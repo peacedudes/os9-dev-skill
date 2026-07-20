@@ -74,11 +74,12 @@ Topic → target → file. Keywords are deliberately dense; scan for yours.
 
 Tag legend: `CONFIDENCE-TAGS.md`. Each file carries inline tags next to
 its claims. Broad picture: 68k common/C material is mostly `Live`; BASIC09
-is `Live` on both targets for marked items; 6809 assembler/debugger core
-and two syscall codes are `Live`, plus a handful of `utility-usage.md`
-items (`dcheck`'s options, `wcreate -s=<type>`, `tmode`/`xmode`'s
-`baud=`/`psc=`, `cobbler`'s existence, NitrOS-9's own `format` syntax) —
-the rest of the 6809 catalog is `Manual`/`Source`; CoCo/Dragon hardware
+is `Live` on both targets for marked items; on 6809 the assembler/debugger
+core, ~70 of ~93 documented `F$`/`I$` syscalls, most `gfx-windowing.md`
+calling sequences, and a handful of `utility-usage.md` items (`dcheck`'s
+options, `wcreate -s=<type>`, `tmode`/`xmode`'s `baud=`/`psc=`,
+`cobbler`'s existence, NitrOS-9's own `format` syntax) are `Live` — the
+rest of the 6809 catalog is `Manual`/`Source`; CoCo/Dragon hardware
 and network-sockets are `Manual` only. When a claim matters, prefer
 running it (see SKILL.md → Verification).
 

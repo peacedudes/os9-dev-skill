@@ -254,8 +254,7 @@ live) before relying on details:
 - Device driver/file manager authoring (entry-point skeletons, static
   storage layout, `F$IRQ` wrapper patterns): sibling `os9-systems-dev` skill
 - Compiler/linker toolchain and the `debug` command:
-  `references/c/os9-c-cheatsheet.md` and
-  `references/common/using-os9exec-repl.md`
+  `c/os9-c-cheatsheet.md` and `common/using-os9exec-repl.md`
 
 Sources: The OS-9 Guru (68000-specific chapters); OS-9 v2.4 Technical
 Reference Manual (module format, exception vectors, TRAP conventions);

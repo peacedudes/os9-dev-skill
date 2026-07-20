@@ -3,10 +3,10 @@
 **Verification status:** baseline is `Manual` — cross-referenced across
 multiple manuals. **Exception: the Record Locking section is now largely
 `Live` on 68k** — the mechanism was implemented in `os9exec` and each
-behaviour verified with a paired before/after transcript (2026-07-19). Read
+behavior verified with a paired before/after transcript (2026-07-19). Read
 that section's "Implemented and verified" and "Testing this" subsections
 before porting it anywhere; the design intent itself stays `Hearsay` (the
-designer's own account) and cannot be upgraded, but the *behaviour* is now
+designer's own account) and cannot be upgraded, but the *behavior* is now
 demonstrated. One prior `Live` claim there is **retracted** — a lost-update
 counter race that passed against code with no locking at all. The path-descriptor byte-offset claims below are
 `Source` — spot-checked against `os9exec`'s own C source (the
@@ -352,9 +352,8 @@ The mechanics that implement both cases:
 below passed against an `os9exec` that had **no record locking whatsoever**:
 `SS_Lock` was `pNop`, there was no lock state in any path structure, and
 `E_LOCK`/`E_DEADLK` appeared only in a debugger string table. It passed
-because `os9exec` never pre-empts (see `os9-dev`'s
-`common/os9-mental-model.md` and the emulator's own
-"Cooperative-Multiprocess" banner), so a read-modify-write essentially never
+because `os9exec` never pre-empts (the emulator's own
+"Cooperative-Multiprocess" source banner), so a read-modify-write essentially never
 interleaves and the race never opens. **A counter race cannot detect a
 missing lock.** To tell a working lock from a scheduler that never
 interleaves, force a conflict and check it is *refused* — see "Testing this"
@@ -379,7 +378,7 @@ resident — `load math` without `-s` works).
 `SS_Lock` was `pNop` (returning **success** while doing nothing, so a program
 that locked defensively was told it had worked), `SS_Ticks` was absent, and a
 reader at end-of-file was told the file was finished while a writer was still
-appending. Each behaviour below has a paired before/after transcript against a
+appending. Each behavior below has a paired before/after transcript against a
 baseline binary in the `os9exec` repo,
 `test/68k-live-verification/dogfood-report-eoflock-fix-2026-07-19.md`.
 

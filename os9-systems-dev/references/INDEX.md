@@ -23,8 +23,11 @@ matching rule) in either of those two files.
 `os9-dev/references/CONFIDENCE-TAGS.md`. `device-drivers.md`,
 `file-managers.md`, and `kernel-internals.md` are mostly `Manual`, with
 several struct-layout offsets now `Source` (cross-checked against
-os9exec's own C source) — no custom driver or file manager has actually
-been written and loaded to confirm the documented calling conventions
-(`Live` tier), so treat that specific gap as still open. `6809-level2-mmu.md`
+os9exec's own C source) and `file-managers.md`'s Record Locking section
+largely `Live` (68k). The entry-point calling conventions remain
+unconfirmed: a custom driver and file manager *were* built and installed
+live (2026-07-18), but os9exec never dispatches installed modules
+(confirmed unimplemented — see SKILL.md → Verification), so that gap is
+untestable on this emulator, not merely untested. `6809-level2-mmu.md`
 is `Manual` only. Next verification steps: os9-dev
 `references/VERIFICATION-BACKLOG.md`.

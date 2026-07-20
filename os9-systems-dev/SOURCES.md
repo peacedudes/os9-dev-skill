@@ -14,6 +14,8 @@ the chain.
 | kernel-internals.md | 1985 independent OS-9/68000 technical manual (scheduler, vector layout); The OS-9 Guru (module directory, allocation, process descriptor); OS-9 Insights; OS-9 v2.4 Technical Reference Manual; Microware Training & Education "OS-9 Advanced" seminar manual (trap entry-point names, D_MaxAge details, timeslice inheritance — the D_MaxAge two-tier mechanism additionally cross-checked against Using Professional OS-9 v2.4) |
 | 6809-level2-mmu.md | 6809 Level 2 System Designer's Guide (primary), cross-referenced against other 6809 System Programmer's/Level 2 manuals; Gimix "OS-9 GMX III Support ROM User's Manual" Rev C (1983). `Manual` only |
 
-None of these files carries a `Live` tag yet (see the INDEX confidence
-note); verification backlog lives in os9-dev
+`Live` findings now exist in `device-drivers.md` and `file-managers.md`
+(the 2026-07-18 dispatch-gap investigation; `file-managers.md`'s Record
+Locking section) — see each file's own status header and the INDEX
+confidence note. Verification backlog lives in os9-dev
 `references/VERIFICATION-BACKLOG.md`.

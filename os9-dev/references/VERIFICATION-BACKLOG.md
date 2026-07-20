@@ -293,6 +293,22 @@ discipline — not silently fixed):
   dogfood sessions) and the deliberately-never-tested `F$RTE`/
   `F$SysDbg` remain untested. See
   `dogfood-report-syscalls-batch7-2026-07-20.md`.
+  **Batch 8 — `F$TLink` now `Live` (37 total). Detailed tier now done**
+  short of the deliberately-untestable `F$RTE`/`F$SysDbg`. Found and
+  **fixed** a real `os9exec` memory-leak bug along the way, not just
+  logged: `install_traphandler` (`modstuff.c`) set `tp->trapmodule`/
+  `tp->mid` before calling `prepData`, then returned on `prepData`
+  failure without rolling them back — corrupting the trap slot's
+  bookkeeping and leaking the loaded module. Root-caused via source,
+  fixed, rebuilt, reverified clean on a fresh instance. Also found the
+  hand-built test module's own `_midata=0`/`_midref=0` was itself
+  invalid — `prepData` doesn't treat 0 as "no table," it unconditionally
+  parses one there. Separately reconfirmed (minimal isolated probe)
+  that `l68 -o=<name>` shares the same "doesn't reliably overwrite an
+  existing output" bug already known for `r68 -O=` — early attempts
+  this batch were silently re-running a stale linked executable; a
+  never-before-used output name fixed it. See
+  `dogfood-report-syscalls-batch8-2026-07-20.md`.
 - Two already-flagged, concrete, small open items in
   `c/os9-clib-reference.md`: `os9fork()`'s `modname` resolution rule
   (does a bare name resolve via `PATH`/module directory the way Shell

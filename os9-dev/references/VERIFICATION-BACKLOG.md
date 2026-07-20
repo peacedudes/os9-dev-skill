@@ -233,6 +233,17 @@ discipline — not silently fixed):
   addressing required everywhere (like 6809's `,pcr`); `ds.b` isn't a
   valid directive on this `r68`; `r68 -O=` doesn't reliably overwrite an
   existing `.r` file, `del` first.
+  **Batch 2 — module/process lifecycle, 5 more calls now `Live` (15
+  total).** `F$Load`/`F$Link`/`F$UnLink`/`F$Fork`/`F$Wait` all confirmed
+  cleanly in one file using a real forked child module
+  (`test/68k-live-verification/batch2-01.a`) — `F$Wait`'s returned exit
+  status matched the child's own `F$Exit(77)` exactly, full lifecycle
+  confirmation. **`F$Fork`'s long-standing `Flag` (conflicting register
+  layouts across manuals) is now resolved** — `os9exec`'s real
+  implementation matches this skill's existing table exactly. Applying
+  the batch-1 register-discipline lesson proactively meant zero
+  register bugs this time. See
+  `dogfood-report-syscalls-batch2-2026-07-20.md`.
 - Two already-flagged, concrete, small open items in
   `c/os9-clib-reference.md`: `os9fork()`'s `modname` resolution rule
   (does a bare name resolve via `PATH`/module directory the way Shell

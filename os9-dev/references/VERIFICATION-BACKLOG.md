@@ -330,12 +330,15 @@ discipline — not silently fixed):
   handler in `os9exec`'s own dispatch table; confirmed each cleanly
   returns `E$UNKSVC`. See `dogfood-report-syscalls-batch9-2026-07-20.md`
   through `-batch12-2026-07-20.md`.
-- Two already-flagged, concrete, small open items in
-  `c/os9-clib-reference.md`: `os9fork()`'s `modname` resolution rule
-  (does a bare name resolve via `PATH`/module directory the way Shell
-  does, or does it require a full path — only a full path has been
-  tested) and its `datasize` sizing rule (a `4096`-byte guess worked live
-  but isn't derived from any documented rule).
+- **RESOLVED, 2026-07-20**: `os9fork()`'s two open items in
+  `c/os9-clib-reference.md`. `modname`: a bare name resolves via the
+  exec-directory search same as `F$Fork`/Shell, confirmed live
+  (`test/68k-live-verification/dogfood-osfork-modname.c`). `datasize`:
+  `os9exec`'s `F$Fork` (`procstuff.c`) calls the same `prepData()` used
+  for `F$TLink`, with `datasize` simply added to the module's own
+  declared `_mdata`+`_mstack` — headroom on top, not a replacement
+  total, confirmed via source. See
+  `dogfood-report-osfork-modname-2026-07-20.md`.
 - `common/module-format.md`: PSECT's claimed restriction "is unconfirmed
   for 68k" per the file's own note — a small multi-section assembly test
   would settle it.

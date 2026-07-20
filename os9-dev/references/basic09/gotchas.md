@@ -66,8 +66,14 @@
   ...` (the latter is a syntax error, `Error #000:018`).
 - **Divergence from the manual**: `PRINT USING`'s `B` (boolean) format is
   documented as printing `"TRUE"`/`"FALSE"` but actually prints mixed-case
-  `"True"` — `Live` on both 68k and 6809, so it's the
-  Microware runtime itself, not an emulator artifact.
+  `"True    "` (8-char field, correct width) — `Live` (68k) only; 6809
+  not yet independently confirmed (this entry previously said "both,"
+  overstating it — see `basic09-language.md`'s PRINT USING section, the
+  more precise source for this claim, for the exact test and scoping).
+  Given 68k `os9exec` faithfully reproduces real Microware BASIC09
+  behavior elsewhere, this is very likely the Microware runtime itself
+  rather than an emulator artifact, but that's an inference, not a
+  6809-confirmed fact yet.
 - **A literal `;` inside a string constant gets a spurious backslash
   escape** — `PRINT "Enter lines of text; blank line ends input:"`
   stores and echoes as `Enter lines of text\; blank line ends input:`,
@@ -84,9 +90,13 @@
   the trap both times. Treat it as staying armed indefinitely until an
   explicit bare `ON ERROR`.
 - **Divide-by-zero has two very different, both-surprising failure
-  modes.** `INTEGER÷0` silently falls through with NO error at all on
-  both architectures — execution just continues. `REAL÷0` **used to
-  crash the entire 68k BASIC process** via an uncatchable CPU trap
+  modes.** `INTEGER÷0` is **not** silent — `Live` (6809): it generates
+  `Error #045 -- Divide by Zero` and drops into interactive Debug Mode
+  if left unhandled, same path as `REAL÷0` on 6809 (68k behavior
+  unverified; may differ — see `basic09-language.md`'s own entry for the
+  precise wording, this file previously said the opposite). `REAL÷0`
+  **used to crash the entire 68k BASIC process** via an uncatchable CPU
+  trap
   (`Error #000:107 E_TRAPV`), a genuine divergence from 6809 (where it
   was always an ordinary catchable `Error #045 -- Divide by Zero`
   dropping into interactive Debug Mode). **This was an `os9exec` bug,

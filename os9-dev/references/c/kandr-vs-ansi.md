@@ -22,7 +22,7 @@ toolchain.
 | `x =+ 5;` (old compound-assignment form) | **Not** supported *(6809 manual)* — parses as `x = +5` | Use `x += 5;` |
 | `struct1 = struct2;` (direct struct assignment) | Not supported *(6809 manual)* | Use the library's `strass()` function — a byte-by-byte block copy provided as the documented workaround |
 | `<string.h>` | Doesn't exist | `<strings.h>` — different API (`index`/`rindex`, not `strchr`/`strrchr`) |
-| Modifying a string literal (`char *s = "x"; s[0] = 'y';`) | Undefined behavior — literals live in the DATA section | Copy to a `char[]` buffer first with `strcpy` |
+| Modifying a string literal (`char *s = "x"; s[0] = 'y';`) | Undefined behavior — a `char *` literal like this lives in the module's shared, read-only TEXT section (see `common/module-format.md`), not DATA; writing to it risks a real fault, not just silent corruption. (Contrast `char array[] = "x"` — that form gets its own per-process, mutable DATA storage and is safe to write) | Copy to a `char[]` buffer first with `strcpy` |
 
 ## Function definitions (the one syntax you actually need to get right)
 
@@ -47,9 +47,17 @@ will surprise anyone porting code either direction.
 
 ```c
 printf("Line 1\nLine 2\n");    /* outputs CR, not LF */
-printf("Line 1\LFLine 2\LF");  /* \LF is this compiler's true-linefeed escape */
+printf("Line 1\eLine 2\e");    /* \e (lowercase) is this compiler's true-linefeed escape */
 printf("Value: %d\x0D");       /* or just be explicit with \x0D / \x0A */
 ```
+
+`Source` (OS-9 C Compiler manual, Microware, 1983, 6809 edition — the
+compiler's own "Control Character Escape Sequences" section, extending
+K&R p.181): `\e` is documented explicitly "to distinguish LF from `\n`
+which on OS9 is the same as `\r`." (Previously this file said `\LF`,
+which conflicted with `common/unix-differences.md` and
+`common/os9-mental-model.md`'s `\e` — corrected here to match, since
+`\e` is the one with a direct primary-source citation.)
 
 ## Porting checklist
 

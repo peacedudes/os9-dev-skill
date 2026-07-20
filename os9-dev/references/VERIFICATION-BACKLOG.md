@@ -45,6 +45,90 @@ extracted at length. Trust the actual code over any comment sitting
 above it; this project's own first use of it found a NitrOS-9 source
 comment describing the wrong function entirely.
 
+## Skill-quality punch list (2026-07-20, from the editorial polish pass)
+
+Ideas for making the skills better that aren't "run more live tests" —
+tracked here to work through opportunistically, not all at once:
+
+1. **DONE 2026-07-20 — the 4 real contradictions the Fable editorial
+   pass flagged, resolved** (see below); the other 2 items it flagged
+   (`E$`/`E_` error-prefix mixing, `os9-dev/SOURCES.md`'s per-file table
+   missing 5 self-documenting files) were correctly assessed by that
+   pass as deliberate/non-issues, not contradictions needing a fix.
+2. **Wrap the ~90 6809 test files (`test/6809-live-verification/`) into
+   an actual runnable regression suite** — a driver script that deploys
+   all of them, runs each, collects PASS/FAIL, so re-verifying against a
+   future NitrOS-9 release is one command instead of a day of manual
+   per-file work. Not started.
+3. **A cheap automated consistency check**, not another full editorial
+   pass — grep every `see X.md`/cross-reference and confirm the target
+   exists; flag any paragraph that repeats near-verbatim across two
+   files. Turns what the Fable pass did by hand into something that
+   catches regressions on every future edit, for free. Not started.
+4. **A "don't touch without supervision" 6809 syscall risk table** — the
+   risk categorization used to scope batch 5 (`F$Boot`=reboot,
+   `F$AProc`/`F$NProc`=scheduler-internal/no-return,
+   `F$GCMDir`=explicit-kernel-only, `F$IOQu`=untimed-hang-risk,
+   `F$IRQ`=real-hardware-vector, `F$SSvc`=patches-live-dispatch-table,
+   `I$SetStt`=channel-disruption-risk, `F$Chain`=looks-unsafe-on-failure)
+   only exists scattered across report prose
+   (`dogfood-report-syscalls-batch5-2026-07-19.md`) — worth one real
+   table in `6809/syscalls-and-module-format.md` or `STATUS.md` so the
+   next session doesn't re-derive the same judgment calls. Not started.
+5. **A "verified against" version marker convention** — no `Live` tag
+   currently says which NitrOS-9 disk image / `os9exec` commit it was
+   confirmed against. If the disk image or emulator is ever rebuilt,
+   there's no way to tell which facts are timeless (register
+   conventions) vs. build-specific (a particular error code from a
+   particular kernel). Not started, needs a design decision first (a
+   footer date is already common — is that enough, or does it need an
+   explicit build/commit reference?).
+
+### Contradiction 1 — INTEGER÷0 behavior (basic09) — RESOLVED 2026-07-20
+
+`gotchas.md` had the stale pre-2026-07-18 claim ("silently falls
+through, no error, on both architectures"); `basic09-language.md` had
+already been corrected that day with a real `Live` (6809) test
+(`Error #045`, Debug Mode) but `gotchas.md` was never updated to match.
+Fixed: `gotchas.md` now states the same `Live` (6809) finding, 68k still
+flagged unverified, with a note that this file previously said the
+opposite.
+
+### Contradiction 2 — PRINT USING `B`-format tag mismatch (basic09) — RESOLVED 2026-07-20
+
+`basic09-language.md`'s version was the more precise, verifiable one
+(exact printed string `"True    "`, field width, explicitly scoped
+`Live (68k)` only, explicit "6809 not yet checked"). `gotchas.md`'s
+"Live on both" had no 6809-specific detail behind it — almost certainly
+an unverified extrapolation, not a real second test. Fixed: `gotchas.md`
+now matches the 68k-only scoping. **Genuine remaining live-test
+opportunity, not urgent**: nobody has actually run `PRINT USING "B8"`
+on real 6809 NitrOS-9 yet to confirm the mixed-case rendering there too.
+
+### Contradiction 3 — C true-linefeed escape: `\e` vs `\LF` — RESOLVED 2026-07-20
+
+Checked the already-cited primary source directly
+(`os9/txtResources/6809/OS-9_C_Compiler_Microware.txt`, the 1983
+Microware C Compiler manual — OCR quality is rough but the relevant
+passage is legible): its "Control Character Escape Sequences" section
+documents `\e` (lowercase) as the linefeed escape, explicitly "to
+distinguish LF from `\n` which on OS9 is the same as `\r`." Fixed:
+`c/kandr-vs-ansi.md`'s `\LF` corrected to `\e`, now matching
+`common/unix-differences.md` and `common/os9-mental-model.md`, with the
+manual citation attached.
+
+### Contradiction 4 — string-literal storage location (C, 68k) — RESOLVED 2026-07-20
+
+Not a 6809-vs-68k difference — `module-format.md`'s version was simply
+more precise and mechanistically explained (shared read-only TEXT,
+*except* `char array[] = "..."` which gets its own per-process DATA
+storage — matching the linker's actual `M$IRefs` TEXT/DATA-pointer
+split it documents). `kandr-vs-ansi.md`'s flat "DATA section" was wrong
+for the `char *s = "x"` example it was actually describing. Fixed:
+corrected to match `module-format.md`, with a cross-reference, and
+sharpened the practical consequence (writing to it risks a real fault,
+not just "undefined behavior," since it's read-only shared memory).
+
 ### 68k — os9-dev
 
 - **DONE 2026-07-18 — program-entry register state** now documented in

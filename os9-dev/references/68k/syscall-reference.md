@@ -62,7 +62,7 @@ on TRAP #1–#15 via F$TLink.
 | **F$UnLink** | Unlink by address | (a2)=header | — | Free at zero unless sticky (bit 6) — sticky needs count −1 or memory pressure. **`Live`**: confirmed needing exactly two calls (one per link: the `F$Load` and the `F$Link`) to fully free the module, matching the documented link-count semantics |
 | **F$SetCRC** | Update module CRC | (a0)=module | — | Recomputes CRC + header parity after in-place modification (data modules); required before saving to disk. **`Live`**: confirmed rejecting a non-header address with `E$BMID` (205) — validates its input rather than trusting it blindly. Success path (a real module image) not yet exercised |
 | **F$CRC** | Compute CRC | d0.l=count, d1.l=accumulator (init $FFFFFFFF), (a0)=data | d1.l=updated | 24-bit, one's-complemented for storage. Kernel checks once at load/bootstrap, never re-verifies. **`Live`**: confirmed, real nonzero result over test data, no error |
-| **F$DatMod** | Create/link data module | d0.l=size, d1.w=attr/rev, d2.w=access, d3.w=type/lang, d4.l=color, (a0)=name | d0.w=type, d1.w=attr, (a1)=data, (a2)=header | Named shared memory: creator sizes it, later callers link by name. No kernel synchronization — coordinate with events/signals |
+| **F$DatMod** | Create/link data module | d0.l=size, d1.w=attr/rev, d2.w=access, d3.w=type/lang, d4.l=color, (a0)=name | d0.w=type, d1.w=attr, (a1)=data, (a2)=header | Named shared memory: creator sizes it, later callers link by name. No kernel synchronization — coordinate with events/signals. **`Live`**: confirmed creating a real 64-byte named data module, no error |
 
 ## I/O
 
@@ -93,10 +93,16 @@ Ev$Pulse (momentary signal), Ev$Signl (permanent increment), Ev$Set
 
 ## Alarms
 
-**F$Alarm** `Manual` (single-sourced register layout, not cross-verified)
-(d0.l=alarm ID, d1.w=function, d2.l=signal, d3.l=interval,
-d4.l=date): subfunctions A$Delete, A$Set (one-shot), A$Cycle (periodic),
-A$AtDate / A$AtJul (absolute Gregorian/Julian). Time-of-day alarms fire at
+**F$Alarm** (d0.l=alarm ID, d1.w=function, d2.l=signal, d3.l=interval,
+d4.l=date): subfunctions A$Delete=0, A$Set=1 (one-shot), A$Cycle=2
+(periodic), A$AtDate=3 / A$AtJul=4 (absolute Gregorian/Julian). **`Live`,
+2026-07-20**: register contract and function codes confirmed exact
+against `os9exec`'s own `OS9_F_Alarm`/`Alarm()` (`Source/OS9exec_core/
+fcalls.c`/`alarms.c`) and live-tested — `A$Set` (far-future interval,
+never allowed to fire) returned a real alarm ID with no error,
+`A$Delete` on that same ID succeeded immediately after
+(`test/68k-live-verification/batch5-01.a`). Actual signal delivery on
+firing not exercised. Time-of-day alarms fire at
 the *corrected* time after a clock adjustment. A system-state variant runs
 a kernel subroutine instead of signaling; pending alarms die with their
 process, so a persistent one must be requested as the system process.
@@ -107,7 +113,7 @@ process, so a persistent one must be requested as the system process.
 |------|---------|-------|
 | **F$Send** | Send signal to a process | Kill (0) restricted to same user/group (superuser excepted); other codes unrestricted. Standard OS-9 documents PID 0 as broadcasting to all same-user/group processes except the sender; signals queue in send order (~10× cost of unqueued delivery). **`Live`, 2026-07-20 — real `os9exec`-specific divergence, not a doc error**: `os9exec`'s own source (`OS9_F_Send`, `Source/OS9exec_core/fcalls.c`) explicitly states "0 is NOT all here!" — PID 0 is a real, specific, valid process ID on `os9exec` (its own comment: "pid=0 is a valid process ID in os9exec/nt"), and sending to it succeeds, but reaches only that one process, **not** a broadcast. Confirmed live: sending to PID 0 succeeds with no error (`test/68k-live-verification/batch3-02.a`), as does sending to the caller's own real PID (a genuine, valid single target) — both dispatch correctly, only the broadcast semantics are missing. Don't rely on PID-0 broadcast when writing `os9exec` test code; target real PIDs explicitly |
 | **F$Icpt** | Install signal intercept routine | On entry the kernel puts the count of queued signals in d0.w (1 = nothing else waiting). No handler installed ⇒ any interceptable signal kills the process. **`Live`, 2026-07-20 — real `os9exec` feature gap, not a doc error**: `os9exec`'s own source (`OS9_F_Icpt`) carries an explicit comment, "does not work, as signal handling is not yet implemented (%%%)" — the call stores the handler address/data pointer fields with zero validation and always returns success, but signal delivery to an installed intercept routine is not implemented at all. Confirmed live: `F$Icpt` with a real handler address is accepted (carry clear), matching "always succeeds" — actual signal-to-handler delivery was not (and, per source, cannot currently be) exercised. Anything relying on `F$Icpt`-based signal handling working on `os9exec` should expect it to silently not fire |
-| **F$SigMask** | Mask delivery | d1 = +1 increment / −1 decrement / 0 clear-to-zero. Counter is P$SigLvl (unsigned byte); over/underflow silently ignored. F$Sleep unmasks internally, making `mask → sleep(0)` a safe masked wait |
+| **F$SigMask** | Mask delivery | d1 = +1 increment / −1 decrement / 0 clear-to-zero. Counter is P$SigLvl (unsigned byte); over/underflow silently ignored. F$Sleep unmasks internally, making `mask → sleep(0)` a safe masked wait. **`Live`**: confirmed increment then decrement back, both accepted with no error |
 | **F$SigReset** | Reset intercept-nesting counter | Needed when `longjmp()` bypasses F$RTE exits |
 | **F$RTE** | Return from intercept | Processes queued signals first |
 | **F$STrap** | Install error-exception handler | (a0)=stack, (a1)=service table. Covers bus/address/illegal/zero-divide etc. (vectors 2–8, 10–24, 48–63), otherwise fatal. Handler gets all user registers stacked and chooses resume point. An F$DFork child's resources survive for post-mortem. **`Live`**: register contract confirmed via real REAL÷0/INTEGER÷0 BASIC09 traps now correctly caught (see `basic09/gotchas.md`'s divide-by-zero entry); a deliberately-malformed unterminated service table was separately confirmed to be refused cleanly rather than walking off the arena (`test/68k-live-verification/dogfood-strap-unterminated.a` — this found and fixed a real `os9exec` out-of-bounds read bug) |

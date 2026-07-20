@@ -264,6 +264,19 @@ discipline — not silently fixed):
   result comes back in `d2.l`, not `d1` (previously undocumented,
   the skill only said "per code"). See
   `dogfood-report-syscalls-batch4-2026-07-20.md`.
+  **Batch 5 — 3 more calls now `Live` (30 total).** `F$SigMask`/
+  `F$DatMod`/`F$Alarm` confirmed; `F$Alarm`'s subfunction codes
+  (`A$Delete`=0/`A$Set`=1/`A$Cycle`=2/`A$AtDate`=3/`A$AtJul`=4) were
+  previously undocumented as actual numbers, now confirmed. Deliberately
+  skipped as too risky to call automated: `F$SysDbg` (drops `os9exec`
+  into its own interactive meta-debugger, would hang the scripted REPL)
+  and `F$RTE` (kills the caller if not genuinely inside an intercept
+  routine, and `F$Icpt` doesn't deliver signals — see batch 3 — so there
+  is no safe way to reach that context). `F$TLink` and
+  `F$DFork`/`F$DExec`/`F$DExit` deferred, not skipped — both need more
+  setup (a real trap-handler module; a debug-child register-frame
+  buffer) than this batch had scope for. See
+  `dogfood-report-syscalls-batch5-2026-07-20.md`.
 - Two already-flagged, concrete, small open items in
   `c/os9-clib-reference.md`: `os9fork()`'s `modname` resolution rule
   (does a bare name resolve via `PATH`/module directory the way Shell

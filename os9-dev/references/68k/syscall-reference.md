@@ -162,9 +162,9 @@ irrelevant (`loword()` reads it directly), confirmed live.
 
 | Call | Purpose | Notes |
 |------|---------|-------|
-| **F$DFork** | Fork suspended debuggee | F$Fork inputs plus (a2)=register buffer → child PID + initial register image. Child has trace bit set, never runs until F$DExec |
-| **F$DExec** | Drive debuggee | d0.w=PID, d1.l=instruction count (0=free run), d2.w=breakpoint count, (a0)=breakpoint list → instructions executed, remaining count, exception offset/classification/access address/IR. Syscalls (including through trap handlers and F$Chain) run at full speed as one logical instruction. Editing the register buffer changes what the child resumes with |
-| **F$DExit** | Kill debuggee | Resources survive for post-mortem examination |
+| **F$DFork** | Fork suspended debuggee | F$Fork inputs plus (a2)=register buffer → child PID + initial register image. Child has trace bit set, never runs until F$DExec. **`Live`, 2026-07-20**: confirmed forking a real child module (`childprg68k`) suspended, no error, plausible child PID returned (`test/68k-live-verification/batch6-01.a`) |
+| **F$DExec** | Drive debuggee | d0.w=PID, d1.l=instruction count (0=free run), d2.w=breakpoint count, (a0)=breakpoint list → instructions executed, remaining count, exception offset/classification/access address/IR. Syscalls (including through trap handlers and F$Chain) run at full speed as one logical instruction. Editing the register buffer changes what the child resumes with. **`Live`**: single-stepping the forked child exactly one instruction (no breakpoints) completed cleanly, parent resumed with no error and no hang |
+| **F$DExit** | Kill debuggee | Resources survive for post-mortem examination. **`Live`**: confirmed killing the debug child after single-stepping it, no error |
 | **F$SysDbg** | Enter ROM debugger | Used by `break` (superuser, console); halts everything |
 
 ## `Manual`-only calls (register detail not reproduced here)

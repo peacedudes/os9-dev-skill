@@ -277,6 +277,11 @@ discipline — not silently fixed):
   setup (a real trap-handler module; a debug-child register-frame
   buffer) than this batch had scope for. See
   `dogfood-report-syscalls-batch5-2026-07-20.md`.
+  **Batch 6 — 3 more calls now `Live` (33 total).** `F$DFork`/
+  `F$DExec`/`F$DExit` confirmed end-to-end: forked `childprg68k`
+  suspended, single-stepped it one instruction, killed it, parent
+  parked and resumed cleanly with no hang. `F$TLink` remains the only
+  deferred item. See `dogfood-report-syscalls-batch6-2026-07-20.md`.
 - Two already-flagged, concrete, small open items in
   `c/os9-clib-reference.md`: `os9fork()`'s `modname` resolution rule
   (does a bare name resolve via `PATH`/module directory the way Shell

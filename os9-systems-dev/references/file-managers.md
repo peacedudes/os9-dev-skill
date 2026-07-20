@@ -1,7 +1,14 @@
 # OS-9 File Managers
 
 **Verification status:** baseline is `Manual` — cross-referenced across
-multiple manuals. The path-descriptor byte-offset claims below are
+multiple manuals. **Exception: the Record Locking section is now largely
+`Live` on 68k** — the mechanism was implemented in `os9exec` and each
+behaviour verified with a paired before/after transcript (2026-07-19). Read
+that section's "Implemented and verified" and "Testing this" subsections
+before porting it anywhere; the design intent itself stays `Hearsay` (the
+designer's own account) and cannot be upgraded, but the *behaviour* is now
+demonstrated. One prior `Live` claim there is **retracted** — a lost-update
+counter race that passed against code with no locking at all. The path-descriptor byte-offset claims below are
 `Source` — spot-checked against `os9exec`'s own C source (the
 `PD_FST`/42-byte-header claim matches; see the `PD_COUNT` "Known gap"
 note below for a `Source, Flag` offset conflict that check turned up).
@@ -255,6 +262,16 @@ allocation bitmap through it — any read attempt past that returns EOF.
 
 ## Record Locking
 
+**What it is.** RBF hands out short-term exclusive access to *part* of a
+file — a byte range, not the whole file — and does it by itself, as a side
+effect of ordinary reads and writes. A read on a path open for update locks
+the bytes it just returned; the next write on that path releases them.
+Anything else touching those bytes meanwhile waits. No locking calls appear
+anywhere in the program. The same mechanism, applied past the last byte where
+no data exists yet, is what makes a reader wait at end-of-file for a writer
+that has not finished — so "record locking" and "EOF lock" are one feature,
+not two.
+
 **Why this matters, before the mechanics — this is not a defensive
 feature you invoke, it's a design opportunity most programmers using it
 never fully exploited, because it was never explained well enough
@@ -290,10 +307,17 @@ tolerating as a safety net:
    something a plain `open()`/`read()`/`write()` model gives you.
 
 The mechanics that implement both cases:
-- A **read** (or `ReadLn`) on a path opened for update locks the bytes from
-  the current file pointer for the requested count — a `ReadLn` requesting
-  256 bytes locks exactly 256 bytes regardless of where the CR actually
-  landed. Reads on read-only or execute-mode paths never lock anything,
+- A **read** (or `ReadLn`) on a path opened for update locks the bytes it
+  handed back, from the file pointer it started at. `Manual` says the
+  *requested* count — a `ReadLn` asking 256 bytes locking 256 regardless of
+  where the CR landed. The designer's own recollection is the opposite (a
+  `ReadLn` that asks 80 and delivers 43 should lock 43), stated with the
+  explicit caveat that he was not certain. **`os9exec` implements
+  delivered**, and there is a practical argument for it: BASIC09 offers a
+  511-byte buffer for an 8-byte record, so locking the requested count locks
+  most of the file and makes unrelated records collide. `Flag` — unresolved
+  between manual and designer; if you have a primary source, settle it.
+  Reads on read-only or execute-mode paths never lock anything,
   since those modes can't update records anyway — prefer read-only opens
   when writing isn't needed, both for this reason and for speed.
 - A **write** always releases any record currently locked by that path; it
@@ -306,20 +330,101 @@ The mechanics that implement both cases:
 - `SS_Lock` locks/releases part of a file directly; `SS_Ticks` sets how
   long a caller will wait for a lock held by someone else before giving up.
 
-**Case 1 confirmed working as designed on `os9exec`/68k.** `Live`
+**RETRACTED 2026-07-19 — that 600/600 proved nothing.** The counter race
+below passed against an `os9exec` that had **no record locking whatsoever**:
+`SS_Lock` was `pNop`, there was no lock state in any path structure, and
+`E_LOCK`/`E_DEADLK` appeared only in a debugger string table. It passed
+because `os9exec` never pre-empts (see `os9-dev`'s
+`common/os9-mental-model.md` and the emulator's own
+"Cooperative-Multiprocess" banner), so a read-modify-write essentially never
+interleaves and the race never opens. **A counter race cannot detect a
+missing lock.** To tell a working lock from a scheduler that never
+interleaves, force a conflict and check it is *refused* — see "Testing this"
+below. Kept here because the trap is easy to fall into twice. Original
+(now-uninformative) run: `Live`
 (2026-07-18), on a real RBF disk image (`/h1/CLAUDETEST/counter.dat`):
 two separate processes raced 300 iterations each of unprotected
 read-modify-write (`SEEK` to a fixed record offset mid-file, not at EOF /
 `GET` / `+1` / `SEEK` / `PUT`, path held open across all iterations, no
 `SS_Lock` anywhere in either program) against the same shared counter.
-Final count landed exactly on 2×300=600 in two independent full races —
-no lost updates. See
+Final count landed exactly on 2×300=600 in two independent full races. See
 `test/68k-live-verification/dogfood-report-lostupdate-2026-07-18.md`
 (in the `os9exec` repo) for the full pass, including a real but
 unrelated blocker hit and worked around (BASIC09 needs the `math` trap
 handler resident for any numeric operation; the account's own
 `/h0/startup` `load -s cio csl math` line silently fails to make it
 resident — `load math` without `-s` works).
+
+## Implemented and verified on `os9exec`/68k (2026-07-19)
+
+`Live`. All of it was missing before this: RBF had no record locking at all,
+`SS_Lock` was `pNop` (returning **success** while doing nothing, so a program
+that locked defensively was told it had worked), `SS_Ticks` was absent, and a
+reader at end-of-file was told the file was finished while a writer was still
+appending. Each behaviour below has a paired before/after transcript against a
+baseline binary in the `os9exec` repo,
+`test/68k-live-verification/dogfood-report-eoflock-fix-2026-07-19.md`.
+
+**The prerequisite nobody expects.** Before any locking can matter, two paths
+on one file have to be looking at the same file. In `os9exec` they were not:
+each path kept its own copy of the FD sector taken at open, and its own data
+sector buffer, so a reader never saw the size, the segment list or the sector
+contents change underneath it. Fixed by linking paths on the same file into a
+ring and treating their buffers as a shared cache. **Anyone porting this
+should check the same thing first** — a lock is pointless if the reader cannot
+see what the writer wrote.
+
+**What the mechanism turned out to be**, from the designer directly: it is one
+lock, not two. A read locks the record it read; the next write releases it;
+a conflicting access sleeps and every release wakes all waiters. The EOF case
+is that same lock placed where there is no data yet — a **ghost lock** past
+the last byte. Nothing real is locked, which is why a second appender is
+unaffected and why two programs logging to one file do not shut each other
+out. End-of-file is therefore a *lock to acquire*, not a condition to compute
+— which is exactly what both reimplementations got wrong.
+
+**Four things that bit, all of which a 6809 port would hit too:**
+
+1. **The directory walk goes through the same read path.** Opening a file for
+   update walks directories via the ordinary read routine, so the path takes a
+   lock on *directory* bytes and carries those offsets onto the file it ends
+   up at. Its own first read then collides with its own stale lock. Locks must
+   be dropped whenever a path changes which file it refers to.
+2. **Judge a read conflict on bytes delivered, not bytes requested.** A caller
+   may offer a buffer far larger than the record. Since reading is not
+   destructive, the honest order is: read, then check what was actually
+   touched, and unwind if it conflicts. Writes are the opposite — destructive,
+   exact length known up front, so check before.
+3. **Refuse a same-process conflict rather than sleeping on it** (`E_DEADLK`).
+   The only process that could release the lock is the one about to wait for
+   it. Without this a single-process test does not fail, it *hangs* — and it
+   is what makes the whole thing testable without concurrency.
+4. **`SS_Ticks` is only as good as the scheduling under it.** A timeout can
+   only fire if the blocked process is re-run while it waits. On `os9exec`,
+   which does not pre-empt, a blocked reader got two chances to check its
+   deadline and then none until the holder released — so the limit was never
+   noticed. It works with the emulator's optional tick on.
+
+## Testing this
+
+The counter race cannot detect a missing lock (see the retraction above).
+What does:
+
+- **Force a conflict and check it is refused.** One process, two paths on one
+  file, both open for update: path A reads a record, path B reads the same
+  bytes. B must be refused with `E_DEADLK`. Deterministic, no timing, cannot
+  hang. (`dogfood-recordlock.bas`)
+- **Cross-process, for the blocking path.** A holder that reads a record and
+  sits on it across yield points, and a waiter that tries the same bytes. The
+  waiter must not return until the holder writes. Compare the *values*: before
+  the fix the waiter got the stale pre-update record, which is the lost update
+  caught in the act. (`dogfood-recordlock-holder/-waiter.bas`)
+- **`SS_Lock` needs assembly** — no BASIC09 route to a SetStat.
+  (`dogfood-sslock.a`)
+- **Single-process, deterministic tests are worth more than they look**: one
+  process with two paths covers visibility, cache invalidation, the
+  writer-closes-first lifecycle, and the deadlock refusal, with no timing at
+  all.
 
 **Does NOT reproduce on NitrOS-9 (6809) — real, reproducible lost
 updates.** `Live` (2026-07-19), identical test design (10-byte record,

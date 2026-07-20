@@ -244,6 +244,19 @@ discipline — not silently fixed):
   the batch-1 register-discipline lesson proactively meant zero
   register bugs this time. See
   `dogfood-report-syscalls-batch2-2026-07-20.md`.
+  **Batch 3 — I/O path calls + signals, 8 more calls now `Live` (23
+  total).** `I$Create`/`I$Delete`/`I$MakDir`/`I$ChgDir`/`I$Seek`/`I$Dup`
+  all confirmed cleanly, zero fix-and-rerun cycles. **Two real,
+  `os9exec`-specific behavioral divergences found and confirmed live,
+  both flagged first by the emulator's own source comments**: `F$Send`'s
+  PID 0 does **not** broadcast to the sender's user/group (standard OS-9
+  behavior) — `os9exec`'s own comment says "0 is NOT all here!", PID 0
+  is a real specific process here, not a broadcast target. `F$Icpt`
+  accepts an install with no error but **never actually delivers a
+  signal to the handler** — "signal handling is not yet implemented"
+  per the emulator's own comment; same class of finding as the earlier
+  device-driver/file-manager dispatch gaps. See
+  `dogfood-report-syscalls-batch3-2026-07-20.md`.
 - Two already-flagged, concrete, small open items in
   `c/os9-clib-reference.md`: `os9fork()`'s `modname` resolution rule
   (does a bare name resolve via `PATH`/module directory the way Shell

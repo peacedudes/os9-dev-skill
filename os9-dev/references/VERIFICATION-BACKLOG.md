@@ -256,6 +256,14 @@ discipline — not silently fixed):
   per the emulator's own comment; same class of finding as the earlier
   device-driver/file-manager dispatch gaps. See
   `dogfood-report-syscalls-batch3-2026-07-20.md`.
+  **Batch 4 — 4 more calls now `Live` (27 total).** `F$SPrior`/`F$CRC`/
+  `F$SetCRC`/`I$GetStt`(SS.Size) confirmed. Two self-inflicted
+  register-clobber bugs caught by checking printed results against
+  independently-known truth (a real file size via `dir -e`/`dump`)
+  rather than trusting "no error" alone — found `I$GetStt`'s SS.Size
+  result comes back in `d2.l`, not `d1` (previously undocumented,
+  the skill only said "per code"). See
+  `dogfood-report-syscalls-batch4-2026-07-20.md`.
 - Two already-flagged, concrete, small open items in
   `c/os9-clib-reference.md`: `os9fork()`'s `modname` resolution rule
   (does a bare name resolve via `PATH`/module directory the way Shell

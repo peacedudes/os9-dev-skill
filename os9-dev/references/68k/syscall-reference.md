@@ -47,7 +47,7 @@ on TRAP #1–#15 via F$TLink.
 | Call | Purpose | Key inputs | Key outputs | Notes |
 |------|---------|-----------|------------|-------|
 | **F$Fork** | Create process | d0.w=module type (0=any), d1.l=extra stack/mem, d2.l=param size, d3.w=# I/O paths, d4.w=priority, (a0)=module name, (a1)=params | d0.w=child PID, (a0)=updated | Child inherits priority, open paths, user/group ID, current dirs, environment — never memory. **`Live`, 2026-07-20 — `Flag` resolved**: register contract confirmed exact against `os9exec`'s own `OS9_F_Fork` (`Source/OS9exec_core/fcalls.c`) and live-tested end-to-end (`test/68k-live-verification/batch2-01.a` — forked a real child module, `F$Wait`'d it, got back the exact PID and exit status the child actually used). The conflicting other-manual passages this row used to flag are wrong for `os9exec`'s implementation, whatever their origin |
-| **F$Chain** | Replace current program | as F$Fork `Manual, Flag` | doesn't return | Fork+Exit in one: reuses the caller's process descriptor and PID, preserves open paths |
+| **F$Chain** | Replace current program | as F$Fork `Manual, Flag` | doesn't return | Fork+Exit in one: reuses the caller's process descriptor and PID, preserves open paths. **`Live`, 2026-07-20 — real concern, not root-caused**: `os9exec`'s own `OS9_F_Chain` (`Source/OS9exec_core/fcalls.c`) reads cleanly (mirrors `F$Fork`'s already-proven-safe logic, no obvious destructive step before name resolution), but a live failure-path attempt (bogus target name) produced a raw, uncontrolled `Error #000:221 (E_MNF)` with none of the calling program's own output ever printing — the same red flag independently found on the 6809/NitrOS-9 side for the equivalent call. Not chased further live (same discipline as the 6809 finding — stop rather than keep probing an already-flagged crash-shaped symptom). Flagged on `ROADMAP.md` for the emulator author to investigate directly in `os9exec`'s own source, since this is a genuine platform bug candidate here, not just a third-party clone's behavior |
 | **F$Exit** | Terminate | d1.w=status | — | Closes paths. Auto-unlinks only the *primary* module and trap handlers — anything else you linked/loaded leaks unless unlinked first. **`Live`**: confirmed clean exit in every 68k assembly dogfood test this project has run (`test/68k-live-verification/dogfood-asm-line-counter.a` and others) |
 | **F$Wait** | Wait for child | — | d0.w=child PID, d1.w=status | Also reclaims the dead child's process descriptor; forking without matching waits can fill the process table. **`Live`**: confirmed via the same `F$Fork` test — returned PID matched the forked child's exactly, status matched the child's own `F$Exit(77)` exactly |
 | **F$SPrior** | Set priority | d0.w=PID, d1.w=priority (0=min, 65535=max) | — | Same-user rule; superuser (group 0) can set any. Shell: `setpr`. **`Live`**: confirmed setting the caller's own priority, no error |
@@ -74,7 +74,7 @@ on TRAP #1–#15 via F$TLink.
 | **I$Create** | Create file | d0.b=mode, d1.b=attrs, d2.l=size hint, (a0)=pathname | d0.w=path | On non-multi-file devices behaves as I$Open. **`Live`**: register contract confirmed against `os9exec`'s own `OS9_I_Create` and live-tested (`test/68k-live-verification/batch3-01.a`) |
 | **I$Close** | Close path | d0.w=path | — | Decrements share count; descriptor freed at zero. F$Exit closes leftovers. **`Live`**: confirmed in `dogfood-asm-line-counter.a` |
 | **I$Read** / **I$Write** | Raw transfer | d0.w=path, d1.l=count, (a0)=buffer | d1.l=transferred | No editing. Reads return EOF error when exhausted; writes past EOF extend the file (RBF may pre-read a sector for partial-sector writes). **`Live`**: `dogfood-asm-line-counter.a`'s read loop reproduced exact known-good line/char counts on two independently-verified test files; confirmed raw `I$Write` truly does no editing (a bare CR alone doesn't advance the terminal — CR+LF needed) |
-| **I$ReadLn** / **I$WritLn** | Line transfer | same | same | Stop at first CR; apply device line editing (SCF: backspace/echo on input, LF append on output; 512-byte line buffer) |
+| **I$ReadLn** / **I$WritLn** | Line transfer | same | same | Stop at first CR; apply device line editing (SCF: backspace/echo on input, LF append on output; 512-byte line buffer). **`Live`**: `I$ReadLn` confirmed — a real CR-terminated line written then read back returned the exact byte count including the CR |
 | **I$Seek** | Position | d0.w=path, d1.l=position | — | Logical only; past-EOF legal; non-random devices no-op; doesn't touch record locks. **`Live`**: register contract confirmed exact, seeking a freshly-created file to position 5 with no error |
 | **I$Delete** | Delete file | d0.b=mode, (a0)=pathname | — | Multi-file devices only. **`Live`**: confirmed deleting a file this same test created |
 | **I$MakDir** | Create directory | d0.b=mode, d1.b=attrs (corrected from `d1.w`, same as I$Create), (a0)=pathname | — | Managers without directories return unknown-service. **`Live`**: confirmed creating a real directory with no error |
@@ -136,9 +136,13 @@ buffer at all. Packed time/date field layout not decoded in this pass —
 only the register-slot convention is confirmed, not what the bits inside
 `d0.l`/`d1.l` mean.
 
-**F$STime** (set current time) remains `Manual`-only, register detail
-not reproduced here — presumably the input-side mirror of `F$Time`'s
-output shape, but not live-tested this pass.
+**F$STime** (d0.l=time, d1.l=date — input-side mirror of `F$Time`'s
+output shape, confirmed against `OS9_F_STime`): **`Live`, 2026-07-20**
+— confirmed accepting real time/date values with no error
+(`test/68k-live-verification/batch7-01.a`). On this build specifically
+the call does not touch the real host clock at all — its only host-side
+effect is compiled in only under `#ifdef MACOS9` (the classic Mac OS 9
+target), not this modern macOS/Linux/Windows build.
 
 ## Utility
 
@@ -172,8 +176,7 @@ irrelevant (`loword()` reads it directly), confirmed live.
 These exist (attested by name in primary sources; some also `Source` —
 implemented by os9exec) but their exact register contracts are not
 reproduced in this file — consult the OS-9 Technical Manual before use:
-F$SSpd (suspend), F$STime (set system time — see the Time section
-above), F$Gregor / F$Julian (date conversion), F$Sleep (d0.l ticks;
+F$SSpd (suspend), F$Gregor / F$Julian (date conversion), F$Sleep (d0.l ticks;
 0 = until signal), F$UnLoad (unlink by name), F$SRqMem / F$SRtMem
 (request/return system memory), F$Mem (resize data area), F$SRqCMem
 (colored request), F$CpyMem (copy external memory), F$Trans (address

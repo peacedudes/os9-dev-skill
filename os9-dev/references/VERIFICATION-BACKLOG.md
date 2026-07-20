@@ -282,6 +282,17 @@ discipline — not silently fixed):
   suspended, single-stepped it one instruction, killed it, parent
   parked and resumed cleanly with no hang. `F$TLink` remains the only
   deferred item. See `dogfood-report-syscalls-batch6-2026-07-20.md`.
+  **Batch 7 — 3 more calls now `Live` (36 total, close to done for this
+  pass).** `I$ReadLn`/`F$STime` confirmed cleanly. **`F$Chain`'s failure
+  path produced a raw, uncontrolled error instead of returning control
+  to the caller** — the same red flag independently found on 6809 the
+  same day, but this time in `os9exec`'s own code, so it's now a real
+  bug candidate on `ROADMAP.md` rather than just a third-party clone's
+  quirk. Only `F$TLink` (needs a hand-built `TrapLib`-type module
+  header, same complexity class as the earlier driver/file-manager
+  dogfood sessions) and the deliberately-never-tested `F$RTE`/
+  `F$SysDbg` remain untested. See
+  `dogfood-report-syscalls-batch7-2026-07-20.md`.
 - Two already-flagged, concrete, small open items in
   `c/os9-clib-reference.md`: `os9fork()`'s `modname` resolution rule
   (does a bare name resolve via `PATH`/module directory the way Shell

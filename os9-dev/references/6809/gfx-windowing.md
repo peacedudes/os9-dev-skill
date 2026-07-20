@@ -27,11 +27,11 @@ parameters after the path), `SELECT`, `COLOR`, `LINE`, `BOX` and `CIRCLE`,
 and that the path-as-first-argument form works. Harness: `tools/b09run.sh`
 in the os9exec repo. **Assume no argument validation anywhere in this file** —
 `LINE` at x=639 on a 320-pixel-wide screen is accepted silently, matching the
-earlier `PALETTE` result (register 99, colour 200 also accepted). Bad
+earlier `PALETTE` result (register 99, color 200 also accepted). Bad
 coordinates fail silently, never diagnosably.
 
 **2026-07-18, first pixels actually observed.** A box and a circle were drawn
-on a `wcreate`d 320x192 4-colour window and photographed. First result:
+on a `wcreate`d 320x192 4-color window and photographed. First result:
 **the X coordinate range claims below are suspect.** Y behaves as documented,
 X does not — a box spanning the nominal `(0,0)`-`(639,191)` space filled the
 full height but only about half the width, and a radius-64 circle came out
@@ -322,7 +322,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
 - **`Live`, 2026-07-18 — `LINE` does move the draw pointer, confirmed, but
   mind the layer.** windint has *two* line opcodes and they differ: `WLine`
   `$1b44` draws without moving the pointer, `WLineM` `$1b46` draws and moves
-  it (verified live — a following bare `CIRCLE` centred on the line's start
+  it (verified live — a following bare `CIRCLE` centered on the line's start
   vs its end respectively). GFX2 exposes **only** the moving variant: its
   `FuncTbl` has no `LineM` name, and the registered `"Line"` points at the
   handler loading `#$46` (`gfx2.asm` L060D). So a raw-escape test of `$1b44`
@@ -348,8 +348,8 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   convention as `BAR`; also does not move the draw pointer.
   **`Live`, 2026-07-18** — confirmed on all counts: `BOX` renders as an
   outline and `BAR` as a solid fill; after a box drawn (100,50)→(400,150) a
-  following bare `CIRCLE` centred on (100,50), proving the draw pointer never
-  moved. Bare `CIRCLE`/`ELLIPSE` centring on the draw pointer, and
+  following bare `CIRCLE` centered on (100,50), proving the draw pointer never
+  moved. Bare `CIRCLE`/`ELLIPSE` centering on the draw pointer, and
   `ELLIPSE`'s separate x/y radii, are confirmed too.
 - `DRAW(path,option_string)` — draws a polyline from a mini-language of
   direction codes and magnitudes in one string: `N`/`S`/`E`/`W`/`NE`/`NW`/
@@ -457,7 +457,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   `GET(group,buffer,x,y,xsize,ysize)` and `PUT(group,buffer,x,y)`. Note
   `DEFBUFF` accepted an explicit `path` argument without complaint despite
   being documented as taking none — read "no path argument" as "does not
-  require one". Visual behaviour of these is not yet confirmed, only that
+  require one". Visual behavior of these is not yet confirmed, only that
   the calls are well-formed.
 - `DEFBUFF(group,buffer,size)` *(no `path` argument)* — allocates a
   Get/Put buffer for `GET`/`PUT`. `group` 1-199 (0 and 200-255 are

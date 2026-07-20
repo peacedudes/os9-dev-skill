@@ -351,7 +351,8 @@ they generalize to every 6809 board.
   no `events` counterpart because its own IPC primitives are
   process-directed signals (`F$Send`/`F$Icpt`/`F$Sleep` — see
   `6809/syscalls-and-module-format.md`'s Signals section) rather than
-  68k's named-event-object model (`F$Signal`/`F$Wait`).
+  68k's named-event-object model (`F$Event` with `Ev$Signl`/`Ev$Wait`
+  subfunctions — see `68k/syscall-reference.md`).
 - `tape`, `tapegen`, `diskcache` — `Absent`.
 - `code` — `Absent`.
 

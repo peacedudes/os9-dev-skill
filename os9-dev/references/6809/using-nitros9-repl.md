@@ -57,7 +57,8 @@ return`).
   independent flags. Adding only `-ui macosx` leaves the CPU throttled at
   real 6809 speed with no visible indication why things feel slow;
   combine both in `NITROS9REPL_EXTRA_XROAR` if the test doesn't care
-  about real-time pacing (most don't — see the full-speed policy above).
+  about real-time pacing (most don't — see the full-speed policy in the
+  Benchmarking gotcha below).
 - **`stop` does not reliably kill XRoar when it was started this way** —
   confirmed live: after `stop`, the XRoar GUI process was still running
   (`ps aux | grep xroar` showed it alive) with its window still open.
@@ -253,7 +254,7 @@ move any file-level comment after it if you want one at all.
 
 ## `rma` hangs indefinitely — don't use it, use `asm` instead
 
-`Live`, reproduced 6+ times across independent
+**`Live`, reproduced 6+ times across independent
 `restart`s, root-cause investigation done, conclusively a real bug — not
 a REPL artifact.** Invoking the Relocating Macro Assembler (`rma`, or its
 `rma.6809`/`rma.6309` aliases — byte-identical copies of the same module,

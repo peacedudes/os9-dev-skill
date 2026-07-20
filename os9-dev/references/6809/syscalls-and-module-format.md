@@ -14,6 +14,7 @@ cleanly with no residual module left in `mdir`. Full repro in
 `assembly-and-tools.md`. **`F$Icpt`=$09, `F$Send`=$08, and `F$ID`=$0C are
 also now `Live`** — see the Signals section below for the
 reserved-signal-range test that exercised all three together.
+
 **2026-07-19: `F$Link`, `F$UnLink`, `F$Fork`, `F$Wait`, `F$Time`,
 `I$Open`, `I$Close`, `I$Read`, and `I$Write` are now `Live` too** — full
 success- and failure-path register-contract tests in
@@ -33,7 +34,9 @@ full module-header byte layout beyond type/attribute, remain `Manual`
 Programmers Manual and its Rev F1 errata, Level 2 manuals, a Tandy/CoCo
 Technical Reference, two Users Guides, a Quick Reference) and internally
 consistent — real signal, but not yet individually `Live` the way 68k's
-syscall table has been. **Same day, second batch: `I$Create`, `I$MakDir`,
+syscall table has been.
+
+**Same day, second batch: `I$Create`, `I$MakDir`,
 `I$ChgDir`, `I$Delete`, `I$Seek`, `I$GetStt` (call confirmed; its SS.SIZ
 return-value register convention is not — see that entry), `F$Mem`,
 `F$Sleep`, `F$SPrior`, and `F$CRC` are `Live` too** —
@@ -66,7 +69,9 @@ permission it doesn't have under `USER1`, misreported as 218 rather than
 214; not root-caused, but real and reproducible — worth working around
 (create fixtures at the disk root, or in a directory owned by whichever
 user is logged in) rather than fighting. See
-`dogfood-report-syscalls-batch3-2026-07-19.md`. A fourth batch
+`dogfood-report-syscalls-batch3-2026-07-19.md`.
+
+A fourth batch
 (`test/6809-live-verification/batch4-01.a` through `batch4-04.a`)
 exercised `F$Load`/`F$UnLoad`/`F$SSWI`/`F$SRqMem`/`F$Move`/`F$FModul`/
 `I$Attach`/`I$Detach` — found that `F$SRqMem`, `F$Move`, and `F$FModul`
@@ -77,7 +82,9 @@ cleanly; `F$UnLoad` failed unexpectedly (`E$MNF`) right after loading
 the same name, left inconclusive; `F$SSWI`'s install call is accepted
 but this pass couldn't confirm the handler actually runs (the only
 documented handler-exit convention anywhere in this file, `F$Icpt`'s
-plain `RTI`, may not be `F$SSWI`'s own convention). A fifth, large batch
+plain `RTI`, may not be `F$SSWI`'s own convention).
+
+A fifth, large batch
 (`test/6809-live-verification/batch5-01.a` through `batch5-06.a`) swept
 the remaining calls whose docs already flagged a Level-2/DAT-image
 dependency, confirming most are genuinely **unimplemented** on this
@@ -92,7 +99,9 @@ re-attempted unsupervised, left for a careful follow-up rather than
 asserted as a confirmed bug. `F$DelPrc` was deliberately not attempted
 (the only available PID would be the caller's own live one — a real
 self-termination risk, not a bounded test). See
-`dogfood-report-syscalls-batch5-2026-07-19.md`. 70 of ~93 documented
+`dogfood-report-syscalls-batch5-2026-07-19.md`.
+
+70 of ~93 documented
 `F$`/`I$` calls are `Live` as of this pass, up from 5 at the start of
 2026-07-19.
 
@@ -235,7 +244,7 @@ Every code here is `Manual`, cross-confirmed by at least two independent sources
 | I$MakDir | $85 | B=attributes, X=pathlist | Auto-creates `.` and `..` entries. `Source`: NitrOS-9's `rbf.asm` implements `MakDir` as a thin wrapper that just calls `Create` (same B=attributes contract) and then sets the directory bit afterward. **`Live`, 2026-07-19**: `B=$FF, X=`pathlist created a directory with no error. Test: same file as `I$Create` above |
 | I$ChgDir | $86 | A=mode (1/2/3=data, 4=exec), X=pathlist | **`Live`, 2026-07-19**: `A=1` (data directory) accepted with no error; confirmed effective (not just accepted) since a subsequent bare-name `I$Create` succeeded relative to the new directory. Test: same file as `I$Create` above |
 | I$Delete | $87 | X=pathlist | Requires write permission. **`Live`, 2026-07-19**: deleted a file created via `I$Create` moments earlier with no error. Test: same file as `I$Create` above |
-| I$Seek | $88 | A=path, D or X:D=position | Random access (RBF) or cursor position (SCF). **Source-checked**: NitrOS-9's RBF `Seek` routine actually reads the position as X (high word) plus U (low word) — a 32-bit value split across X and U, not D — the manual-sourced "D or X:D" framing this table already hedged on doesn't quite match either this Level 1 implementation's register choice. **`Live`, 2026-07-19` — the X:U convention is confirmed, not just Source-suspected**: seeking to offset 5 in a known 10-byte file via `X=0,U=5` and reading 5 bytes back landed exactly on the expected content. **Trap for any test writing this call**: `U` is commonly also a program's own U-relative data-area base pointer — save it (`pshs u`/`puls u` around the `swi2`) or every later `,u`-relative reference breaks silently. Test: `test/6809-live-verification/syscall-iseek.a` in the os9exec repo |
+| I$Seek | $88 | A=path, D or X:D=position | Random access (RBF) or cursor position (SCF). **Source-checked**: NitrOS-9's RBF `Seek` routine actually reads the position as X (high word) plus U (low word) — a 32-bit value split across X and U, not D — the manual-sourced "D or X:D" framing this table already hedged on doesn't quite match either this Level 1 implementation's register choice. **`Live`, 2026-07-19 — the X:U convention is confirmed, not just Source-suspected**: seeking to offset 5 in a known 10-byte file via `X=0,U=5` and reading 5 bytes back landed exactly on the expected content. **Trap for any test writing this call**: `U` is commonly also a program's own U-relative data-area base pointer — save it (`pshs u`/`puls u` around the `swi2`) or every later `,u`-relative reference breaks silently. Test: `test/6809-live-verification/syscall-iseek.a` in the os9exec repo |
 | I$Read | $89 | A=path, X=buffer, Y=count | Returns Y=actual bytes; EOF error at end. **`Live`, 2026-07-19**: register contract confirmed for the plain (non-`Ln`) form specifically — a 10-byte read returned the correct content, and reading again once the file was exhausted correctly failed (no explicit code checked, just carry). Also **`Live`**: a path number that was never opened fails `E$BPNum` (201, "illegal path number"), confirming path numbers are validated, not just trusted. Test: `test/6809-live-verification/syscall-ftime-iread-iwrite.a` in the os9exec repo |
 | I$Write | $8A | A=path, X=buffer, Y=count | Past-EOF write expands file. **Source-corrected**: this table had `I$Write` and `I$ReadLn`'s codes swapped — settled by NitrOS-9's `defs/os9.d`, whose sequential `RMB` definitions starting at `ORG $80` are authoritative and unambiguous (each call code is just the previous one plus one, so miscounting is the only way to get this wrong, which is what happened here). **`Live`, 2026-07-19**: register contract confirmed for the plain (non-`Ln`) form; also confirms **`I$Write` does return Y** (the actual byte count written, `Y=10` for a 10-byte write) — previously this row stated no return value at all. Test: same file as `I$Read` above |
 | I$ReadLn | $8B | A=path, X=buffer, Y=max | Reads to CR, with line editing. **Source-corrected**, see `I$Write` above — same swap, same fix. **The returned length (in `Y` on exit) includes the CR terminator** — `Live`: summing raw returned lengths across a 3-line file gave a character count 3 too high against an independent `fsize` cross-check. This diverges from BASIC09's own `READ`/`LEN()` (also `Live`), which excludes the terminator — code porting a count from the syscall level to BASIC09 semantics (or vice versa) needs an explicit off-by-one adjustment |

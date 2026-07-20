@@ -25,7 +25,7 @@ As of 2026-07-19, `start`/`restart` **automatically** parks the window at
 launching XRoar — both happen inside `cmd_start` in `nitros9repl.sh` itself,
 with a short retry loop since the window doesn't exist the instant the tmux
 pane is created. Don't call `./tools/cocoscreen.sh place 0 0` by hand
-anymore; it's redundant. *(Live)*
+anymore; it's redundant. (`Live`)
 
 ## The practical GFX2-window recipe (BASIC09)
 
@@ -62,7 +62,7 @@ os9exec repo — follow that rather than re-deriving it. The rules below are
    areas, but thin line art (a `DRAW` polyline, an unfilled `BOX`) often
    has too few matching pixels to clear a threshold set safely above
    incidental occurrences of the same color elsewhere (`#A44713`, a
-   4-colour window's `COLOR 3`, also appears in Term's boot text at
+   4-color window's `COLOR 3`, also appears in Term's boot text at
    ~1076 px). When in doubt, `cycle 10` or `12` and read the distinct
    frames yourself — screens repeat in a short cycle (typically 3-5
    distinct ones: `/w1`, `/w2`, `Term`, and the graphics window if it's
@@ -105,15 +105,15 @@ outside that tool, do the same check.
 `screencapture -x -o -l <CGWindowID>`.
 
 - Scoped to XRoar's window only — never the desktop, so nothing else on
-  screen is exposed. *(Live)*
+  screen is exposed. (`Live`)
 - Renders through XRoar's own video path, so every GIME mode, palette and
-  window is correct with **no video decoding on the host side**. *(Live)*
-- Needs no focus and does not raise the window. *(Live)*
+  window is correct with **no video decoding on the host side**. (`Live`)
+- Needs no focus and does not raise the window. (`Live`)
 - **XRoar's window ID changes on every restart** — always re-query. XRoar also
   publishes auxiliary windows; the emulator display is the one whose
-  `kCGWindowName` is exactly `XRoar` (~720x572). *(Live)*
+  `kCGWindowName` is exactly `XRoar` (~720x572). (`Live`)
 - md5-diffing successive captures is a cheap "did anything change?" check, and
-  is the reliable way to prove a keystroke had *no* effect. *(Live)*
+  is the reliable way to prove a keystroke had *no* effect. (`Live`)
 
 ## Pressing keys
 
@@ -121,17 +121,17 @@ outside that tool, do the same check.
 
 - **AppleScript System Events does not work.** Both `key code` and `keystroke`
   reach the process but arrive as the *wrong key* — every attempt landed as a
-  stray `p` in the guest. Do not use it for key injection. *(Live)*
+  stray `p` in the guest. Do not use it for key injection. (`Live`)
 - A HID-level `CGEvent` keyDown/keyUp pair posted with `postToPid` **does**
-  work. *(Live)*
+  work. (`Live`)
 - **XRoar must be FRONTMOST or injected keys are silently dropped.** Measured:
   an unfocused `clear` left the screen byte-identical; the same key worked
   immediately once focused. Key injection therefore always steals focus —
-  don't run it while a human is typing elsewhere. *(Live)*
+  don't run it while a human is typing elsewhere. (`Live`)
 - XRoar maps host keys **by position**, so the US-layout key at that location
   is what the CoCo sees.
 - Verified end-to-end: `type "dir"` then `key enter` put `dir` on the Term
-  prompt, ran it, and the screenshot showed the directory listing. *(Live)*
+  prompt, ran it, and the screenshot showed the directory listing. (`Live`)
 
 **Shell-quoting trap that mimics a hardware fault:** the focus step is an
 `osascript -e '...'`. A `\` line-continuation *inside single quotes* is passed
@@ -147,11 +147,11 @@ fail loudly. Symptom to check first when keys stop landing:
 
 The CoCo `CLEAR` key cycles between the screens of active windows, and is how
 you bring a background window's screen to the front. Under XRoar it is the
-**host backtick** (macOS virtual keycode 50). *(Live)*
+**host backtick** (macOS virtual keycode 50). (`Live`)
 
 On the stock EOU test disk the cycle has 4 screens; `procs` shows shells on
 Term (pid 2), W1 (5), W2 (6) and N1 (7) — N1 being the serial REPL, which has
-no screen of its own. *(Live)*
+no screen of its own. (`Live`)
 
 ## windint escape codes — look them up, don't guess
 
@@ -169,8 +169,8 @@ produced a confident but entirely bogus conclusion about SELECT's behavior.
 | `$1b21` | `WSelect` | `$1b40` | `WSetDPtr` set draw pointer |
 | `$1b20` | `WDWSet` device window set | `$1b42` | `WPoint` |
 | `$1b22` | `WOWSet` overlay window set | `$1b44` | `WLine` |
-| `$1b32` | `WFColor` foreground colour | `$1b48` | `WBox` |
-| `$1b33` | `WBColor` background colour | `$1b4a` | `WBar` (filled) |
+| `$1b32` | `WFColor` foreground color | `$1b48` | `WBox` |
+| `$1b33` | `WBColor` background color | `$1b4a` | `WBar` (filled) |
 | `$1b31` | `WPalette` | `$1b50` | `WCircle` |
 | `$1b39` | `WGCSet` graphics cursor | `$1b51` | `WEllipse` |
 
@@ -184,30 +184,30 @@ display 1b 40 00 70 00 60 1b 51 00 50 00 30 >/w7
 
 ## Creating a graphics window
 
-`wcreate /w7 -s=5 0 0 40 24 0 1 1` — type 5 is 320x192 4-colour — succeeds.
-*(Live)*
+`wcreate /w7 -s=5 0 0 40 24 0 1 1` — type 5 is 320x192 4-color — succeeds.
+(`Live`)
 
-- `/w1` is already taken by EOU: error 184 "Window already defined". *(Live)*
+- `/w1` is already taken by EOU: error 184 "Window already defined". (`Live`)
 - Type 8 (640x192) with an 80x24 geometry fails with **error 189 "Illegal
   Coordinates"** — a geometry error, not the memory or screen-table
-  exhaustion it first looks like. *(Live)*
+  exhaustion it first looks like. (`Live`)
 - A shell started on such a window with `shell i=/w7&` **did not survive** —
   it died on its own with the same error 189, leaving the window present but
-  with no process on it. Symptom to recognise: the screen shows what looks
+  with no process on it. Symptom to recognize: the screen shows what looks
   like a prompt cursor but typing only clicks and never echoes, because
   nothing is reading the keyboard. Getting a shell to persist on a graphics
-  window is unfinished work. *(Live)*
+  window is unfinished work. (`Live`)
 
 ## Gotchas that cost time
 
 - A window with no live process still *displays*; a lone block on it is not
-  a cursor. Do not read "there is a cursor" as "there is a shell". *(Live)*
+  a cursor. Do not read "there is a cursor" as "there is a shell". (`Live`)
 - If `nitros9repl.sh send` starts replaying stale output, its `nc` client has
   died and commands are going nowhere — check
   `tmux capture-pane -t nitros9repl:chan` directly and restart the REPL.
-  Silent no-ops here are easy to misread as the *guest* failing. *(Live)*
+  Silent no-ops here are easy to misread as the *guest* failing. (`Live`)
 - XRoar's `-gdb` target is a **dead end**: connecting to port 65520 wedges the
   emulator (no RSP reply, no output even at `-debug-gdb -1`, unresponsive to
   SIGTERM, port left bound — needs `kill -9`). Confirmed on XRoar 1.11 /
   macOS arm64. It would only have exposed the CPU's 64K logical space anyway,
-  not the GIME's physical video buffer. *(Live)*
+  not the GIME's physical video buffer. (`Live`)

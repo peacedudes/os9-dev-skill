@@ -341,10 +341,12 @@ The mechanics that implement both cases:
     opening for update; one that opens `>` is invisible to the mechanism and
     nobody waits on it, which is precisely what keeps two plain loggers from
     ever getting in each other's way.
-  - *explicit `SS_Lock`*: `os9exec` currently applies **no mode check**, so a
-    read-only path can take one. Probably wrong — it should plausibly require
-    a write-capable open — but unverified against any source, so it is left
-    as-is and flagged here rather than guessed at. `Flag`.
+  - *explicit `SS_Lock`*: **update mode too**, same rule as the automatic
+    lock — a path that cannot modify what it read has nothing to protect, and
+    allowing it a lock would hand it a way to hold up writers, which is the
+    lockout this design exists to avoid. A *release* is always allowed; it can
+    only ever let something go. (`os9exec` accepted a lock from any path until
+    2026-07-19; no manual consulted, this follows the designer's one rule.)
 - A lock is released by: the next read, the next write, a path close, or
   an explicit `SS_Lock` `SetStat`. A zero-byte read or write drops every
   lock that path holds — record, EOF, or whole-file — outright. `seek()`

@@ -334,9 +334,13 @@ The mechanics that implement both cases:
   two-thirds true:
   - *read auto-lock*: **update mode only** (read+write). A read-only path
     cannot modify what it read, so it locks nothing.
-  - *EOF wait*: triggered by any other path holding the file open **for
-    write** — update mode is not required. A plain appending writer must
-    still make readers wait, or the pipe-like case does not work at all.
+  - *EOF wait*: a reader blocks at end-of-file only while **another process
+    holds that file open for update**. The waiting reader's own mode is
+    irrelevant — a follower opens plain `READ`; it is the *producer* that
+    must open `>+`. A sequential writer that wants followers says so by
+    opening for update; one that opens `>` is invisible to the mechanism and
+    nobody waits on it, which is precisely what keeps two plain loggers from
+    ever getting in each other's way.
   - *explicit `SS_Lock`*: `os9exec` currently applies **no mode check**, so a
     read-only path can take one. Probably wrong — it should plausibly require
     a write-capable open — but unverified against any source, so it is left

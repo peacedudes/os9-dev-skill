@@ -40,7 +40,7 @@ procedure has its own private namespace: line numbers and variables
 declared in one procedure never collide with another's, even if reused
 verbatim (`Live`: a helper procedure with its own `PARAM b:
 BYTE` and its own print statement can't affect a caller's counters — see
-`tools/benchmarks/basic09-langtest.bas` in this repo for a working
+`tools/benchmarks/basic09-langtest.bas` in the os9exec repo for a working
 demonstration). Procedures talk to each other only through parameters,
 invoked with `RUN`.
 
@@ -293,7 +293,7 @@ ENDIF
 
 **`IF i<5 THEN GOTO 10` — a single line, `GOTO` keyword present, no
 `ENDIF` — is neither form.** It's an invalid hybrid: Type 1 syntax
-forbids the `GOTO` keyword: Type 2 syntax requires `ENDIF`. `Live`:
+forbids the `GOTO` keyword; Type 2 syntax requires `ENDIF`. `Live`:
 this correctly fails to compile (`Error #000:069`), and it fails even
 as the *only* statement in an otherwise-empty procedure — this is
 **not** a compiler bug, direction-dependent, GOTO-vs-GOSUB-specific, or
@@ -463,8 +463,9 @@ read/written mid-record. `PUT`/`GET` also work on whole arrays in one call
 — storing or loading N records in a single bulk operation instead of
 looping. Structured `TYPE` records combine naturally with this: dimension
 an array of a `TYPE`, and `PUT`/`GET` moves whole records (or the whole
-array) at once. `Live` (68k) (`tools/benchmarks/basic09-
-randfile-test.bas`): pre-allocate several empty `TYPE` records, `SEEK` to
+array) at once. `Live` (68k)
+(`tools/benchmarks/basic09-randfile-test.bas`): pre-allocate several
+empty `TYPE` records, `SEEK` to
 a computed `SIZE()`-based offset, `PUT` a record there, `SEEK` back and
 `GET` it — round-trips correctly, and a neighboring untouched record is
 confirmed still empty (proves `SEEK`+`PUT` only touches its target, not

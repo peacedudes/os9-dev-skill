@@ -149,8 +149,13 @@ Compiler-specific values worth isolating:
 - The 6809 RMA assembler organizes source as PSECT (code) / VSECT (data,
   optionally direct-page) / CSECT (offset counter); PSECT carries the
   type/lang/attr/stack/entry info the older MOD directive held, consumed
-  by the linker rather than OS-9. Whether PSECT/VSECT is a
-  Microware-family convention beyond this assembler is unconfirmed for 68k.
+  by the linker rather than OS-9. **Confirmed a Microware-family
+  convention beyond RMA, `Live`**: the 68k assembler (`r68`) uses the
+  same lowercase `psect` directive with the identical argument shape
+  (`psect name,type_lang,attr_rev,edition,stacksize,entrylabel`),
+  consumed by `l68` at link time to build the module header — used
+  successfully in every one of the 68k syscall-verification batches
+  this project has run (`test/68k-live-verification/batch*.a`).
 
 ## Program-module extended header (68k, offset 0x30+)
 

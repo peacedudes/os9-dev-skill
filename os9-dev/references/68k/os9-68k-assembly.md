@@ -22,6 +22,13 @@ source.)
   `main()`.
 - **`debug`** — symbolic debugger; usage and its two real defects:
   `common/using-os9exec-repl.md`.
+- **`r68 -O=<name>.r` and `l68 -o=<name>` both do not reliably overwrite
+  an existing output file of the same name** — `Live`, hit repeatedly
+  across sessions. Re-running either against a stale output can silently
+  leave the old bytes in place (or produce a corrupt mix) while reporting
+  success, so a rebuild after any source edit *looks* clean but tests the
+  old binary. Always `del` the output first, or link to a never-before-
+  used name, before trusting a rerun's result.
 
 ## System call mechanism (TRAP #0)
 
@@ -200,11 +207,14 @@ live) before relying on details:
   Cross-references below**: `basic09/basic09-vs-68k-differences.md` has
   a complete, `Live`-tested worked example that fills this gap in
   practice, even though it isn't a manual citation.
-- `ds.b`/`ds.w`/`ds.l`/`dc.b`/`dc.w`/`dc.l` and other data-definition
-  directive syntax specifics — one now resolved: `Live`, `dc.b 'text'`
-  (single-quoted) fails on `r68` with `*** error - value out of range
-  ***` regardless of string length, `dc.b "text"` (double-quoted)
-  assembles clean. Use double quotes for string data.
+- `ds.w`/`ds.l` and other data-definition directive syntax specifics —
+  two now resolved, both `Live`: `dc.b 'text'` (single-quoted) fails on
+  `r68` with `*** error - value out of range ***` regardless of string
+  length, `dc.b "text"` (double-quoted) assembles clean — use double
+  quotes for string data. **`ds.b` is not a valid directive on `r68`**
+  (`*** error - bad mnemonic ***`) — reserve space with an explicit
+  comma-separated `dc.b 0,0,0,...` instead (confirmed repeatedly across
+  `test/68k-live-verification/batch*.a`, most recently `batch10-01.a`).
 - ~~The external-symbol "trailing colon = public" visibility convention~~
   — resolved: `Live`, confirmed via `l68 -s` and `debug`'s `sc` symbol
   listing. Colon-suffixed labels (`start:`, `sumloop:`) are

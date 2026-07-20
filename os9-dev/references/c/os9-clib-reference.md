@@ -25,7 +25,7 @@ names (`F$xxx`/`I$xxx`).
 | `<time.h>` | OS-9-specific system time (see "File Dates and Time Zones" below) |
 | `<errno.h>` | OS-9 extensions: EFPOVR=40, EDIVERR=41, EINTERR=42 |
 | `<module.h>` | OS-9 module linking |
-| `<sgstat.h>` | OS-9 file status/setstat (`I$SetStat`) |
+| `<sgstat.h>` | OS-9 file status/setstat (`I$SetStt`) |
 | `<stat.h>` | File status/mode bits (owner/public only, no group class) |
 
 **String functions live in `strings.h`, not `string.h`.**

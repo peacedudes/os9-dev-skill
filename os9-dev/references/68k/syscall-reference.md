@@ -52,6 +52,8 @@ on TRAP #1–#15 via F$TLink.
 | **F$Wait** | Wait for child | — | d0.w=child PID, d1.w=status | Also reclaims the dead child's process descriptor; forking without matching waits can fill the process table. **`Live`**: confirmed via the same `F$Fork` test — returned PID matched the forked child's exactly, status matched the child's own `F$Exit(77)` exactly |
 | **F$SPrior** | Set priority | d0.w=PID, d1.w=priority (0=min, 65535=max) | — | Same-user rule; superuser (group 0) can set any. Shell: `setpr`. **`Live`**: confirmed setting the caller's own priority, no error |
 | **F$ID** | Get process identity | — | d0.w=PID, d1.l=group.user (packed, group in high word), d2.w=priority | **`Live`, 2026-07-20**: register contract confirmed exact against `os9exec`'s own `OS9_F_ID` (`Source/OS9exec_core/fcalls.c`) and live-tested (`test/68k-live-verification/batch1-01.a`) — this row previously had no register detail at all (`Manual`-only). Architecture-general shape (matches 6809's `F$ID`, just wider registers) |
+| **F$SUser** | Set process identity | d1.l=(group:16)(user:16), full 16-bit fields each | — | No permission check on `os9exec` — any process may set itself to any identity, no superuser restriction. **Not the same wire format as `F$ID`'s output** — `F$ID` packs group/user into a single word (`group<<8\|user`, one byte each); feeding `F$ID`'s output straight into `F$SUser` sets the wrong identity instead of restoring it. **`Live`, 2026-07-20**: register contract confirmed exact against `os9exec`'s own `OS9_F_SUser` (`Source/OS9exec_core/fcalls.c`) and live-tested — set to an explicit (group=99,user=42), confirmed via `F$ID`'s own packing formula (`test/68k-live-verification/batch11-01.a`) |
+| **F$Sleep** | Suspend process | d0.l=ticks (0=indefinite until signaled, 1=no-op/return immediately, negative=fractional 1/256-sec units, positive=raw tick count) | none written (a stale internal comment describes `F$Wait`'s shape, not this call's) | **`Live`, 2026-07-20**: register contract confirmed against `os9exec`'s own `OS9_F_Sleep` — `d0.l=1` (no-op) and a short positive tick count both return promptly with no hang (`test/68k-live-verification/batch11-01.a`). `d0.l=0` (indefinite, wakes only on signal) deliberately never tested live — nothing in a scripted harness can safely signal it |
 
 ## Module management
 
@@ -60,9 +62,19 @@ on TRAP #1–#15 via F$TLink.
 | **F$Link** | Link resident module | d0.w=type (0=any), (a0)=name | d0.w=type, d1.w=attr/rev, (a1)=entry, (a2)=header | Increments link count, no disk I/O; needs read permission. **`Live`**: confirmed against a module already resident from a preceding `F$Load` (`test/68k-live-verification/batch2-01.a`) |
 | **F$Load** | Load from file | d0.b=access mode, d1.l=color (opt), (a0)=pathname | d0.w=type, d1.w=attr, (a1)=entry, (a2)=header | Registers every module in the file (a "module group" — stays resident until the group's combined count is zero), then links. **`Live`**: register contract confirmed exact against `os9exec`'s own `OS9_F_Load`, loaded a real module from disk with no error |
 | **F$UnLink** | Unlink by address | (a2)=header | — | Free at zero unless sticky (bit 6) — sticky needs count −1 or memory pressure. **`Live`**: confirmed needing exactly two calls (one per link: the `F$Load` and the `F$Link`) to fully free the module, matching the documented link-count semantics |
+| **F$UnLoad** | Unlink by name | (a0)=module name | (a0)=updated | The declared `d0.w` (type/language) input is, like `F$CpyMem`'s PID, accepted but never actually read by `os9exec`'s implementation — it looks the module up by name alone, ignoring type/language entirely. **`Live`, 2026-07-20**: confirmed unloading a real loaded module by name (a deliberately wrong `d0.w` had no effect, confirming the above), then confirmed the module was genuinely gone — not just link-counted down — via a follow-up `F$Link` on the same name correctly failing `E$MNF` (`test/68k-live-verification/batch11-01.a`) |
 | **F$SetCRC** | Update module CRC | (a0)=module | — | Recomputes CRC + header parity after in-place modification (data modules); required before saving to disk. **`Live`**: confirmed rejecting a non-header address with `E$BMID` (205) — validates its input rather than trusting it blindly. Success path (a real module image) not yet exercised |
 | **F$CRC** | Compute CRC | d0.l=count, d1.l=accumulator (init $FFFFFFFF), (a0)=data | d1.l=updated | 24-bit, one's-complemented for storage. Kernel checks once at load/bootstrap, never re-verifies. **`Live`**: confirmed, real nonzero result over test data, no error |
 | **F$DatMod** | Create/link data module | d0.l=size, d1.w=attr/rev, d2.w=access, d3.w=type/lang, d4.l=color, (a0)=name | d0.w=type, d1.w=attr, (a1)=data, (a2)=header | Named shared memory: creator sizes it, later callers link by name. No kernel synchronization — coordinate with events/signals. **`Live`**: confirmed creating a real 64-byte named data module, no error |
+
+## Memory
+
+| Call | Purpose | Key inputs | Key outputs | Notes |
+|------|---------|-----------|------------|-------|
+| **F$SRqMem** | Request system memory | d0.l=size (rounded up to 16 bytes; `$FFFFFFFF`=request the largest available block) | d0.l=actual size, (a2)=block pointer | **`Live`, 2026-07-20**: register contract confirmed against `os9exec`'s own `OS9_F_SRqMem` and live-tested — requested 256 bytes, wrote/read a real pattern through the returned pointer to confirm it's genuinely usable memory, not just a success code (`test/68k-live-verification/batch10-01.a`) |
+| **F$SRtMem** | Return system memory | d0.l=size, (a2)=block pointer | — | Must pass back exactly the size `F$SRqMem` returned, or the block silently isn't freed (`os9exec`'s own documented restriction). **`Live`, 2026-07-20**: confirmed round-tripping a block requested via `F$SRqMem` |
+| **F$SRqCMem** | Request colored system memory | d0.l=size, d1.l=color | d0.l=actual size, (a2)=block pointer | Same handler as `F$SRqMem` (confirmed by reading `funcdispatch.c` directly) — the color parameter is accepted but never read by the shared implementation, so it has no effect on `os9exec`. **`Live`, 2026-07-20**: confirmed live with a nonzero color value, behaves identically to plain `F$SRqMem` (`test/68k-live-verification/batch10-01.a`) |
+| **F$CpyMem** | Copy memory across a process boundary | d0.w=PID of external memory's owner, d1.l=count, (a0)=source, (a1)=destination | — | The declared `d0.w` "owner PID" is accepted but never read by `os9exec`'s implementation — the copy is a raw address-range-checked `memcpy` with **no ownership check of any kind**, so any process can copy from any arena address regardless of which process actually owns it. **`Live`, 2026-07-20**: register contract confirmed against `os9exec`'s own `OS9_F_CpyMem` and live-tested, byte-for-byte match confirmed (`test/68k-live-verification/batch10-01.a`) |
 
 ## I/O
 
@@ -144,6 +156,17 @@ the call does not touch the real host clock at all — its only host-side
 effect is compiled in only under `#ifdef MACOS9` (the classic Mac OS 9
 target), not this modern macOS/Linux/Windows build.
 
+**F$Julian** (d0.l=time as `00hhmmss`, d1.l=date packed as
+`(year:16)(month:8)(day:8)` — **not** decimal-digit "yyyymmdd" despite
+that doc naming, confirmed against `OS9_F_Julian` → d0.l=seconds since
+midnight, d1.l=Julian day number) and **F$Gregor** (the inverse: same
+d0.l=seconds-since-midnight/d1.l=Julian-day in, `00hhmmss`/packed date
+out): **`Live`, 2026-07-20** — round-trip confirmed exact (`F$Julian`'s
+output fed straight into `F$Gregor` reproduced the original input
+bit-for-bit), which verifies the register contract without needing to
+independently verify the internal Julian-day epoch
+(`test/68k-live-verification/batch9-01.a`).
+
 ## Utility
 
 **F$CmpNam** (d1.w=pattern length, (a0)=pattern, (a1)=target → carry clear
@@ -162,6 +185,26 @@ its own at all.
 No register-clearing gotcha applies to this call — `d1`'s upper word is
 irrelevant (`loword()` reads it directly), confirmed live.
 
+**F$PrsNam** ((a0)=path string → d0.b=terminator character, d1.w=element
+length, (a0)=updated past a leading `/` if present, (a1)=pointer to the
+terminator): parses one pathlist element at a time; also the call
+whose double-evaluated-`++p` bug once broke single-character redirect
+targets (`os9-shell-rejects-single-char-redirect-target`). **`Live`,
+2026-07-20**: register contract confirmed exact against `os9exec`'s own
+`OS9_F_PrsNam` and live-tested both without and with a leading `/` —
+the leading-`/` advance (the historically buggy path) is still correct
+(`test/68k-live-verification/batch9-01.a`).
+
+**F$PErr** (d0.w=error message path, 0=none and the only mode
+`os9exec` honors; d1.w=error code): prints a formatted `Error
+#nnn:nnn (E$NAME) description` line. Writes directly to the emulator's
+own console via `upe_printf`, **not** through `I$Write` — bypasses
+per-process I/O redirection entirely, the same channel an uncontrolled
+kernel-level error (like the `F$Chain` finding above) prints through.
+**`Live`, 2026-07-20**: confirmed against `os9exec`'s own `OS9_F_PErr`,
+produced the expected formatted line for a known error code
+(`test/68k-live-verification/batch9-01.a`).
+
 ## Debugger support
 
 | Call | Purpose | Notes |
@@ -171,18 +214,15 @@ irrelevant (`loword()` reads it directly), confirmed live.
 | **F$DExit** | Kill debuggee | Resources survive for post-mortem examination. **`Live`**: confirmed killing the debug child after single-stepping it, no error |
 | **F$SysDbg** | Enter ROM debugger | Used by `break` (superuser, console); halts everything |
 
-## `Manual`-only calls (register detail not reproduced here)
+## Not implemented on `os9exec`
 
-These exist (attested by name in primary sources; some also `Source` —
-implemented by os9exec) but their exact register contracts are not
-reproduced in this file — consult the OS-9 Technical Manual before use:
-F$SSpd (suspend), F$Gregor / F$Julian (date conversion), F$Sleep (d0.l ticks;
-0 = until signal), F$UnLoad (unlink by name), F$SRqMem / F$SRtMem
-(request/return system memory), F$Mem (resize data area), F$SRqCMem
-(colored request), F$CpyMem (copy external memory), F$Trans (address
-translation), F$PrsNam (parse pathlist element), F$PErr (print error
-message), F$AllBit / F$DelBit / F$SchBit (bitmap ops), F$SUser (set user
-ID), F$UAcct (accounting hook).
+**F$SSpd, F$Mem, F$SchBit, F$AllBit, F$DelBit, F$Trans, F$UAcct** — all
+seven route to a shared `OS9_F_UnImp` handler in `os9exec`'s own
+dispatch table (`funcdispatch.c`), confirmed by reading it directly.
+Calling any of them is a clean, safe error — `E$UNKSVC` (208), no
+crash, no side effect — never a real register contract to document.
+**`Live`, 2026-07-20**: all seven confirmed live, each returning exactly
+`E$UNKSVC` (`test/68k-live-verification/batch12-01.a`).
 
 ## Notes
 

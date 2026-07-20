@@ -309,6 +309,27 @@ discipline — not silently fixed):
   this batch were silently re-running a stale linked executable; a
   never-before-used output name fixed it. See
   `dogfood-report-syscalls-batch8-2026-07-20.md`.
+  **Batches 9-12 — the full 18-item Manual-only list resolved (55**
+  **total, entire 68k syscall reference now Live except the**
+  **deliberately-untestable `F$RTE`/`F$SysDbg`).** Batch 9:
+  `F$Julian`/`F$Gregor` round-trip, `F$PrsNam` (both with and without a
+  leading `/`, re-confirming the historic double-eval-`++p` fix still
+  holds), `F$PErr`. Batch 10: `F$SRqMem`/`F$SRtMem`/`F$SRqCMem`
+  confirmed, plus a real finding logged on `ROADMAP.md`: `F$CpyMem`'s
+  declared "owner PID" input is never read by `os9exec` — the call does
+  a raw cross-process memory copy with no ownership check at all.
+  Batch 11: `F$UnLoad`/`F$SUser`/`F$Sleep` confirmed; found `F$ID`'s
+  output and `F$SUser`'s input use *different* group/user packings
+  (byte-packed word vs. two full 16-bit fields) — round-tripping one
+  into the other would silently corrupt the identity, caught during
+  test design; also confirmed live that `l68 -o=<name>` sets a linked
+  module's *real* internal name, overriding the source's own `psect`
+  declaration. Batch 12: the remaining 7 calls (`F$SSpd`/`F$Mem`/
+  `F$SchBit`/`F$AllBit`/`F$DelBit`/`F$Trans`/`F$UAcct`) turned out to
+  not be implemented at all — all route to a shared unimplemented-call
+  handler in `os9exec`'s own dispatch table; confirmed each cleanly
+  returns `E$UNKSVC`. See `dogfood-report-syscalls-batch9-2026-07-20.md`
+  through `-batch12-2026-07-20.md`.
 - Two already-flagged, concrete, small open items in
   `c/os9-clib-reference.md`: `os9fork()`'s `modname` resolution rule
   (does a bare name resolve via `PATH`/module directory the way Shell

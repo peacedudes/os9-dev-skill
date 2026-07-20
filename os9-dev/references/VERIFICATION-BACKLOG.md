@@ -226,10 +226,11 @@ discipline — not silently fixed):
   source (`Source/OS9exec_core/fcalls.c`/`funcdispatch.c`) is a direct,
   authoritative ground truth for exact register conventions — check it
   BEFORE guessing a convention in test code, not after a live test fails
-  ambiguously.** This resolved `F$CmpNam` definitively (a genuine
-  register-discipline bug in the test itself, `moveq` vs `move.w` not
-  clearing the full register) after three live-only attempts had failed
-  to explain it. Real toolchain gotchas found: `(pc)`-relative
+  ambiguously.** This resolved `F$CmpNam` definitively (a NUL- vs
+  sign-bit-terminator mismatch in the test strings, not a register bug —
+  an initial `moveq`-vs-`move.w` theory was live-tested and disproven the
+  same day) after three live-only attempts had failed to explain it.
+  Real toolchain gotchas found: `(pc)`-relative
   addressing required everywhere (like 6809's `,pcr`); `ds.b` isn't a
   valid directive on this `r68`; `r68 -O=` doesn't reliably overwrite an
   existing `.r` file, `del` first.
@@ -240,9 +241,7 @@ discipline — not silently fixed):
   status matched the child's own `F$Exit(77)` exactly, full lifecycle
   confirmation. **`F$Fork`'s long-standing `Flag` (conflicting register
   layouts across manuals) is now resolved** — `os9exec`'s real
-  implementation matches this skill's existing table exactly. Applying
-  the batch-1 register-discipline lesson proactively meant zero
-  register bugs this time. See
+  implementation matches this skill's existing table exactly. See
   `dogfood-report-syscalls-batch2-2026-07-20.md`.
   **Batch 3 — I/O path calls + signals, 8 more calls now `Live` (23
   total).** `I$Create`/`I$Delete`/`I$MakDir`/`I$ChgDir`/`I$Seek`/`I$Dup`

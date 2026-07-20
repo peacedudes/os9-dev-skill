@@ -71,7 +71,7 @@ on TRAP #1–#15 via F$TLink.
 | **I$Attach** | Attach device | d0.b=mode, (a0)=device name | (a2)=device-table entry | Exact port/manager/driver/descriptor match increments use count; same port+code but different descriptor makes a "synonymous device"; no match allocates static storage and calls the driver's INIT (a failed INIT is rolled back via TERM, no entry left) |
 | **I$Detach** | Detach device | (a2)=entry | — | At zero use count, calls TERM and frees storage unless shared. Superuser only |
 | **I$Open** | Open path | d0.b=mode, (a0)=pathname | d0.w=path number, (a0)=updated | Allocates a path descriptor (share count 1). Opening a directory requires the directory bit (0x80) in the mode. **`Live`**: register contract confirmed exact — `test/68k-live-verification/dogfood-asm-line-counter.a` opened real files successfully (byte-exact line/char counts matched independent host-side verification), and separately confirmed to fail cleanly against a nonexistent custom device in `dogfood-filemgr-test.a` |
-| **I$Create** | Create file | d0.b=mode, d1.b=attrs (corrected from `d1.w`, see `Live` note), d2.l=size hint, (a0)=pathname | d0.w=path | On non-multi-file devices behaves as I$Open. **`Live`, 2026-07-20**: register contract confirmed against `os9exec`'s own `OS9_I_Create` (`Source/OS9exec_core/icalls.c`) and live-tested (`test/68k-live-verification/batch3-01.a`) — one correction found this way: `d1` (attrs) is a **byte** per source, not the word this row previously claimed (harmless in practice if the byte value is right and the rest of `d1` is clean, but matters given this project's own hard-won "clear the whole register" register-discipline lesson) |
+| **I$Create** | Create file | d0.b=mode, d1.b=attrs, d2.l=size hint, (a0)=pathname | d0.w=path | On non-multi-file devices behaves as I$Open. **`Live`**: register contract confirmed against `os9exec`'s own `OS9_I_Create` and live-tested (`test/68k-live-verification/batch3-01.a`) |
 | **I$Close** | Close path | d0.w=path | — | Decrements share count; descriptor freed at zero. F$Exit closes leftovers. **`Live`**: confirmed in `dogfood-asm-line-counter.a` |
 | **I$Read** / **I$Write** | Raw transfer | d0.w=path, d1.l=count, (a0)=buffer | d1.l=transferred | No editing. Reads return EOF error when exhausted; writes past EOF extend the file (RBF may pre-read a sector for partial-sector writes). **`Live`**: `dogfood-asm-line-counter.a`'s read loop reproduced exact known-good line/char counts on two independently-verified test files; confirmed raw `I$Write` truly does no editing (a bare CR alone doesn't advance the terminal — CR+LF needed) |
 | **I$ReadLn** / **I$WritLn** | Line transfer | same | same | Stop at first CR; apply device line editing (SCF: backspace/echo on input, LF append on output; 512-byte line buffer) |
@@ -147,19 +147,10 @@ target string must be plain-NUL-terminated** (a literal `0x00` byte) —
 *not* sign-bit-terminated the OS-9-module-name way, despite that
 convention applying elsewhere in this same call family; and **the
 pattern is purely length-bounded by `d1.w`**, needing no terminator of
-its own at all. **Real gotcha, not an `os9exec` bug**: a bare `move.w
-#4,d1` left stale garbage in `d1`'s upper 16 bits from earlier
-full-longword (`move.l`) use elsewhere in the same test program, and the
-syscall dispatcher's parameter marshaling reads the *full* `d1.l`
-despite the call only documenting `d1.w` — this silently corrupted the
-effective length and produced a spurious mismatch on genuinely identical
-strings. Fixed with `moveq #4,d1` (clears the whole register). **General
-rule for any 68k test in this project: clear a data register fully
-(`moveq`/`clr.l`) before loading a "`.w`"-documented parameter into it,
-never assume a bare `move.w` is enough** — this is now the second
-register-discipline class of bug this project's live-testing has hit
-(the first being the 6809 side's `,U`-clobber pattern), just shaped
-differently for 68k's wider registers.
+its own at all.
+
+No register-clearing gotcha applies to this call — `d1`'s upper word is
+irrelevant (`loword()` reads it directly), confirmed live.
 
 ## Debugger support
 

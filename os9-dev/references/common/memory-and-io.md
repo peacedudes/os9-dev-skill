@@ -213,12 +213,16 @@ skips the file manager and driver entirely — it just increments `PD_COUNT`
 on the *existing* descriptor, letting multiple processes share one
 open-file context cheaply. `I$Close` decrements `PD_COUNT`; only at 0 is the
 descriptor actually deallocated and removed from the path table.
-**Unresolved cross-check:** `os9exec`'s own path-descriptor header
-(`sgstat_from_book.h`) instead defines this field, `PD_CNT`, at offset
-`$03` — `os9exec` implements no `I$Dup`, so there's no live share-counter
-to observe either offset against. Treat both offsets as unconfirmed until
-checked against a primary source directly; full note in `os9-systems-dev`
-skill's `file-managers.md`.
+**Unresolved cross-check, corrected 2026-07-20:** `os9exec`'s own
+path-descriptor header (`sgstat_from_book.h`) instead defines this field,
+`PD_CNT`, at offset `$03`. **`os9exec` does implement `I$Dup`** (`Live`,
+confirmed working — the earlier claim that it didn't was wrong), but its
+implementation shares paths via host-native bookkeeping, never touching
+`PD_CNT` — that field is genuinely dead/unreferenced in the `.c` source,
+so there's still no live guest-visible share-counter to observe either
+offset against. Treat both offsets as unconfirmed until checked against a
+primary source directly; full note in `os9-systems-dev` skill's
+`file-managers.md`.
 
 ### Multi-port and multi-class drivers
 

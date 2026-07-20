@@ -150,12 +150,20 @@ parent and child processes (or any multiple processes) to share the same
 open-file context without re-opening. Only when `I$Close` drives the count
 to zero does the kernel deallocate and unlink the descriptor.
 
-**`Source, Flag`:** `os9exec`'s own path-descriptor header (`sgstat_from_book.h`,
-also Guru-derived) defines an "open count" field, `PD_CNT`, at offset `$03`
-— not `$1A` — and it's unused dead code (`os9exec` implements no `I$Dup`
-at all, so there's no live share-counter to observe either offset against).
-This offset conflict is unresolved; treat both as unconfirmed until checked
-against a primary source directly.
+**`Source`, corrected 2026-07-20:** `os9exec`'s own path-descriptor header
+(`sgstat_from_book.h`, also Guru-derived) defines an "open count" field,
+`PD_CNT`, at offset `$03` — not `$1A`. **`os9exec` does implement `I$Dup`**
+(`OS9_I_Dup`, `icalls.c`, dispatch code `$82` — `Live`-confirmed working,
+`test/68k-live-verification/batch2-01.a`, and see `68k/syscall-reference.md`)
+— the earlier claim that it didn't was wrong. The offset conflict is real
+for a more precise reason, though: `OS9_I_Dup` never touches `PD_CNT` at
+all — it does the sharing via host-native bookkeeping (an internal
+`usrpaths[]` array plus `usrpath_link()`'s own link-count field), not by
+incrementing a guest-visible byte at a fixed struct offset. `PD_CNT` is
+genuinely unreferenced anywhere in the `.c` source (confirmed by grep) —
+dead, unused code, so there is still no live guest-visible share-counter
+to observe against either claimed offset. Both offsets remain unconfirmed
+against a primary source.
 
 **Kernel-side bookkeeping** (not the file manager's job, but what the file
 manager's Open/Close calls are embedded inside): the kernel maintains a

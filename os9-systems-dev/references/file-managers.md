@@ -322,7 +322,25 @@ The mechanics that implement both cases:
   when writing isn't needed, both for this reason and for speed.
 - A **write** always releases any record currently locked by that path; it
   doesn't itself lock anything *unless* it lands at EOF, in which case it
-  acquires a whole-file **EOF lock** to serialize concurrent appenders.
+  takes the **EOF lock** — a lock on the position past the last byte.
+  **This does NOT serialize appenders**, and an earlier revision of this file
+  saying so was wrong. Nothing real is locked: the range covers bytes that do
+  not exist. Its only job is to stop a *reader* concluding the file is
+  finished. Two programs appending to one log do not shut each other out —
+  they never contend, because each append lands at a different offset, and a
+  write-only path takes no record lock at all. Getting this backwards means
+  building mutual exclusion between writers that the design never had.
+- **Which opens lock what**, since "locks only happen in update mode" is only
+  two-thirds true:
+  - *read auto-lock*: **update mode only** (read+write). A read-only path
+    cannot modify what it read, so it locks nothing.
+  - *EOF wait*: triggered by any other path holding the file open **for
+    write** — update mode is not required. A plain appending writer must
+    still make readers wait, or the pipe-like case does not work at all.
+  - *explicit `SS_Lock`*: `os9exec` currently applies **no mode check**, so a
+    read-only path can take one. Probably wrong — it should plausibly require
+    a write-capable open — but unverified against any source, so it is left
+    as-is and flagged here rather than guessed at. `Flag`.
 - A lock is released by: the next read, the next write, a path close, or
   an explicit `SS_Lock` `SetStat`. A zero-byte read or write drops every
   lock that path holds — record, EOF, or whole-file — outright. `seek()`

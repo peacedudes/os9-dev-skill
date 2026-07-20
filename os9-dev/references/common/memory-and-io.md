@@ -57,7 +57,7 @@ Each process gets three regions, sized as `minimum data space + stack size + par
 | Stack | Locals, return addresses, call frames | Grows downward; minimum declared in the module header |
 | Parameter string | Arguments from the parent | Copied to the top of allocated memory |
 
-Programs can request additional static storage via `F$Fork`. All data access is register-indirect from a base pointer (A6 for ordinary program modules), enabling ROM placement and concurrent multi-process execution against one code copy. Device drivers and file managers use kernel-supplied register convention (A1/A2/A4/A5/A6 each with specific pointer) — see `references/68k/os9-68k-assembly.md`.
+Programs can request additional static storage via `F$Fork`. All data access is register-indirect from a base pointer (A6 for ordinary program modules), enabling ROM placement and concurrent multi-process execution against one code copy. Device drivers and file managers use kernel-supplied register convention (A1/A2/A4/A5/A6 each with specific pointer) — see `68k/os9-68k-assembly.md`.
 
 ### Data modules (shared memory, mechanism level)
 
@@ -67,7 +67,7 @@ address isn't known at compile time — a process must reach it by pointer
 (C) or register-indirect addressing (assembly), unlinking later with
 `F$UnLink`. This is the underlying allocation mechanism for OS-9's shared
 memory; for the usage patterns and gotchas of using data modules for actual
-inter-process communication, see `references/common/ipc.md`.
+inter-process communication, see `ipc.md`.
 
 ### `edata` / `end`
 
@@ -272,7 +272,7 @@ re-reading it on every access.
 | `I$Read` | Returns the requested byte count into the caller's buffer; EOF error if no more data; generally no editing |
 | `I$ReadLn` | Like `I$Read` but stops at the first CR (end-of-record) and applies input editing |
 | `I$Write` | Writes data (generally unedited); writing past EOF expands the file. On fixed-record devices (e.g. RBF) may need to pre-read a sector before a partial-sector write |
-| `I$WriteLn` | Writes up to and including the first CR, with output editing (e.g. SCF appends LF after CR) |
+| `I$WritLn` | Writes up to and including the first CR, with output editing (e.g. SCF appends LF after CR) |
 | `I$Seek` | Random-access devices only; logical repositioning, no physical effect, no error going past EOF; no-op elsewhere |
 | `I$GetStt` / `I$SetStt` | Wildcard status get/set; file manager handles known codes, passes unknown codes to the driver |
 | `I$MakDir` | Creates a directory (multi-file devices); unsupported managers return carry-set + unknown-service error |

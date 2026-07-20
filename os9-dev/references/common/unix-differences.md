@@ -28,9 +28,10 @@ Unix has one cwd. OS-9 has two:
 `chd` ≠ `cd`. A program visible via `dir` (data dir) can be "not found"
 when run — running searches `chx`/`PATH`, not `chd`. Like Unix `cd`, `chd`
 with no argument returns to the home (login data) directory; `chx` with no
-argument does nothing. Full resolution rule, `PATH` guidance, and the
-compiler-driver exception: `os9-mental-model.md`'s "Two Current
-Directories" section; practical gotchas hitting this live:
+argument does nothing (`Hearsay`, not yet `Live` — same tag as in
+`os9-tools-and-shell.md`). Full resolution rule, `PATH` guidance, and the
+compiler-driver exception: `os9-mental-model.md`'s "Two current
+directories, not one" section; practical gotchas hitting this live:
 `using-os9exec-repl.md`.
 
 ### 2. Lines end with CR, not LF
@@ -43,8 +44,8 @@ host↔OS-9 file-boundary bug.
 - A Unix-authored (LF) source file can make the OS-9 C compiler read the
   whole file as one line, producing cascading syntax errors at nonsensical
   spots.
-- RBF/SCF translation behavior: see `os9-mental-model.md`'s "Text Files: CR
-  vs. LF" section.
+- RBF/SCF translation behavior: see `os9-mental-model.md`'s "Conventions
+  that bite" section.
 - Convert with `flip -m` (host-side files only — can't touch files inside
   an RBF image; edit those natively with `vi`/`ed`, which already produce
   correct native line endings). See `using-os9exec-repl.md`.

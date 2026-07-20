@@ -109,15 +109,9 @@ well. `help <name>` (or `<name> -?`) prints usage for any of them.
 **Per-command syntax and option letters: `utility-usage.md`** — read it
 before invoking a utility with options rather than guessing flags.
 
-**Files and directories:** `attr` (show/change permissions — bare `attr <path>`
-prints an 8-character string, `Live`-decoded 2026-07-19: positions 1-4 are
-`d`/`s`/`pe`/`pw` (directory, sharable, public-execute, public-write) and
-5-8 are `pr`/`e`/`w`/`r` (public-read, owner-execute, owner-write,
-owner-read), each either the letter or `-`; e.g. `----r-wr` = no
-directory/sharable/public-exec/public-write bits, public-read granted,
-owner has write+read but not execute. `attr -e` needs more privilege than
-the bare form — `Live`: it failed `E$FNA`/214 in a session where the plain
-form succeeded on the same file), `build` (create
+**Files and directories:** `attr` (show/change permissions —
+output-string decoding and the `-e` privilege gotcha, both `Live`:
+`utility-usage.md`'s `attr` entry), `build` (create
 a small text file from console input, `?` prompt per line, EOF ends),
 `copy`, `del`, `deldir` (recursive directory delete), `dir` (`-e` for full
 listing), `dsave` (emit a procedure file that copies a directory tree),

@@ -1,7 +1,7 @@
 # OS-9 Inter-Process Communication: Patterns and Gotchas
 
 Mechanism-level call signatures (`F$Send`, `F$Icpt`, `F$Event`/`Ev$*`,
-`F$DatMod`, etc.) are in `syscall-reference.md`. This file is the practical
+`F$DatMod`, etc.) are in `68k/syscall-reference.md`. This file is the practical
 layer on top: how these mechanisms actually get used, and where they bite.
 
 ---
@@ -202,7 +202,7 @@ establish one-directional flow between them.
 
 ## Data modules (shared memory)
 
-Created via `F$DatMod`; accessed by pointer or register-indirect addressing once linked (see `references/common/memory-and-io.md` for allocation mechanism). A data module is mutable, shared, *live* state — not code.
+Created via `F$DatMod`; accessed by pointer or register-indirect addressing once linked (see `memory-and-io.md` for allocation mechanism). A data module is mutable, shared, *live* state — not code.
 
 OS-9's shared-memory IPC mechanism for processes needing to see the same live data (vs. pipes which move data, or signals/events which coordinate timing without payload). Common pattern: data module holding shared state plus an event for coordination — usually paired, not separate.
 

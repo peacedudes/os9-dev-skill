@@ -14,9 +14,9 @@ runs natively (an x86_64 build executes on ARM64 Windows through the OS's own
 x64 emulation). The repo's `test/` integration suite (a Swift `OS9Tests`
 runner that pipes commands to the emulator) drives it identically on all
 three, so REPL sessions and batch tests behave the same cross-platform. A few
-*host*-filesystem behaviours legitimately differ on Windows (NTFS permission
+*host*-filesystem behaviors legitimately differ on Windows (NTFS permission
 mapping, device-alias path resolution) — those are emulator-platform quirks,
-not OS-9 facts, so don't encode them as OS-9 behaviour.
+not OS-9 facts, so don't encode them as OS-9 behavior.
 
 ## Launching and disks
 

@@ -5,11 +5,18 @@ equivalent (SWI2 dispatch, different codes and registers) is
 `6809/syscalls-and-module-format.md`; C-library wrappers are in
 `c/os9-clib-reference.md`.
 
-Confidence: `Manual` throughout — every call listed is attested in this
-skill's primary-source set. Entries additionally tagged `Flag` carry a
-known cross-manual register-layout conflict; entries noted as
-single-sourced have register detail from only one manual. Verify against
-a primary manual (or run it) before coding against exact register slots.
+Confidence: mostly `Manual` — every call listed is attested in this
+skill's primary-source set, but until 2026-07-20 none had been
+individually live-tested with known register inputs and checked against
+documented outputs (existing `Live` findings elsewhere in this project
+exercised specific calls incidentally, e.g. via BASIC09/C programs, but
+that coverage was never backfilled here). A live audit is now
+in progress, `Live` tags landing per-row as calls are confirmed — see
+`VERIFICATION-BACKLOG.md`'s 68k syscall audit entry for progress.
+Entries additionally tagged `Flag` carry a known cross-manual
+register-layout conflict; entries noted as single-sourced have register
+detail from only one manual. Verify against a primary manual (or run it)
+before coding against exact register slots on anything not yet `Live`.
 
 ## Calling convention
 
@@ -41,9 +48,10 @@ on TRAP #1–#15 via F$TLink.
 |------|---------|-----------|------------|-------|
 | **F$Fork** | Create process | d0.w=module type (0=any), d1.l=extra stack/mem, d2.l=param size, d3.w=# I/O paths, d4.w=priority, (a0)=module name, (a1)=params | d0.w=child PID, (a0)=updated | Child inherits priority, open paths, user/group ID, current dirs, environment — never memory. `Manual, Flag`: register layout mirrors the fully-documented F$DFork table; other manual passages place priority in d2.w, group.user in d1.l, or param size in d5.l — verify before relying on exact slots |
 | **F$Chain** | Replace current program | as F$Fork `Manual, Flag` | doesn't return | Fork+Exit in one: reuses the caller's process descriptor and PID, preserves open paths |
-| **F$Exit** | Terminate | d1.w=status | — | Closes paths. Auto-unlinks only the *primary* module and trap handlers — anything else you linked/loaded leaks unless unlinked first |
+| **F$Exit** | Terminate | d1.w=status | — | Closes paths. Auto-unlinks only the *primary* module and trap handlers — anything else you linked/loaded leaks unless unlinked first. **`Live`**: confirmed clean exit in every 68k assembly dogfood test this project has run (`test/68k-live-verification/dogfood-asm-line-counter.a` and others) |
 | **F$Wait** | Wait for child | — | d0.w=child PID, d1.w=status | Also reclaims the dead child's process descriptor; forking without matching waits can fill the process table |
 | **F$SPrior** | Set priority | d0.w=PID, d1.w=priority (0=min, 65535=max) | — | Same-user rule; superuser (group 0) can set any. Shell: `setpr` |
+| **F$ID** | Get process identity | — | d0.w=PID, d1.l=group.user (packed, group in high word), d2.w=priority | **`Live`, 2026-07-20**: register contract confirmed exact against `os9exec`'s own `OS9_F_ID` (`Source/OS9exec_core/fcalls.c`) and live-tested (`test/68k-live-verification/batch1-01.a`) — this row previously had no register detail at all (`Manual`-only). Architecture-general shape (matches 6809's `F$ID`, just wider registers) |
 
 ## Module management
 
@@ -62,16 +70,16 @@ on TRAP #1–#15 via F$TLink.
 |------|---------|-----------|------------|-------|
 | **I$Attach** | Attach device | d0.b=mode, (a0)=device name | (a2)=device-table entry | Exact port/manager/driver/descriptor match increments use count; same port+code but different descriptor makes a "synonymous device"; no match allocates static storage and calls the driver's INIT (a failed INIT is rolled back via TERM, no entry left) |
 | **I$Detach** | Detach device | (a2)=entry | — | At zero use count, calls TERM and frees storage unless shared. Superuser only |
-| **I$Open** | Open path | d0.b=mode, (a0)=pathname | d0.w=path number, (a0)=updated | Allocates a path descriptor (share count 1). Opening a directory requires the directory bit (0x80) in the mode |
+| **I$Open** | Open path | d0.b=mode, (a0)=pathname | d0.w=path number, (a0)=updated | Allocates a path descriptor (share count 1). Opening a directory requires the directory bit (0x80) in the mode. **`Live`**: register contract confirmed exact — `test/68k-live-verification/dogfood-asm-line-counter.a` opened real files successfully (byte-exact line/char counts matched independent host-side verification), and separately confirmed to fail cleanly against a nonexistent custom device in `dogfood-filemgr-test.a` |
 | **I$Create** | Create file | d0.b=mode, d1.w=attrs, d2.l=size hint, (a0)=pathname | d0.w=path | On non-multi-file devices behaves as I$Open |
-| **I$Close** | Close path | d0.w=path | — | Decrements share count; descriptor freed at zero. F$Exit closes leftovers |
-| **I$Read** / **I$Write** | Raw transfer | d0.w=path, d1.l=count, (a0)=buffer | d1.l=transferred | No editing. Reads return EOF error when exhausted; writes past EOF extend the file (RBF may pre-read a sector for partial-sector writes) |
+| **I$Close** | Close path | d0.w=path | — | Decrements share count; descriptor freed at zero. F$Exit closes leftovers. **`Live`**: confirmed in `dogfood-asm-line-counter.a` |
+| **I$Read** / **I$Write** | Raw transfer | d0.w=path, d1.l=count, (a0)=buffer | d1.l=transferred | No editing. Reads return EOF error when exhausted; writes past EOF extend the file (RBF may pre-read a sector for partial-sector writes). **`Live`**: `dogfood-asm-line-counter.a`'s read loop reproduced exact known-good line/char counts on two independently-verified test files; confirmed raw `I$Write` truly does no editing (a bare CR alone doesn't advance the terminal — CR+LF needed) |
 | **I$ReadLn** / **I$WritLn** | Line transfer | same | same | Stop at first CR; apply device line editing (SCF: backspace/echo on input, LF append on output; 512-byte line buffer) |
 | **I$Seek** | Position | d0.w=path, d1.l=position | — | Logical only; past-EOF legal; non-random devices no-op; doesn't touch record locks |
 | **I$Delete** | Delete file | d0.b=mode, (a0)=pathname | — | Multi-file devices only |
 | **I$MakDir** | Create directory | d0.b=mode, d1.w=attrs, (a0)=pathname | — | Managers without directories return unknown-service |
 | **I$Dup** | Duplicate path | d0.w=path | d0.w=new path | Only bumps the existing descriptor's share count — file manager/driver never called |
-| **I$GetStt** / **I$SetStt** | Status get/set | d0.w=path, d1.w=code, … | per code | File manager handles known codes, forwards unknown ones to the driver. Known: SS_Opt (128-byte option area), file size (C code 2), SS_Lock (record lock), SS_Ticks (lock timeout) |
+| **I$GetStt** / **I$SetStt** | Status get/set | d0.w=path, d1.w=code, … | per code | File manager handles known codes, forwards unknown ones to the driver. Known: SS_Opt (128-byte option area), file size (C code 2), SS_Lock (record lock), SS_Ticks (lock timeout). **`Live`**: `I$SetStt`/SS_Lock and SS_Ticks both confirmed dispatching (`test/68k-live-verification/dogfood-sslock.a`, `dogfood-ssticks.a`) — this pass found and fixed a real `os9exec` bug, `SS_Lock` claiming success while doing nothing; now a real, working record lock (see `os9-systems-dev/file-managers.md`'s Record Locking section and project memory `nitros9-rbf-lock-fix-implemented` for the fix) |
 
 ## Events (F$Event subfunctions)
 
@@ -101,15 +109,56 @@ process, so a persistent one must be requested as the system process.
 | **F$SigMask** | Mask delivery | d1 = +1 increment / −1 decrement / 0 clear-to-zero. Counter is P$SigLvl (unsigned byte); over/underflow silently ignored. F$Sleep unmasks internally, making `mask → sleep(0)` a safe masked wait |
 | **F$SigReset** | Reset intercept-nesting counter | Needed when `longjmp()` bypasses F$RTE exits |
 | **F$RTE** | Return from intercept | Processes queued signals first |
-| **F$STrap** | Install error-exception handler | (a0)=stack, (a1)=service table. Covers bus/address/illegal/zero-divide etc. (vectors 2–8, 10–24, 48–63), otherwise fatal. Handler gets all user registers stacked and chooses resume point. An F$DFork child's resources survive for post-mortem |
+| **F$STrap** | Install error-exception handler | (a0)=stack, (a1)=service table. Covers bus/address/illegal/zero-divide etc. (vectors 2–8, 10–24, 48–63), otherwise fatal. Handler gets all user registers stacked and chooses resume point. An F$DFork child's resources survive for post-mortem. **`Live`**: register contract confirmed via real REAL÷0/INTEGER÷0 BASIC09 traps now correctly caught (see `basic09/gotchas.md`'s divide-by-zero entry); a deliberately-malformed unterminated service table was separately confirmed to be refused cleanly rather than walking off the arena (`test/68k-live-verification/dogfood-strap-unterminated.a` — this found and fixed a real `os9exec` out-of-bounds read bug) |
 | **F$TLink** | Install trap handler | d0.w=trap 1–15, d1.l=memory override, (a0)=module name → (a1)=entry, (a2)=header. Links a TrapLib, allocates private static storage, runs its init. Max 15 per process (one per vector); a `tcall` before install can lazily self-install via the module's M$Excpt entry |
 | **F$Sema** | Kernel binary semaphore | OS-9 **v3.0+** only — absent on the v2.4 baseline documented here |
+
+## Time
+
+**F$Time** (d0.w=mode: bit0 0=Gregorian/1=Julian, bit1 set=also return
+ticks → d0.l=packed time, d1.l=packed date, d2.w=day of week
+(0=Sunday), d3.l=tick rate/current tick if requested): **`Live`,
+2026-07-20** — register contract confirmed exact against `os9exec`'s own
+`OS9_F_Time` (`Source/OS9exec_core/fcalls.c`) and live-tested
+(`test/68k-live-verification/batch1-01.a`, `d0.w=0` → real nonzero
+packed time/date values, carry clear). This row previously had no
+register detail at all (`Manual`-only) — a first guess assuming a
+6809-style 6-byte-buffer-pointer convention was live-tested and found
+**wrong**: 68k's `F$Time` returns everything directly in registers, no
+buffer at all. Packed time/date field layout not decoded in this pass —
+only the register-slot convention is confirmed, not what the bits inside
+`d0.l`/`d1.l` mean.
+
+**F$STime** (set current time) remains `Manual`-only, register detail
+not reproduced here — presumably the input-side mirror of `F$Time`'s
+output shape, but not live-tested this pass.
 
 ## Utility
 
 **F$CmpNam** (d1.w=pattern length, (a0)=pattern, (a1)=target → carry clear
 on match): wildcard compare (`?` one char, `*` any string), case-
-insensitive — the primitive behind shell wildcard expansion.
+insensitive — the primitive behind shell wildcard expansion. **`Live`,
+2026-07-20**: register contract confirmed exact via `os9exec`'s own
+`OS9_F_CmpNam` (`Source/OS9exec_core/fcalls.c`) plus a live match/mismatch
+test (`test/68k-live-verification/batch1-01.a`). Two precise, previously
+undocumented details, both source-confirmed and live-verified: **the
+target string must be plain-NUL-terminated** (a literal `0x00` byte) —
+*not* sign-bit-terminated the OS-9-module-name way, despite that
+convention applying elsewhere in this same call family; and **the
+pattern is purely length-bounded by `d1.w`**, needing no terminator of
+its own at all. **Real gotcha, not an `os9exec` bug**: a bare `move.w
+#4,d1` left stale garbage in `d1`'s upper 16 bits from earlier
+full-longword (`move.l`) use elsewhere in the same test program, and the
+syscall dispatcher's parameter marshaling reads the *full* `d1.l`
+despite the call only documenting `d1.w` — this silently corrupted the
+effective length and produced a spurious mismatch on genuinely identical
+strings. Fixed with `moveq #4,d1` (clears the whole register). **General
+rule for any 68k test in this project: clear a data register fully
+(`moveq`/`clr.l`) before loading a "`.w`"-documented parameter into it,
+never assume a bare `move.w` is enough** — this is now the second
+register-discipline class of bug this project's live-testing has hit
+(the first being the 6809 side's `,U`-clobber pattern), just shaped
+differently for 68k's wider registers.
 
 ## Debugger support
 
@@ -124,9 +173,9 @@ insensitive — the primitive behind shell wildcard expansion.
 
 These exist (attested by name in primary sources; some also `Source` —
 implemented by os9exec) but their exact register contracts are not
-reproduced in this file — consult the OS-9 Technical Manual before use: F$ID (PID +
-group.user + priority), F$SSpd (suspend), F$Time / F$STime (read/set
-system time), F$Gregor / F$Julian (date conversion), F$Sleep (d0.l ticks;
+reproduced in this file — consult the OS-9 Technical Manual before use:
+F$SSpd (suspend), F$STime (set system time — see the Time section
+above), F$Gregor / F$Julian (date conversion), F$Sleep (d0.l ticks;
 0 = until signal), F$UnLoad (unlink by name), F$SRqMem / F$SRtMem
 (request/return system memory), F$Mem (resize data area), F$SRqCMem
 (colored request), F$CpyMem (copy external memory), F$Trans (address

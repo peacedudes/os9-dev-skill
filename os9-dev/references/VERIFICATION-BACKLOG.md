@@ -216,6 +216,23 @@ discipline — not silently fixed):
   that audit — which calls have real direct confirmation vs. indirect vs.
   none — is the first, highest-leverage step before picking individual
   calls to test.
+  **IN PROGRESS, started 2026-07-20, batch 1 — 10 calls now `Live`.**
+  Free backfill from existing dogfood work (`I$Open`/`I$Read`/`I$Write`/
+  `I$Close`/`F$Exit`/`I$SetStt`/`F$STrap`, 7 calls) plus new testing
+  (`F$ID`/`F$Time`/`F$CmpNam`, 3 calls, all fully resolved by checking
+  `os9exec`'s own source directly — see
+  `dogfood-report-syscalls-batch1-2026-07-20.md`). **Key methodology
+  finding: for 68k, unlike 6809/NitrOS-9, this project's own `os9exec` C
+  source (`Source/OS9exec_core/fcalls.c`/`funcdispatch.c`) is a direct,
+  authoritative ground truth for exact register conventions — check it
+  BEFORE guessing a convention in test code, not after a live test fails
+  ambiguously.** This resolved `F$CmpNam` definitively (a genuine
+  register-discipline bug in the test itself, `moveq` vs `move.w` not
+  clearing the full register) after three live-only attempts had failed
+  to explain it. Real toolchain gotchas found: `(pc)`-relative
+  addressing required everywhere (like 6809's `,pcr`); `ds.b` isn't a
+  valid directive on this `r68`; `r68 -O=` doesn't reliably overwrite an
+  existing `.r` file, `del` first.
 - Two already-flagged, concrete, small open items in
   `c/os9-clib-reference.md`: `os9fork()`'s `modname` resolution rule
   (does a bare name resolve via `PATH`/module directory the way Shell

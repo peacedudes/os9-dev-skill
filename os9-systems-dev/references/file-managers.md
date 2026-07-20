@@ -308,15 +308,22 @@ tolerating as a safety net:
 
 The mechanics that implement both cases:
 - A **read** (or `ReadLn`) on a path opened for update locks the bytes it
-  handed back, from the file pointer it started at. `Manual` says the
-  *requested* count — a `ReadLn` asking 256 bytes locking 256 regardless of
-  where the CR landed. The designer's own recollection is the opposite (a
-  `ReadLn` that asks 80 and delivers 43 should lock 43), stated with the
-  explicit caveat that he was not certain. **`os9exec` implements
-  delivered**, and there is a practical argument for it: BASIC09 offers a
-  511-byte buffer for an 8-byte record, so locking the requested count locks
-  most of the file and makes unrelated records collide. `Flag` — unresolved
-  between manual and designer; if you have a primary source, settle it.
+  requested, from the file pointer it started at — a `ReadLn` asking 256
+  bytes locks 256 regardless of where the CR landed. `Manual`, and what
+  `os9exec` implements as of 2026-07-19. (The designer's recollection was
+  *delivered* rather than requested, offered with the explicit caveat that he
+  was unsure; the manual was followed.)
+  **But clamped to the end of the file**, which is not optional. A read that
+  locks past EOF holds ground that belongs to whoever is appending, and the
+  result is a genuine deadlock: demonstrated live — an update-mode follower
+  read one record, locked 511 bytes past its position, the producer's next
+  append collided with that lock, and both waited on each other forever, with
+  no `E$DEADLK` to catch it because they are different processes. The
+  invariant to hold is **no path ever locks a byte that does not exist yet**.
+  Practical consequence of the requested rule, accepted deliberately: BASIC09
+  asks 511 bytes on every `READ` whatever the target string's size, so two
+  records closer together than that can never be held independently. Fine for
+  record-oriented code that asks for its record size; coarse for BASIC09.
   Reads on read-only or execute-mode paths never lock anything,
   since those modes can't update records anyway — prefer read-only opens
   when writing isn't needed, both for this reason and for speed.

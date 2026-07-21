@@ -43,6 +43,25 @@ class TestParseKnownTags(unittest.TestCase):
 # --------------------------------------------------------------------------
 # platform_of
 # --------------------------------------------------------------------------
+class TestVerifiedAgainst(unittest.TestCase):
+    def test_extracts_baseline_rows_from_the_section(self):
+        md = (
+            "## What `Live` is verified against\n\n"
+            "| Platform | Build identity | How |\n"
+            "|---|---|---|\n"
+            "| 68k (os9exec) | v0.0.0-482-g534315a | the hash |\n"
+            "| 6809 (NitrOS-9) | XRoar 1.11 + eou_ide-v0.3 | disk+emu |\n"
+            "\n## Next section\n| unrelated | table |\n"
+        )
+        self.assertEqual(
+            chk.verified_against(md),
+            [("68k (os9exec)", "v0.0.0-482-g534315a"), ("6809 (NitrOS-9)", "XRoar 1.11 + eou_ide-v0.3")],
+        )
+
+    def test_empty_when_no_section(self):
+        self.assertEqual(chk.verified_against("# nothing here\n| a | b |\n"), [])
+
+
 class TestPlatformOf(unittest.TestCase):
     def test_6809_path(self):
         self.assertEqual(chk.platform_of("os9-dev/references/6809/foo.md"), "6809")

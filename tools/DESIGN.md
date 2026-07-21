@@ -85,6 +85,12 @@ Meta-docs (`CONFIDENCE-TAGS.md`, `VERIFICATION-BACKLOG.md`, `INDEX.md`,
 `SOURCES.md`) are used for their tag set but never scanned as claim sources —
 they quote calls as examples.
 
+The run also prints a **`Live` verified-against** footer: the per-platform build
+baselines from the "What `Live` is verified against" table in `CONFIDENCE-TAGS.md`
+(os9exec `git describe`; 6809 disk + XRoar + lwasm). Surfacing it every run keeps
+the baseline visible so stale `Live` claims get re-checked after an emulator fix.
+Informational only.
+
 ## Honest limits
 
 - **Level I vs Level II is not modelled.** Both fall in the "6809" bucket, so a

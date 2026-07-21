@@ -75,6 +75,24 @@ def parse_known_tags(md):
     return {m.group("tag") for m in (TAG_ROW.match(line) for line in md.splitlines()) if m}
 
 
+def verified_against(md):
+    """Return the (platform, build-identity) baseline rows from CONFIDENCE-TAGS.md.
+
+    Reads the data rows of the table under the "What `Live` is verified against"
+    heading, so the checker can surface which build the `Live` tier reflects.
+    """
+    rows, in_section = [], False
+    for line in md.splitlines():
+        if line.startswith("## "):
+            in_section = "verified against" in line.lower()
+            continue
+        if in_section and line.lstrip().startswith("|"):
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            if len(cells) >= 2 and "---" not in cells[0] and cells[0].lower() != "platform":
+                rows.append((cells[0], cells[1]))
+    return rows
+
+
 def platform_of(path):
     """Classify a doc path as "6809", "68k", or "neutral" (applies to both)."""
     parts = path.replace(os.sep, "/").split("/")
@@ -323,6 +341,16 @@ def main(argv=None):
         print(f"\n`Flag` divergence inventory ({len(inventory)} unresolved -- for tracking):")
         for item in inventory:
             print(_format(item))
+
+    for path in collect_markdown(roots):
+        if os.path.basename(path) == CONFIDENCE_TAGS_FILE:
+            with open(path, encoding="utf-8") as handle:
+                baselines = verified_against(handle.read())
+            if baselines:
+                print("\n`Live` verified against:")
+                for platform, identity in baselines:
+                    print(f"  {platform}: {identity}")
+            break
 
     return 1 if findings else 0
 

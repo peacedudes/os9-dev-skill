@@ -51,7 +51,7 @@ names (`F$xxx`/`I$xxx`).
 |---|---|
 | `strcat`/`strncat`/`strcmp`/`strncmp`/`strcpy`/`strncpy`/`strlen` | `strncpy` pads the remainder with nulls if the source is shorter than n. |
 | `strhcpy` | Copy with a sign-bit string terminator (OS-9 specific). |
-| `index(s, ch)` / `rindex(s, ch)` | OS-9/BSD names instead of ANSI's `strchr`/`strrchr`. |
+| `index(s, ch)` / `rindex(s, ch)` | OS-9/BSD names instead of ANSI's `strchr`/`strrchr`. **`Live`, 2026-07-21** (os9exec 68k): `index("hello",'l')`→`"llo"`, `rindex(...)`→`"lo"` both link and work; `strchr` fails to link (`Symbol 'strchr' unresolved`, `l68: error - unresolved references`) — the ANSI names genuinely aren't in `clib.l`. |
 
 **No bounds checking** — caller must ensure buffers are large enough. No `strstr()`.
 

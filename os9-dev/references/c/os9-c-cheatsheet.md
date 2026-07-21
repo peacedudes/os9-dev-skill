@@ -162,10 +162,16 @@ does not hold on 68k.
 
 **String termination differs between the two languages, and this bites
 in practice.** A C string is NUL-terminated (`0x00`); a BASIC09 STRING is
-terminated by `$FF` (255) instead. **A BASIC09 string at its declared
-maximum length has no terminator byte at all** — a C function reading it
-must check the declared length as well as scanning for `$FF`, not assume
-one or the other.
+terminated by a sentinel byte **whose value differs by target** — and
+**`$FF` is the 6809 value, NOT 68k's.** `Live`, 2026-07-21 (byte-dump of a
+`PUT` on 68k os9exec): a `STRING[8]` set to `"XY"` after being filled with
+`"ABCDEFGH"` stored `58 59 00 44 45 46 47 48` — i.e. `"XY"` then a **`00`
+(NUL)** terminator (overwriting the old `C`), so **68k BASIC09 terminates a
+STRING with NUL, not `$FF`.** **A BASIC09 string at its declared maximum
+length still has no terminator byte at all** (`Live`: a `STRING[3]` set to
+`"XYZ"` stored exactly `58 59 5A`) — so a C function reading a BASIC09 STRING
+must check the declared length as well as scanning for the terminator, and
+the terminator to scan for is `$FF` on 6809 but `0x00` on 68k.
 
 **Multi-dimensional arrays are stored in opposite element order.**
 BASIC09 stores a multi-dimensional array column-wise; C stores the same

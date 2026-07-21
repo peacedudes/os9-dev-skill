@@ -113,6 +113,14 @@ The **first 42 bytes** form a file-manager- and driver-agnostic header:
 path number, access mode, references to the active file manager and driver,
 and other bookkeeping the kernel manages. Every path descriptor starts with
 this section regardless of which file manager is driving the I/O.
+**`Source`, 2026-07-21 — matches os9exec's `PD_` common-header offsets**
+(`sgstat_from_book.h`, used throughout its kernel code): `PD_PD` $00 (path
+number), `PD_MOD` $02 (access mode), `PD_CNT` $03 (open count — the same
+offset the `I$Dup` correction below uses), `PD_DEV` $04 (device-table
+pointer), `PD_CPR` $08 (current PID), `PD_RGS` $0A (caller register stack),
+`PD_BUF` $0E (buffer), `PD_USER` $12 (user ID), `PD_Paths` $16 (open-path
+list), then `PD_FST` $2A (86-byte file-manager work area) and `PD_OPT` $80 —
+i.e. the 42-byte common header runs $00–$29, exactly as stated.
 
 Beyond that sits a **file-manager-defined working area** (`PD_FST`) whose
 layout and meaning vary by file-manager type. RBF uses it for file

@@ -185,7 +185,7 @@ memory:** whatever's left after static/stack allocation feeds the
 | `stdlib.h` (full) | No `rand()`, `abs()`, `div()`; `atoi()`/`atol()` may be limited or absent |
 | `strings.h` | Use this, not `string.h` (different API: `index`/`rindex` not `strchr`/`strrchr`) |
 | `ctype.h` (full ANSI) | Missing `isgraph()` and other ANSI additions; link errors, not compile errors |
-| `stat.h` (group permissions) | No group class on OS-9 — group macros alias public bits |
+| `stat.h` (absent entirely) | **`Live`:** there is no `stat.h` on the 68k `DEFS` — `#include <stat.h>` fails to open. File mode bits are in `<modes.h>` (owner/public only, no group class) |
 
 **Baseline:** K&R C — no enforced prototypes, no cross-file type checking.
 

@@ -55,6 +55,30 @@ Same gated-send / raw-key-fallback pattern as any OS-9 REPL (see the 68k
 sibling doc), but transport is TCP to the DriveWire-exposed channel, not a
 PTY to the emulator process.
 
+## Running multiple instances concurrently
+
+XRoar edits the `.ide` disk image **in place** — the guest's own writes land
+back in the host file. Two harnesses booting the same image therefore corrupt
+each other's disk, and their DriveWire servers fight over one becker port. To
+run sessions side by side (`Source`, verified against this repo's
+`tools/nitros9repl.sh`; the in-place-mutation reason is inherent to XRoar's IDE
+emulation), give each instance three distinct things:
+
+1. **Its own disk clone** — a directory holding a copy of the golden master's
+   `<disk>.ide` plus the IDE cart ROM (`hdblba.rom` here); point the harness at
+   it (`NITROS9REPL_DISKDIR=<clone>`). A clone is cheap insurance even for a
+   read-only-*looking* session — a single stray guest write would otherwise
+   mutate the shared boot disk permanently.
+2. **A unique session name** (`NITROS9REPL_SESSION=<name>`) so the tmux panes
+   don't collide.
+3. **Unique ports** — both the becker port (`NITROS9REPL_BECKER_PORT`) and the
+   text channel (`NITROS9REPL_CHAN_PORT`); two servers on one port is the
+   classic "port already in use" or silent-host→guest-input failure.
+
+Miss any one and the instances interfere in a way that mimics a flaky guest,
+not a collision. (The system CoCo3 ROMs live in the absolute `-rompath` and are
+read-only, so they need not be cloned — only the writable `.ide` does.)
+
 ## DriveWire protocol contract (inherent to the protocol, not this repo)
 
 Get straight if implementing a server from scratch — both bit real

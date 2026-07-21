@@ -625,9 +625,11 @@ way you'd expect:**
   the **opposite** — INTEGER÷0 is **silent, no error at all**: a procedure that
   divides an INTEGER by 0 and then `PRINT`s ran straight through and printed
   (`ON ERROR GOTO` never fired). Don't count on an INTEGER÷0 being caught on
-  68k. (Real 68000 hardware traps integer divide-by-zero via vector 5, so
-  whether this silence is a BASIC09 choice or an os9exec emulation gap is an
-  open follow-up.)
+  68k. (The silence is a **BASIC09-level guard**, not an emulation gap:
+  `Live`, 2026-07-21 — a *C* program doing integer `1/0` on os9exec traps
+  correctly with `Error #000:105 (E_ZERDIV) zero divide TRAP 5` and aborts,
+  so the 68000 core does raise vector 5; BASIC09 must be checking the divisor
+  itself and quietly not dividing.)
 - **REAL ÷ 0** (e.g. `z = x / y` with `y: REAL` = 0): **used to crash the
   entire BASIC process** (`Error #000:107 (E_TRAPV) TrapV instruction
   TRAP 7 occurred`, `E_PRCABT(228)`) — a raw, uncatchable 68k CPU trap

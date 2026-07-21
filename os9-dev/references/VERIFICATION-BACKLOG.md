@@ -177,8 +177,9 @@ discipline — not silently fixed):
   through (`ON ERROR` never fired), the exact **opposite** of 6809's
   `Error #045`. So the original "silently falls through" claim was right for 68k
   and wrong for 6809. Both `basic09-language.md` and `gotchas.md` updated.
-  (Open follow-up: real 68000 traps integer div-by-zero via vector 5, so the
-  silence may be a BASIC09 choice or an os9exec emulation gap.)
+  (Follow-up resolved same day: os9exec's 68000 core DOES trap integer ÷0 — a
+  C `1/0` aborts with `Error #000:105 (E_ZERDIV) zero divide TRAP 5` — so the
+  BASIC09 silence is a BASIC09-level divisor guard, not an emulation gap.)
 - **RESOLVED 2026-07-21 — `chd`/`chx` no-argument behavior confirmed `Live`**
   (os9exec). Bare `chd` → `$HOME` (the `HOME` env var, **not** the
   password-file data dir — the open question is answered): with `HOME=/dd/DEFS`

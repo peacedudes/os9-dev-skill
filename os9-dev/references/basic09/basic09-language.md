@@ -92,7 +92,7 @@ as a complete, unmodified whole hasn't been run start-to-finish.
 | BYTE | 0-255, unsigned. Truncates silently on overflow. **Cannot be passed as a procedure parameter** — see Pitfalls. |
 | INTEGER | Signed. Faster than REAL (see Control Structures below). Width/range/overflow behavior is architecture-specific — see the per-architecture file. |
 | REAL | Width/range/precision is architecture-specific — see the per-architecture file. |
-| STRING | Declared via `STRING[len]` (max length, default 32 if omitted). Null-terminated in a fixed buffer; silently truncates past max. |
+| STRING | Declared via `STRING[len]` (max length, default 32 if omitted). Fixed buffer, silently truncates past max. **Terminator is target-specific:** `0x00` (NUL) on **68k** (`Live`, 2026-07-21 — byte-dump: `STRING[8]="XY"` after `"ABCDEFGH"` → `58 59 00 44...`), `$FF` on **6809**. A string filling its declared max length has **no** terminator byte at all (`Live` on 68k: `STRING[3]="XYZ"` → exactly `58 59 5A`). |
 | BOOLEAN | TRUE / FALSE. Not usable in numeric expressions — storing anything else into a BOOLEAN fails at runtime instead of being silently coerced. |
 
 Undeclared numeric variables default to REAL; a name ending in `$` and

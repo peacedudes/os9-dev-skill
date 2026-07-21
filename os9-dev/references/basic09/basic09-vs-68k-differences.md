@@ -65,9 +65,17 @@ direction, independent source.
   **EQUAL** (the residual is below single-precision resolution) and `1.0/3.0`
   gives ~9 good digits, not 15-16. So on os9exec, **68k BASIC REAL stores as
   double but computes at single precision** — don't rely on bit-for-bit
-  IEEE-double arithmetic. Whether real OS-9 68k BASIC also computes in single
-  (soft-float) or this is an os9exec REAL-math path is the remaining open
-  question.
+  IEEE-double arithmetic. **`Live`, 2026-07-21 — NOT BASIC09-specific:** the
+  same C test (`c/os9-c-cheatsheet.md`) shows os9exec's **C `double` arithmetic
+  is also single-precision** — `0.1+0.2-0.3` (and even the *runtime*-computed
+  `1.0/10.0 + 2.0/10.0 - 3.0/10.0`, ruling out constant-parsing) stored a
+  residual of exponent −22 (`3E 90 ...`, i.e. 2⁻²²), where a full-double result
+  would be ~2⁻⁵⁴. So this is os9exec's **shared default soft-float math** (C and
+  BASIC09 alike) computing at single precision, not a BASIC09 quirk. Full
+  double precision is reachable via the **68881 FPU** (accurate, `Live`
+  elsewhere — reached via a `math881` swap; see project memory
+  `fpu-68881-verified-accurate`). Remaining open question: whether real 68k OS-9
+  soft-float is also single-precision, or this is an os9exec math-library gap.
 
 ## 68k-only documented commands
 

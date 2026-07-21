@@ -52,6 +52,18 @@ direction, independent source.
   by 1024, and a 52-bit mantissa with an implied leading one. Unlike the
   6809's proprietary format, this one is a real, standard IEEE-754 double —
   bit-for-bit rounding behavior should follow normal IEEE-754 semantics.
+  **`Live`, 2026-07-21 — but the observed precision does NOT match a 52-bit
+  double (`Flag`, Manual vs Live, os9exec):** `0.1+0.2-0.3` evaluated to
+  `2.38418579e-7` (≈2⁻²²) — a *single*-precision-magnitude residual; a true
+  52-bit-mantissa double would leave ~1e-16. And `0.1+0.2 = 0.3` compares
+  **EQUAL** (BASIC09's REAL `=` tolerates a sub-precision difference), and
+  `1.0/3.0` printed only `.333333333` (~9 digits). So as observed on os9exec,
+  68k BASIC REAL arithmetic behaves at roughly *single* precision with a
+  tolerant `=`, not the full 15-16-digit double the manual implies. Not
+  root-caused — could be os9exec computing REAL arithmetic at reduced
+  precision, a low default `DIGITS`, or the storage not actually being 8-byte
+  double; a byte-dump of a stored REAL would settle it. **Don't rely on
+  15-digit double precision or bit-for-bit IEEE-double comparison here.**
 
 ## 68k-only documented commands
 

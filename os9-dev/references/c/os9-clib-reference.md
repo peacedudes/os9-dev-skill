@@ -182,7 +182,7 @@ memory:** whatever's left after static/stack allocation feeds the
 
 | Feature | Status |
 |---------|-------|
-| `stdlib.h` (full) | No `rand()`, `abs()`, `div()`; `atoi()`/`atol()` may be limited or absent |
+| `stdlib.h` (full) | No `rand()` (`Live`: unresolved at link), and no `abs()`/`div()` (`Manual`). But `atoi()`/`atol()` **are** present and work — `Live`, 2026-07-21: `atol("77")`→77, `atoi` likewise (the earlier "may be absent" was wrong) |
 | `strings.h` | Use this, not `string.h` (different API: `index`/`rindex` not `strchr`/`strrchr`) |
 | `ctype.h` (full ANSI) | Missing `isgraph()` and other ANSI additions; link errors, not compile errors |
 | `stat.h` (absent entirely) | **`Live`:** there is no `stat.h` on the 68k `DEFS` — `#include <stat.h>` fails to open. File mode bits are in `<modes.h>` (owner/public only, no group class) |

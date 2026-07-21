@@ -57,6 +57,11 @@ in this file:
   the data-types reference table below).
 - **`\n` is CR (0x0D), not LF** — matches OS-9's own line convention, but
   will silently produce the wrong bytes if you're thinking in Unix terms.
+  **`Live`, 2026-07-21** (os9exec 68k): `putc('\n', f)` to a file wrote the
+  single byte `0x0D` (the file read back `58 0D 59` for `X`,`\n`,`Y`) — the
+  compiler maps the escape to CR at compile time; a raw `putc(0x0A, f)` stays
+  `0x0A`, so there is no I/O-layer translation, it is purely what `\n` compiles
+  to.
 - **`<strings.h>`, not `<string.h>`** — different API (`index`/`rindex`,
   not `strchr`/`strrchr`); see `os9-clib-reference.md`.
 - **CLIB/CDEF must be set correctly** or the linker/preprocessor can't find

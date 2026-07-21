@@ -23,7 +23,7 @@ names (`F$xxx`/`I$xxx`).
 | `<ctype.h>` | Character classification (macros, K&R-era coverage) |
 | `<setjmp.h>` | `setjmp()`, `longjmp()` |
 | `<time.h>` | OS-9-specific system time (see "File Dates and Time Zones" below) |
-| `<errno.h>` | OS-9 extensions: EFPOVR=40, EDIVERR=41, EINTERR=42 |
+| `<errno.h>` | OS-9 error-code extensions. **`Live`, 2026-07-21 — correction:** the macro names `EFPOVR`/`EDIVERR`/`EINTERR` this row previously gave (with values 40/41/42) are **not** defined in the 68k `DEFS/errno.h` — each is an "undeclared identifier" at compile. The real header uses different OS-9-style short names; consult it (or `common/error-codes.md`) for the actual FP/divide/overflow codes rather than trusting these names. |
 | `<module.h>` | OS-9 module linking |
 | `<sgstat.h>` | OS-9 file status/setstat (`I$SetStt`) |
 | `<modes.h>` | File status/mode bits (owner/public only, no group class). **`Live`: `<stat.h>` does NOT exist on the 68k `DEFS` — use `<modes.h>`** (see File Permissions below) |

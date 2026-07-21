@@ -52,9 +52,12 @@ out: `fwrite("ABCDE",1,5)` returned `5` and `fread(...,1,5)` read back `ABCDE`
 `2`/end (a `-3` from end gave `78`); `puts` appends `\n` while `fputs` does not
 (`puts("PUTSLINE")` then `fputs("FPA")`/`fputs("FPB\n")` produced `PUTSLINE`
 on its own line followed by `FPAFPB`); and `gets` strips the trailing newline
-and NUL-terminates (input `HELLOWORLD` → a 10-char string, no `\n`). The `getc`
-auto-select (raw `read()` vs line-edited `readln()` by file type) is the one row
-here not yet individually exercised — it needs a terminal vs a disk file to show.
+and NUL-terminates (input `HELLOWORLD` → a 10-char string, no `\n`). `getc`
+auto-select confirmed on the **disk-file** side: reading a file containing
+`41 08 42` (an `A`, a raw `0x08` backspace, a `B`) returned all three bytes
+intact (`COUNT=3`, no line-editing) — i.e. `getc` uses raw `read()` for a disk
+file. The terminal side (line-edited `readln()`) isn't scriptable here, but the
+type-based selection is demonstrated by the raw disk read.
 
 ## String Functions (`strings.h`, not `string.h`)
 

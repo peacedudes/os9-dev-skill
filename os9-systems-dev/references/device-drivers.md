@@ -2,9 +2,13 @@
 
 **Verification status:** baseline is `Manual` — cross-referenced across
 multiple manuals. The Device Descriptor field table below is `Source` —
-checked against `os9exec`'s own C source (`module_from_book.h`) and
-confirmed exact, including three fields (`M$Port`, `M$FMgr`, `M$PDev`)
-this cross-check newly filled in.
+checked against `os9exec`'s own C source (`module_from_book.h`, the `mod_dev`
+struct) and confirmed exact. **Re-verified 2026-07-21:** every field
+(`M$Port` $30, `M$Vector` $34, `M$IRQLvl` $35, `M$Prior` $36, `M$Mode` $37,
+`M$FMgr` $38, `M$PDev` $3A, `M$DevCon` $3C, `M$Opt` $46, options at $48)
+carries a **compile-time** `offsetof` assertion in that header — the build
+fails if any offset moves, so the layout is continuously enforced, not
+checked once.
 
 **Entry-point register conventions below are untestable on `os9exec`, not
 just untested** — `Live` (2026-07-18, first real attempt): a

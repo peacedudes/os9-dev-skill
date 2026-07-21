@@ -328,19 +328,20 @@ when running it alongside another process that needs to make progress.
 ## Stopping a runaway program
 
 - **Ctrl-C**: shell keeps the prompt, child continues in background.
-- **Ctrl-E**: kills the child. Documented to act immediately regardless of
-  what the process is doing (compute loop, blocked write — no console
-  read needed) — **`Flag`: does not hold for a process blocked writing to
-  a full named pipe with no reader.** `Live`: both Ctrl-C and Ctrl-E,
-  sent multiple times, had zero effect on a process wedged mid-`WRITE` on
-  a full named pipe (45+ seconds observed, no progress, no response) —
-  the shell prompt never returned. **A full harness `restart` was the
-  only recovery; don't expect Ctrl-E to work if you deliberately induce a
-  named-pipe write-block for testing.** Not root-caused: could be a real
-  `os9exec`/UAE-core signal-delivery bug specific to a process parked deep
-  in a kernel-level pipe wait, or the general claim simply doesn't extend
-  to this specific blocked-syscall case. Host-native files/PACKed modules
-  survive the restart intact; in-memory session state does not.
+- **Ctrl-E**: kills the child. Acts immediately regardless of what the
+  process is doing — compute loop, blocked read, **or blocked write**.
+  **`Source`+`Live`, 2026-07-21 — was a real os9exec bug, now root-caused
+  and fixed:** a process blocked writing to a full named pipe (no reader)
+  parks in `pSysTask` state, and the emulator main loop's `pSysTask` branch
+  never drained the async signal queue — only the `pActive`/`pWaitRead`
+  path (`os9exec_nt.c` ~2158) and the `pSleeping` arbitration path
+  (`procstuff.c` ~1238) did. So a queued Ctrl-C/Ctrl-E abort sat undelivered
+  and the writer wedged until a full restart (45+ s observed originally).
+  This is exactly why blocked *reads* (`pWaitRead`) could always be
+  interrupted but blocked *writes* couldn't. Fixed by draining pending
+  signals in the `pSysTask` branch too, guarded so a delivered abort skips
+  the write-continuation. Regression (proven to fail without the fix):
+  `test/68k-live-verification/pipe-abort-repro.sh` in the os9exec repo.
 - `kill <pid>` after `procs`.
 - **ESC on a blank line** exits the shell; a harness restart is the
   reliable reset when state is unknown.

@@ -47,11 +47,14 @@ names (`F$xxx`/`I$xxx`).
 
 **`Live`, 2026-07-21** (os9exec 68k) — the core File I/O behaviors above check
 out: `fwrite("ABCDE",1,5)` returned `5` and `fread(...,1,5)` read back `ABCDE`
-(both return the item count); `fseek(f,2,0)` (place 0 = from start) then a 2-byte
-read returned `CD`; `puts` appends `\n` while `fputs` does not
+(both return the item count); all three `fseek` place codes work — `0`/start
+(→`CD` at offset 2), `1`/current (a `+3` from offset 2 then read gave `56`), and
+`2`/end (a `-3` from end gave `78`); `puts` appends `\n` while `fputs` does not
 (`puts("PUTSLINE")` then `fputs("FPA")`/`fputs("FPB\n")` produced `PUTSLINE`
-on its own line followed by `FPAFPB`). The `getc` auto-select and `gets`
-NUL-replacement rows are not yet individually exercised.
+on its own line followed by `FPAFPB`); and `gets` strips the trailing newline
+and NUL-terminates (input `HELLOWORLD` → a 10-char string, no `\n`). The `getc`
+auto-select (raw `read()` vs line-edited `readln()` by file type) is the one row
+here not yet individually exercised — it needs a terminal vs a disk file to show.
 
 ## String Functions (`strings.h`, not `string.h`)
 

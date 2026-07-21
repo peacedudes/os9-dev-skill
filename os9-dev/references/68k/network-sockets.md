@@ -203,6 +203,10 @@ requires re-running `idbgen` and reloading `inetdb` to take effect.
 ---
 
 Sources: OS-9 Internet Software Reference Manual. `Manual` throughout —
-no `Live` tier reachable (no network device support in the emulator);
-error-handling conventions cross-referenced against
-`68k/syscall-reference.md` and `common/ipc.md`.
+no `Live` tier reachable (no network device support in the emulator).
+**Confirmed 2026-07-21:** the socket API isn't even in the base SDK `clib` —
+a C program calling `socket()` fails at *link* time (`Symbol 'socket'
+unresolved`, `l68: error`), because OS-9/Internet ships its own socket
+library that this disk doesn't carry. So nothing here is testable without
+that separate product installed. Error-handling conventions cross-referenced
+against `68k/syscall-reference.md` and `common/ipc.md`.

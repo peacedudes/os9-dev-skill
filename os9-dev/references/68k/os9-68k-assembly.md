@@ -130,12 +130,16 @@ being silently swallowed. (This is exactly the `pwrstat` utility's latent bug:
 `MOVEA.L $4C(A0),A0` with `A0` still holding its `$AAAAAAAx` sentinel.)
 
 Slot assignments for the *informational* registers (which datum is in D2 vs
-D5, etc.) vary between manual passages — `Manual, Flag`, the same source
-conflict flagged for `F$Fork`'s input table — so treat the
-**defined-vs-undefined split** as the reliable fact and confirm an exact
-slot against a live register dump before depending on it. The
-defined-vs-undefined split itself is `Source`: verified against os9exec's
-own `prepFork` register setup.
+D5, etc.) varied between manual passages, but are now **`Live`-resolved
+(2026-07-21)** via a debugger register dump of a forked program (`debug <prog>
+hello`): **D2 = priority (`$80` = 128, the default), D3 = # inherited paths
+(`3` = stdin/out/err), D5 = param-area size, D6 = total memory** — exactly the
+order the table above lists. The same dump confirmed the rest Live: **D0 = the
+PID**, **D1 = packed owner** (`0` for a `0.0` super-user), and every
+**undefined** register holding its sentinel — **D4=`DDDDDDD4`, D7=`DDDDDDD7`,
+A0=`AAAAAAA0`, A2=`AAAAAAA2`, A4=`AAAAAAA4`** (the `$DDDDDDDn`/`$AAAAAAAn`
+fill). The defined-vs-undefined split is also `Source` (os9exec's own
+`prepFork` register setup).
 
 **`A5`'s actual content, `Live`**: a NUL-terminated string holding
 exactly the typed command-line tail (e.g. `"hello"` for one argument —

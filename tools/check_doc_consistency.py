@@ -47,6 +47,22 @@ _PRESENCE = [
 # it is not an open divergence.
 _FLAG_RESOLVED = re.compile(r"`?Flag`?\s+(?:is\s+|now\s+)?(?:resolved|cleared)", re.I)
 
+# A `.md`-shaped path token, backticked or bare -- used by the INDEX.md
+# cross-reference check. Word/dot/slash/dash chars only, so prose punctuation
+# around it (backticks, trailing periods) never gets swept in.
+_DOC_TOKEN = re.compile(r"[\w./-]+\.md")
+
+INDEX_FILENAME = "INDEX.md"
+
+# A wiki-style memory cross-link, e.g. "see [[user-designed-rbf-eof-lock]]".
+# Optional surrounding backticks are captured so a backtick-quoted occurrence
+# (`` `[[memory]]` `` describing the linking convention itself, not using it)
+# can be told apart from a real link.
+_MEMORY_LINK = re.compile(r"(`?)\[\[([A-Za-z0-9_-]+)\]\](`?)")
+
+# The `name:` field of a memory file's YAML frontmatter.
+_FRONTMATTER_NAME = re.compile(r"\A---\n.*?^name:\s*(\S+)\s*$.*?^---", re.M | re.S)
+
 # Platform hints found in the prose itself (override the path when present in an
 # absence clause -- e.g. "6809 has no F$STrap" written in a platform-neutral file).
 _PLAT_6809 = re.compile(r"\b(6809|nitros-?9|coco)\b", re.I)
@@ -272,6 +288,72 @@ def scan_open_flags(text, filename, known_tags):
     return inventory
 
 
+def extract_doc_references(line):
+    """Return every `something.md`-shaped token mentioned in `line`, backticked or bare."""
+    return _DOC_TOKEN.findall(line)
+
+
+def check_cross_references(files, known_basenames):
+    """Flag an INDEX.md entry that names a file matching nothing in `known_basenames`.
+
+    Scoped to `INDEX.md` files only -- the two skills' manifests are the one place
+    a broken pointer breaks navigation; prose elsewhere routinely names files that
+    live in a different repo (dogfood reports, `ROADMAP.md`) and is not in scope.
+    Resolution is by basename: INDEX.md rows are written as bare names, tree-
+    relative paths, or sibling-skill-qualified paths (`os9-dev/references/...`),
+    and basename matching is the one rule that resolves all three without having
+    to hand-parse "sibling X skill" prose to pick a path root.
+    """
+    findings = []
+    for filename, text in files:
+        if os.path.basename(filename) != INDEX_FILENAME:
+            continue
+        for lineno, line in enumerate(text.splitlines(), start=1):
+            for ref in extract_doc_references(line):
+                base = os.path.basename(ref)
+                if base not in known_basenames:
+                    findings.append(
+                        Finding(
+                            "cross-ref",
+                            None,
+                            f"INDEX.md points to `{ref}`, no file named `{base}` was found",
+                            [(filename, lineno)],
+                        )
+                    )
+    return findings
+
+
+def parse_memory_name(text):
+    """Return a memory file's frontmatter `name:` value, or None if absent."""
+    m = _FRONTMATTER_NAME.match(text)
+    return m.group(1) if m else None
+
+
+def check_orphaned_memory_links(files):
+    """Flag a `[[name]]` link with no memory file whose frontmatter `name:` matches.
+
+    `files` is a list of (filename, text) pairs covering every memory file, so the
+    known-name set and the scan are both built from the same corpus in one pass.
+    """
+    known = {name for name in (parse_memory_name(text) for _, text in files) if name}
+    findings = []
+    for filename, text in files:
+        for lineno, line in enumerate(text.splitlines(), start=1):
+            for open_tick, link, close_tick in _MEMORY_LINK.findall(line):
+                if open_tick == "`" and close_tick == "`":
+                    continue
+                if link not in known:
+                    findings.append(
+                        Finding(
+                            "memory-link",
+                            None,
+                            f"[[{link}]] has no matching memory file (frontmatter name: {link})",
+                            [(filename, lineno)],
+                        )
+                    )
+    return findings
+
+
 # --- driver ----------------------------------------------------------------
 
 def collect_markdown(roots):
@@ -292,26 +374,42 @@ def load_known_tags(files):
     raise SystemExit(f"{CONFIDENCE_TAGS_FILE} not found under scanned roots")
 
 
+def _index_adjacent_files(roots):
+    """SKILL.md/SOURCES.md one directory above each root -- INDEX.md's only
+    non-references/ targets, named explicitly rather than re-walked for."""
+    extra = []
+    for root in roots:
+        parent = os.path.dirname(os.path.normpath(root))
+        for name in ("SKILL.md", "SOURCES.md"):
+            path = os.path.join(parent, name)
+            if os.path.isfile(path):
+                extra.append(path)
+    return extra
+
+
 def run(roots):
     """Scan `roots`, returning (findings, inventory).
 
-    `findings` are presence-contradiction + tag-hygiene issues (any means the run
-    failed); `inventory` is the informational `Flag` worklist. Meta-docs are used
-    for their tag set but never scanned as claim sources.
+    `findings` are presence-contradiction + tag-hygiene + cross-reference issues
+    (any means the run failed); `inventory` is the informational `Flag` worklist.
+    Meta-docs are used for their tag set but never scanned as claim sources.
     """
     files = collect_markdown(roots)
     known = load_known_tags(files)
-    mentions, findings, inventory = [], [], []
+    known_basenames = {os.path.basename(p) for p in files + _index_adjacent_files(roots)}
+    mentions, findings, inventory, doc_texts = [], [], [], []
     for path in files:
-        if os.path.basename(path) in META_DOCS:
-            continue
         display = os.path.relpath(path)
         with open(path, encoding="utf-8") as handle:
             text = handle.read()
+        doc_texts.append((display, text))
+        if os.path.basename(path) in META_DOCS:
+            continue
         mentions.extend(find_mentions(text, display, known))
         findings.extend(check_tag_hygiene(text, display, known))
         inventory.extend(scan_open_flags(text, display, known))
     findings = check_presence_contradiction(mentions) + findings
+    findings += check_cross_references(doc_texts, known_basenames)
     return findings, inventory
 
 
@@ -320,15 +418,39 @@ def _format(finding):
     return f"  [{finding.check}] {finding.message}\n         {where}"
 
 
+def collect_memory_files(memory_dir):
+    """Return (filename, text) for every memory `.md` file under `memory_dir`."""
+    files = []
+    for dirpath, _dirs, names in os.walk(memory_dir):
+        for name in sorted(names):
+            if not name.endswith(".md"):
+                continue
+            path = os.path.join(dirpath, name)
+            with open(path, encoding="utf-8") as handle:
+                files.append((os.path.relpath(path), handle.read()))
+    return files
+
+
 def main(argv=None):
-    """CLI entry: scan skill reference trees, print findings, return exit code."""
+    """CLI entry: scan skill reference trees, print findings, return exit code.
+
+    `--memory-dir DIR` additionally scans DIR's memory files for orphaned
+    `[[name]]` links; the path is project-specific so it is never hardcoded.
+    """
     argv = list(sys.argv[1:] if argv is None else argv)
+    memory_dir = None
+    if "--memory-dir" in argv:
+        i = argv.index("--memory-dir")
+        memory_dir = argv[i + 1]
+        del argv[i : i + 2]
     here = os.path.dirname(os.path.abspath(__file__))
     roots = argv or [
         os.path.join(here, os.pardir, "os9-dev", "references"),
         os.path.join(here, os.pardir, "os9-systems-dev", "references"),
     ]
     findings, inventory = run(roots)
+    if memory_dir:
+        findings = findings + check_orphaned_memory_links(collect_memory_files(memory_dir))
 
     if findings:
         print(f"Doc-consistency findings ({len(findings)} -- investigate, neither runtime is an oracle):")

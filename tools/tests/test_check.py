@@ -293,5 +293,82 @@ class TestRun(unittest.TestCase):
         self.assertEqual(inventory, [])
 
 
+# --------------------------------------------------------------------------
+# cross-reference integrity (INDEX.md pointers)
+# --------------------------------------------------------------------------
+class TestExtractDocReferences(unittest.TestCase):
+    def test_finds_backticked_and_bare_md_tokens(self):
+        line = "| Read | `common/foo.md` | and also bar.md plain |"
+        self.assertEqual(chk.extract_doc_references(line), ["common/foo.md", "bar.md"])
+
+    def test_finds_sibling_qualified_token(self):
+        line = "sibling os9-dev skill: `references/6809/using-nitros9-repl.md`"
+        self.assertEqual(chk.extract_doc_references(line), ["references/6809/using-nitros9-repl.md"])
+
+
+class TestCrossReferences(unittest.TestCase):
+    def test_flags_index_entry_with_no_matching_file(self):
+        files = [("os9-dev/references/INDEX.md", "| Topic | ghost-file.md |\n")]
+        findings = chk.check_cross_references(files, known_basenames={"INDEX.md"})
+        self.assertEqual(len(findings), 1)
+        self.assertIn("ghost-file.md", findings[0].message)
+        self.assertEqual(findings[0].locations, [("os9-dev/references/INDEX.md", 1)])
+
+    def test_silent_when_basename_matches(self):
+        files = [("os9-dev/references/INDEX.md", "| Topic | `common/foo.md` |\n")]
+        findings = chk.check_cross_references(files, known_basenames={"foo.md"})
+        self.assertEqual(findings, [])
+
+    def test_sibling_qualified_path_resolves_by_basename(self):
+        # os9-systems-dev/INDEX.md style: "os9-dev/references/CONFIDENCE-TAGS.md"
+        files = [("os9-systems-dev/references/INDEX.md", "See `os9-dev/references/CONFIDENCE-TAGS.md`.\n")]
+        findings = chk.check_cross_references(files, known_basenames={"CONFIDENCE-TAGS.md"})
+        self.assertEqual(findings, [])
+
+    def test_non_index_files_are_not_scanned(self):
+        # A prose doc mentioning a file that lives in a different repo entirely
+        # (e.g. a dogfood report) must never be flagged -- only INDEX.md is scoped.
+        files = [("os9-dev/references/6809/STATUS.md", "See `dogfood-report-2026-07-18.md`.\n")]
+        findings = chk.check_cross_references(files, known_basenames={"STATUS.md"})
+        self.assertEqual(findings, [])
+
+
+# --------------------------------------------------------------------------
+# orphaned [[memory]] link detection
+# --------------------------------------------------------------------------
+class TestParseMemoryName(unittest.TestCase):
+    def test_reads_name_from_frontmatter(self):
+        text = "---\nname: my-memory\ndescription: x\n---\n\nbody\n"
+        self.assertEqual(chk.parse_memory_name(text), "my-memory")
+
+    def test_none_when_no_frontmatter(self):
+        self.assertIsNone(chk.parse_memory_name("just a body, no frontmatter\n"))
+
+
+class TestOrphanedMemoryLinks(unittest.TestCase):
+    def test_flags_link_to_nonexistent_memory(self):
+        files = [("real.md", "---\nname: real\n---\nSee [[ghost-memory]] for detail.\n")]
+        findings = chk.check_orphaned_memory_links(files)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("ghost-memory", findings[0].message)
+        self.assertEqual(findings[0].locations, [("real.md", 4)])
+
+    def test_silent_when_link_resolves(self):
+        files = [
+            ("a.md", "---\nname: a\n---\nSee [[b]].\n"),
+            ("b.md", "---\nname: b\n---\nSee [[a]].\n"),
+        ]
+        self.assertEqual(chk.check_orphaned_memory_links(files), [])
+
+    def test_self_reference_is_not_orphaned(self):
+        files = [("a.md", "---\nname: a\n---\nRelated: [[a]].\n")]
+        self.assertEqual(chk.check_orphaned_memory_links(files), [])
+
+    def test_backtick_quoted_link_is_a_convention_example_not_a_link(self):
+        # "`[[memory]]` detection" describes the linking convention itself.
+        files = [("a.md", "---\nname: a\n---\nSee orphaned `[[memory]]` detection.\n")]
+        self.assertEqual(chk.check_orphaned_memory_links(files), [])
+
+
 if __name__ == "__main__":
     unittest.main()

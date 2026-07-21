@@ -48,12 +48,19 @@ verified behavior from silent regression. Note: the concurrent session appears
 to be building 6809 test infra (`tools/nitros9-*.py`, `rl-*.sh`) — coordinate
 so this doesn't duplicate theirs.
 
-## 4. Extend the doc-consistency checker for structural rot
-`tools/check_doc_consistency.py` currently catches syscall presence/tag issues.
-Add **cross-reference integrity** (a reference file citing another file/section
-that doesn't exist) and **orphaned `[[memory]]` link** detection. Keep it
-mechanical — do NOT add fragile general-prose claim-matching (deliberately
-rejected). Add tests + prove-it-fails-once, as with the existing checks.
+## 4. Extend the doc-consistency checker for structural rot — DONE (2026-07-21)
+Added **cross-reference integrity** (an `INDEX.md` row naming a `.md` file that
+doesn't exist anywhere in the skill tree, resolved by basename so bare/
+tree-relative/sibling-qualified paths all work without hand-parsing "sibling X
+skill" prose) and **orphaned `[[memory]]` link** detection (opt-in via
+`--memory-dir <dir>`, since that path is machine-specific). Both scoped
+narrowly — INDEX.md only, backtick-quoted `` `[[name]]` `` treated as
+convention prose not a real link — to avoid the fragile general-prose
+claim-matching this checker deliberately rejects. 50/50 tests green (12 new),
+each proven to fail once before trusting green. Run for real with
+`--memory-dir`, it immediately found 36 genuine orphaned `[[name]]` links
+across ~15 memory files (mostly `feedback_` prefix drift) — a real maintenance
+worklist, not fixed by this change. See `doc-consistency-checker` memory.
 
 ## 5. Maintain the `Live` verified-against baseline
 `CONFIDENCE-TAGS.md`'s baseline table must be re-stamped when the emulator
@@ -63,11 +70,10 @@ checker prints the stamp every run; keep it honest.
 ---
 
 ## Specific open items (smaller)
-- **E$Share delete-open enforcement** — real os9exec fidelity gap (deleting an
-  open file succeeds; should be 253). Needs careful open-path-tracking design;
-  logged on os9exec `ROADMAP.md` and memory `os9exec-ebmode-enforcement-fix`.
-  The concurrent session is already in that RBF code fixing the related
-  cluster-leak, so watch for overlap.
+- **E$Share delete-open enforcement — DONE** (os9exec commit `0ee76c1`, by the
+  concurrent RBF-hammer session): deleting a file held open for write now
+  refuses with `E$Share` instead of orphaning its clusters. See memory
+  `rbf-lock-hammer-in-progress`.
 - **Single-precision float open question** (1 of 2 checker flags) — whether real
   68k OS-9's default `math` module is also single-precision, or it's an os9exec
   `math`-trap gap. Resolvable only against real 68k hardware.

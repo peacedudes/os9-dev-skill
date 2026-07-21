@@ -76,11 +76,16 @@ direction, independent source.
   accurate and gives full precision** (`Live`, 2026-07-21): a C program compiled
   `cc -K=2F` (target 68020 + 68881, via the `c68020`/`r68020` passes) computed
   the runtime `1.0/10.0+2.0/10.0-3.0/10.0` to a residual of **exactly 0** (the
-  68881's 80-bit extended precision), vs 2⁻²² without the flag. Note `load
-  math881` at runtime does NOT help an already-compiled program — precision is
-  fixed at compile time. BASIC09 has no equivalent recompile knob, so its REAL
-  math stays single-precision. Open question: whether real 68k OS-9's default
-  `math` module is also single-precision, or this is an os9exec `math`-trap gap.
+  68881's 80-bit extended precision), vs 2⁻²² without the flag.
+  **BASIC09's knob differs from C's:** BASIC09 uses the `math` *module*
+  dynamically, so **`load /dd/CMDS/math881` before running `basic` upgrades its
+  REAL math to the FPU** — `Live`, 2026-07-21: with math881 loaded,
+  `0.1+0.2-0.3` gave a residual of **exactly 0** (vs 2⁻²² under the default
+  software `math`). A `cc` program can't be fixed this way (it links software FP
+  *statically*, ignoring the `math` module — it needs the `-K=2F` recompile).
+  See project memory `fpu-68881-verified-accurate`. Open question: whether real
+  68k OS-9's default `math` module is also single-precision, or this is an
+  os9exec `math`-trap gap.
 
 ## 68k-only documented commands
 

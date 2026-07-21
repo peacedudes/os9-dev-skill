@@ -158,9 +158,12 @@ on os9exec (`Live`, 2026-07-21).** A `double` computation loses precision to
 about single-precision magnitude: `0.1+0.2-0.3` (and the runtime-computed
 `1.0/10.0+2.0/10.0-3.0/10.0`, so it isn't constant-parsing) yielded a 2⁻²²
 residual — `0.1+0.2 != 0.3` is still true (C does a real IEEE compare, unlike
-BASIC09's tolerant `=`), but you get ~7 good digits, not ~16. This is os9exec's
-default soft-float math, shared with BASIC09 REAL; full double precision needs
-the 68881 FPU (`math881`). See `basic09/basic09-vs-68k-differences.md`.
+BASIC09's tolerant `=`), but you get ~7 good digits, not ~16. This is the
+default soft-float math, shared with BASIC09 REAL, and it's fixed at
+compile/link time — **`Live`: `load math881` at runtime does NOT change an
+already-compiled program's precision**; full double precision needs FPU-targeted
+*compilation* (exact mechanism not established here). See
+`basic09/basic09-vs-68k-differences.md`.
 
 On the 6809 compiler only, `SHORT`/`SHORT INT` are synonyms for plain
 `int`, `LONG INT` is a synonym for `long`, and `LONG FLOAT` means `double`

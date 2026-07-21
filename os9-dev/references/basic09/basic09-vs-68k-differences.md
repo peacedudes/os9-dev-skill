@@ -71,11 +71,14 @@ direction, independent source.
   `1.0/10.0 + 2.0/10.0 - 3.0/10.0`, ruling out constant-parsing) stored a
   residual of exponent −22 (`3E 90 ...`, i.e. 2⁻²²), where a full-double result
   would be ~2⁻⁵⁴. So this is os9exec's **shared default soft-float math** (C and
-  BASIC09 alike) computing at single precision, not a BASIC09 quirk. Full
-  double precision is reachable via the **68881 FPU** (accurate, `Live`
-  elsewhere — reached via a `math881` swap; see project memory
-  `fpu-68881-verified-accurate`). Remaining open question: whether real 68k OS-9
-  soft-float is also single-precision, or this is an os9exec math-library gap.
+  BASIC09 alike) computing at single precision, not a BASIC09 quirk. **The
+  precision is fixed at compile/link time, not by a runtime module choice:**
+  `Live`, `load math881` at runtime did NOT change an already-compiled C
+  program's residual (still 2⁻²²). The 68881 FPU is accurate (`Live` elsewhere,
+  project memory `fpu-68881-verified-accurate`) but reaching it needs
+  FPU-targeted *compilation*, not just loading `math881`. Remaining open
+  questions: the exact FPU-compile mechanism, and whether real 68k OS-9
+  soft-float is also single-precision or this is an os9exec math-library gap.
 
 ## 68k-only documented commands
 

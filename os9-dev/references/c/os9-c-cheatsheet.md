@@ -180,7 +180,10 @@ shape row-wise. Concretely: BASIC09's `DIM array(5,3):INTEGER` and C's
 same logical element requires transposed subscripts — BASIC09's
 `array(4,2)` is C's `array[2][4]`, not `array[4][2]`. Passing a
 multi-dimensional array between the two languages without accounting for
-this silently reads/writes the wrong elements.
+this silently reads/writes the wrong elements. **`Live`, 2026-07-21** (68k):
+a `DIM m(2,3):BYTE` filled `m(i,j)=i*16+j` and `PUT` to a file stored
+`11 21 12 22 13 23` — i.e. `m(1,1),m(2,1),m(1,2),m(2,2),m(1,3),m(2,3)`, the
+first subscript varying fastest, confirming BASIC09's column-major layout.
 
 Sources: OS-9 C Compiler manual, "Data Representation and Storage
 Requirements", p. 1-5, and "Interfacing to BASIC09", p. C-1

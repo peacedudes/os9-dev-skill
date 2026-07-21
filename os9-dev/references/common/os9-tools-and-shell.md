@@ -29,7 +29,7 @@ argument text before the program sees it; quote them to pass literally.
 
 | Modifier | Effect |
 |---|---|
-| `<path` `>path` `>>path` | Redirect stdin / stdout / **stderr**. `>>` is NOT append — it redirects the standard error path. Output modifiers: `>path` fails if file exists (create only); `>+path` appends to existing or creates; `>-path` truncates existing or creates. Combine freely: `cmd >out >>err`. `Live`: tested on NitrOS-9. |
+| `<path` `>path` `>>path` | Redirect stdin / stdout / **stderr**. `>>` is NOT append — it redirects the standard error path. Output modifiers: `>path` fails if file exists (create only); `>+path` appends to existing or creates; `>-path` truncates existing or creates. Combine freely: `cmd >out >>err`, or stacked into one target: `>>>path` = stdout AND stderr (`Live`: `cmd >>>/nil` swallows a stderr banner; proven-ran via side effect), `<>>>path` = all three (owner-stated; accepted live — note the shell still prints a failed child's exit status on its OWN stderr, which is NOT the child's and looks like a leak). `Live`: tested on NitrOS-9. |
 | `#n` or `#nK` | Raise the process's memory allocation (both forms are kilobytes on 68k). Ignored if smaller than the module-header default; applies to that one command only. C programs use the extra purely as stack. Classic use: `basic09 #32k` when a program blows the default workspace |
 
 Wildcards `*` (any string) and `?` (one character) are expanded by the shell
@@ -51,6 +51,12 @@ itself via `F$CmpNam`; the program receives matched names only.
 
 Shell invocation options (also settable via `set`): `t`/`nt` echo input
 lines on/off, `p="..."`/`np` prompt on/off, `x`/`nx` abort-on-error on/off.
+**`Live`, 2026-07-21** (os9exec): all three confirmed via `set` — `set t`
+echoed each command line before running it; `set np` suppressed the `$`
+prompt for subsequent commands; `set x` aborted the shell on the first
+command error (a following `echo` never ran) while `set nx` continued past
+the error. (`p`'s prompt *string* form `p="..."` not separately exercised,
+only the on/off behaviour.)
 
 - The `PROMPT` environment variable holds the prompt string; a leading `@`
   expands to the shell-nesting level (tracked in `_sh`), so nested shells

@@ -184,9 +184,10 @@ discipline — not silently fixed):
   live-verify both, plus whether "home" means `HOME` env var or
   the password-file data dir.
 - **RESOLVED 2026-07-18 — `>+`/`>-` redirection forms confirmed `Live`.** Both forms are real OS-9 shell syntax, not documented in Using Professional OS-9 v2.4 (which lists only `<`/`>`/`>>`). Behavior: `>` = create new only (fail if exists); `>+` = append to existing or create new; `>-` = truncate/overwrite existing or create new. Tested on NitrOS-9 6809.
-- Shell option letters (`t`/`nt`, `p`/`np`, `x`/`nx`) in
-  `os9-tools-and-shell.md`: standard set, but worth a live `set`/invocation
-  check.
+- **RESOLVED 2026-07-21 — shell option letters `t`/`nt`, `p`/`np`, `x`/`nx`
+  confirmed `Live`** (os9exec, via `set`): trace echoes each command line,
+  `np` suppresses the prompt, `x` aborts the shell on a command error while
+  `nx` continues. Now stamped `Live` in `os9-tools-and-shell.md`.
 - tmode/xmode semantics (`utility-usage.md`): `Manual`, confirmed against
   Using Professional OS-9's own entries (tmode = open path, temporary;
   xmode = in-memory descriptor, immediate, survives until reboot, five

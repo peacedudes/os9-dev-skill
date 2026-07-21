@@ -159,11 +159,15 @@ about single-precision magnitude: `0.1+0.2-0.3` (and the runtime-computed
 `1.0/10.0+2.0/10.0-3.0/10.0`, so it isn't constant-parsing) yielded a 2⁻²²
 residual — `0.1+0.2 != 0.3` is still true (C does a real IEEE compare, unlike
 BASIC09's tolerant `=`), but you get ~7 good digits, not ~16. This is the
-default soft-float math, shared with BASIC09 REAL, and it's fixed at
-compile/link time — **`Live`: `load math881` at runtime does NOT change an
-already-compiled program's precision**; full double precision needs FPU-targeted
-*compilation* (exact mechanism not established here). See
-`basic09/basic09-vs-68k-differences.md`.
+default soft-float math (the `math` trap handler), shared with BASIC09 REAL, and
+it's fixed at compile time — `load math881` at runtime does NOT change an
+already-compiled program (`Live`). **To get full precision, compile for the
+68881 FPU: `cc -K=2F` (`-K=2` = target 68020, `F` = 68881; uses the `c68020`/
+`r68020` passes).** `Live`, 2026-07-21: with `-K=2F`, the runtime-computed
+`1.0/10.0+2.0/10.0-3.0/10.0` gave a residual of **exactly 0** (the 68881's 80-bit
+extended precision — even tighter than 64-bit double), vs 2⁻²² without it. So the
+68881 emulation is accurate; the single-precision default is a `math`-trap
+limitation, not the CPU core. See `basic09/basic09-vs-68k-differences.md`.
 
 On the 6809 compiler only, `SHORT`/`SHORT INT` are synonyms for plain
 `int`, `LONG INT` is a synonym for `long`, and `LONG FLOAT` means `double`

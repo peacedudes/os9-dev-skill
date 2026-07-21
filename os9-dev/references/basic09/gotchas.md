@@ -90,11 +90,13 @@
   the trap both times. Treat it as staying armed indefinitely until an
   explicit bare `ON ERROR`.
 - **Divide-by-zero has two very different, both-surprising failure
-  modes.** `INTEGER÷0` is **not** silent — `Live` (6809): it generates
-  `Error #045 -- Divide by Zero` and drops into interactive Debug Mode
-  if left unhandled, same path as `REAL÷0` on 6809 (68k behavior
-  unverified; may differ — see `basic09-language.md`'s own entry for the
-  precise wording, this file previously said the opposite). `REAL÷0`
+  modes.** `INTEGER÷0` **differs by platform — both now `Live`.** On
+  **6809** it is **not** silent: it generates `Error #045 -- Divide by
+  Zero` and drops into interactive Debug Mode if left unhandled, same path
+  as `REAL÷0` on 6809. On **68k** (`Live`, 2026-07-21, os9exec) it **is
+  silent** — no error at all (so the "previously said the opposite" wording
+  was actually right for 68k, wrong for 6809). See `basic09-language.md`'s
+  entry for the full divergence. `REAL÷0`
   **used to crash the entire 68k BASIC process** via an uncatchable CPU
   trap
   (`Error #000:107 E_TRAPV`), a genuine divergence from 6809 (where it

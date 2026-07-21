@@ -166,19 +166,19 @@ discipline — not silently fixed):
   catchable on 68k", regression test in `test/Sources/OS9Tests/main.swift`).
   Both files now state `REAL÷0` is a catchable trap on 68k matching
   6809's always-catchable behavior, per project memory recording this as
-  `Live`. **Not independently re-verified in this pass**: the
-  exact BASIC09-level error text/number 68k now shows (6809's is
-  `Error #045`) — the regression test covers the `F$STrap`
-  assembly-level dispatch, not a BASIC09-level live run. Worth a live
-  `nitros9repl`-style confirmation on 68k `os9exec` if the precise wording
-  matters for a future card.
-- **RESOLVED 2026-07-18 — `basic09/basic09-language.md`'s INTEGER÷0 passage
-  corrected and architecture-tagged.** Prior passage claimed `Live` —
-  "silently falls through, no error, no trap fired," but 6809 live test
-  (on NitrOS-9 BASIC09) confirmed INTEGER÷0 generates `Error #045 -- Divide
-  by Zero` and breaks into Debug Mode, identical to REAL÷0 on 6809.
-  Passage rewritten to document 6809 behavior as `Live`; 68k behavior
-  flagged as unverified.
+  `Live`. **RESOLVED 2026-07-21 — 68k BASIC09-level wording now confirmed
+  `Live`** (os9exec, via `basic` — the 68k interpreter is named `basic`, not
+  `basic09`): a REAL÷0 under `ON ERROR GOTO` is caught and `ERR` returns
+  **107** (the `E_TRAPV` code), vs 6809's `Error #045` — the number differs
+  across platforms though both are catchable. Stamped in `basic09-language.md`.
+- **RESOLVED 2026-07-21 — INTEGER÷0 68k behavior confirmed `Live`** (was flagged
+  unverified after the 2026-07-18 6809 pass). On **68k** INTEGER÷0 is **silent,
+  no error** — a procedure dividing an INTEGER by 0 then `PRINT`ing ran straight
+  through (`ON ERROR` never fired), the exact **opposite** of 6809's
+  `Error #045`. So the original "silently falls through" claim was right for 68k
+  and wrong for 6809. Both `basic09-language.md` and `gotchas.md` updated.
+  (Open follow-up: real 68000 traps integer div-by-zero via vector 5, so the
+  silence may be a BASIC09 choice or an os9exec emulation gap.)
 - **RESOLVED 2026-07-21 — `chd`/`chx` no-argument behavior confirmed `Live`**
   (os9exec). Bare `chd` → `$HOME` (the `HOME` env var, **not** the
   password-file data dir — the open question is answered): with `HOME=/dd/DEFS`

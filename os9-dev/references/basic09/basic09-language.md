@@ -618,10 +618,16 @@ after each trip.
 **Divide-by-zero has two very different outcomes depending on type —
 neither goes through the documented "Divide by Zero" error path in the
 way you'd expect:**
-- **INTEGER ÷ 0** (e.g. `i = i / 0` with `i: INTEGER`): `Live` (6809) —
-  generates `Error #045 -- Divide by Zero` and drops into interactive
-  Debug Mode if left unhandled, same as REAL÷0 on 6809. (68k behavior
-  unverified; may differ.)
+- **INTEGER ÷ 0** (e.g. `i = i / 0` with `i: INTEGER`): a genuine
+  **6809-vs-68k divergence, both now `Live`.** **6809**: generates
+  `Error #045 -- Divide by Zero` and drops into interactive Debug Mode if
+  left unhandled, same as REAL÷0 on 6809. **68k** (`Live`, 2026-07-21, os9exec):
+  the **opposite** — INTEGER÷0 is **silent, no error at all**: a procedure that
+  divides an INTEGER by 0 and then `PRINT`s ran straight through and printed
+  (`ON ERROR GOTO` never fired). Don't count on an INTEGER÷0 being caught on
+  68k. (Real 68000 hardware traps integer divide-by-zero via vector 5, so
+  whether this silence is a BASIC09 choice or an os9exec emulation gap is an
+  open follow-up.)
 - **REAL ÷ 0** (e.g. `z = x / y` with `y: REAL` = 0): **used to crash the
   entire BASIC process** (`Error #000:107 (E_TRAPV) TrapV instruction
   TRAP 7 occurred`, `E_PRCABT(228)`) — a raw, uncatchable 68k CPU trap
@@ -629,8 +635,11 @@ way you'd expect:**
   an `os9exec` bug (four stacked `F$STrap` dispatch bugs), now fixed —
   see `basic09/gotchas.md`'s divide-by-zero entry. `REAL÷0` is now a
   catchable trap on 68k, matching 6809's always-catchable behavior
-  (drops into interactive Debug Mode if left unhandled, same as
-  6809's `Error #045`). **Still avoid REAL division where the divisor
+  (drops into interactive Debug Mode if left unhandled). **`Live`,
+  2026-07-21** (os9exec): `ON ERROR GOTO` caught a 68k REAL÷0 and `ERR`
+  returned **107** (the `E_TRAPV` code) — vs 6809's `Error #045`, so the
+  *number* differs across platforms even though both are now catchable.
+  **Still avoid REAL division where the divisor
   could be zero** — catchable now, but there is still no automatic
   recovery without an explicit `ON ERROR GOTO`.
 

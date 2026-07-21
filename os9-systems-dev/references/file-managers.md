@@ -9,9 +9,11 @@ before porting it anywhere; the design intent itself stays `Hearsay` (the
 designer's own account) and cannot be upgraded, but the *behavior* is now
 demonstrated. One prior `Live` claim there is **retracted** — a lost-update
 counter race that passed against code with no locking at all. The path-descriptor byte-offset claims below are
-`Source` — spot-checked against `os9exec`'s own C source (the
-`PD_FST`/42-byte-header claim matches; see the `PD_COUNT` "Known gap"
-note below for a `Source, Flag` offset conflict that check turned up).
+`Source` — **fully cross-checked 2026-07-21** against `os9exec`'s own C
+source: the whole common-header `PD_` table ($00–$29, `PD_FST` at $2A) and
+the 128-byte SCF options region (`struct _sgs` at `PD_OPT` $80) both match
+(see those sections). The `PD_COUNT` "Known gap" note below is the one
+`Source, Flag` offset conflict that check turned up.
 
 **Entry-point conventions below are untestable on `os9exec`, not just
 untested — confirmed the same platform gap as `device-drivers.md`, and

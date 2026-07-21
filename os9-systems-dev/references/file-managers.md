@@ -130,6 +130,17 @@ device descriptor's initialization table (`M$DTyp` through `M$Opt` — see
 `I$GetStt(SS_Opt)` and modify selected fields via `I$SetStt`, subject to
 write-protection rules the file manager enforces.
 
+**`Source`, 2026-07-21 — the SCF options layout is os9exec's real one.** The
+128-byte options region is os9exec's own `struct _sgs`
+(`Source/OS9exec_core/os9defs/sgstat_from_book.h`), size-asserted at
+compile time (`sizeof == 128`) and — for the SCF fields — *actively used* by
+its SCF driver, not just declared: e.g. `PD_EOR`/end-of-record at `$0B`
+(`_sgs_eorch`), `PD_QUT`/keyboard-abort at `$11` (`_sgs_kbach`, the Ctrl-E
+handler reads it), `PD_INT` at `$10`, `PD_PAR` at `$14`, `PD_BAU` at `$15`.
+`PD_OPT` = `$80` and `PD_DTP` = byte 0 of the region both match. (The
+per-field offsets themselves are book-derived, not individually
+compile-asserted the way the module header's are — only the total size is.)
+
 **`Source`:** `os9exec`'s own device-descriptor
 header (`module_from_book.h`, Guru-derived, same source as the rest of
 this file) confirms `M$Mode`/`$37`, `M$DevCon`/`$3C`, and `M$Opt`/`$46`

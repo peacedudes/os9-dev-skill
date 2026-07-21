@@ -26,7 +26,7 @@ names (`F$xxx`/`I$xxx`).
 | `<errno.h>` | OS-9 extensions: EFPOVR=40, EDIVERR=41, EINTERR=42 |
 | `<module.h>` | OS-9 module linking |
 | `<sgstat.h>` | OS-9 file status/setstat (`I$SetStt`) |
-| `<stat.h>` | File status/mode bits (owner/public only, no group class) |
+| `<modes.h>` | File status/mode bits (owner/public only, no group class). **`Live`: `<stat.h>` does NOT exist on the 68k `DEFS` — use `<modes.h>`** (see File Permissions below) |
 
 **String functions live in `strings.h`, not `string.h`.**
 
@@ -77,22 +77,30 @@ undefined.
 Calling `isgraph()` fails at *link* time (unresolved symbol), not compile
 time. Implement as `isascii(c) && isprint(c) && c != ' '`.
 
-## File Permissions (`<stat.h>`)
+## File Permissions (`<modes.h>`)
 
-OS-9 has only two permission classes, **owner** and **public** — there is
-no group class. `<stat.h>` reflects this deliberately: the group macros are
-aliased directly onto the public ones (`S_IRGRP`/`S_IROTH` both `0x0008`,
-`S_IWGRP`/`S_IWOTH` both `0x0010`, and so on). Code ported from Unix that
-extracts a permission triple with the classic octal masks `0700`/`0070`/
-`0007` misses OS-9's actual permission bits (`0x01`-`0x20`) entirely and
-renders every permission as absent.
+**`Live`, 2026-07-21 — header correction:** the mode/permission bits live in
+`<modes.h>`, **not `<stat.h>`**. `#include <stat.h>` fails `cpp` outright
+(`can't open /dd/DEFS/stat.h`, err 216 — there is no `stat.h` in the 68k
+`DEFS`), while `<modes.h>` is present and compiles. `<stat.h>` was a Unix-ism
+that doesn't exist on this toolchain.
 
-The aliasing is itself a hint: when rendering a Unix-style 10-character
-mode string, mirroring the public bits into the group position matches
-what the header already implies. A giveaway symptom: an `ls -l`-style
-listing whose file-type character is right but whose permission bits are
-all dashes means the *permission* decode is using Unix masks — independent
-of whatever else might be wrong with the type decode.
+OS-9 has only two permission classes, **owner** and **public** — there is no
+group class. `<modes.h>` names them with OS-9's own symbols: owner
+`S_IREAD`/`S_IWRITE`/`S_IEXEC` and public `S_IOREAD`/`S_IOWRITE`/`S_IOEXEC`
+(plus `S_ISHARE`, `S_IFDIR`) — **not** Unix's `S_IRGRP`/`S_IROTH` group macros
+(an earlier version of this section described a fabricated `stat.h` aliasing
+those onto the public bits; no such header exists here). Code ported from Unix
+that extracts a permission triple with the classic octal masks
+`0700`/`0070`/`0007` misses OS-9's actual permission bits (`0x01`-`0x20`)
+entirely and renders every permission as absent.
+
+When rendering a Unix-style 10-character mode string, mirror the OS-9 public
+bits into *both* the group and other positions (OS-9 has no separate group
+class). A giveaway symptom: an `ls -l`-style listing whose file-type character
+is right but whose permission bits are all dashes means the *permission* decode
+is using Unix masks — independent of whatever else might be wrong with the type
+decode.
 
 ## File Dates and Time Zones
 

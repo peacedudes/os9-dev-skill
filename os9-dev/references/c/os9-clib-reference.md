@@ -143,6 +143,11 @@ transition, which minute-resolution local dates can't disambiguate anyway.
 | `ibrk(int increase)` | Request memory from the program's initial pool (distinct from `sbrk`). |
 | `freemem(void)` | Pointer to the base of free memory. |
 
+**`Live`, 2026-07-21** (os9exec 68k): `calloc(16,1)` returned a block whose
+16 bytes were all zero (zero-init confirmed), and `sbrk(1000000000)` (a ~1 GB
+ask) returned `-1` (refused, as documented). `malloc`/`free`/`calloc`/`sbrk`
+all link.
+
 **Memory layout** (high to low address): stack (grows downward) → free
 memory (`malloc`/`sbrk` pool) → I/O buffers (256 bytes per open file) →
 uninitialized data → initialized data → kernel/registers. The global

@@ -152,7 +152,7 @@ that thinks of an event as a signed delta rather than an absolute counter.
 
 ## Pipes
 
-A pipe is a FIFO memory buffer where one writer's output becomes one reader's input. The Pipe File Manager (PIPEMAN) coordinates access via a null driver. Default buffer: **90 bytes** (`Manual`), overridable via `S_ISIZE` option to `_os_create()`. **The qualitative model is `Live`-confirmed (bounded buffer, blocks-not-errors when full); the specific 90-byte figure is not** — a lone writer with no reader ever, on a named pipe, got 40 full 100-byte chunks (4040 bytes, ~45x the documented default) accepted with `ERR=0` before finally blocking on chunk 41. Not yet root-caused: most likely BASIC09's own `WRITE` statement batches multiple logical writes into fewer real `I$Write` syscalls (unconfirmed — would need syscall tracing, e.g. `idbg -d 2`, to settle), rather than the effective default actually being ~4KB. **Don't reason about the real threshold from a BASIC09-level `WRITE` count** — the language statement is not confirmed to map 1:1 to syscalls.
+A pipe is a FIFO memory buffer where one writer's output becomes one reader's input. The Pipe File Manager (PIPEMAN) coordinates access via a null driver, buffer size overridable via the `S_ISIZE` option to `_os_create()`. **Default buffer size — an os9exec-vs-manual divergence, now root-caused (2026-07-21):** the OS-9 manuals document a **90-byte** default (`Manual`, real PIPEMAN), but **os9exec's default is 4096 bytes** — `Source`: `DEFAULTPIPESZ 4096+SAFETY` in `os9exec_nt.h`, where 90 is os9exec's `MINPIPESZ` (its *minimum*, not its default). `Live` (os9exec): a C program writing 256-byte chunks to a pipe with no reader got exactly **16 chunks = 4096 bytes** accepted before the write failed. This **disproves** the earlier guess that a lone writer's ~4KB throughput (an older BASIC09 test saw 4040 bytes) was BASIC09 `WRITE`-statement batching — a C `write()` wraps `I$Write` ~1:1 and still hit 4KB, so the effective buffer genuinely is ~4KB on os9exec, not a language artifact. On os9exec, don't assume the manual's 90 bytes; it uses 4096. (Real OS-9's own default may well be 90 — this is a clone divergence, neither an oracle.)
 
 **Unnamed pipes** are created fresh by `I$Open` and shareable only across processes related by `F$Fork` inheritance — how the shell builds pipelines with `!`. Two unrelated processes each opening `/pipe` get two separate, unconnected pipes.
 
@@ -171,11 +171,19 @@ establish one-directional flow between them.
 
 **Blocking and deadlock:**
 - Writing to a **full named pipe** blocks until space frees (unless the
-  writer is interrupted by a signal).
-- For an **unnamed pipe**, if every process with access to it is
-  simultaneously blocked trying to write (pipe full, nobody left to read),
-  OS-9 detects the resulting deadlock and returns `E_WRITE` to the first
-  waiting writer, rather than hanging forever.
+  writer is interrupted by a signal). **`Live`** (os9exec): a C writer to a
+  named pipe with no reader blocks once the ~4KB buffer fills; the block is
+  now interruptible by Ctrl-C/Ctrl-E (see `common/using-os9exec-repl.md` — a
+  2026-07-21 os9exec fix; before it, a blocked pipe writer wedged until
+  restart).
+- For an **unnamed pipe**, a writer that fills the buffer with no reader
+  attached gets **`E_WRITE`** rather than blocking. **`Source`+`Live`**
+  (os9exec): `pipefiles.c` returns `E_WRITE` when the pipe is unnamed and its
+  path count is below 2 (nobody else attached); confirmed live — a C writer to
+  an unnamed pipe got `E_WRITE` after 4096 bytes. The stronger *cyclic*
+  deadlock (several mutually-write-blocked processes sharing one unnamed pipe,
+  all detected and one given `E_WRITE`) needs a multi-process setup and is
+  still `Manual` — a dedicated follow-up.
 - **Creating a named pipe that already exists:** the `FAM_NOCREATE` open flag
   makes this fail outright; without it, behavior is file-manager-dependent
   and may truncate the existing pipe — pass `FAM_NOCREATE` if you specifically

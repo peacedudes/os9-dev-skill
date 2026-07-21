@@ -113,11 +113,20 @@ against `os9exec`'s own `OS9_F_Alarm`/`Alarm()` (`Source/OS9exec_core/
 fcalls.c`/`alarms.c`) and live-tested — `A$Set` (far-future interval,
 never allowed to fire) returned a real alarm ID with no error,
 `A$Delete` on that same ID succeeded immediately after
-(`test/68k-live-verification/batch5-01.a`). Actual signal delivery on
-firing not exercised. Time-of-day alarms fire at
+(`test/68k-live-verification/batch5-01.a`). Time-of-day alarms fire at
 the *corrected* time after a clock adjustment. A system-state variant runs
 a kernel subroutine instead of signaling; pending alarms die with their
 process, so a persistent one must be requested as the system process.
+**Signal delivery on firing, `Live`, 2026-07-21 (real `os9exec` fix)**: a
+process sleeping via `F$Sleep` (any duration, including indefinite
+`F$Sleep(0)`) waiting to be woken by its own alarm firing was **never woken by
+it** — the alarm-due check ran only on the next `TRAP0` dispatch, and
+`DoWait()`'s idle-wait path (reached whenever every process is
+asleep/blocked) never polled it, so the signal sat undelivered until the
+process woke some other way. Fixed by checking alarms from `DoWait()` too
+(`CheckAlarms()`, `alarms.c`/`procstuff.c`) — same idiom as the stdin-poll
+fix for `tsmon`. Confirmed live: a 1-second alarm now interrupts both a
+10-second `F$Sleep` and an indefinite `F$Sleep(0)`.
 
 ## Signals & traps
 

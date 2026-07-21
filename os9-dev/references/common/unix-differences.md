@@ -27,9 +27,10 @@ Unix has one cwd. OS-9 has two:
 
 `chd` ≠ `cd`. A program visible via `dir` (data dir) can be "not found"
 when run — running searches `chx`/`PATH`, not `chd`. Like Unix `cd`, `chd`
-with no argument returns to the home (login data) directory; `chx` with no
-argument does nothing (`Hearsay`, not yet `Live` — same tag as in
-`os9-tools-and-shell.md`). Full resolution rule, `PATH` guidance, and the
+with no argument returns to `$HOME` (the `HOME` env var, **not** the
+password-file login data dir); `chx` with no argument does nothing
+(**`Live`, 2026-07-21** on os9exec — see `os9-tools-and-shell.md` for the
+test). Full resolution rule, `PATH` guidance, and the
 compiler-driver exception: `os9-mental-model.md`'s "Two current
 directories, not one" section; practical gotchas hitting this live:
 `using-os9exec-repl.md`.

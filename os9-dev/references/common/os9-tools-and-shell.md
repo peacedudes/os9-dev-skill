@@ -39,7 +39,7 @@ itself via `F$CmpNam`; the program receives matched names only.
 
 | Built-in | Effect |
 |---|---|
-| `chd <dir>` / `chx <dir>` | Set current data / execution directory (see `unix-differences.md` for the two-directory model). `chd` with no argument returns to the home (login) directory; `chx` with no argument is a no-op |
+| `chd <dir>` / `chx <dir>` | Set current data / execution directory (see `unix-differences.md` for the two-directory model). `chd` with no argument returns to `$HOME` (the `HOME` environment variable, not the password-file data dir — see below); `chx` with no argument is a no-op |
 | `ex <name>` | Replace this shell with the named program (no new process) |
 | `w` / `wait` | Wait for any child / all children to terminate |
 | `kill <pid>` | Send the kill signal to a process |
@@ -161,4 +161,9 @@ Sources: Using Professional OS-9 v2.4 (shell, basic commands, utilities);
 The OS-9 Primer (environment variables, built-ins); The OS-9 Guru §2.1–2.2;
 OS-9 v2.4 Technical Reference Manual; Technical I/O Manual v2.4. The
 `#<size>k` modifier behavior is additionally `Live` on os9exec.
-`chd`-with-no-argument behavior: `Hearsay`, not yet `Live`.
+`chd`/`chx`-with-no-argument behavior: **`Live`, 2026-07-21** (os9exec).
+Bare `chd` goes to `$HOME` — set `HOME=/dd/DEFS`, `chd /dd/CMDS`, then a bare
+`chd` landed in `/dd/DEFS` (the env var, *not* the login/password data dir).
+Bare `chx` is a no-op — after `chx /dd/CMDS`, a bare `chx` left the exec dir
+there (a command in `/dd/CMDS` still resolved, where it failed under a
+different `chx`).

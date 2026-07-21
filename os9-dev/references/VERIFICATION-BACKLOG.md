@@ -179,10 +179,12 @@ discipline — not silently fixed):
   by Zero` and breaks into Debug Mode, identical to REAL÷0 on 6809.
   Passage rewritten to document 6809 behavior as `Live`; 68k behavior
   flagged as unverified.
-- `chd` with no argument → home directory; `chx` with no argument → no-op
-  (`common/os9-tools-and-shell.md`, `common/unix-differences.md`). `Hearsay`;
-  live-verify both, plus whether "home" means `HOME` env var or
-  the password-file data dir.
+- **RESOLVED 2026-07-21 — `chd`/`chx` no-argument behavior confirmed `Live`**
+  (os9exec). Bare `chd` → `$HOME` (the `HOME` env var, **not** the
+  password-file data dir — the open question is answered): with `HOME=/dd/DEFS`
+  and `chd /dd/CMDS`, a bare `chd` landed in `/dd/DEFS`. Bare `chx` is a no-op
+  (exec dir unchanged). Stamped `Live` in both `os9-tools-and-shell.md` and
+  `unix-differences.md`.
 - **RESOLVED 2026-07-18 — `>+`/`>-` redirection forms confirmed `Live`.** Both forms are real OS-9 shell syntax, not documented in Using Professional OS-9 v2.4 (which lists only `<`/`>`/`>>`). Behavior: `>` = create new only (fail if exists); `>+` = append to existing or create new; `>-` = truncate/overwrite existing or create new. Tested on NitrOS-9 6809.
 - **RESOLVED 2026-07-21 — shell option letters `t`/`nt`, `p`/`np`, `x`/`nx`
   confirmed `Live`** (os9exec, via `set`): trace echoes each command line,

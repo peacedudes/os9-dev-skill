@@ -45,6 +45,14 @@ names (`F$xxx`/`I$xxx`).
 | `setbuf(FILE *fp, char *buffer)` | Call after `fopen()`, before any I/O. Pass `NULL` to disable buffering. `stderr` is always unbuffered by default. |
 | `write(int path, char *buf, int count)` / `read(int path, char *buf, int count)` | Raw path-based I/O (OS-9 `I$Write`/`I$Read` directly, no `FILE *` or buffering) — the primitive underneath the numbered stdin/stdout/stderr paths (0/1/2). **Do not mix these with `printf`/`fprintf`/other stdio calls on the same path without an explicit `fflush()` in between.** `Live`: interleaving a raw `write()` with a buffered `fprintf()` on the same fd doesn't just reorder or drop output — the two calls' bytes physically overlay each other in the shared stdio buffer, corrupting both (e.g. `"raw write with fflush first\n"` came out as `"after writeith fflush first"` when a `printf` followed without a flush). `write()`/`read()` used alone, with no stdio calls sharing the same path, work correctly. |
 
+**`Live`, 2026-07-21** (os9exec 68k) — the core File I/O behaviors above check
+out: `fwrite("ABCDE",1,5)` returned `5` and `fread(...,1,5)` read back `ABCDE`
+(both return the item count); `fseek(f,2,0)` (place 0 = from start) then a 2-byte
+read returned `CD`; `puts` appends `\n` while `fputs` does not
+(`puts("PUTSLINE")` then `fputs("FPA")`/`fputs("FPB\n")` produced `PUTSLINE`
+on its own line followed by `FPAFPB`). The `getc` auto-select and `gets`
+NUL-replacement rows are not yet individually exercised.
+
 ## String Functions (`strings.h`, not `string.h`)
 
 | Function | Notes |

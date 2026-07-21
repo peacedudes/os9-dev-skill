@@ -26,16 +26,19 @@ harness is the concurrent RBF-hammer session's. The clone-isolation
 Keep 6809 live-verification on the primary model — Haiku fabricated results
 before (memory `feedback_haiku-cant-drive-repl`).
 
-## 2. Lift `os9-systems-dev` from `Manual` to `Source` (best solo, unblocked)
-This is the weaker skill and **os9exec can't `Live`-test it** (no real driver
-dispatch, no system globals). The realistic upgrade is **`Source` verification
-against os9exec's OWN C structs** (ours, clean-room-safe): cross-check the
-documented layouts for **Process Descriptor** (`procid`), **Path Descriptor**
-(`PD_FST`/$2A header), **Device Descriptor**, and **Module Directory**
-(`mdir_entry`) against `Source/OS9exec_core/*.h`/`*.c`. Move each confirmed
-offset/field from `Manual` to `Source`; flag any that os9exec doesn't implement.
-Design-intent claims that are `Hearsay` from the firsthand author stay as-is
-(he's the authority — memory `user-designed-rbf-eof-lock`).
+## 2. Lift `os9-systems-dev` from `Manual` to `Source` — DONE (2026-07-21)
+Every documented struct that HAS an os9exec anchor is now `Source`-verified
+against os9exec's own C source (clean-room-safe): **Process Descriptor**
+(`procid`), **module header / executable / device descriptor**
+(`modhcom`/`mod_exec`/`mod_dev` in `module_from_book.h`, with compile-time
+`offsetof` assertions), **path descriptor** (common `PD_` header + 128-byte
+SCF options `struct _sgs`), and **Module Directory** (`mdir_entry` — four
+32-bit big-endian fields; documented WITH os9exec's group-mirrors-address
+simplification). What legitimately stays `Manual` has **no struct to check**:
+System Global memory (`F$SetSys` is a self-described half-dummy), the scheduler
+algorithm, driver/file-manager dispatch, and the Level-2 MMU — os9exec doesn't
+emulate any of them. INDEX.md + kernel-internals.md updated to say exactly this.
+Nothing left here; kept for the numbering that items below reference.
 
 ## 3. Wrap the accumulated tests into a runnable regression suite (durability)
 The ~90 6809 `.a` files and the 68k live-verification programs (incl.

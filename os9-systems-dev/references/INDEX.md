@@ -20,11 +20,15 @@ cover in full systems depth here; the two are meant to agree, cross-check
 matching rule) in either of those two files.
 
 **Confidence:** tag legend in the sibling skill,
-`os9-dev/references/CONFIDENCE-TAGS.md`. `device-drivers.md`,
-`file-managers.md`, and `kernel-internals.md` are mostly `Manual`, with
-several struct-layout offsets now `Source` (cross-checked against
-os9exec's own C source) and `file-managers.md`'s Record Locking section
-largely `Live` (68k). The entry-point calling conventions remain
+`os9-dev/references/CONFIDENCE-TAGS.md`. the **struct layouts are now largely `Source`** (2026-07-21, cross-checked
+against os9exec's own C source): the Process Descriptor (`procid`), the
+module header + executable + device-descriptor (`modhcom`/`mod_exec`/`mod_dev`
+in `module_from_book.h`, with **compile-time** offset assertions), and the
+path descriptor (common `PD_` header + the 128-byte SCF options `struct _sgs`).
+What stays `Manual` is the **behavioral** layer os9exec doesn't emulate —
+driver/file-manager dispatch, the scheduler algorithm, System Global memory,
+the Module Directory — plus `6809-level2-mmu.md`. `file-managers.md`'s Record
+Locking section is largely `Live` (68k). The entry-point calling conventions remain
 unconfirmed: a custom driver and file manager *were* built and installed
 live (2026-07-18), but os9exec never dispatches installed modules
 (confirmed unimplemented — see SKILL.md → Verification), so that gap is

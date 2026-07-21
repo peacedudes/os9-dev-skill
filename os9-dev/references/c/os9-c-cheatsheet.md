@@ -150,8 +150,8 @@ toolchain): `int`, `long`, and pointers are all 32-bit there, not the
 | `int` | 2 bytes | **4 bytes** (`Live`) |
 | `unsigned` | 2 bytes | presumably 4 bytes (follows `int`; not independently spot-checked) |
 | `long` | 4 bytes | 4 bytes (`Live`) |
-| `float` | 4 bytes — proprietary sign-magnitude binary format (exponent biased by 128, 3-byte mantissa with implied leading 1), **not IEEE 754** | `Manual` only — a 68k/68881-era compiler may instead use an IEEE-754-oriented format; don't assume the 6809 layout |
-| `double` | 8 bytes — same proprietary format, 7-byte mantissa | `Manual` only |
+| `float` | 4 bytes — proprietary sign-magnitude binary format (exponent biased by 128, 3-byte mantissa with implied leading 1), **not IEEE 754** | **4 bytes, IEEE-754 single (`Live`, 2026-07-21)** — a C `float`=1.0 stored `3F 80 00 00` (big-endian), textbook IEEE single. NOT the 6809 proprietary format |
+| `double` | 8 bytes — same proprietary format, 7-byte mantissa | **8 bytes, IEEE-754 double (`Live`, 2026-07-21)** — a C `double`=1.0 stored `3F F0 00 00 00 00 00 00` (big-endian), textbook IEEE double |
 
 On the 6809 compiler only, `SHORT`/`SHORT INT` are synonyms for plain
 `int`, `LONG INT` is a synonym for `long`, and `LONG FLOAT` means `double`

@@ -55,6 +55,15 @@ names (`F$xxx`/`I$xxx`).
 
 **No bounds checking** — caller must ensure buffers are large enough. No `strstr()`.
 
+**`Live`, 2026-07-21 — actual 68k `clib.l` symbol availability** (each
+link-tested on os9exec): `strcmp`/`strncmp`/`strlen`/`malloc`/`free`/`atoi`
+link and work. **Memory functions are ANSI, not BSD:** `memcpy`/`memset` link;
+`bcopy`/`bzero` are **absent** (`Symbol unresolved`) — an inconsistency with the
+BSD-style *string-search* names (`index`/`rindex`, no `strchr`) just above.
+Also **absent** (unresolved at link): `strchr`/`strrchr` (use `index`/`rindex`),
+`strtol` (use `atoi`), `strdup`, `strstr`. Reach for the name the library
+actually has, or the link fails outright rather than at runtime.
+
 ## Character Classification (`<ctype.h>`)
 
 Fast inline macros built over `_chcodes[]` table: `isalpha isupper islower

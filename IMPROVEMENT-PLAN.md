@@ -62,10 +62,16 @@ each proven to fail once before trusting green. Run for real with
 across ~15 memory files (mostly `feedback_` prefix drift) — a real maintenance
 worklist, not fixed by this change. See `doc-consistency-checker` memory.
 
-## 5. Maintain the `Live` verified-against baseline
+## 5. Maintain the `Live` verified-against baseline (recurring, not "done")
 `CONFIDENCE-TAGS.md`'s baseline table must be re-stamped when the emulator
-changes behaviour (the E$BMode fix already bumped the os9exec build). The
-checker prints the stamp every run; keep it honest.
+changes behaviour. The checker prints the stamp every run; keep it honest.
+**Last re-stamped 2026-07-21** (`v0.0.0-482-g534315a` → `v0.0.0-504-g40eda43`,
+22 commits, 4 touching `Source/`): found and fixed 2 stale gap claims this
+same pass — `error-codes.md`'s E$Share entry still described delete-while-
+open-for-write as unenforced (fixed by the concurrent session, `0ee76c1`),
+and `68k/syscall-reference.md`'s F$Alarm entry still said "signal delivery on
+firing not exercised" (fixed, `25991b4`, F$Sleep now correctly woken by its
+own alarm). Re-check next time `git describe` in os9exec moves.
 
 ---
 

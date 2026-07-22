@@ -40,13 +40,28 @@ algorithm, driver/file-manager dispatch, and the Level-2 MMU — os9exec doesn't
 emulate any of them. INDEX.md + kernel-internals.md updated to say exactly this.
 Nothing left here; kept for the numbering that items below reference.
 
-## 3. Wrap the accumulated tests into a runnable regression suite (durability)
-The ~90 6809 `.a` files and the 68k live-verification programs (incl.
-`bmode.c`, `pipe-abort-*`, `dmppar.a`) are orphan files, not a gate. A runner
-(compile/assemble + run + check PASS/FAIL per file) would protect all this
-verified behavior from silent regression. Note: the concurrent session appears
-to be building 6809 test infra (`tools/nitros9-*.py`, `rl-*.sh`) — coordinate
-so this doesn't duplicate theirs.
+## 3. Wrap the accumulated tests into a runnable regression suite — 68k PHASE 1+2 DONE (2026-07-21)
+**68k half done, in os9exec's own `test/` package** (`LiveVerifyCore`/
+`LiveVerify`, `make live-verify`): a manifest-driven Swift runner
+(`test/live-verification-manifest.json` + `SoloExecutor`/
+`ChoreographyExecutor`) wrapping asm/c/bas/existing-repro-script recipes
+plus real PACK+runb multi-process choreography. 5-entry proof-of-concept
+batch landed (spans every recipe shape), each entry proven to fail once,
+all reviewed (8 tasks, 3 real fix cycles + 1 whole-branch-review fix
+cycle — see design/plan docs in os9exec's `docs/superpowers/specs/` and
+`docs/superpowers/plans/`, dated 2026-07-21, and memory
+`live-verify-suite-68k-phase1-2-done`).
+**Phase 3 (open, next)**: scale from 5 to the remaining ~81 68k corpus
+files (batches, same manifest schema, each oracle authored by running the
+file live first — see the design doc's Phasing section). Sizable, multi-
+session work; not started.
+**6809 half (open, deferred by design, not blocked the same way as item
+#1)**: deliberately out of scope for the 68k work above — two reasons,
+both the user's call: (a) sequencing (6809 is under active investigation
+by the concurrent session, matching item #1's harness-contention
+blocker); (b) where 6809 test tooling should even live (this repo vs. the
+NitrOS-9 fork) is an open design question, not yet answered. Revisit once
+item #1 unblocks. The ~90 6809 `.a` files are still just orphan files.
 
 ## 4. Extend the doc-consistency checker for structural rot — DONE (2026-07-21)
 Added **cross-reference integrity** (an `INDEX.md` row naming a `.md` file that

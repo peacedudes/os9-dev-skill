@@ -44,9 +44,9 @@ touches its area is suspect until re-run.**
 
 **Current baselines** (bump when you re-verify against a newer build):
 
-| Platform | Build identity (as of 2026-07-21) | How to read it |
+| Platform | Build identity (as of 2026-07-23) | How to read it |
 |---|---|---|
-| 68k (os9exec) | `git describe` in the os9exec repo — `v0.0.0-504-g40eda43` | the `g<hash>` suffix is the exact commit; re-stamp after any `Source/OS9exec_core` change that alters behaviour |
+| 68k (os9exec) | `git describe` in the os9exec repo — `v0.0.0-555-g50f32a2` (suite 148/0) | the `g<hash>` suffix is the exact commit; re-stamp after any `Source/OS9exec_core` change that alters behaviour |
 | 6809 (NitrOS-9) | EOU disk `eou_ide-v0.3` under **XRoar 1.11** + DriveWire (`drivewire-cli`); host-side module builds via **lwasm 4.24** | disk image + emulator version together define the observable system |
 
 This is a coarse stamp, not a per-claim version: the date on each `Live` claim is

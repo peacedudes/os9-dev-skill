@@ -345,9 +345,9 @@ def check_orphaned_memory_links(files):
                 if link not in known:
                     findings.append(
                         Finding(
-                            "memory-link",
+                            "orphan-memory-link",
                             None,
-                            f"[[{link}]] has no matching memory file (frontmatter name: {link})",
+                            f"orphaned [[{link}]] - no memory file has that frontmatter name:",
                             [(filename, lineno)],
                         )
                     )

@@ -144,15 +144,19 @@ device descriptor's initialization table (`M$DTyp` through `M$Opt` — see
 `I$GetStt(SS_Opt)` and modify selected fields via `I$SetStt`, subject to
 write-protection rules the file manager enforces.
 
-**`Source`, 2026-07-21 — the SCF options layout is os9exec's real one.** The
-128-byte options region is os9exec's own `struct _sgs`
-(`Source/OS9exec_core/os9defs/sgstat_from_book.h`), size-asserted at
-compile time (`sizeof == 128`) and — for the SCF fields — *actively used* by
-its SCF driver, not just declared: e.g. `PD_EOR`/end-of-record at `$0B`
-(`_sgs_eorch`), `PD_QUT`/keyboard-abort at `$11` (`_sgs_kbach`, the Ctrl-E
-handler reads it), `PD_INT` at `$10`, `PD_PAR` at `$14`, `PD_BAU` at `$15`.
-`PD_OPT` = `$80` and `PD_DTP` = byte 0 of the region both match. (The
-per-field offsets themselves are book-derived, not individually
+**`Manual`, verified 2026-07-23 against the OS-9 Technical I/O Manual** (§3,
+"SCF Path Descriptor Definitions") — and independently matching os9exec's
+`struct _sgs` (`Source/OS9exec_core/os9defs/sgstat_from_book.h`, `sizeof == 128`,
+*actively used* by its SCF driver). **One framing note that matters:** the
+offsets here are **relative to the option region** (`PD_OPT` = `$80`), while the
+manual lists the same fields as **absolute path-descriptor offsets** — so each
+manual value is `$80` + the value here. They agree field-for-field:
+`PD_DTP` byte 0 (manual `$80`), `PD_EOR` `$0B` (manual `$8B`), `PD_INT` `$10`
+(manual `$90`, keyboard interrupt char), `PD_QUT` `$11` (manual `$91`, keyboard
+abort — `_sgs_kbach`, read by the Ctrl-E handler), `PD_PAR` `$14` (manual `$94`,
+parity/stop-bits/bits-per-char), `PD_BAU` `$15` (manual `$95`, baud rate). (The
+per-field offsets are now manual-confirmed, no longer only book-derived and not
+individually
 compile-asserted the way the module header's are — only the total size is.)
 
 **`Source`:** `os9exec`'s own device-descriptor

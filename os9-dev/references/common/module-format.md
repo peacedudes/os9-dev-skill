@@ -53,6 +53,15 @@ the `0x20` "reserved" span into `_mident` at `$20` + a 12-byte `_mspare` at
 `$22`.) M$Attr at 0x14 is additionally `Live`: real 68k C-runtime startup
 code tests bit 5 of offset 0x14 against the module base.
 
+**Independently re-verified against a second Microware manual, 2026-07-23:**
+the *OS-9/68000 Technical Manual*'s own header figure (ch. 1) lists the same
+offsets. One OCR trap in that scan, called out so it isn't mistaken for a
+conflict: it prints `M$Parity` at `$28`. That is a scan error (8-for-E, the
+same misread that turns I$SetStt's `$8E` into `$BE` in the 6809 manuals) —
+`M$Parity` is the header's last word at **`$2E`**, confirmed by both the v2.4
+Technical Reference (`$2E M$Parity`) and the fixed 48-byte header size. Trust
+`0x2E`.
+
 ### Type codes (M$Type)
 
 | Code | Symbol | Meaning |

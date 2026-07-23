@@ -436,10 +436,14 @@ verification.** Full detail in
   `F$BtMem`/`F$AllPrc`/`F$AllImg`/`F$SetImg`/`F$ResTsk`/`F$DATLog`/
   `F$DATTmp`/`F$LDAXY`/`F$LDAXYP`/`F$LDDDXY`/`F$LDABX`/`F$STABX`
   confirmed unimplemented. **`F$MapBlk` is a real exception — actually
-  implemented**, unlike its documented Level-2 siblings. **Real flag:
-  `F$Chain`'s failure path produced a raw, uncontrolled kernel error
-  instead of cleanly rejecting** — disabled rather than chased further
-  unattended, left for a supervised follow-up. `F$DelPrc` deliberately
+  implemented**, unlike its documented Level-2 siblings. **F$Chain
+  RESOLVED (2026-07-21): faithful, not a bug.** Its failure path produced
+  a raw kernel error with no program output because `fchain.asm` unlinks
+  the old primary module and frees the old DAT blocks before linking the
+  new one, then `F$Exit`s on failure (Level-2) / condemns the process
+  (Level-1) — the caller is torn down before the target resolves, so a bad
+  name kills it with nothing to return to. os9exec's 68k `F$Chain` does the
+  same; owner-confirmed intent. Do not re-flag. `F$DelPrc` deliberately
   never attempted (self-termination risk — no safe PID to pass).
   Deliberately still excluded: `F$Boot`, `F$AProc`/`F$NProc`,
   `F$GCMDir`, `F$IOQu`, `F$IRQ`, `F$IODel`, `F$SSvc`, `I$SetStt` — all

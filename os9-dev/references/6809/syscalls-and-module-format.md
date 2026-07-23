@@ -92,11 +92,11 @@ kernel build (`err=00208`=`E$UnkSvc`) — a real, now well-established
 pattern rather than a per-call mystery. Real exceptions: `F$MapBlk`
 (genuinely implemented, unlike its siblings), `F$AllRAM`/`F$DelRam`,
 `F$NMLink`/`F$NMLoad`, `F$VIRQ`, `F$SUser`, `F$CpyMem` all confirmed
-cleanly working. One real flag, not just a documentation gap:
-**`F$Chain`'s failure path produced a raw, uncontrolled kernel error
-instead of a clean documented failure** — deliberately not
-re-attempted unsupervised, left for a careful follow-up rather than
-asserted as a confirmed bug. `F$DelPrc` was deliberately not attempted
+cleanly working. F$Chain RESOLVED (2026-07-21, faithful not a bug):
+**its failure path produced a raw kernel error because it tears the
+caller down before the target resolves** (unlinks old module, frees old
+DAT blocks, then F$Exit/condemn on failure) — os9exec 68k matches this,
+owner-confirmed intent. `F$DelPrc` was deliberately not attempted
 (the only available PID would be the caller's own live one — a real
 self-termination risk, not a bounded test). See
 `dogfood-report-syscalls-batch5-2026-07-19.md`.
@@ -132,7 +132,7 @@ Codes `$00-$1D` are ordinary user-mode `F$` calls (Table C.1 of the System Progr
 | F$UnLink | $02 | U=module header addr | Decrements link count; frees at zero. **`Live`, 2026-07-19**: unlinking a module just linked via `F$Link` above succeeds cleanly (carry clear). Test: same file as `F$Link` |
 | F$Fork | $03 | A=lang/type, B=data pages, X=name, Y=param size, U=param start | Returns A=new PID, X=past name. **`Live`, 2026-07-19**: register contract confirmed (A=0 "any type" accepted, B=1 data page sufficient for a trivial helper module, Y=0/U=0 for no parameters, returned A is a plausible small PID). **`Live`**: unlike `F$Link`, `F$Fork` *does* resolve via the filesystem (like `F$Load`) — a name with no file behind it at all fails `E$PNNF` (216, "path name not found"), not `E$MNF`. A caller distinguishing "not loaded yet" from "doesn't exist" needs to know which of these two calls it's using and which error code that implies. Test: same file as `F$Link` |
 | F$Wait | $04 | — | Returns A=child PID, B=exit status; error if no children. **`Live`, 2026-07-19**: forking a helper module that exits with a distinctive `F$Exit` status (77), then `F$Wait`ing, returned the correct PID (matching `F$Fork`'s own return) and the correct exit status in B. Calling `F$Wait` with **no children at all** fails `E$NoChld` (226) — the "error if no children" behavior was already documented but not the specific code. Test: same file as `F$Link` |
-| F$Chain | $05 | same as Fork | Reconfigures data area in place; doesn't close open paths. **`Live`, 2026-07-19 — a failure-path attempt (bogus target name) produced a raw, unstructured kernel-level error with none of the calling program's own controlled output, unlike every other tested call's clean documented failure.** Not chased further live — deliberately not re-attempted unsupervised, since this looks like it may have side effects (e.g. reconfiguring the caller's own data area) before confirming the target resolves, rather than a clean early-reject. Flagged for a supervised follow-up, not asserted as a confirmed bug. Test: `test/6809-live-verification/batch5-01.a` in the os9exec repo |
+| F$Chain | $05 | same as Fork | Reconfigures data area in place; doesn't close open paths. **`Live`, 2026-07-19; RESOLVED 2026-07-21 — faithful, not a bug.** A failure-path attempt (bogus target name) produced a raw kernel error with none of the program's own output because `fchain.asm` unlinks the old primary module and frees the old DAT blocks BEFORE linking the new one, then `F$Exit`s on failure (Level-2) / condemns the process (Level-1). The caller is torn down before the target resolves, so a bad name kills it — there is nothing left to return an error to. os9exec's 68k `F$Chain` matches this exactly; owner-confirmed intent. Test: `test/6809-live-verification/batch5-01.a` |
 | F$Exit | $06 | B=exit status | Deallocates data area, unlinks primary module, closes all paths. **`Live`**: exited cleanly with no residual module left in `mdir`; `B` must be explicitly cleared first or a stale value produces a cosmetic `Error #001` after your own output. Confirmed in every test file this suite has run |
 | F$Mem | $07 | D=new size (0=query) | Returns Y=new upper bound, D=actual size. **`Live`, 2026-07-19**: `D=0` (query) returned a plausible in-range upper-bound address in Y with no error. Test: `test/6809-live-verification/syscall-fmem-fsleep-fsprior-fcrc.a` in the os9exec repo |
 | F$Send | $08 | A=dest PID (0=all same group), B=signal code | Signal 0=Kill, 1=Wakeup, 2=Abort, 3=Interrupt, rest user-defined (see below). **`Live`**: confirmed via the reserved-signal-range test below, sending both a disputed-range and undisputed-range code to self |

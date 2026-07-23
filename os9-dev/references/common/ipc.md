@@ -216,6 +216,50 @@ OS-9's shared-memory IPC mechanism for processes needing to see the same live da
 
 ---
 
+## Record locking (RBF files — a fifth sync primitive, easy to miss)
+
+Unlike everything above, this one needs **no call at all** to work. RBF
+(the disk file manager) locks byte ranges on its own as a side effect of
+ordinary `Read`/`Write` on a path opened for **update** (`r+`/`w+`-style,
+not read-only or write-only): a `Read` locks the bytes it just returned;
+the next `Write` on that path releases them. Anything else touching those
+bytes meanwhile just blocks — same wait/wake plumbing as the rest of this
+file, nothing new to learn there.
+
+**Why it's worth knowing, not just trusting:** it's not only a safety net,
+it's a design opportunity most programmers never exploited because it was
+never explained well.
+- **Lost-update races vanish for free.** Two processes each doing
+  "read a record, modify it, write it back" on the same file cannot
+  corrupt each other's update — the read's auto-lock plus the write's
+  auto-release serializes them, with zero explicit locking calls. Design
+  a shared data file as read-modify-write on purpose and you get real
+  concurrency safety at no cost.
+- **A plain growing file can behave like a persistent pipe.** A write
+  landing at current EOF takes the **EOF lock** — a "ghost lock" placed
+  where no data exists yet, not a lock on the file's actual content, which
+  stays fully readable throughout. Its only job is to stop a reader from
+  mistaking "caught up to the current end" for "the writer is done": it
+  hits the ghost and waits right at the edge instead of reading past what's
+  really there. Unlike a real pipe the data also survives after both
+  processes exit — useful for a slow producer/consumer pair (e.g. a
+  spooler) that wants that.
+
+One easy trap: only **update-mode** opens ever lock or wait on anything —
+read-only and write-only paths are both invisible to the mechanism. This
+is deliberate, not an oversight: a write-only appender takes *no* lock,
+specifically so two independent processes can log to the same file and
+interleave freely. If either opened for update instead, its first write
+would EOF-lock the file and the other process's next write would block
+until the first one closed — exactly the mutual exclusion this design
+avoids between plain appenders.
+
+Explicit control exists too (`SS_Lock` to lock/release a range by hand,
+`SS_Ticks` to bound how long to wait for a conflicting lock) but is rarely
+needed — the automatic behavior above covers most real designs. **Deep
+mechanics, exact byte-range rules, and the assembly-level implementation**:
+sibling skill `os9-systems-dev`, `file-managers.md` → Record Locking.
+
 ## Reentrancy note for C programs using any of the above
 
 Microware C generates reentrant code by default, with one exception: **system-state code (drivers, file managers)** must avoid globals/statics and stdlib calls (no per-process isolation at that privilege level). Use parameters or path-descriptor storage instead.

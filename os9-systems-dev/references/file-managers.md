@@ -324,7 +324,8 @@ tolerating as a safety net:
 2. **A plain, ordinary growing file can coordinate a slow producer and a
    slow consumer as if it were a pipe, with a persistent on-disk
    record.** A write landing at the current end of file takes a
-   whole-file EOF lock specifically so a reader catching up to a live
+   EOF lock — a "ghost lock" past the last byte, not a lock on any real
+   data — specifically so a reader catching up to a live
    writer stalls right at the edge instead of racing ahead and mistaking
    "caught up to current EOF" for "the writer is done." A spooler
    appending output over a long run and a slow consumer (e.g. feeding a

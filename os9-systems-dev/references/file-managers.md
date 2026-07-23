@@ -252,6 +252,11 @@ bit means free.
 
 ### File Descriptor Sector
 
+**`Manual`, verified 2026-07-23 against the OS-9 "Disk File Organization"
+manual** — all 7 fields at the documented offsets (`FD_ATT` $00, `FD_OWN` $01,
+`FD_DAT` $03 as Y/M/D/H/M, `FD_LNK` $08, `FD_SIZ` $09 four-byte size, `FD_CREAT`
+$0D as Y/M/D, `FD_SEG` $10 = 240-byte segment list of five-byte entries).
+
 | Field | Offset | Size | Contents |
 |---|---|---|---|
 | `FD_ATT` | $00 | 1 | Attribute byte (see bit layout below) |

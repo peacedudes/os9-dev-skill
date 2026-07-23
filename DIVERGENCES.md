@@ -77,6 +77,30 @@ Manual passage located *and* runtime behaviour observed.
   or with the manual describing intent that shipping code never matched.
 - **Status:** open
 
+### D-002 — `INTEGER÷0` raises a CPU trap on 68k, not the documented BASIC09 error 45
+- **Topic / file:** `os9-dev/references/basic09/gotchas.md` (divide-by-zero)
+- **Microware says:** BASIC09 error **45, "Divide by Zero"**, on both
+  architectures. `68k/BASIC09_Reference_Manual_Rev_H.txt:6830`;
+  `6809/BASIC09_Reference_Manual_Rev_F.txt:5635`;
+  `6809/BASIC09_Reference_Manual_Rev_G.txt:6509`;
+  `6809/BASIC09_Reference_Manual_Tandy.txt:18148`.
+- **Observed:** 6809 NitrOS-9 matches — `Error #045 -- Divide by Zero`, Debug
+  Mode if unhandled. 68k `os9exec` does not — `Error #000:105 (E_ZERDIV) zero
+  divide TRAP 5`, breaking into the debugger (`Live`, 2026-07-23:
+  `a=10 : b=0 : c=a/b`, all INTEGER).
+- **Our own error, recorded:** this skill previously stated 68k INTEGER÷0 was
+  **silent, no error at all**, tagged `Live` (2026-07-21). Direct retest shows
+  that is wrong. A reminder that a `Live` tag records what one run appeared to
+  show, not a fact — the earlier test most likely had an `ON ERROR` handler
+  swallowing the trap.
+- **Type:** semantic divergence (wrong error number / wrong error layer)
+- **Open question, deliberately not chased:** whether os9exec's TRAP 5 does what
+  BASIC09 expects of it. That is an emulator question, out of scope for the
+  skills work.
+- **Who can settle it:** Microware, or genuine 68k hardware — does real
+  OS-9/68k BASIC09 report 45 here, or 105?
+- **Status:** open
+
 ---
 
 # Part 2 — Divergence candidates: runtime behaviour known, manual passage not yet located
@@ -88,7 +112,6 @@ This is the work queue.
 
 | ID | Topic | What a runtime does | Manual passage |
 |---|---|---|---|
-| C-01 | INTEGER ÷ 0 (BASIC09) | 68k `os9exec`: silent, no error. 6809 NitrOS-9: `Error #045`. **The two runtimes disagree with each other**, so at most one matches OS-9 | not yet located |
 | C-02 | REAL ÷ 0 error number (BASIC09) | 68k: catchable, `ERR` = 107. 6809: `Error #045`. Both catchable, different numbers | not yet located |
 | C-03 | `F$CpyMem` register contract (6809) | NitrOS-9's `fcpymem.asm` never reads X — a 3-register call (D/Y/U), not the documented 4. That file's *own* header comment still states the 4-register form | manual's shape is recorded; needs exact citation |
 | C-04 | `PD_CNT` / `PD_COUNT` path-descriptor offset | `os9exec`'s reconstructed header puts open-count at `$03`; this skill documents `$1A`. **Neither anchor is authoritative** — os9exec's `os9defs/` headers are themselves second-hand reconstructions | not yet located |

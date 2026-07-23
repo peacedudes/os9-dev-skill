@@ -183,7 +183,16 @@ discipline — not silently fixed):
   `basic09`): a REAL÷0 under `ON ERROR GOTO` is caught and `ERR` returns
   **107** (the `E_TRAPV` code), vs 6809's `Error #045` — the number differs
   across platforms though both are catchable. Stamped in `basic09-language.md`.
-- **RESOLVED 2026-07-21 — INTEGER÷0 68k behavior confirmed `Live`** (was flagged
+- **RETRACTED 2026-07-23 — the "68k INTEGER÷0 is silent" finding below is
+  WRONG.** Retested directly on `os9exec` (`a=10 : b=0 : c=a/b`, INTEGER):
+  it raises `Error #000:105 (E_ZERDIV) zero divide TRAP 5` and breaks into
+  the debugger. It is not silent. Microware documents BASIC09 error **45**
+  ("Divide by Zero") on both architectures, and 6809 NitrOS-9 gives exactly
+  that — so 68k reports a CPU-level trap where the manual specifies a
+  BASIC09 error. Now tracked as `⚠ DIVERGENCE D-002`. Whether os9exec's
+  trap does what BASIC09 expects is an emulator question, deliberately not
+  chased here. Superseded entry follows.
+- ~~**RESOLVED 2026-07-21 — INTEGER÷0 68k behavior confirmed `Live`**~~ (was flagged
   unverified after the 2026-07-18 6809 pass). On **68k** INTEGER÷0 is **silent,
   no error** — a procedure dividing an INTEGER by 0 then `PRINT`ing ran straight
   through (`ON ERROR` never fired), the exact **opposite** of 6809's

@@ -215,6 +215,12 @@ is entirely the driver's job, not RBF's.
 
 ### Identification Sector (LSN 0)
 
+**`Manual`, verified 2026-07-23 against the OS-9 Technical Manual "Disk File
+Organization"** — its identification-sector table lists every field at exactly
+these offsets (19/19). The only field it carries that this table omits is a
+2-byte `DD_RES` reserved slot at `$13` (between `DD_SPT` and `DD_BT`); harmless,
+noted for completeness.
+
 | Field | Offset | Size | Contents |
 |---|---|---|---|
 | `DD_TOT` | $00 | 3 | Total sectors on media |

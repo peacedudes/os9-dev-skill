@@ -64,6 +64,18 @@ now live-confirmed working, per the same test — see
 `test/68k-live-verification/dogfood-report-driver-2026-07-18.md`
 in the `os9exec` repo. Reference files carry inline confidence tags —
 legend in the sibling skill's `os9-dev/references/CONFIDENCE-TAGS.md`.
+
+**Neither emulator is OS-9.** `os9exec` and NitrOS-9 are reverse-engineered
+reimplementations built by the user community, and both have had real errors.
+This matters more here than in the sibling skill: kernel structures, dispatch
+conventions and scheduler behaviour are exactly where a reimplementation is
+most likely to have simplified something, and `os9exec` in particular does not
+implement large parts of what these files describe. A `Source` tag here means
+"this is what os9exec's C does" — which is a statement about os9exec, not
+about OS-9. Where an authoritative Microware manual disagrees with either
+runtime, the manual is the specification and the disagreement is recorded in
+`DIVERGENCES.md`; only Microware or genuine hardware resolves it. See
+`SOURCE-AUTHORITY.md` for what counts as Microware's word.
 **Confidence gap, refined**: the driver/file-manager/kernel files here
 are mostly `Manual`, with several struct-layout offsets now `Source`
 (checked against os9exec's own code) — the entry-point calling

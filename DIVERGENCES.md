@@ -134,6 +134,30 @@ Manual passage located *and* runtime behaviour observed.
 absent from our table entirely, and `I$MakDir`/`I$Delete`/`I$ChgDir` all showed
 no output where the manual documents `(a0)` updated past the pathname.
 
+### D-004 — `F$Sleep` never returns the remaining-ticks count the manual specifies
+- **Topic / file:** `os9-dev/references/68k/syscall-reference.md`, F$Sleep row
+- **Microware says:** F$Sleep returns how much of the requested sleep was left
+  when it woke — so a process woken early by a signal can tell. Two independent
+  authoritative manuals: *OS-9/68000 Technical Manual*,
+  `68k/M68000_Programmers_Reference_Archive_History.txt:9047` — "OUTPUT: d0.l =
+  Remaining number of ticks if awakened prematurely"; *OS-9 System Programmer's
+  Manual* (6809), `6809/OS-9_System_Programmers_Manual.txt:4869` — "OUTPUT: (X)
+  = Decremented by the number of ticks that the process was asleep."
+- **Observed:** `os9exec`'s `OS9_F_Sleep` (`Source/OS9exec_core/fcalls.c`)
+  returns without ever writing `d0.l` — the caller's original tick count is left
+  in the register. Confirmed by reading the source directly, 2026-07-23; the
+  handler's own header comment is stale (it describes `F$Wait`'s output). Its
+  dispatch-table entry declares a `d0.l` output that the handler never fills.
+- **Consequence:** code that reads `d0.l` after `F$Sleep` to detect an early
+  wake, or to resume a partial sleep, gets a wrong value on os9exec — it looks
+  like no time passed.
+- **Type:** semantic divergence (missing output)
+- **Who can settle it:** this one is not really in doubt — two Microware manuals
+  agree and the os9exec source plainly omits it. It is an os9exec bug to fix,
+  logged for completeness; recording it here so the skill does not present
+  os9exec's behaviour as the contract.
+- **Status:** open
+
 ---
 
 # Part 2 — Divergence candidates: runtime behaviour known, manual passage not yet located

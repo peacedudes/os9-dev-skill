@@ -119,13 +119,14 @@ Manual passage located *and* runtime behaviour observed.
   than flagged. The width itself is genuinely unsettled; what is certain is that
   agreement with os9exec was not grounds to overwrite it.
 - **Type:** method failure (confirmed); no actual divergence
-- **Resolution (owner, 2026-07-23):** closed — **there is no divergence**. The
-  access-permission bits all fit in the low byte of `d1`; OS-9/68k reads only
-  that byte and ignores any higher bits, so passing a byte, word, or long makes
-  no difference. The width question was moot. What remains true and worth
-  keeping is the method lesson: our table had `d1.w` changed to `d1.b` *because
-  os9exec did that*, which is not a valid reason to overwrite a manual value —
-  that reasoning was the defect, not the number.
+- **Resolution (owner, 2026-07-23):** closed — **both readings were right, and
+  there was never a divergence.** The permit bits live in `d1.b`; the caller
+  passes the full `d1` register as always, and OS-9/68k uses its low byte. So
+  the manual's `d1` and the byte-level `d1.b` are describing the same call
+  correctly, from different altitudes. The only real lesson is procedural: our
+  table had `d1.w` changed to `d1.b` *because os9exec did that*, and "a runtime
+  does it this way" is not a reason to overwrite a manual — the reasoning was
+  the defect, not the value.
 - **Status:** resolved
 
 **Two plain omissions found in the same pass and simply fixed, not divergences:**

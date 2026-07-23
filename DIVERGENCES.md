@@ -221,6 +221,17 @@ only party who can say which.
 - **Assembler label length: 1-8 vs 1-9 characters.** Resolved as an RMA-vs-`asm`
   difference rather than a contradiction, but the manuals do not state the
   distinction plainly.
+- **The v2.4 Technical Reference Manual's error appendix mislabels error 200.**
+  It prints `000:200 E$BPNum PATH TABLE FULL` — but `E$BPNum` is also (correctly)
+  given for 201, and PATH TABLE FULL is `E$PthFul` everywhere else, including the
+  *OS-9/68000 Technical Manual* (`000:200 E$PthFul`), the 6809 *System
+  Programmer's Manual* (`$C8 200 E$PthFul`), and this same manual's own
+  per-call error lists (`I$Open`/`I$Attach` cite `E$PthFul` for path-table-full).
+  So it is a typo in one edition's appendix, not two codes sharing a symbol.
+  Low stakes — the numeric code is what matters at runtime — but worth a fix in
+  that manual. Whole error-code list otherwise cross-checked clean:
+  **87 shared codes, zero name mismatches** against the v2.4 appendix
+  (2026-07-23).
 - **OCR collisions in the surviving scans — a caution, not a finding.** The
   6809 System Programmer's Manual scans render `F$AllPrc` and `F$FModul` both
   as `$4B`, and `F$CpyMem`/`F$GPrDsc` similarly collide. **No divergence may be

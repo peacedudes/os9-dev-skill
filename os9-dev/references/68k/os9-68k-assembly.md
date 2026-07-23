@@ -219,6 +219,15 @@ live) before relying on details:
   (`*** error - bad mnemonic ***`) — reserve space with an explicit
   comma-separated `dc.b 0,0,0,...` instead (confirmed repeatedly across
   `test/68k-live-verification/batch*.a`, most recently `batch10-01.a`).
+- **Mutable data in a program needs address-register indirect, not a
+  PC-relative destination** (`Live`, 2026-07-22): `move.l d0,x(pc)` /
+  `subq.l #1,cnt(pc)` do not work — `(d16,PC)` is a **source-only**
+  addressing mode on the 68000. Load the address first, write through it:
+  `lea cnt(pc),a1` then `subq.l #1,(a1)`. `os9exec` lets a `Prgrm` module
+  write into its own `dc`-defined storage this way (each process gets its
+  own image), so a scratch counter/flag/saved-ID can sit beside the code
+  with no `vsect` — the pattern used throughout the event/alarm tests
+  (`test/Sources/OS9Tests/main.swift`).
 - ~~The external-symbol "trailing colon = public" visibility convention~~
   — resolved: `Live`, confirmed via `l68 -s` and `debug`'s `sc` symbol
   listing. Colon-suffixed labels (`start:`, `sumloop:`) are

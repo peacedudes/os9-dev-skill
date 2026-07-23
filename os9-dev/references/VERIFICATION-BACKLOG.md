@@ -319,9 +319,10 @@ discipline — not silently fixed):
   `F$Julian`/`F$Gregor` round-trip, `F$PrsNam` (both with and without a
   leading `/`, re-confirming the historic double-eval-`++p` fix still
   holds), `F$PErr`. Batch 10: `F$SRqMem`/`F$SRtMem`/`F$SRqCMem`
-  confirmed, plus a real finding logged on `ROADMAP.md`: `F$CpyMem`'s
-  declared "owner PID" input is never read by `os9exec` — the call does
-  a raw cross-process memory copy with no ownership check at all.
+  confirmed, plus a finding since FIXED (commit `a4a62db`): `F$CpyMem`
+  did no write-permission check on its destination. Now enforced
+  (caller's own memory or a loaded module, else `E$BPAddr`); the source
+  is intentionally unchecked, as on real OS-9.
   Batch 11: `F$UnLoad`/`F$SUser`/`F$Sleep` confirmed; found `F$ID`'s
   output and `F$SUser`'s input use *different* group/user packings
   (byte-packed word vs. two full 16-bit fields) — round-tripping one

@@ -101,9 +101,12 @@ opposite.
 `Live (68k)` only, explicit "6809 not yet checked"). `gotchas.md`'s
 "Live on both" had no 6809-specific detail behind it — almost certainly
 an unverified extrapolation, not a real second test. Fixed: `gotchas.md`
-now matches the 68k-only scoping. **Genuine remaining live-test
-opportunity, not urgent**: nobody has actually run `PRINT USING "B8"`
-on real 6809 NitrOS-9 yet to confirm the mixed-case rendering there too.
+now matches the 68k-only scoping. **CLOSED 2026-07-23 — the 6809 test has
+now actually been run**, so both files are back to "Live on both", this
+time earned: real Microware BASIC09 01.01.00 under NitrOS-9 gives
+`"True    "` / `"False   "`, `LEN()` 8, output file exactly 18 bytes
+(2 × 8 + CR). The manual's uppercase `"TRUE"`/`"FALSE"` is wrong on both
+architectures — not an `os9exec` artifact.
 
 ### Contradiction 3 — C true-linefeed escape: `\e` vs `\LF` — RESOLVED 2026-07-20
 
@@ -146,8 +149,17 @@ Items surfaced by the 2026-07-18 redundancy/consistency/density/plagiarism
 audit pass (flagged per this file's own "correct a lone finding"
 discipline — not silently fixed):
 
-- **`common/module-format.md`'s 6809-C-compiler type/language byte looks
-  wrong, not just under-cited.** The file states the compiler sets `$4`
+- **DONE 2026-07-23 — `common/module-format.md`'s 6809-C-compiler
+  type/language byte resolved against `$11`.** `ident` on real 6809
+  modules confirms the byte is packed `(type << 4) | language`: `dir` and
+  `copy` read `$11` (Prgrm + 6809 object), `basic09`'s `BFX` reads `$21`,
+  a freshly `PACK`ed procedure reads `$22` (`At/Rv $81`). `$04` would
+  decode as type nibble 0 — not a valid module type — so it cannot be
+  right. Caveat recorded in the file: no actual 6809 C-compiled module was
+  available to `ident`, so `$11` for that compiler is inference from a
+  confirmed encoding, not direct observation. Original entry follows.
+- ~~**`common/module-format.md`'s 6809-C-compiler type/language byte looks
+  wrong, not just under-cited.**~~ The file states the compiler sets `$4`
   ("C program — 6809 object"), but `6809/syscalls-and-module-format.md`'s
   own type/language table marks language nibble 4 as "C I-code
   (reserved/unimplemented)," and `c/os9-clib-reference.md`'s `os9fork()`
@@ -198,9 +210,15 @@ discipline — not silently fixed):
   on os9exec is low-value — the emulator's device layer may not implement
   descriptor updates faithfully, so a divergence there would say more
   about os9exec than OS-9.
-- PACK/SAVE `>pathlist` spurious-error behavior
-  (`basic09/pack-and-runb.md`): observed on os9exec only — unknown whether
-  real OS-9 does the same. Test on 6809 NitrOS-9 BASIC09 if possible.
+- **DONE 2026-07-23 — PACK/SAVE `>pathlist` spurious-error behavior
+  settled: it is an `os9exec` defect, not OS-9.** Real 6809 NitrOS-9
+  BASIC09 prints nothing for `SAVE proc >rel`, `SAVE proc >/DD/abs` or
+  `PACK proc >rel` — clean `Ready`, correct files. Logged on the
+  emulator's `ROADMAP.md`; `pack-and-runb.md` re-scoped to 68k-only.
+  **Net-new fact found while testing it** (the "expand, don't just verify"
+  payoff): `SAVE >relname` resolves against **CHD** while `PACK >relname`
+  resolves against **CHX** — the file previously said the two behaved
+  alike. Reproduced twice with fresh names.
 - os9exec open oddities moved out of the reference files (they're emulator
   bugs, not OS-9 facts — tracked in the os9exec repo): `load -s a b c` can
   silently skip one module; intermittent trap-handler-install race

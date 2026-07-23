@@ -146,9 +146,12 @@ Compiler-specific values worth isolating:
   constants. **The `$04`-vs-`$11` divergence this file used to carry as an
   unresolved tag is now settled against `$11`** — an earlier revision
   glossed the byte as `$4` ("C program — 6809 object"), which cannot be
-  right. **`Live` (6809, NitrOS-9, 2026-07-23):** `ident` on real modules
-  confirms the byte is packed `(type << 4) | language`, one byte, so the
-  type nibble is the *high* one — `dir` and `copy` (native 6809 object
+  right. **`Manual` + `Live` (6809, 2026-07-23):** the packing is documented, not just
+  inferred — the *OS-9 System Programmer's Manual* §4.2.1 states "the module
+  type is coded into the four most significant bits of byte 6" and lists
+  `$10` Prgrm, `$20` Sbrtn, `$40` Data; the language occupies the low nibble.
+  `ident` on real modules confirms it directly: the byte is `(type << 4) |
+  language`, one byte, so the type nibble is the *high* one — `dir` and `copy` (native 6809 object
   programs) both read `$11`, `basic09`'s own `BFX` reads `$21` (Sbrtn +
   object), and a freshly `PACK`ed BASIC09 procedure reads `$22` (Sbrtn +
   BASIC09 I-code, `At/Rv $81` exactly as above). `$04` would decode as

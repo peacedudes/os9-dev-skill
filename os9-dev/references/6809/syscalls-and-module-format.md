@@ -267,6 +267,11 @@ Same design as 68k (numbered codes, tiny non-reentrant handlers, `F$Sleep` auto-
 ## Module Header
 
 Much smaller than 68k's (48-byte universal section): **9 bytes minimum**.
+**`Manual`, verified 2026-07-23 against the *OS-9 System Programmer's Manual*
+§4.2** (its own module-header definition list): $00-$01 sync `$87,$CD`, $02-$03
+size, $04-$05 name offset (sign-bit-terminated), $06 type/language, $07
+attributes/revision, $08 header check ("one's complement of the vertical parity
+(XOR) of the previous eight bytes") — matching this table field-for-field.
 
 | Offset | Size | Field | Notes |
 |---|---|---|---|

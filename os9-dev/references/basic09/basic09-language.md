@@ -349,7 +349,11 @@ concurrent activation records of the same procedure, not just a simple
 chain). `fact(5)=120`, `fib(10)=55`, both correct.
 
 **BYTE variables cannot be passed as parameters.** Pass a BYTE array
-instead. **This fails silently, not loudly:** `PARAM b: BYTE` is accepted
+instead. **`Manual`-confirmed 2026-07-23** — the *BASIC09 Reference Manual*
+(Rev H) parameter-passing section is explicit: parameters "can be of any type
+(EXCEPT variables of type BYTE, but BYTE arrays are O.K.)". So the skill matches
+Microware here; the emulator behaviour below is faithful, not a quirk.
+**This fails silently, not loudly:** `PARAM b: BYTE` is accepted
 with zero error at both edit time and run time, but the passed argument
 is simply discarded — the parameter never gets bound and reads as its
 default/uninitialized value (`Live` (68k) — see

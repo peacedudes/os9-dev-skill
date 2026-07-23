@@ -115,6 +115,55 @@ Unknown Procedure` on 6809 — silently fine on 68k, but fatal here. See
 first procedure; nothing in the file loads). Put `PROCEDURE` on line 1;
 move any file-level comment after it if you want one at all.
 
+## Running a multi-process test on this disk (all `Live`, 2026-07-20)
+
+- **★ A `What?` flood is BASIC09's DEBUGGER spinning on EOF, not the shell and
+  not lost data.** `Live`, reproduced on demand and traced 2026-07-21. When a
+  BASIC09 program launched as `basic09 <script` hits an **uncaught runtime
+  error**, it `BREAK`s into the interactive debugger (the `D:` prompt — that is
+  what prints `What?`, on any command it doesn't recognise). Because the
+  program's stdin is the redirected script file, now at EOF, the debugger reads
+  past EOF endlessly and emits `What?` on every empty read: an unbounded
+  `D:What?` flood that hangs the job and leaves its output file unwritten —
+  reading exactly like the filesystem dropping every write. Proven minimally: an
+  `x=1/0` program run with stdin = terminal drops to `D:` and **blocks** (one
+  prompt, responds to `q`); the same program run with `<file` **floods**. In a
+  multi-process roster the specific trigger was `Error #237 (RAM Full)` at
+  `SHELL "sleep"` inside a nap procedure — several `#32k` BASIC09 workers plus
+  the `#32k` shell running the procedure file, all forking `SHELL` at once, ran
+  the CoCo3 out of memory. **Takeaways:** (a) `What?` means "look for an
+  uncaught error that dropped a program into `D:`", not channel trouble; (b)
+  give any BASIC09 program you drive non-interactively an `ON ERROR` so a fault
+  reports instead of spinning; (c) watch total memory when backgrounding several
+  `#32k` jobs that each `SHELL`-fork — stagger the launches or shrink the
+  footprint. Earlier versions of this bullet blamed "channel corruption from
+  rapid `key`" and "a backgrounded child inheriting the parent's stdin"; both
+  were tested and are false — do not reintroduce them.
+- **`SHELL` DOES exist in 6809 BASIC09 and really forks.** `Live`:
+  `SHELL "echo MARKER"` printed its output from inside a `RUN` procedure.
+  Some 68k-era documentation implies it is 68k-only; it is not. It costs a
+  process fork per call, which on a 2MHz 6809 is expensive — roughly a quarter
+  of a call per second in a tight loop. A burst of writes to `/nil` is far
+  cheaper but does NOT yield long enough to let another process interleave, so
+  it is not a substitute when the point is to open a scheduling window.
+- **Editing the disk host-side: ToolShed cannot read the `.ide` container.**
+  The OS-9 partition starts at byte **323,584** inside `68IDE.ide` (verified:
+  an RBF LSN0 with volume name "NitrOS-9 EOU 6809"). `dd` the partition out,
+  run `os9 copy` against the raw partition, `dd` it back with `conv=notrunc` —
+  about 1.8s round trip for 128MB. XRoar must be stopped throughout.
+- **Clone the image per run rather than mutating the shared one.** On APFS
+  `cp -c` clones the 134MB image in ~5ms with no disk cost. A clone directory
+  needs `68IDE.ide` and `hdblba.rom` (XRoar loads the cart ROM relative to its
+  own cwd); `-rompath` is absolute. `NITROS9REPL_DISKDIR` points the harness at
+  it. **Verify with `lsof` which image XRoar actually has open** — `stop` does
+  not reliably kill XRoar, and a survivor gets reused by the next `start`,
+  silently writing to whatever disk *it* was booted on.
+- **`-no-ratelimit` boots this disk in about 4 seconds**, not the ~40 the
+  throttled default takes. A whole multi-process scenario can run in 7-11s.
+- **`tmux clear-history -t <session>:chan` before a command** makes `send`
+  output readable; `peek` dumps the entire scrollback and is useless for
+  polling for a completion marker.
+
 ## Gotchas an agent must know (all `Live`)
 
 - **`send`'s prompt-gate doesn't recognize a sub-program's own prompt**

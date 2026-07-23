@@ -151,6 +151,12 @@ no output where the manual documents `(a0)` updated past the pathname.
 - **Consequence:** code that reads `d0.l` after `F$Sleep` to detect an early
   wake, or to resume a partial sleep, gets a wrong value on os9exec — it looks
   like no time passed.
+- **Cross-architecture check (2026-07-19, 6809):** real NitrOS-9 6809 *does*
+  return it — `F$Sleep` with `X=50` came back `X=23` when signalled early,
+  exactly as the 6809 manual specifies. So this is not an OS-9 design question
+  at all; it is specifically the **68k os9exec implementation** that drops the
+  output. That narrows it to an emulator fix and removes any doubt about what
+  the contract should be.
 - **Type:** semantic divergence (missing output)
 - **Who can settle it:** this one is not really in doubt — two Microware manuals
   agree and the os9exec source plainly omits it. It is an os9exec bug to fix,

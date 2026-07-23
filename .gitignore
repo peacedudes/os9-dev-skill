@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+
+# Python (doc-consistency checker)
+__pycache__/
+*.pyc

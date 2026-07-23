@@ -1,5 +1,9 @@
 # OS-9 development skills
 
+> **Pre-publication — not for distribution.** Circulated privately for review;
+> no license is granted yet. A license will follow after review by Microware.
+> See [LICENSE](LICENSE).
+
 Two [Claude Code](https://claude.com/claude-code) skills for working with
 Microware OS-9 — the real one, on 6809 and 68000.
 

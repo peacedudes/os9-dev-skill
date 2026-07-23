@@ -134,16 +134,24 @@ Compiler-specific values worth isolating:
 
 - The 6809 C compiler's module type/language byte and attribute/revision
   `$81` (reentrant, rev 1) are compiler-specific values, not general
-  constants. **`Manual, Flag`, not resolved here:** this file
-  previously stated the type/language byte as `$4` glossed as "C program
-  — 6809 object," but `6809/syscalls-and-module-format.md`'s own
-  type/language table marks language nibble 4 as "C I-code
-  (reserved/unimplemented)," and `c/os9-clib-reference.md`'s `os9fork()`
-  entry states a 6809 program's `lang` is object code (1), with 4
-  reserved for the separate, unimplemented C I-code — both point toward
-  the real byte being type=Program(`$1`)/lang=Object(`$1`), i.e. `$11`,
-  not `$04`. Needs a primary-source recheck or a live `ident` decode of a
-  real 6809-compiled C module to settle; see `VERIFICATION-BACKLOG.md`.
+  constants. **The `$04`-vs-`$11` divergence this file used to carry as an
+  unresolved tag is now settled against `$11`** — an earlier revision
+  glossed the byte as `$4` ("C program — 6809 object"), which cannot be
+  right. **`Live` (6809, NitrOS-9, 2026-07-23):** `ident` on real modules
+  confirms the byte is packed `(type << 4) | language`, one byte, so the
+  type nibble is the *high* one — `dir` and `copy` (native 6809 object
+  programs) both read `$11`, `basic09`'s own `BFX` reads `$21` (Sbrtn +
+  object), and a freshly `PACK`ed BASIC09 procedure reads `$22` (Sbrtn +
+  BASIC09 I-code, `At/Rv $81` exactly as above). `$04` would decode as
+  type nibble 0 — not a valid module type at all — with language 4, the
+  nibble `6809/syscalls-and-module-format.md` marks as the *reserved,
+  unimplemented* C I-code. A 6809 C program compiling to native object
+  code is therefore `$11`, agreeing with `c/os9-clib-reference.md`'s
+  `os9fork()` entry (`lang == 1`). **Scope this honestly:** what was run
+  live is the encoding and the native-object-program value; no actual
+  6809 C-compiled module was available to `ident`, so `$11` for that
+  specific compiler's output is a sound inference from a confirmed
+  encoding, not a direct observation.
 - `os9fork()`/`chain()` on 6809 want `lang == 1` (6809 machine code).
   Numerically equal to 68k's Objct=1 but a mutually incompatible format —
   never merge the two facts.

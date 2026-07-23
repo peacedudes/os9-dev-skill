@@ -334,6 +334,60 @@ class TestCrossReferences(unittest.TestCase):
 
 
 # --------------------------------------------------------------------------
+# DIVERGENCES.md two-way link integrity
+#
+# The point of these: a divergence from Microware documentation is only useful
+# if the reader of the affected *claim* meets the warning. The failure this
+# guards against is real and has a history -- the repo's old confidence rule
+# told contributors to clear a manual disagreement whenever a reimplementation
+# was observed, which is how 540 runtime claims came to sit against 5 recorded
+# disagreements. An entry whose inline marker gets rewritten away is that same
+# failure in slow motion, so it must break the build.
+# --------------------------------------------------------------------------
+class TestDivergenceLinks(unittest.TestCase):
+    REGISTER = "### D-001 — boolean casing\n- **Status:** open\n"
+
+    def test_silent_when_entry_and_marker_agree(self):
+        files = [("os9-dev/references/basic09/gotchas.md", "⚠ DIVERGENCE D-001 applies here.\n")]
+        self.assertEqual(chk.check_divergence_links(files, self.REGISTER), [])
+
+    def test_flags_entry_with_no_inline_marker(self):
+        # The burial case: the register documents it, no claim warns about it.
+        files = [("os9-dev/references/basic09/gotchas.md", "Nothing cites the register.\n")]
+        findings = chk.check_divergence_links(files, self.REGISTER)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("D-001", findings[0].message)
+        self.assertIn("would never see it", findings[0].message)
+
+    def test_flags_marker_citing_an_undefined_entry(self):
+        files = [("os9-dev/references/basic09/gotchas.md", "See DIVERGENCE D-404.\n")]
+        findings = chk.check_divergence_links(files, self.REGISTER)
+        # D-404 dangles, and D-001 is uncited -- both are real breaks.
+        messages = " ".join(f.message for f in findings)
+        self.assertIn("D-404", messages)
+        self.assertIn("does not define", messages)
+
+    def test_marker_need_not_carry_the_warning_glyph(self):
+        # The check keys on the ID, so it survives an editor stripping the emoji.
+        files = [("os9-dev/references/basic09/gotchas.md", "DIVERGENCE D-001 without a glyph.\n")]
+        self.assertEqual(chk.check_divergence_links(files, self.REGISTER), [])
+
+    def test_register_itself_is_not_scanned_for_markers(self):
+        # DIVERGENCES.md quotes its own IDs in the format section; that must not
+        # count as a reference file citing them.
+        files = [("DIVERGENCES.md", "### D-001 — x\ncited as DIVERGENCE D-001 in the format guide\n")]
+        findings = chk.check_divergence_links(files, self.REGISTER)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("no reference file", findings[0].message)
+
+    def test_absent_register_makes_every_marker_dangle(self):
+        files = [("os9-dev/references/basic09/gotchas.md", "DIVERGENCE D-001 here.\n")]
+        findings = chk.check_divergence_links(files, None)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("does not define", findings[0].message)
+
+
+# --------------------------------------------------------------------------
 # orphaned [[memory]] link detection
 # --------------------------------------------------------------------------
 class TestParseMemoryName(unittest.TestCase):

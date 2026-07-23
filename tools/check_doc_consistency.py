@@ -53,6 +53,12 @@ _FLAG_RESOLVED = re.compile(r"`?Flag`?\s+(?:is\s+|now\s+)?(?:resolved|cleared)",
 _DOC_TOKEN = re.compile(r"[\w./-]+\.md")
 
 INDEX_FILENAME = "INDEX.md"
+DIVERGENCE_FILENAME = "DIVERGENCES.md"
+# A register entry is defined by its `### D-NNN` heading; a claim cites it with
+# an inline `DIVERGENCE D-NNN` marker (the warning glyph is not required here,
+# so the check does not depend on an emoji surviving an edit).
+_DIVERGENCE_HEADING = re.compile(r"^###\s+(D-\d+)", re.MULTILINE)
+_DIVERGENCE_MARKER = re.compile(r"DIVERGENCE\s+(D-\d+)")
 
 # A wiki-style memory cross-link, e.g. "see [[user-designed-rbf-eof-lock]]".
 # Optional surrounding backticks are captured so a backtick-quoted occurrence
@@ -323,6 +329,54 @@ def check_cross_references(files, known_basenames):
     return findings
 
 
+def check_divergence_links(files, register_text):
+    """Flag any break in the two-way link between `DIVERGENCES.md` and the claims.
+
+    A divergence is only useful if the reader of the *claim* sees it. So every
+    `D-NNN` defined in the register must be cited by at least one inline
+    `DIVERGENCE D-NNN` marker in a reference file, and every inline marker must
+    name an ID the register actually defines. Either break is a finding: an
+    uncited entry is a divergence filed where nobody reading the claim will meet
+    it, and an undefined marker is a warning pointing at nothing.
+
+    `register_text` is DIVERGENCES.md's contents, or None when the register is
+    absent -- in which case any inline marker is dangling by definition.
+    """
+    findings = []
+    defined = set(_DIVERGENCE_HEADING.findall(register_text or ""))
+
+    cited = {}
+    for filename, text in files:
+        if os.path.basename(filename) == DIVERGENCE_FILENAME:
+            continue
+        for lineno, line in enumerate(text.splitlines(), start=1):
+            for ident in _DIVERGENCE_MARKER.findall(line):
+                cited.setdefault(ident, []).append((filename, lineno))
+
+    for ident, locations in sorted(cited.items()):
+        if ident not in defined:
+            findings.append(
+                Finding(
+                    "divergence",
+                    None,
+                    f"inline marker cites `{ident}`, which {DIVERGENCE_FILENAME} does not define",
+                    locations,
+                )
+            )
+
+    for ident in sorted(defined - set(cited)):
+        findings.append(
+            Finding(
+                "divergence",
+                None,
+                f"`{ident}` is defined in {DIVERGENCE_FILENAME} but no reference file "
+                "carries its inline marker -- a reader of the claim would never see it",
+                [(DIVERGENCE_FILENAME, 0)],
+            )
+        )
+    return findings
+
+
 def parse_memory_name(text):
     """Return a memory file's frontmatter `name:` value, or None if absent."""
     m = _FRONTMATTER_NAME.match(text)
@@ -387,8 +441,14 @@ def _index_adjacent_files(roots):
     return extra
 
 
-def run(roots):
+def run(roots, register_text=None):
     """Scan `roots`, returning (findings, inventory).
+
+    `register_text` is DIVERGENCES.md's contents. It is passed in rather than
+    discovered because the register lives at the repo root while `roots` are the
+    two `references/` trees -- the inline markers are inside those trees, the
+    entries they cite are not. When omitted, a register found among the scanned
+    files is used, so a caller can point everything at one directory.
 
     `findings` are presence-contradiction + tag-hygiene + cross-reference issues
     (any means the run failed); `inventory` is the informational `Flag` worklist.
@@ -410,6 +470,12 @@ def run(roots):
         inventory.extend(scan_open_flags(text, display, known))
     findings = check_presence_contradiction(mentions) + findings
     findings += check_cross_references(doc_texts, known_basenames)
+    if register_text is None:
+        register_text = next(
+            (text for name, text in doc_texts if os.path.basename(name) == DIVERGENCE_FILENAME),
+            None,
+        )
+    findings += check_divergence_links(doc_texts, register_text)
     return findings, inventory
 
 
@@ -448,7 +514,12 @@ def main(argv=None):
         os.path.join(here, os.pardir, "os9-dev", "references"),
         os.path.join(here, os.pardir, "os9-systems-dev", "references"),
     ]
-    findings, inventory = run(roots)
+    register_path = os.path.join(here, os.pardir, DIVERGENCE_FILENAME)
+    register_text = None
+    if os.path.exists(register_path):
+        with open(register_path, encoding="utf-8") as handle:
+            register_text = handle.read()
+    findings, inventory = run(roots, register_text)
     if memory_dir:
         findings = findings + check_orphaned_memory_links(collect_memory_files(memory_dir))
 

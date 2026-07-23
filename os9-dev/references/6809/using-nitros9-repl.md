@@ -238,13 +238,46 @@ move any file-level comment after it if you want one at all.
   than normal editing and several back-to-back `key` calls in quick
   succession, no long computation involved. `Flag` (`Manual`): consistent
   with either "long computation" or "several rapid `key` calls" as the
-  real trigger, not yet distinguished. **Practical mitigation**: after
+  real trigger, not yet distinguished.
+  **Deliberate reproduction attempt, 2026-07-23 — NEITHER trigger
+  reproduced it; read this before spending a session re-running the same
+  experiment.** Both stated triggers were driven on purpose: (a) 26+
+  consecutive `key` calls with no computation, twice (authoring two
+  BASIC09 procedures line-by-line with no pauses) — channel stayed clean
+  both times; (b) a genuine 5000-iteration `SIN`/`COS` loop, 237 s of
+  guest compute, then three immediate probes including the exact
+  `key "e <name>" Enter` the original report says failed — all three
+  clean (workspace `DIR` correct, editor opened, `q` returned to `B:`).
+  So the symptom is real (two independent sessions saw it) but is **not**
+  reliably produced by either stated condition, and the trigger stays
+  undistinguished — now with the cheap experiments already spent. Do not
+  read this as "fixed": one non-reproduction cannot refute two
+  observations, and the cause may be timing- or build-dependent. Keep the
+  mitigation below; it costs one command.
+  **Practical mitigation**: after
   any long-running guest computation, or after a burst of rapid `key`
   calls, send one cheap probe command (e.g. `dir`) and confirm it
   actually produced fresh output before trusting further `key`/`send`
   calls; if a probe comes back stale/unchanged or garbled, don't keep
   retrying blind — go straight to `restart` (matches the general "2-3
   attempts, then stop" rule elsewhere in this skill).
+- **"Unresponsive" is usually just slow — calibrate before diagnosing.**
+  `Live`, 2026-07-23: a 5000-iteration `SIN`/`COS` BASIC09 loop takes
+  **237 seconds** of guest time. A 30-second wait looks exactly like a
+  wedged channel, and a session acting on that misreading will `restart`
+  a perfectly healthy harness and lose its workspace. Budget guest
+  compute in minutes; poll for a sentinel the program prints
+  (`until tmux capture-pane -p -t nitros9repl:2 | grep -q DONE`) rather
+  than sleeping a guessed interval.
+- **Two echo behaviours that look like character loss but are not.**
+  `Live`: `LOAD <file>` at the `B:` prompt echoes the **procedure name it
+  loaded**, not the command line — so `LOAD burn.b09` shows as `B:burn`,
+  which reads exactly like a mangled send. And the DriveWire server pane
+  (window 0) shows repeating `->43` / `<-0000` — `OP_SERREAD` polls — the
+  whole time, *including while the guest is busy computing*. **Do not read
+  SERREAD polling as "a process is parked at a prompt waiting for input"**
+  (this session did, and drew the wrong conclusion from it): the poller
+  runs regardless of what the guest is doing, so it distinguishes nothing.
 - **The disk image (`.ide` file) persists fully across `restart`** — it's
   a real file being edited in place, not reset to a pristine snapshot
   each time. Useful (source files you've authored survive a `restart`

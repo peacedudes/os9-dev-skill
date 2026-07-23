@@ -1,14 +1,22 @@
 # Skill-doc consistency checker — design
 
-Repo: `~/.claude/skills` (os9-dev + os9-systems-dev). Entry: `check_doc_consistency.py`.
-Run from `~/.claude/skills`:
+Repo: `~/Developer/os9/os9-dev-skill` (os9-dev + os9-systems-dev; symlinked
+into `~/.claude/skills/`). Entry: `check_doc_consistency.py`. Run from the
+repo root:
 
 ```
 python3 tools/check_doc_consistency.py            # scan both skills' references/
 python3 tools/check_doc_consistency.py <dir>...   # scan given roots
 python3 tools/check_doc_consistency.py --memory-dir <dir>  # + orphaned [[memory]] links
-python3 -m unittest discover -s tools/tests       # the test suite
+python3 -m unittest discover -s tools/tests       # the test suite (stdlib, no pytest)
 ```
+
+**Scan both skills together, or cross-references false-positive.** The two
+skills point at each other's files on purpose (os9-dev's INDEX.md cites
+`6809-level2-mmu.md`, which lives in os9-systems-dev). Narrowing a run to one
+root — `... check_doc_consistency.py os9-dev` — reports those legitimate
+pointers as broken cross-refs. The no-arg form scans both and is what a
+clean-run claim must be based on.
 
 Exit status is nonzero if there are any presence/hygiene **findings**; the
 `Flag` **inventory** is informational and never fails the run.

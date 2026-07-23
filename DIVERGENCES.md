@@ -1,0 +1,179 @@
+# Divergences from Microware documentation
+
+**What this is:** a register of every place where this project's documentation
+or the runtimes it tests against disagree with, or fail to cover, Microware's
+own published documentation. It is maintained for Microware's review.
+
+**Why it exists.** `os9exec` and NitrOS-9 are reverse-engineered
+reimplementations built by the user community. Both have had real errors.
+Until 2026-07-23 this repo's confidence rules told every contributor that
+running one of those reimplementations *resolved* a disagreement with a
+manual — with the predictable result that the repo held **540** runtime-derived
+`Live` claims against only **5** recorded manual disagreements. That rule is
+now reversed (`os9-dev/references/CONFIDENCE-TAGS.md`): a runtime observation
+never overrules a manual, and disagreements land here instead of being erased.
+
+**What counts as Microware's word:** see `SOURCE-AUTHORITY.md`. Microware's own
+manuals, plus those published under licence by Tandy/Radio Shack, Dragon Data
+and Motorola. Third-party books — including the excellent OS-9 Guru — are not
+authoritative here, however useful they are as pointers.
+
+**Nothing in this file asserts Microware is wrong.** Where a manual and a
+reimplementation disagree, the manual is the specification and the
+reimplementation is the candidate defect. Some entries will turn out to be our
+error, some a runtime's, some a documentation gap. Adjudicating them is exactly
+what we are asking for.
+
+## How entries stay findable
+
+Each entry has an ID (`D-001`). The claim it concerns carries an inline
+`⚠ DIVERGENCE D-001` marker **at the point of use** in the reference file, so a
+reader relying on that claim sees the warning without ever opening this file.
+This register is the aggregate view, not the primary home. The doc-consistency
+checker enforces the link in both directions — an entry with no inline marker,
+or a marker with no entry, is a build failure.
+
+## Entry format
+
+```
+### D-NNN — one-line summary
+- **Topic / file:** the skill file and claim affected
+- **Microware says:** the passage, with source file and line
+- **Observed:** what the runtime(s) actually do, and which runtime
+- **Type:** semantic divergence | unimplemented | undocumented | doc conflict
+- **Who can settle it:** Microware / real hardware / already settled
+- **Status:** open | withdrawn | resolved
+```
+
+---
+
+# Part 1 — Confirmed divergences
+
+Manual passage located *and* runtime behaviour observed.
+
+### D-001 — BOOLEAN prints as "True"/"False", manuals specify "TRUE"/"FALSE"
+- **Topic / file:** `os9-dev/references/basic09/basic09-language.md` (PRINT
+  USING section), `basic09/gotchas.md`
+- **Microware says:** two independent authoritative manuals specify uppercase.
+  *BASIC09 Programming Language Reference Manual* Rev H (Microware 1980, 1984),
+  `68k/BASIC09_Reference_Manual_Rev_H.txt:2493` — "BOOLEAN values print out as
+  the character strings: `"TRUE"`…". *BASIC09 Reference Manual* (Tandy 1983),
+  `6809/BASIC09_Reference_Manual_Tandy.txt:2128-2129` — "A Boolean operation
+  always returns either the character string `"TRUE"` or `"FALSE"`."
+- **Observed:** both reimplementations render mixed case. 68k `os9exec`:
+  `PRINT #path USING "B8", TRUE` → `"True    "`. 6809 NitrOS-9 with real
+  Microware BASIC09 "6809 VERSION 01.01.00" (2026-07-23): `TRUE` → `"True    "`,
+  `FALSE` → `"False   "`, `LEN()` 8, output file exactly 18 bytes = 2 × (8+CR).
+  Field width matches the manual; only the casing differs.
+- **Scope limit, stated honestly:** what was tested is the `B` format of
+  `PRINT USING`. The manual passages describe how BOOLEAN values print
+  *generally*. Plain `PRINT b` has **not** been separately tested on either
+  architecture — if plain `PRINT` yields uppercase, this divergence is narrower
+  than stated. That test is queued.
+- **Type:** semantic divergence
+- **Who can settle it:** Microware, or genuine hardware. Two community
+  reimplementations agreeing with each other is not evidence the manual is
+  wrong — it is equally consistent with both having inherited the same defect,
+  or with the manual describing intent that shipping code never matched.
+- **Status:** open
+
+---
+
+# Part 2 — Divergence candidates: runtime behaviour known, manual passage not yet located
+
+These are **not** yet divergences. Each is a place where a runtime does
+something specific and nobody has yet found what Microware's documentation
+says. Locating the passage either promotes the entry to Part 1 or closes it.
+This is the work queue.
+
+| ID | Topic | What a runtime does | Manual passage |
+|---|---|---|---|
+| C-01 | INTEGER ÷ 0 (BASIC09) | 68k `os9exec`: silent, no error. 6809 NitrOS-9: `Error #045`. **The two runtimes disagree with each other**, so at most one matches OS-9 | not yet located |
+| C-02 | REAL ÷ 0 error number (BASIC09) | 68k: catchable, `ERR` = 107. 6809: `Error #045`. Both catchable, different numbers | not yet located |
+| C-03 | `F$CpyMem` register contract (6809) | NitrOS-9's `fcpymem.asm` never reads X — a 3-register call (D/Y/U), not the documented 4. That file's *own* header comment still states the 4-register form | manual's shape is recorded; needs exact citation |
+| C-04 | `PD_CNT` / `PD_COUNT` path-descriptor offset | `os9exec`'s reconstructed header puts open-count at `$03`; this skill documents `$1A`. **Neither anchor is authoritative** — os9exec's `os9defs/` headers are themselves second-hand reconstructions | not yet located |
+| C-05 | `I$Write` / `I$ReadLn` call codes (6809) | Found swapped relative to this skill's table; settled against NitrOS-9's `defs/os9.d` — i.e. against a clone, not against Microware | not yet located |
+| C-06 | `SAVE`/`PACK` `>pathlist` | `os9exec` prints `Error #000:043`/`#000:051` spuriously; NitrOS-9 prints nothing and writes correct files. Logged as an os9exec bug | not yet located — is either behaviour documented? |
+| C-07 | `SAVE` vs `PACK` redirect target | 6809: `SAVE >rel` → CHD, `PACK >rel` → CHX. Asymmetric and undocumented here until 2026-07-23 | not yet located |
+| C-08 | `math` module precision (68k) | `os9exec`'s default `math` is single-precision; whether real OS-9's is too is unknown | not yet located |
+| C-09 | GFX2 `GOSET` | Absent from the community-built GFX2 package (`Error #048`, absent from its function table). Note the runtime here is a *third-party* package build, not even NitrOS-9 proper | documented in the Level 2 manual |
+| C-10 | GFX2 `PALETTE` argument validation | No range checking at all — register up to 99, colour up to 200 accepted | manual implies 0-15 / 0-63 ranges |
+| C-11 | 6809 module type/language byte | Confirmed `(type << 4) \| language`; `dir`/`copy` = `$11`. An earlier revision of this skill claimed `$04` for the C compiler | needs the 6809 C Compiler manual's own module example |
+
+---
+
+# Part 3 — Microware material we do not cover
+
+Authoritative sources sitting unmined or barely mined, measured by citations
+across both skills (2026-07-23). For contrast, the third-party Guru and FARNA
+references are each cited ~21 times.
+
+| Source | Citations | Consequence |
+|---|---|---|
+| `OS-9_Primer.txt` (Microware 1994) | **0** | An official Microware introduction to the system, never consulted |
+| `OS-9_Internet_Software_Reference_Manual.txt` (Microware 1992) | **0** | `68k/network-sockets.md` carries claims explicitly marked "unverified" and "inferred by analogy to `hostent`, not attested" — while the authoritative manual sits unread. This is the single clearest gap in the set |
+| `OS9_Technical_Manual_Disk_File_Organization.txt` (Microware) | **0** | `os9-systems-dev` documents RBF disk structure without citing Microware's own file-organization manual |
+| `Microware_Training_OS-9_{Starter,Intermediate,Advanced}.txt` (Microware 1994) | 2 files | Official Microware training material, reached only `memory-and-io.md` and `ipc.md` |
+| `OS-9_Pascal_Reference_Manual.txt` (Microware 1984) | out of scope | Deliberate prior scope decision, recorded not forgotten |
+| `Enhanced_OS-9_68K_*` (Microware 2000, v3.2) | out of scope | Deliberately excluded to avoid importing v3.2 semantics into v2.4 material |
+
+---
+
+# Part 4 — Gaps and inconsistencies within Microware's own documentation
+
+Offered in the spirit the LICENSE describes — these are places where the
+published documentation is silent, self-contradictory, or where OCR of the
+surviving scans cannot resolve what was originally printed. Microware is the
+only party who can say which.
+
+- **`F$Fork`'s register layout conflicts across manuals.** Different Microware
+  manuals give different input-register tables for the same call. This skill
+  carried it as an unresolved flag for a long time before matching one variant
+  against a reimplementation — which settles what the reimplementation does,
+  not what was specified.
+- **Shell redirection forms `>+` and `>-` appear undocumented.** Both are real,
+  working OS-9 shell syntax (append-or-create; truncate-or-create). *Using
+  Professional OS-9 v2.4* documents only `<`, `>`, `>>`.
+- **Syscall codes `$1F`, `$20`, `$23`-`$26` (6809)** produce zero hits across
+  the entire corpus — neither documented nor confirmed reserved.
+- **`wmode` is absent from the Level 2 manual entirely** (TOC and full-text
+  search both empty), though it is a real utility documented by third parties.
+- **Assembler label length: 1-8 vs 1-9 characters.** Resolved as an RMA-vs-`asm`
+  difference rather than a contradiction, but the manuals do not state the
+  distinction plainly.
+- **OCR collisions in the surviving scans — a caution, not a finding.** The
+  6809 System Programmer's Manual scans render `F$AllPrc` and `F$FModul` both
+  as `$4B`, and `F$CpyMem`/`F$GPrDsc` similarly collide. **No divergence may be
+  raised on an OCR-only reading**; reporting a phantom disagreement to the
+  people who wrote the original would be worse than reporting nothing. Every
+  Part 1 entry requires a legible passage.
+
+---
+
+# Part 5 — Claims resting only on non-authoritative sources
+
+Not divergences — claims whose only backing is a third-party book. Under the
+authority rule these are, for review purposes, unsourced. Guru and FARNA are
+each cited ~21 times across the two skills; those citations have not yet been
+individually traced back to a Microware passage. Auditing them is queued.
+
+---
+
+# Part 6 — What has NOT been audited
+
+Stated plainly so this register is not mistaken for a completed audit.
+
+- **The 540 `Live` claims have not been individually checked against the
+  manuals.** Parts 1 and 2 came from disagreements the skills had *already
+  half-recorded* in prose, plus findings from the 2026-07-23 6809 session. The
+  large majority of runtime-derived claims have never been compared to a
+  Microware passage at all. That is the bulk of the remaining work.
+- **Priority order for continuing**, highest consequence first: syscall
+  register contracts → kernel/path-descriptor struct offsets → error codes →
+  BASIC09 language semantics → utility behaviour.
+- **The instrument that would automate most of this** is the live-verification
+  corpus, if it is made rerunnable on genuine OS-9. Then every PASS/FAIL
+  mismatch is a divergence report rather than a hand audit. Scoped in the
+  os9exec repo's `ROADMAP.md`; currently only 5 of 86 68k files have
+  machine-checkable oracles, 0 of 99 on 6809, and the runner is welded to
+  `os9exec` as a host process.

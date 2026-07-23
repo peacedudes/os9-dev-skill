@@ -531,9 +531,13 @@ after it (`PRINT USING #path, ...` is a syntax error, `Error #000:018`).
 `12.35`. `PRINT #path USING "I4", 10`, `"S8", "HELLO"`, `"H4", 100`
 (→ `0064`, correct hex of 100) all compiled and ran with no error.
 
-**Real divergence from the manual, not a test mistake:** the manual
-states BOOLEAN format converts to the strings `"TRUE"` and `"FALSE"`
-(uppercase). `Live` (68k): `PRINT #path USING "B8", TRUE`
+**⚠ DIVERGENCE D-001 — both reimplementations disagree with two Microware
+manuals here; do not treat either side as settled.** The manuals state BOOLEAN
+values print as the strings `"TRUE"` and `"FALSE"` (uppercase) — *BASIC09
+Reference Manual* Rev H (Microware) and the Tandy 1983 edition, independently.
+Both `os9exec` and real 6809 Microware BASIC09 render mixed case instead. Which
+side is in error is Microware's call, not ours; see `DIVERGENCES.md`.
+`Live` (68k): `PRINT #path USING "B8", TRUE`
 produces `"True    "` — mixed case (capital T, lowercase `rue`), not
 `"TRUE"`. Field width is still exactly correct (8 chars).
 

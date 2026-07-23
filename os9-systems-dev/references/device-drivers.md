@@ -1,14 +1,16 @@
 # OS-9 Device Drivers
 
 **Verification status:** baseline is `Manual` — cross-referenced across
-multiple manuals. The Device Descriptor field table below is `Source` —
-checked against `os9exec`'s own C source (`module_from_book.h`, the `mod_dev`
-struct) and confirmed exact. **Re-verified 2026-07-21:** every field
-(`M$Port` $30, `M$Vector` $34, `M$IRQLvl` $35, `M$Prior` $36, `M$Mode` $37,
-`M$FMgr` $38, `M$PDev` $3A, `M$DevCon` $3C, `M$Opt` $46, options at $48)
-carries a **compile-time** `offsetof` assertion in that header — the build
-fails if any offset moves, so the layout is continuously enforced, not
-checked once.
+multiple manuals. The Device Descriptor field table below is now **`Manual`,
+verified 2026-07-23 against the authoritative primary source**: the OS-9
+Technical I/O Manual (§1, device-descriptor module figure) lists every field
+at exactly these offsets — `M$Port` $30, `M$Vector` $34, `M$IRQLvl` $35,
+`M$Prior` $36, `M$Mode` $37, `M$FMgr` $38, `M$PDev` $3A, `M$DevCon` $3C,
+`M$Opt` $46 (initialization-table size), `M$DTyp` $48 (device type, first field
+of the init table). It *additionally* matches os9exec's `mod_dev` struct
+(`module_from_book.h`), which carries a **compile-time** `offsetof` assertion
+per field — so the layout is confirmed against Microware's own manual *and*
+continuously enforced in the emulator build.
 
 **Entry-point register conventions below are untestable on `os9exec`, not
 just untested** — `Live` (2026-07-18, first real attempt): a

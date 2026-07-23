@@ -9,7 +9,19 @@ and wired byte-for-byte into `F$GPrDsc`/`F$GPrDBT` as the actual
 guest-visible descriptor image) matches every offset and field described
 below. That check surfaced one real `os9exec` bug — `P$SigLvl` ($370) was
 never populated from the emulator's actual signal-mask-nesting counter, so
-`F$GPrDsc`/`F$GPrDBT` always reported it as stale/zero — now fixed. The
+`F$GPrDsc`/`F$GPrDBT` always reported it as stale/zero — now fixed.
+**Authority ceiling, confirmed 2026-07-23:** the field *offsets* here are
+not published in any authoritative Microware manual in this corpus. The
+68k manuals describe the process descriptor only in prose (state, priority,
+paths, memory list); no 68k manual gives a `P$` offset table (the one offset
+table that exists, in the 6809 *System Programmer's Manual*, is the 6809
+descriptor — a different, smaller layout). The offsets therefore trace to the
+**Guru book** (Dayan — third-party, see the repo `SOURCE-AUTHORITY.md`) as
+reflected in os9exec's reconstructed `procid` struct. Microware manuals and the
+Guru corroborate the field *names and semantics* (`P$SigLvl`, `P$Signal`,
+`P$State`), but the numeric offsets are `Source` resting on a third-party
+foundation — the strongest tier available here, and not Microware-authoritative.
+Real hardware or a Microware internal header would be needed to lift it. The
 **System Global Memory** section stays `Manual` only: `os9exec` has no
 in-memory struct corresponding to real System Globals at all — `F$SetSys`
 is a self-described "half-dummy" that stubs most `D_*` variables (including

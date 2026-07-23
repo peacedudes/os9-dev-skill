@@ -200,6 +200,7 @@ references are each cited ~21 times.
 | `OS-9_Internet_Software_Reference_Manual.txt` (Microware 1992) | **0** | `68k/network-sockets.md` carries claims explicitly marked "unverified" and "inferred by analogy to `hostent`, not attested" — while the authoritative manual sits unread. This is the single clearest gap in the set |
 | `OS9_Technical_Manual_Disk_File_Organization.txt` (Microware) | **0** | `os9-systems-dev` documents RBF disk structure without citing Microware's own file-organization manual |
 | `Microware_Training_OS-9_{Starter,Intermediate,Advanced}.txt` (Microware 1994) | 2 files | Official Microware training material, reached only `memory-and-io.md` and `ipc.md` |
+| 68k **process-descriptor field offsets** | not published | No authoritative 68k Microware manual in this corpus gives a `P$` offset table — the descriptor is described in prose only. The offsets in `os9-systems-dev/kernel-internals.md` trace to the third-party Guru book via os9exec's reconstructed struct; Microware sources confirm field *names/semantics* but not offsets. `Source`-tier by necessity, not Microware-verifiable here (2026-07-23) |
 | `OS-9_Pascal_Reference_Manual.txt` (Microware 1984) | out of scope | Deliberate prior scope decision, recorded not forgotten |
 | `Enhanced_OS-9_68K_*` (Microware 2000, v3.2) | out of scope | Deliberately excluded to avoid importing v3.2 semantics into v2.4 material |
 

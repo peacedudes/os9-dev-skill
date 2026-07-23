@@ -15,16 +15,29 @@ output off the system disk. Never source from `h0/SYS/errmsg` (copyrighted).
 
 ---
 
-## 1. 6809 needs the 68k treatment (highest content ROI)
+## 1. 6809 needs the 68k treatment (highest content ROI) — UNBLOCKED, STARTED
 Most 6809 claims are still `Manual`; only a handful are `Live`. The same
 verification pass done on 68k would find as much on 6809 — byte-dumps,
 symbol/behavior tests, gotcha hunting, div-zero/float/string-terminator checks,
-etc. **Blocked only by harness contention:** the NitrOS-9/XRoar + DriveWire
-harness is the concurrent RBF-hammer session's. The clone-isolation
-(`NITROS9REPL_DISKDIR`/`_SESSION`/`_BECKER_PORT`/`_CHAN_PORT`, see
-`6809/nitros9repl-setup.md`) makes it runnable alongside once that settles.
-Keep 6809 live-verification on the primary model — Haiku fabricated results
-before (memory `feedback_haiku-cant-drive-repl`).
+etc. **No longer blocked** (2026-07-23): the RBF-hammer session that owned the
+NitrOS-9/XRoar + DriveWire harness has closed, and the harness ran clean for a
+full session. Keep 6809 live-verification on the primary model — Haiku
+fabricated results before (memory `feedback_haiku-cant-drive-repl`).
+
+**First pass done 2026-07-23** (memory `6809-verification-pass-2026-07-23`):
+`PRINT USING "B8"` confirmed on real 6809 (manual wrong on both architectures);
+`SAVE`/`PACK` `>pathlist` spurious errors proven to be an `os9exec` defect, not
+OS-9 (→ emulator `ROADMAP.md`); net-new fact that `SAVE >rel` resolves against
+CHD while `PACK >rel` resolves against CHX; 6809 `ident` `Ty/La` shown to be a
+single packed `(type << 4) | language` byte, which settles the old
+`$04`-vs-`$11` question against `$11`. The channel-garble `Flag` in
+`using-nitros9-repl.md` was driven at both its stated triggers and reproduced
+at neither — recorded there so the experiments aren't re-run blind.
+
+**Still open — the bulk of the work.** The ~93-call 6809 syscall table, the
+debugger command set, and most of `assembly-and-tools.md` remain `Manual`.
+Good next batches: syscall spot-checks against the table's register columns,
+then the `6809/STATUS.md` items that say "not yet systematically re-checked".
 
 ## 2. Lift `os9-systems-dev` from `Manual` to `Source` — DONE (2026-07-21)
 Every documented struct that HAS an os9exec anchor is now `Source`-verified

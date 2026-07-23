@@ -101,6 +101,34 @@ Manual passage located *and* runtime behaviour observed.
   OS-9/68k BASIC09 report 45 here, or 105?
 - **Status:** open
 
+### D-003 — `I$MakDir`'s `d1` width was changed from the manual's to match os9exec
+- **Topic / file:** `os9-dev/references/68k/syscall-reference.md`, I$MakDir row
+- **Microware says:** *OS-9/68000 Operating System Technical Manual* (Microware
+  1984), ch. 15 p. 15-13: `d1` = access permissions. The register suffix is
+  **illegible in this scan** (renders as `d1.x` in both places it appears), but
+  the surrounding prose reads "the **bytes** passed in register `d1`" — plural,
+  which points to a word. The 6809 System Programmer's Manual's equivalent uses
+  `(B)`, a one-byte register, but that is an architectural difference, not
+  evidence about the 68k width.
+- **Observed:** an earlier revision of this skill carried `d1.w` and then
+  **changed it to `d1.b`, annotated "corrected from `d1.w`"** — on the strength
+  of `os9exec`'s implementation.
+- **Why it is listed even though unresolved:** this is the exact failure mode
+  this register exists for — a Microware-documented value edited to match a
+  reverse-engineered reimplementation, with the manual's version erased rather
+  than flagged. The width itself is genuinely unsettled; what is certain is that
+  agreement with os9exec was not grounds to overwrite it.
+- **Type:** semantic divergence (candidate) + method failure (confirmed)
+- **Who can settle it:** Microware, or a cleaner scan of p. 15-13. Deliberately
+  **not** raised as a confirmed divergence — this register's own rule forbids
+  scoring one on an OCR-only reading.
+- **Status:** open
+
+**Two plain omissions found in the same pass and simply fixed, not divergences:**
+`I$MakDir`'s documented optional input `d2.l` (initial allocation size) was
+absent from our table entirely, and `I$MakDir`/`I$Delete`/`I$ChgDir` all showed
+no output where the manual documents `(a0)` updated past the pathname.
+
 ---
 
 # Part 2 — Divergence candidates: runtime behaviour known, manual passage not yet located

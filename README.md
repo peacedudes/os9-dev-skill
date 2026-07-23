@@ -23,13 +23,16 @@ editing the docs; it isn't needed to use the skills.
 
 ## How this was assembled
 
-OS-9's documentation was never centralized, and Microware is long gone. What
-survives is scattered across preservation archives and hobbyist sites: manuals
-in varying states of OCR, several editions of the same book that don't quite
-agree, and files whose names lie about their contents. One manual circulating
-in the 68k archives is actually a 6809 manual. Two files labelled `Gimix_*`
-turn out to be a byte-identical duplicate and a second OCR pass of documents
-already present under other names.
+OS-9 is a living product. Microware still sells OS-9/68k and still brings the
+system up on new processors as they appear. What these skills document is the
+older end of that line — the v2.4-era 68000 system and 6809 Level 2 — whose
+documentation was never centralized and now circulates mainly through
+preservation archives and hobbyist sites: manuals in varying states of OCR,
+several editions of the same book that don't quite agree, and files whose names
+lie about their contents. One manual circulating in the 68k archives is
+actually a 6809 manual. Two files labelled `Gimix_*` turn out to be a
+byte-identical duplicate and a second OCR pass of documents already present
+under other names.
 
 Some thirty of those published manuals, quick references and training guides
 were read and cross-referenced against one another, and the findings condensed
@@ -77,11 +80,23 @@ one disagrees with the documentation, that is recorded as a disagreement.
 
 ## Provenance
 
+Because OS-9 is still a commercial product with an active rights holder, the
+line was drawn conservatively at every step, and drawn the same way whether or
+not anyone was likely to check.
+
 All source material is public-domain or freely-published Microware/Tandy
 documentation, or historical-preservation archives. **No proprietary Microware
-source code was used anywhere in this chain.** Material that was deliberately
-*not* used is documented too, in `SOURCES.md`, along with the reasoning —
-including one archive of genuine Microware source that has never been opened.
+source code was used anywhere in this chain.** Facts are facts and are stated
+as such — a register contract, an error number, a struct offset — but the prose
+around them is written here rather than borrowed: no raw manual text
+reproduced, no worked code example kept verbatim, no file mirroring a source's
+chapter structure.
+
+What was deliberately *not* used is recorded too, in `SOURCES.md`, with the
+reasoning. An archive of genuine Microware 6809 source sits in the wider
+project's resource collection and has never been opened for any purpose;
+NitrOS-9's open kernel source is held to cross-check-only use and is never
+extracted at length.
 
 ## Layout
 

@@ -249,17 +249,16 @@ discipline — not silently fixed):
   `dogfood-report-syscalls-batch2-2026-07-20.md`.
   **Batch 3 — I/O path calls + signals, 8 more calls now `Live` (23
   total).** `I$Create`/`I$Delete`/`I$MakDir`/`I$ChgDir`/`I$Seek`/`I$Dup`
-  all confirmed cleanly, zero fix-and-rerun cycles. **Two real,
-  `os9exec`-specific behavioral divergences found and confirmed live,
-  both flagged first by the emulator's own source comments**: `F$Send`'s
-  PID 0 does **not** broadcast to the sender's user/group (standard OS-9
-  behavior) — `os9exec`'s own comment says "0 is NOT all here!", PID 0
-  is a real specific process here, not a broadcast target. `F$Icpt`
-  accepts an install with no error but **never actually delivers a
-  signal to the handler** — "signal handling is not yet implemented"
-  per the emulator's own comment; same class of finding as the earlier
-  device-driver/file-manager dispatch gaps. See
-  `dogfood-report-syscalls-batch3-2026-07-20.md`.
+  all confirmed cleanly, zero fix-and-rerun cycles. **Two apparent
+  `os9exec`-specific behavioral divergences were flagged here, both
+  RETRACTED 2026-07-21 — see `syscall-reference.md`'s F$Send/F$Icpt
+  rows.** Both were based on the emulator's own stale source comments
+  plus a test methodology that never actually exercised the mechanism
+  in question (S_Wake instead of a real signal for F$Icpt; success-only
+  check, no second process, for F$Send's broadcast). Both work
+  correctly once tested properly; regression tests now live in
+  `os9exec`'s own suite. See `dogfood-report-syscalls-batch3-2026-07-20.md`
+  for the original (now-superseded) claim.
   **Batch 4 — 4 more calls now `Live` (27 total).** `F$SPrior`/`F$CRC`/
   `F$SetCRC`/`I$GetStt`(SS.Size) confirmed. Two self-inflicted
   register-clobber bugs caught by checking printed results against

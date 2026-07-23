@@ -165,6 +165,35 @@ timeslicing described immediately above it and would have made time slices
 meaningless. That was the system-state rule mistakenly restated as applying to
 user code. Corrected 2026-07-19.)*
 
+### How `os9exec` emulates this (differs from real OS-9) — `Source`, for extending the emulator
+
+The algorithm above is real OS-9. `os9exec` does **not** implement the
+`D_ActAge`/`P$Sched` priority-age machinery; it runs a simpler round-robin in
+`do_arbitrate()` (`procstuff.c`). Facts a future emulator change needs:
+
+- **The OS-9 clock is real host wall-clock time** — `GetSystemTick()`
+  (`funcdispatch.c`) reads `gettimeofday()` on UNIX (`GetTickCount()` on
+  Windows), not a counter incremented by the emulation loop. So blocking the
+  host (`nanosleep`, `select`, a syscall) does **not** stall OS-9 time: on
+  return, ticks/alarms/sleeps reflect the real elapsed interval. This is what
+  makes an idle host-side block safe.
+- **Blocked/waiting processes are poll-retried, not event-woken.** A process
+  in `pWaitRead`/`pWaitWrite` (a blocked console/pipe read, a parked
+  `Ev$Wait`) is re-dispatched by `do_arbitrate` only every Nth round (throttled
+  by `pW_age`, ~`procstuff.c:1229`); it re-runs the syscall and re-checks. The
+  exception is RBF record/EOF locks, which do an **explicit** wake of a known
+  in-emulator waiter — the model the owner wants console reads moved toward
+  (host-tty readiness is now `select()`-driven in `DoWait`, see below).
+- **`DoWait()` (`procstuff.c`) is the ONLY code that runs while every process
+  is blocked/sleeping** (the fully-idle path `do_arbitrate` drops into when
+  nothing is runnable). It is therefore the sole place stdin
+  (`CheckInputBuffers()`) and due alarms (`CheckAlarms()`) get serviced while
+  idle — a recurring root-cause locus: `tsmon` never seeing its first keypress,
+  and an `F$Alarm` never firing during an `F$Sleep`, were both this same gap
+  (something only checked on the TRAP0-dispatch path, never reached while
+  idle). Any new "wake a blocked process from a host event" mechanism must be
+  serviced here too, not only in the syscall dispatcher.
+
 ## Module Directory Internals
 
 The module directory is a kernel-maintained table, one entry per loaded

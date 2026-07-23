@@ -115,13 +115,17 @@ The **first 42 bytes** form a file-manager- and driver-agnostic header:
 path number, access mode, references to the active file manager and driver,
 and other bookkeeping the kernel manages. Every path descriptor starts with
 this section regardless of which file manager is driving the I/O.
-**`Source`, 2026-07-21 — matches os9exec's `PD_` common-header offsets**
-(`sgstat_from_book.h`, used throughout its kernel code): `PD_PD` $00 (path
-number), `PD_MOD` $02 (access mode), `PD_CNT` $03 (open count — the same
-offset the `I$Dup` correction below uses), `PD_DEV` $04 (device-table
-pointer), `PD_CPR` $08 (current PID), `PD_RGS` $0A (caller register stack),
-`PD_BUF` $0E (buffer), `PD_USER` $12 (user ID), `PD_Paths` $16 (open-path
-list), then `PD_FST` $2A (86-byte file-manager work area) and `PD_OPT` $80 —
+**`Manual`, verified 2026-07-23 against the OS-9 Technical I/O Manual**
+(§1, "Path Descriptors" universal table) — and independently matching
+os9exec's `PD_` common-header offsets (`sgstat_from_book.h`). The full
+universal header: `PD_PD` $00 (path number), `PD_MOD` $02 (access mode),
+`PD_CNT` $03 (open count — **manual marks this obsolete**; see the `I$Dup`
+note below), `PD_DEV` $04 (device-table pointer), `PD_CPR` $08 (requester
+PID), `PD_RGS` $0A (caller register stack), `PD_BUF` $0E (buffer), `PD_USER`
+$12 (owner group/user), `PD_PATHS` $16 (open-path list), `PD_COUNT` $1A (open
+count — the current, non-obsolete one), `PD_LProc` $1C (last active PID),
+`PD_ErrNo` $20 and `PD_SysGlob` $24 (C-language file-manager `errno` / system-
+global pointer), then `PD_FST` $2A (file-manager work area) and `PD_OPT` $80 —
 i.e. the 42-byte common header runs $00–$29, exactly as stated.
 
 Beyond that sits a **file-manager-defined working area** (`PD_FST`) whose
@@ -171,20 +175,22 @@ parent and child processes (or any multiple processes) to share the same
 open-file context without re-opening. Only when `I$Close` drives the count
 to zero does the kernel deallocate and unlink the descriptor.
 
-**`Source`, corrected 2026-07-20:** `os9exec`'s own path-descriptor header
-(`sgstat_from_book.h`, also Guru-derived) defines an "open count" field,
-`PD_CNT`, at offset `$03` — not `$1A`. **`os9exec` does implement `I$Dup`**
-(`OS9_I_Dup`, `icalls.c`, dispatch code `$82` — `Live`-confirmed working,
-`test/68k-live-verification/batch2-01.a`, and see `68k/syscall-reference.md`)
-— the earlier claim that it didn't was wrong. The offset conflict is real
-for a more precise reason, though: `OS9_I_Dup` never touches `PD_CNT` at
-all — it does the sharing via host-native bookkeeping (an internal
-`usrpaths[]` array plus `usrpath_link()`'s own link-count field), not by
-incrementing a guest-visible byte at a fixed struct offset. `PD_CNT` is
-genuinely unreferenced anywhere in the `.c` source (confirmed by grep) —
-dead, unused code, so there is still no live guest-visible share-counter
-to observe against either claimed offset. Both offsets remain unconfirmed
-against a primary source.
+**`Manual`, flag RESOLVED 2026-07-23 against the OS-9 Technical I/O Manual.**
+The `$03`-vs-`$1A` "conflict" was never a conflict — Microware's own universal
+path-descriptor table (I/O Technical Manual, §1, "Path Descriptors") lists
+**both fields, at both offsets**:
+- **`PD_CNT` at `$03`** — "Number of Paths using this PD (**obsolete**)"
+- **`PD_COUNT` at `$1A`** — "Number of Paths using this PD" (the current one)
+
+So os9exec's header (`PD_CNT`/`$03`) and this skill's table (`PD_COUNT`/`$1A`)
+were each describing a *different, genuine* field. The manual's "obsolete" tag
+on `PD_CNT` also explains why it is dead, unreferenced code in os9exec:
+`OS9_I_Dup` (dispatch `$82`, `Live`-confirmed working,
+`test/68k-live-verification/batch2-01.a`) does its share-counting through
+host-native bookkeeping (`usrpaths[]` + `usrpath_link()`), touching neither
+guest offset — which is fine, because the live counter (`PD_COUNT`/`$1A`) is
+itself the non-obsolete one the kernel would maintain on real hardware. Both
+offsets are now primary-source confirmed; no flag remains.
 
 **Kernel-side bookkeeping** (not the file manager's job, but what the file
 manager's Open/Close calls are embedded inside): the kernel maintains a

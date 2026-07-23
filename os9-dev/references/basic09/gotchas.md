@@ -66,10 +66,11 @@
   ...` (the latter is a syntax error, `Error #000:018`).
 - **Divergence from the manual**: `PRINT USING`'s `B` (boolean) format is
   documented as printing `"TRUE"`/`"FALSE"` but actually prints mixed-case
-  `"True    "` (8-char field, correct width) — `Live` (68k) only; 6809
-  not yet independently confirmed (this entry previously said "both,"
-  overstating it — see `basic09-language.md`'s PRINT USING section, the
-  more precise source for this claim, for the exact test and scoping).
+  `"True    "` / `"False   "` (8-char field, correct width) — now `Live`
+  on **both** architectures (68k `os9exec`; 6809 real NitrOS-9 Microware
+  BASIC09 01.01.00, 2026-07-23). The manual is simply wrong here, on real
+  hardware-lineage code as much as on the emulator. See
+  `basic09-language.md`'s PRINT USING section for the exact test.
   Given 68k `os9exec` faithfully reproduces real Microware BASIC09
   behavior elsewhere, this is very likely the Microware runtime itself
   rather than an emulator artifact, but that's an inference, not a

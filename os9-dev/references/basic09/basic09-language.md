@@ -535,9 +535,15 @@ after it (`PRINT USING #path, ...` is a syntax error, `Error #000:018`).
 states BOOLEAN format converts to the strings `"TRUE"` and `"FALSE"`
 (uppercase). `Live` (68k): `PRINT #path USING "B8", TRUE`
 produces `"True    "` — mixed case (capital T, lowercase `rue`), not
-`"TRUE"`. Field width is still exactly correct (8 chars). Worth flagging
-to the compiler's author directly — this is exactly the kind of
-manual-vs-implementation gap a real 6809 build should be checked against.
+`"TRUE"`. Field width is still exactly correct (8 chars).
+
+**`Live` (6809, 2026-07-23) — confirmed identical on real Microware
+BASIC09 "6809 VERSION 01.01.00" under NitrOS-9, so this is not an
+`os9exec` artifact.** Same file round-trip method: `TRUE` → `"True    "`,
+`FALSE` → `"False   "`, `LEN()` = 8 for both, and the output file measured
+exactly 18 bytes on disk — 2 × (8-char field + CR), an independent check
+on the field width that doesn't rely on `LEN()` at all. The manual is
+wrong on both architectures.
 
 ```basic
 PRINT [ print-list ]

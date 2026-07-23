@@ -5,6 +5,9 @@ description: Use when writing, porting, or debugging programs for Microware OS-9
 
 # OS-9 Development Skill
 
+> **Pre-publication — not for distribution.** Circulated privately for review;
+> no license is granted yet. See `LICENSE` at the repo root.
+
 Scope: writing programs that *run on* OS-9. Device drivers, file managers,
 and kernel internals (System Globals, process descriptor, scheduler,
 MMU/DAT) are the sibling `os9-systems-dev` skill.

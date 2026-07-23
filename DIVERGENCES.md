@@ -118,11 +118,15 @@ Manual passage located *and* runtime behaviour observed.
   reverse-engineered reimplementation, with the manual's version erased rather
   than flagged. The width itself is genuinely unsettled; what is certain is that
   agreement with os9exec was not grounds to overwrite it.
-- **Type:** semantic divergence (candidate) + method failure (confirmed)
-- **Who can settle it:** Microware, or a cleaner scan of p. 15-13. Deliberately
-  **not** raised as a confirmed divergence — this register's own rule forbids
-  scoring one on an OCR-only reading.
-- **Status:** open
+- **Type:** method failure (confirmed); no actual divergence
+- **Resolution (owner, 2026-07-23):** closed — **there is no divergence**. The
+  access-permission bits all fit in the low byte of `d1`; OS-9/68k reads only
+  that byte and ignores any higher bits, so passing a byte, word, or long makes
+  no difference. The width question was moot. What remains true and worth
+  keeping is the method lesson: our table had `d1.w` changed to `d1.b` *because
+  os9exec did that*, which is not a valid reason to overwrite a manual value —
+  that reasoning was the defect, not the number.
+- **Status:** resolved
 
 **Two plain omissions found in the same pass and simply fixed, not divergences:**
 `I$MakDir`'s documented optional input `d2.l` (initial allocation size) was

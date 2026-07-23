@@ -333,17 +333,24 @@ def check_divergence_links(files, register_text):
     """Flag any break in the two-way link between `DIVERGENCES.md` and the claims.
 
     A divergence is only useful if the reader of the *claim* sees it. So every
-    `D-NNN` defined in the register must be cited by at least one inline
-    `DIVERGENCE D-NNN` marker in a reference file, and every inline marker must
-    name an ID the register actually defines. Either break is a finding: an
-    uncited entry is a divergence filed where nobody reading the claim will meet
-    it, and an undefined marker is a warning pointing at nothing.
+    **open** `D-NNN` defined in the register must be cited by at least one
+    inline `DIVERGENCE D-NNN` marker in a reference file, and every inline
+    marker must name an ID the register actually defines. Either break is a
+    finding: an uncited open entry is a divergence filed where nobody reading
+    the claim will meet it, and an undefined marker is a warning pointing at
+    nothing.
+
+    A **closed** entry (Status: withdrawn / resolved) is archival -- the claim
+    it once concerned is now correct, so forcing a warning marker onto that row
+    would be wrong. Closed entries therefore need no inline marker; a marker may
+    still cite one (the ID stays defined), it just isn't required.
 
     `register_text` is DIVERGENCES.md's contents, or None when the register is
     absent -- in which case any inline marker is dangling by definition.
     """
     findings = []
     defined = set(_DIVERGENCE_HEADING.findall(register_text or ""))
+    open_ids = _open_divergences(register_text or "")
 
     cited = {}
     for filename, text in files:
@@ -364,17 +371,38 @@ def check_divergence_links(files, register_text):
                 )
             )
 
-    for ident in sorted(defined - set(cited)):
+    for ident in sorted(open_ids - set(cited)):
         findings.append(
             Finding(
                 "divergence",
                 None,
-                f"`{ident}` is defined in {DIVERGENCE_FILENAME} but no reference file "
+                f"`{ident}` is open in {DIVERGENCE_FILENAME} but no reference file "
                 "carries its inline marker -- a reader of the claim would never see it",
                 [(DIVERGENCE_FILENAME, 0)],
             )
         )
     return findings
+
+
+def _open_divergences(register_text):
+    """Return the set of `D-NNN` IDs whose entry is not withdrawn/resolved.
+
+    Splits the register at `### D-NNN` headings and reads each entry's
+    `**Status:**` line; an entry counts as open unless that status contains
+    `withdrawn` or `resolved` (case-insensitive). A missing status is treated
+    as open -- the safe default, since it still demands an inline warning.
+    """
+    open_ids = set()
+    parts = re.split(r"^###\s+(D-\d+)", register_text, flags=re.MULTILINE)
+    # parts = [preamble, id1, body1, id2, body2, ...]
+    for ident, body in zip(parts[1::2], parts[2::2]):
+        status = ""
+        m = re.search(r"\*\*Status:\*\*\s*(.+)", body)
+        if m:
+            status = m.group(1).lower()
+        if "withdrawn" not in status and "resolved" not in status:
+            open_ids.add(ident)
+    return open_ids
 
 
 def parse_memory_name(text):

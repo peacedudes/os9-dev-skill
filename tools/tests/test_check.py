@@ -386,6 +386,33 @@ class TestDivergenceLinks(unittest.TestCase):
         self.assertEqual(len(findings), 1)
         self.assertIn("does not define", findings[0].message)
 
+    def test_resolved_entry_needs_no_inline_marker(self):
+        # A closed entry is archival; the row it once flagged is now correct, so
+        # forcing a warning onto it would be wrong.
+        register = "### D-003 — settled\n- **Status:** resolved\n"
+        files = [("os9-dev/references/68k/syscall-reference.md", "no marker here\n")]
+        self.assertEqual(chk.check_divergence_links(files, register), [])
+
+    def test_withdrawn_entry_needs_no_inline_marker(self):
+        register = "### D-009 — dropped\n- **Status:** withdrawn\n"
+        files = [("os9-dev/references/68k/syscall-reference.md", "no marker here\n")]
+        self.assertEqual(chk.check_divergence_links(files, register), [])
+
+    def test_open_entry_still_requires_its_marker(self):
+        # The closed-entry exemption must not weaken the open-entry rule.
+        register = "### D-004 — live\n- **Status:** open\n"
+        files = [("os9-dev/references/68k/syscall-reference.md", "no marker here\n")]
+        findings = chk.check_divergence_links(files, register)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("D-004", findings[0].message)
+
+    def test_missing_status_defaults_to_open(self):
+        register = "### D-005 — no status line at all\n- some body\n"
+        files = [("os9-dev/references/68k/syscall-reference.md", "no marker\n")]
+        findings = chk.check_divergence_links(files, register)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("D-005", findings[0].message)
+
 
 # --------------------------------------------------------------------------
 # orphaned [[memory]] link detection

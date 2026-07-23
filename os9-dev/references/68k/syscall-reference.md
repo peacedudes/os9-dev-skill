@@ -97,11 +97,41 @@ on TRAP #1–#15 via F$TLink.
 ## Events (F$Event subfunctions)
 
 One counter primitive covers mutex + condition variable + counting
-semaphore (see `common/ipc.md`). Subfunction names (`Manual`, name-level
-only — register layouts not reproduced here): Ev$Link, Ev$UnLnk, Ev$Creat, Ev$Delet, Ev$Wait (block
-until value in range), Ev$WaitR (relative range), Ev$Read, Ev$Info,
-Ev$Pulse (momentary signal), Ev$Signl (permanent increment), Ev$Set
-(absolute set), Ev$SetR (relative adjust).
+semaphore (see `common/ipc.md`). **F$Event** = `$53`; the subfunction is in
+`d1.w`. Function codes (standard Microware values, confirmed against
+`os9exec`'s `events.h`): Ev$Link=`0`, Ev$UnLnk=`1`, Ev$Creat=`2`,
+Ev$Delet=`3`, Ev$Wait=`4`, Ev$WaitR=`5`, Ev$Read=`6`, Ev$Info=`7`,
+Ev$Signl=`8`, Ev$Pulse=`9`, Ev$Set=`$0A`, Ev$SetR=`$0B`.
+
+**Register contracts (`Live`, 2026-07-22 — run as 68k asm on `os9exec`):**
+- **Ev$Creat**: a0=name, d0.l=initial value, d1.w=2, d2.w=wait-increment,
+  d3.w=signal-increment → d0.l=event ID. Errors E$EvBusy if the name exists.
+- **Ev$Link**: a0=name, d1.w=0 → d0.l=event ID (E$EvNF if not created yet).
+- **Ev$Wait**: d0.l=event ID, d1.w=4, d2.l=min, d3.l=max → **blocks** until
+  `min ≤ value ≤ max`, then adds the wait-increment and returns the new value
+  in d1.l. A bad event ID returns E$EvntID immediately (does NOT hang — that
+  was a real `os9exec` bug, fixed; a genuinely-invalid ID used to park
+  forever).
+- **Ev$Signl**: d0.l=event ID, d1.w=8 — adds the signal-increment to the
+  counter. It only bumps the value; it does **not** explicitly wake a waiter.
+- **Ev$Delet**: a0=name, d1.w=3 (by name, not ID).
+
+**A blocking wait IS woken cross-process (`Live`, 2026-07-22).** Process A
+parks on an out-of-range Ev$Wait; a separate process B does Ev$Link + Ev$Signl
+to push the counter into range; A wakes and returns. Since Ev$Signl performs
+no wake, the release comes entirely from `os9exec` re-dispatching a parked
+(`pWaitRead`) process every Nth arbitration round to poll-retry the wait
+(`do_arbitrate`, `procstuff.c`). Regression test in `os9exec`'s own suite
+("f$event: a blocking Ev$Wait is woken by another process's Ev$Signl"); proven
+non-vacuous — a control that links but never signals leaves A parked to the
+timeout. To exercise a blocking wait you need two processes: background the
+waiter (`waiter &`) so the shell can launch the signaller, and have the
+signaller retry Ev$Link (the waiter must Ev$Creat first — a startup race).
+
+**`os9exec` implements only Link/UnLnk/Creat/Delet/Wait/Signl.** The other six
+— Ev$WaitR, Ev$Read, Ev$Info, Ev$Pulse, Ev$SetR, and Ev$Set (its `evSet()`
+exists but is not wired into the dispatch switch) — all fall through to
+E$UnkSvc. Real OS-9 has them; don't assume they work here.
 
 ## Alarms
 

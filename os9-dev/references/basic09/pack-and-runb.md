@@ -11,8 +11,16 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
   reloaded into the workspace. Always `SAVE` source first.
 - **Output goes to the current execution directory (CHX)**, under the
   procedure name or an explicit `>pathlist`. If the file "didn't appear,"
-  check CHX — it was written, just not where you were looking. (`asm` and
-  `SAVE`-after-`PACK` behave the same way.)
+  check CHX — it was written, just not where you were looking. (`asm`
+  behaves the same way.)
+- **`SAVE` and `PACK` do NOT redirect to the same place** — `Live` (6809,
+  2026-07-23), and worth internalising because an earlier revision of this
+  file said they behaved alike. With a *relative* target from the same
+  workspace, in the same session: `SAVE proc >name` lands in **CHD** (the
+  data directory), `PACK proc >name` lands in **CHX**. Reproduced twice
+  with fresh names. So `PACK`'s CHX rule above is `PACK`'s alone; `SAVE`
+  follows ordinary data-file resolution. Use an absolute path for either
+  when it matters.
 - **Packing does not speed up in-workspace execution** — measured
   identical times packed vs. unpacked under interactive `basic`; BASIC09
   always executes I-code. The manual's 10–30% speedup claim applies to
@@ -28,17 +36,28 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
 
   Both outputs contain every packed procedure's code; only the entry
   differs. If the entry point matters, name the list explicitly.
-- **`>pathlist` prints spurious errors but works** (`Live`):
-  `PACK name >target` (and `SAVE ... >target`) print `Error #000:043`
-  (relative name) or `#000:051` (absolute path) even though the output
-  file is complete, correct, and runnable. Verify the file; don't trust
-  the message. (`> pathlist` with a space is different — that's just
-  unrecognized syntax.)
+- **`>pathlist` prints spurious errors but works — `os9exec` (68k) only,
+  NOT real OS-9.** `Live` (68k): `PACK name >target` (and `SAVE ...
+  >target`) print `Error #000:043` (relative name) or `#000:051`
+  (absolute path) even though the output file is complete, correct, and
+  runnable. Verify the file; don't trust the message. **`Live` (6809,
+  2026-07-23): real NitrOS-9 BASIC09 prints nothing at all** — `SAVE proc
+  >rel`, `SAVE proc >/DD/abs/path` and `PACK proc >rel` all returned a
+  clean `Ready`, with correct files on disk. The spurious errors are an
+  `os9exec` defect, not OS-9 behaviour to be reproduced; logged on the
+  emulator's `ROADMAP.md`. (`> pathlist` with a space is different —
+  that's just unrecognized syntax.)
 
 ## What a packed module is
 
-A packed+saved procedure is an OS-9 **subroutine module**: `ident` shows
-`Ty/La $0202` — type 2 (Sbrtn), language 2 (BASIC I-code). It is not a
+A packed+saved procedure is an OS-9 **subroutine module**: type 2
+(Sbrtn), language 2 (BASIC I-code). **How `ident` renders that is
+architecture-specific — don't carry one form to the other.** On 68k the
+header has separate `M$Type`/`M$Lang` bytes and `ident` shows `Ty/La
+$0202`. On 6809 it is a single packed byte `(type << 4) | language`, so
+the same module reads **`Ty/La $22`** (`Live`, 2026-07-23, with `At/Rv
+$81` — re-entrant, revision 1). See `common/module-format.md` for the
+encoding and what it settles about the 6809 C compiler's own value. It is not a
 program module; something must interpret it.
 
 **RunB** is that interpreter: a runtime-only BASIC09 (~half the size, no

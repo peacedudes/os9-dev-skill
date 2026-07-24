@@ -90,16 +90,11 @@
   error twice in a row with no re-arming `ON ERROR` call in between fires
   the trap both times. Treat it as staying armed indefinitely until an
   explicit bare `ON ERROR`.
-- **⚠ DIVERGENCE D-002 — `INTEGER÷0` reports a different error on each
-  platform, and neither matches the manual on 68k.** Microware documents
-  BASIC09 **error 45, "Divide by Zero"** (68k Rev H and the 6809 manuals
-  alike). **6809** NitrOS-9 matches it: `Error #045 -- Divide by Zero`,
-  dropping into Debug Mode if unhandled. **68k** `os9exec` does not — it
-  raises `Error #000:105 (E_ZERDIV) zero divide TRAP 5`, the 68000 CPU
-  trap, and breaks into the debugger (`Live`).
-  **This file previously claimed 68k was silent with no error at all. That
-  was wrong** — retested directly and it raises 105. Treat the old claim as
-  retracted, not merely refined. See `DIVERGENCES.md`. `REAL÷0`
+- **`INTEGER÷0`**: Microware documents BASIC09 **error 45, "Divide by
+  Zero"** on both architectures. 6809 NitrOS-9 matches it (`Error #045`,
+  Debug Mode if unhandled). 68k `os9exec` instead raises `Error #000:105
+  (E_ZERDIV) zero divide TRAP 5` and breaks into the debugger — an os9exec
+  divergence from the documented BASIC09 error, `Live`. `REAL÷0`
   **used to crash the entire 68k BASIC process** via an uncatchable CPU
   trap
   (`Error #000:107 E_TRAPV`), a genuine divergence from 6809 (where it

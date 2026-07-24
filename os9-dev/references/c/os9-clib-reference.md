@@ -102,9 +102,9 @@ that doesn't exist on this toolchain.
 OS-9 has only two permission classes, **owner** and **public** — there is no
 group class. `<modes.h>` names them with OS-9's own symbols: owner
 `S_IREAD`/`S_IWRITE`/`S_IEXEC` and public `S_IOREAD`/`S_IOWRITE`/`S_IOEXEC`
-(plus `S_ISHARE`, `S_IFDIR`) — **not** Unix's `S_IRGRP`/`S_IROTH` group macros
-(an earlier version of this section described a fabricated `stat.h` aliasing
-those onto the public bits; no such header exists here). Code ported from Unix
+(plus `S_ISHARE`, `S_IFDIR`) — **not** Unix's `S_IRGRP`/`S_IROTH` group
+macros, and there is no `stat.h` aliasing those onto the public bits. Code
+ported from Unix
 that extracts a permission triple with the classic octal masks
 `0700`/`0070`/`0007` misses OS-9's actual permission bits (`0x01`-`0x20`)
 entirely and renders every permission as absent.

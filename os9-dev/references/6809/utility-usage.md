@@ -257,9 +257,8 @@ layer underneath it.
   three overlapping ways to (re)build a bootable system diskette.
 - `date [t]` — displays the current date; `t` also shows the time. Use
   `setime` to change it. Two quick-reference-documented display variants
-  exist beyond the plain form (Julian, 24-hour/military) but weren't
-  independently confirmed against the Level 2 manual's own `date` entry
-  in this pass.
+  exist beyond the plain form (Julian, 24-hour/military) but are not
+  confirmed against the Level 2 manual's own `date` entry.
 - `setime [y m d h m s [am/pm]]` — sets system date/time and starts the
   clock; multitasking depends on the clock actually running (some boot
   configurations start it automatically via a startup-time clock module
@@ -489,10 +488,7 @@ Descriptions chapter) is primary; OS-9 Users Manual 1983 and Gimix OS-9
 Users Manual 1983 (both Level 1) and the Farna OS-9 Quick References were
 used as independent cross-checks to resolve OCR ambiguity in the primary
 source and to surface Level 1/Level 2 differences. All text here is
-paraphrased, not quoted, from those sources — see
-`docs/superpowers/plans/2026-07-17-6809-utility-usage/cards/` in the
-os9exec repo for the underlying atomic-fact extraction if a claim needs
-re-tracing to its origin. **Caveat on one cross-check source:** the file
+paraphrased, not quoted. **Caveat on one cross-check source:** the file
 catalogued in this corpus as the Farna "1st edition" CoCo quick reference
 is mislabeled — its own title page identifies it as documentation for
 Professional OS-9/68000, not CoCo/6809 (found while chasing the

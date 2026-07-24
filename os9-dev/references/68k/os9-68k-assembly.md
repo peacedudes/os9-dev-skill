@@ -130,9 +130,8 @@ being silently swallowed. (This is exactly the `pwrstat` utility's latent bug:
 `MOVEA.L $4C(A0),A0` with `A0` still holding its `$AAAAAAAx` sentinel.)
 
 Slot assignments for the *informational* registers (which datum is in D2 vs
-D5, etc.) varied between manual passages, but are now **`Live`-resolved
-(2026-07-21)** via a debugger register dump of a forked program (`debug <prog>
-hello`): **D2 = priority (`$80` = 128, the default), D3 = # inherited paths
+D5, etc.) vary between manual passages; **`Live`-resolved** via a debugger
+register dump of a forked program: **D2 = priority (`$80` = 128, the default), D3 = # inherited paths
 (`3` = stdin/out/err), D5 = param-area size, D6 = total memory** — exactly the
 order the table above lists. The same dump confirmed the rest Live: **D0 = the
 PID**, **D1 = packed owner** (`0` for a `0.0` super-user), and every
@@ -149,9 +148,9 @@ safe to pass directly as a syscall's pathname pointer with no copying.
 checking only for a leading NUL to detect "no argument" misses this case
 silently (wrong behavior at runtime, no assemble/link-time warning).
 **Don't use `D5` to bound a raw read/write of the string** — a
-NUL-terminated scan is the safe check; `D5`'s exact meaning was not
-pinned down this pass (possibly the whole parameter+environment block
-size, not just the argument text) and reading past the NUL using `D5` as
+NUL-terminated scan is the safe check. `D5`'s exact meaning is unresolved
+(possibly the whole parameter+environment block size, not just the argument
+text), and reading past the NUL using `D5` as
 a byte count risks pulling in the environment-variable data that follows
 it in memory.
 

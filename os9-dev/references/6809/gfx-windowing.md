@@ -464,11 +464,9 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
 - `FONT(path,group,buffer)` — points BASIC09 at a buffer holding a custom
   character font; **graphics screens only**, no effect on hardware text
   screens. Three fonts ship built-in via `SYS/Stdfonts` (merge that file
-  into the window first): **Group 200**, Buffers 1-3 — `Manual`, settled
-  by re-reading the primary source's own descriptive paragraph directly
-  (previously only its garbled numeric example had been checked), which
-  states the group number in plain prose rather than digits, resolving it
-  in favor of 200 over the earlier-flagged 206 misreading.
+  into the window first): **Group 200**, Buffers 1-3 — `Manual`, from the
+  primary source's own descriptive prose, which states the group number in
+  words rather than the digits its garbled numeric example shows.
   **`Live`** — `FONT(200,3)` was accepted with no error
   *without* first merging `SYS/Stdfonts`, but the text it rendered was
   garbled repeating glyphs, visibly different from a normal
@@ -485,10 +483,9 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   not window-relative. Built-in cursor shapes live in Group 202
   (`SYS/Stdptrs`); selecting which shape to use is done through a function
   called `GOSET` in the one example that mentions it, but `GOSET` itself
-  has no documented entry anywhere in the corpus checked, and `Live`
-  testing (2026-07-18, see Open ends) confirms it isn't a real function
-  in this GFX2 build at all — whatever selects a cursor shape in
-  practice, it isn't `GOSET`.
+  has no documented entry anywhere in the corpus checked, and `Live` it is
+  not a real function in this GFX2 build at all (see Unresolved) — whatever
+  selects a cursor shape in practice, it isn't `GOSET`.
 
 ### Miscellaneous
 

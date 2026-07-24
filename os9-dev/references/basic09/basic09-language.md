@@ -38,10 +38,9 @@ characters only (no underscores, dollar signs, or periods); names are
 case-insensitive. Maximum length unspecified in source manuals. Each
 procedure has its own private namespace: line numbers and variables
 declared in one procedure never collide with another's, even if reused
-verbatim (`Live`: a helper procedure with its own `PARAM b:
-BYTE` and its own print statement can't affect a caller's counters — see
-`tools/benchmarks/basic09-langtest.bas` in the os9exec repo for a working
-demonstration). Procedures talk to each other only through parameters,
+verbatim (`Live`: a helper procedure with its own `PARAM b: BYTE` and its
+own print statement cannot affect a caller's counters). Procedures talk to
+each other only through parameters,
 invoked with `RUN`.
 
 ## One Complete Example
@@ -545,9 +544,9 @@ side is in error is Microware's call, not ours; see `DIVERGENCES.md`.
 produces `"True    "` — mixed case (capital T, lowercase `rue`), not
 `"TRUE"`. Field width is still exactly correct (8 chars).
 
-**`Live` (6809, 2026-07-23) — confirmed identical on real Microware
-BASIC09 "6809 VERSION 01.01.00" under NitrOS-9, so this is not an
-`os9exec` artifact.** Same file round-trip method: `TRUE` → `"True    "`,
+**`Live` (6809) — identical on real Microware BASIC09 "6809 VERSION
+01.01.00" under NitrOS-9, so it is not an os9exec artifact.** Same file
+round-trip method: `TRUE` → `"True    "`,
 `FALSE` → `"False   "`, `LEN()` = 8 for both, and the output file measured
 exactly 18 bytes on disk — 2 × (8-char field + CR), an independent check
 on the field width that doesn't rely on `LEN()` at all. The manual is

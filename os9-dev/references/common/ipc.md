@@ -173,9 +173,7 @@ establish one-directional flow between them.
 - Writing to a **full named pipe** blocks until space frees (unless the
   writer is interrupted by a signal). **`Live`** (os9exec): a C writer to a
   named pipe with no reader blocks once the ~4KB buffer fills; the block is
-  now interruptible by Ctrl-C/Ctrl-E (see `common/using-os9exec-repl.md` — a
-  2026-07-21 os9exec fix; before it, a blocked pipe writer wedged until
-  restart).
+  interruptible by Ctrl-C/Ctrl-E (see `common/using-os9exec-repl.md`).
 - For an **unnamed pipe**, a writer that fills the buffer with no reader
   attached gets **`E_WRITE`** rather than blocking. **`Source`+`Live`**
   (os9exec): `pipefiles.c` returns `E_WRITE` when the pipe is unnamed and its

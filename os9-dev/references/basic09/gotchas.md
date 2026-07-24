@@ -67,7 +67,7 @@
 - **⚠ DIVERGENCE D-001**: `PRINT USING`'s `B` (boolean) format is documented by
   Microware as printing `"TRUE"`/`"FALSE"`, but both reimplementations print
   mixed-case `"True    "` / `"False   "` (8-char field, correct width) — `Live`
-  on both (68k `os9exec`; 6809 real Microware BASIC09 01.01.00, 2026-07-23).
+  on both (68k os9exec; 6809 real Microware BASIC09 01.01.00).
   **Two community reimplementations agreeing is not the manual being wrong** —
   they may share an inherited defect. Unresolved pending Microware; see
   `DIVERGENCES.md` and `basic09-language.md`'s PRINT USING section.

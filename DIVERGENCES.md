@@ -261,14 +261,30 @@ individually traced back to a Microware passage. Auditing them is queued.
 
 Stated plainly so this register is not mistaken for a completed audit.
 
-- **The 540 `Live` claims have not been individually checked against the
-  manuals.** Parts 1 and 2 came from disagreements the skills had *already
-  half-recorded* in prose, plus findings from the 2026-07-23 6809 session. The
-  large majority of runtime-derived claims have never been compared to a
-  Microware passage at all. That is the bulk of the remaining work.
-- **Priority order for continuing**, highest consequence first: syscall
-  register contracts → kernel/path-descriptor struct offsets → error codes →
-  BASIC09 language semantics → utility behaviour.
+**Structural surface — DONE (2026-07-23).** The "wrong value silently breaks
+code" claims have now been individually diffed against Microware manuals, both
+architectures, and either matched (many lifted `Source`→`Manual`) or produced
+the Part 1 entries above:
+- 68k user-mode syscall register contracts (whole table); 6809 user + I$ +
+  a privileged sample — all against the System Programmer's Manual §11/12 and
+  the OS-9/68000 Technical Manual chs. 14-15.
+- 68k error codes (87/87 names) and 6809 syscall + GetStat codes.
+- Struct offsets: 68k + 6809 module headers, device descriptor, path
+  descriptor, SCF option area, RBF identification + file-descriptor sectors —
+  all against the I/O Technical Manual / Disk File Organization manual.
+- BASIC09 core semantics and C-library K&R facts.
+- **Recurring caveat:** these scans carry OCR digit-damage (8↔B, 8↔E); every
+  apparent mismatch resolved to scan damage via a second Microware source, none
+  to a real skill error.
+
+**Behavioural long-tail — NOT yet audited.** The remaining `Live` claims are
+mostly *behavioural* (what a call/utility does, timing, edge cases) rather than
+structural, and are lower-consequence — a wrong description misleads, but does
+not silently corrupt a struct or dispatch. Still worth doing: utility/shell
+command option flags, the less-common 6809 privileged calls in full, and the
+GFX/windowing behaviour claims.
+- **Priority order for continuing**, highest consequence first: utility
+  behaviour → less-common privileged calls → GFX/windowing.
 - **The instrument that would automate most of this** is the live-verification
   corpus, if it is made rerunnable on genuine OS-9. Then every PASS/FAIL
   mismatch is a divergence report rather than a hand audit. Scoped in the

@@ -19,14 +19,17 @@ cover in full systems depth here; the two are meant to agree, cross-check
 `memory-and-io.md` when changing a shared fact (offset, field name,
 matching rule) in either of those two files.
 
-**Confidence:** tag legend in the sibling skill,
-`os9-dev/references/CONFIDENCE-TAGS.md`. **Struct layouts are largely
-`Source`**, cross-checked against os9exec's C: the Process Descriptor, the
-module header / executable / device-descriptor structs (with compile-time
-offset assertions), and the path descriptor (common `PD_` header plus the
-128-byte SCF options struct). What stays `Manual` is the **behavioral** layer
-os9exec doesn't emulate — driver and file-manager dispatch, the scheduler
-algorithm, System Global memory, the Module Directory — plus
-`6809-level2-mmu.md`, which is `Manual` only. `file-managers.md`'s Record
-Locking section is largely `Live` (68k). Entry-point calling conventions are
-untestable on os9exec, not merely untested (see SKILL.md → Verification).
+**Confidence.** Tag legend: sibling skill's
+`os9-dev/references/CONFIDENCE-TAGS.md`. The split in this skill is
+structural vs. behavioral — layouts are checkable against os9exec's C,
+behavior largely isn't:
+
+| Area | Tier |
+|---|---|
+| Struct layouts — Process Descriptor, module / executable / device-descriptor headers, path descriptor (`PD_` header + 128-byte SCF options) | `Source`, several with compile-time offset assertions |
+| `file-managers.md` → Record Locking | largely `Live` (68k) |
+| Behavior os9exec doesn't emulate — driver and file-manager dispatch, the scheduler algorithm, System Global memory, the Module Directory | `Manual` |
+| `6809-level2-mmu.md` | `Manual` only |
+
+Entry-point calling conventions are **untestable** on os9exec, not merely
+untested — SKILL.md → Verification.

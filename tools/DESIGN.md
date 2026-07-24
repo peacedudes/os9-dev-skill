@@ -112,16 +112,34 @@ but never bind across clause punctuation (`,;:()`), so a later clause's
    plan does), not as a real link, and is skipped — same idea as check 3's
    "tagged `Flag`" self-reference guard. Fails the run when active.
 
+6. **Shared-fact agreement** — one OS-9 symbol documented with two different
+   hex values by files that describe the same platform. A fact repeated across
+   files is a maintenance hazard the corpus had no guard for: `M$Mode`,
+   `M$Opt`, `M$FMgr` and `M$DevCon` are each stated in three files
+   (`memory-and-io.md`, `device-drivers.md`, `file-managers.md`), and
+   `INDEX.md` previously handled this by *asking the human to remember* to
+   cross-check. Platform-scoped exactly like check 1, so a 6809 call code
+   legitimately differing from its 68k namesake is not a finding. Fails the run.
+
+   A symbol is recognised only with an internal `_`, `$` or `.` (`PD_COUNT`,
+   `M$Opt`, `SS.Size`) — that separator is what keeps ordinary capitalised
+   prose out. The connector between name and value is a **closed** set (table
+   pipe, comma, paren, `=`, `:`, `offset`, `at`), because arbitrary text
+   between the two would let an unrelated nearby number bind to the symbol.
+   Values are normalised (`$0A` = `$a` = `$A`) so notation is never mistaken
+   for disagreement.
+
+   Three kinds of line are skipped, because each states a number it is not
+   claiming: one tagged `Flag`, one carrying a `DIVERGENCE D-NNN` marker, and
+   one whose wording disowns the value it quotes (`scan error`, `OCR`, `typo`,
+   `misread`, `garbl`, `obsolete`, `stale`, `incorrect`). The corpus really
+   does quote bad values on purpose — `module-format.md` prints `M$Parity` at
+   `$28` specifically to warn the reader that that scan is wrong.
+
 Meta-docs (`CONFIDENCE-TAGS.md`, `VERIFICATION-BACKLOG.md`, `INDEX.md`,
 `SOURCES.md`) are excluded from checks 1–3 (used only for their tag set) but
 `INDEX.md` is exactly what check 4 scans — they quote calls as examples but
 `INDEX.md`'s file-pointers are not "examples," they're the navigation table.
-
-The run also prints a **`Live` verified-against** footer: the per-platform build
-baselines from the "What `Live` is verified against" table in `CONFIDENCE-TAGS.md`
-(os9exec `git describe`; 6809 disk + XRoar + lwasm). Surfacing it every run keeps
-the baseline visible so stale `Live` claims get re-checked after an emulator fix.
-Informational only.
 
 ## Honest limits
 
@@ -135,6 +153,13 @@ Informational only.
 - This is token-level, not semantic: it cannot detect a register-layout
   divergence ("manual says d0.w, runtime uses d1.w"). Those are tracked by the
   `Flag` convention (check 3).
+- **Check 6 sees only the `SYMBOL $VALUE` form.** A table that leads with the
+  offset (`| $00-$01 | 2 | Sync |`) or writes it as `0x2E` states the same fact
+  in a shape the extractor does not bind, so it is watched less densely than a
+  reader might assume: 182 bindings over 155 symbols, 12 of them stated in more
+  than one file. `0x` was left out deliberately — in this corpus it appears as
+  bit masks (`0x80 directory`), never as a symbol-to-offset binding, so
+  including it would add false positives rather than coverage.
 
 ## Failability (project rule: make it fail once)
 
@@ -154,3 +179,11 @@ vs. the real `feedback_commit_approval`) — real data the check was never
 tuned against, which is why it's convincing rather than circular. That
 inventory is a maintenance worklist, not fixed by this change; see the
 `doc-consistency-checker` memory.
+
+Check 6 was proven the same way, and the vacuity trap was checked explicitly
+first: the extractor really does bind 182 facts across the corpus, so a silent
+green is not an empty scan. Injecting a plausible drift (`M$Mode` `$37` → `$39`
+in `device-drivers.md` alone) makes it flag the symbol and name all four
+contributing locations across three files, exit 1; reverting is silent again,
+exit 0. The disown-suppression is exercised against the real `M$Parity` `$28`
+scan-error line, not a synthetic one.

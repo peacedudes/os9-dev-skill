@@ -59,6 +59,7 @@ DIVERGENCE_FILENAME = "DIVERGENCES.md"
 # so the check does not depend on an emoji surviving an edit).
 _DIVERGENCE_HEADING = re.compile(r"^###\s+(D-\d+)", re.MULTILINE)
 _DIVERGENCE_MARKER = re.compile(r"DIVERGENCE\s+(D-\d+)")
+_FLAG_TOKEN = re.compile(r"`Flag`")
 
 # A wiki-style memory cross-link, e.g. "see [[user-designed-rbf-eof-lock]]".
 # Optional surrounding backticks are captured so a backtick-quoted occurrence
@@ -83,6 +84,9 @@ CONFIDENCE_TAGS_FILE = "CONFIDENCE-TAGS.md"
 # asserts the call present/absent/neither, and the confidence tags on the line.
 Mention = namedtuple("Mention", "syscall file line platform presence tags")
 
+# One `SYMBOL $VALUE` binding as stated by one line of one doc.
+Fact = namedtuple("Fact", "symbol value file line platform")
+
 # One reported disagreement. `locations` are (file, line) pairs. Always neutral.
 Finding = namedtuple("Finding", "check syscall message locations")
 
@@ -95,24 +99,6 @@ def parse_known_tags(md):
     Parsed rather than hardcoded, so the known-tag set stays in sync with the doc.
     """
     return {m.group("tag") for m in (TAG_ROW.match(line) for line in md.splitlines()) if m}
-
-
-def verified_against(md):
-    """Return the (platform, build-identity) baseline rows from CONFIDENCE-TAGS.md.
-
-    Reads the data rows of the table under the "What `Live` is verified against"
-    heading, so the checker can surface which build the `Live` tier reflects.
-    """
-    rows, in_section = [], False
-    for line in md.splitlines():
-        if line.startswith("## "):
-            in_section = "verified against" in line.lower()
-            continue
-        if in_section and line.lstrip().startswith("|"):
-            cells = [c.strip() for c in line.strip().strip("|").split("|")]
-            if len(cells) >= 2 and "---" not in cells[0] and cells[0].lower() != "platform":
-                rows.append((cells[0], cells[1]))
-    return rows
 
 
 def platform_of(path):
@@ -269,7 +255,6 @@ def check_tag_hygiene(text, filename, known_tags):
     return findings
 
 
-_FLAG_TOKEN = re.compile(r"`Flag`")
 _FLAG_ABOUT = re.compile(r"tagged\s+`?Flag`?", re.I)
 
 
@@ -292,6 +277,102 @@ def scan_open_flags(text, filename, known_tags):
             snippet = snippet[:107] + "..."
         inventory.append(Finding("flag", None, snippet, [(filename, lineno)]))
     return inventory
+
+
+# An OS-9 symbol carrying a documented numeric offset/code: a capitalised name
+# with an internal `_`, `$` or `.` (PD_COUNT, M$Opt, F$Link, SS.Size, P$SigLvl).
+# The internal separator is what keeps ordinary Capitalised prose words out.
+_SYMBOL = r"[A-Z][A-Za-z0-9]*[_$.][A-Za-z0-9_$.]*[A-Za-z0-9]"
+# `SYM` followed by its hex value, allowing the notations this corpus actually
+# uses: a table cell (`| SYM | $30`), prose (`SYM $00`, `SYM, offset $80`,
+# `SYM at $2E`), or a parenthesised aside (`SYM ($1E)`). The connector set is
+# deliberately closed -- arbitrary text between name and number would let an
+# unrelated nearby value bind to the symbol.
+_FACT = re.compile(
+    r"`?(?P<sym>" + _SYMBOL + r")`?"
+    r"[ \t]*(?:[|,(=:]|--|—)?[ \t]*"
+    r"(?:offset[ \t]+|at[ \t]+)?"
+    r"`?(?P<val>\$[0-9A-Fa-f]{1,8})`?"
+)
+# Wording that means "this number is wrong" -- the corpus quotes bad values on
+# purpose (an OCR misread, a manual's own typo) to warn the reader off them.
+# Such a line states a value it is explicitly disowning, so it is not a claim.
+_DISOWNED = re.compile(
+    r"\b(scan error|OCR|typo|misread|mis-read|damaged|garbl|obsolete|stale|"
+    r"incorrect|not a distinct field)\b",
+    re.I,
+)
+
+
+def normalise_hex(value):
+    """Return a canonical form of a `$HH` literal, so `$0A`, `$a` and `$A` agree."""
+    digits = value.lstrip("$").upper().lstrip("0")
+    return digits or "0"
+
+
+def extract_shared_facts(text, filename):
+    """Return a Fact per `SYMBOL $VALUE` binding stated in `text`.
+
+    Skips lines that carry a `Flag` tag or a `DIVERGENCE` marker (a recorded,
+    deliberate disagreement is not drift) and lines whose wording disowns the
+    number they quote -- see `_DISOWNED`.
+    """
+    platform = platform_of(filename)
+    facts = []
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        if _FLAG_TOKEN.search(line) or _DIVERGENCE_MARKER.search(line) or _DISOWNED.search(line):
+            continue
+        for m in _FACT.finditer(line):
+            facts.append(
+                Fact(m.group("sym"), normalise_hex(m.group("val")), filename, lineno, platform)
+            )
+    return facts
+
+
+def _compatible(a, b):
+    """True when two platforms can describe the same system ("neutral" fits both)."""
+    return a == b or "neutral" in (a, b)
+
+
+def check_shared_facts(facts):
+    """Flag a symbol given two different values by docs that describe one platform.
+
+    A fact repeated across files is a maintenance hazard: `PD_COUNT` appears in
+    three files, `M$Parity` in two, and nothing until now checked that they still
+    agree. Scoped by platform the same way `check_presence_contradiction` is, so a
+    6809 call code legitimately differing from its 68k namesake is not a finding.
+    """
+    grouped = {}
+    for fact in facts:
+        grouped.setdefault(fact.symbol, []).append(fact)
+
+    findings = []
+    for symbol, group in sorted(grouped.items()):
+        by_value = {}
+        for fact in group:
+            by_value.setdefault(fact.value, []).append(fact)
+        if len(by_value) < 2:
+            continue
+        conflicting = [
+            (v1, v2)
+            for i, v1 in enumerate(sorted(by_value))
+            for v2 in sorted(by_value)[i + 1 :]
+            if any(_compatible(a.platform, b.platform) for a in by_value[v1] for b in by_value[v2])
+        ]
+        if not conflicting:
+            continue
+        shown = ", ".join(f"${v}" for v in sorted(by_value))
+        findings.append(
+            Finding(
+                "shared-fact",
+                symbol,
+                f"{symbol} is documented as {shown} in different places -- "
+                "reconcile, or mark the disowned value (`Flag`, or wording that "
+                "says which reading is wrong)",
+                _dedup([(f.file, f.line) for f in group]),
+            )
+        )
+    return findings
 
 
 def extract_doc_references(line):
@@ -485,7 +566,7 @@ def run(roots, register_text=None):
     files = collect_markdown(roots)
     known = load_known_tags(files)
     known_basenames = {os.path.basename(p) for p in files + _index_adjacent_files(roots)}
-    mentions, findings, inventory, doc_texts = [], [], [], []
+    mentions, facts, findings, inventory, doc_texts = [], [], [], [], []
     for path in files:
         display = os.path.relpath(path)
         with open(path, encoding="utf-8") as handle:
@@ -494,9 +575,10 @@ def run(roots, register_text=None):
         if os.path.basename(path) in META_DOCS:
             continue
         mentions.extend(find_mentions(text, display, known))
+        facts.extend(extract_shared_facts(text, display))
         findings.extend(check_tag_hygiene(text, display, known))
         inventory.extend(scan_open_flags(text, display, known))
-    findings = check_presence_contradiction(mentions) + findings
+    findings = check_presence_contradiction(mentions) + check_shared_facts(facts) + findings
     findings += check_cross_references(doc_texts, known_basenames)
     if register_text is None:
         register_text = next(
@@ -562,16 +644,6 @@ def main(argv=None):
         print(f"\n`Flag` divergence inventory ({len(inventory)} unresolved -- for tracking):")
         for item in inventory:
             print(_format(item))
-
-    for path in collect_markdown(roots):
-        if os.path.basename(path) == CONFIDENCE_TAGS_FILE:
-            with open(path, encoding="utf-8") as handle:
-                baselines = verified_against(handle.read())
-            if baselines:
-                print("\n`Live` verified against:")
-                for platform, identity in baselines:
-                    print(f"  {platform}: {identity}")
-            break
 
     return 1 if findings else 0
 

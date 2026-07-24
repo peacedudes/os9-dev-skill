@@ -43,25 +43,6 @@ class TestParseKnownTags(unittest.TestCase):
 # --------------------------------------------------------------------------
 # platform_of
 # --------------------------------------------------------------------------
-class TestVerifiedAgainst(unittest.TestCase):
-    def test_extracts_baseline_rows_from_the_section(self):
-        md = (
-            "## What `Live` is verified against\n\n"
-            "| Platform | Build identity | How |\n"
-            "|---|---|---|\n"
-            "| 68k (os9exec) | v0.0.0-482-g534315a | the hash |\n"
-            "| 6809 (NitrOS-9) | XRoar 1.11 + eou_ide-v0.3 | disk+emu |\n"
-            "\n## Next section\n| unrelated | table |\n"
-        )
-        self.assertEqual(
-            chk.verified_against(md),
-            [("68k (os9exec)", "v0.0.0-482-g534315a"), ("6809 (NitrOS-9)", "XRoar 1.11 + eou_ide-v0.3")],
-        )
-
-    def test_empty_when_no_section(self):
-        self.assertEqual(chk.verified_against("# nothing here\n| a | b |\n"), [])
-
-
 class TestPlatformOf(unittest.TestCase):
     def test_6809_path(self):
         self.assertEqual(chk.platform_of("os9-dev/references/6809/foo.md"), "6809")
@@ -296,6 +277,98 @@ class TestRun(unittest.TestCase):
 # --------------------------------------------------------------------------
 # cross-reference integrity (INDEX.md pointers)
 # --------------------------------------------------------------------------
+# --------------------------------------------------------------------------
+# shared-fact agreement
+#
+# The "must NOT flag" cases are the real notations this corpus uses to quote a
+# number it is disowning (an OCR misread, a manual's own typo) and the real
+# 6809-vs-68k code collision -- both would otherwise read as drift.
+# --------------------------------------------------------------------------
+class TestNormaliseHex(unittest.TestCase):
+    def test_case_and_leading_zeros_do_not_make_two_values(self):
+        self.assertEqual(chk.normalise_hex("$0A"), chk.normalise_hex("$a"))
+        self.assertEqual(chk.normalise_hex("$00"), "0")
+
+    def test_distinct_values_stay_distinct(self):
+        self.assertNotEqual(chk.normalise_hex("$37"), chk.normalise_hex("$39"))
+
+
+class TestExtractSharedFacts(unittest.TestCase):
+    def test_reads_the_notations_the_corpus_actually_uses(self):
+        text = (
+            "| `M$Port` | $30 | port address |\n"
+            "`PD_PD` $00 (path number), `PD_MOD` $02\n"
+            "`PD_OPT`, offset $80\n"
+            "`M$Parity` at `$2E`\n"
+            "`F$Alarm`($1E)\n"
+        )
+        got = {(f.symbol, f.value) for f in chk.extract_shared_facts(text, "common/x.md")}
+        self.assertEqual(
+            got,
+            {("M$Port", "30"), ("PD_PD", "0"), ("PD_MOD", "2"),
+             ("PD_OPT", "80"), ("M$Parity", "2E"), ("F$Alarm", "1E")},
+        )
+
+    def test_ignores_prose_words_without_an_os9_symbol_shape(self):
+        text = "The header is 48 bytes and Sync is $87 on the 6809.\n"
+        self.assertEqual(chk.extract_shared_facts(text, "common/x.md"), [])
+
+    def test_skips_a_value_the_line_disowns(self):
+        text = "it prints `M$Parity` at `$28`. That is a scan error (8-for-E)\n"
+        self.assertEqual(chk.extract_shared_facts(text, "common/x.md"), [])
+
+    def test_skips_flagged_and_divergent_lines(self):
+        flagged = "| `PD_CNT` | $03 | disputed `Flag` |\n"
+        diverged = "`PD_CNT` $03 -- see DIVERGENCE D-002\n"
+        self.assertEqual(chk.extract_shared_facts(flagged, "common/x.md"), [])
+        self.assertEqual(chk.extract_shared_facts(diverged, "common/x.md"), [])
+
+
+class TestSharedFactAgreement(unittest.TestCase):
+    def _facts(self, *rows):
+        return [chk.Fact(sym, chk.normalise_hex(val), f, 1, chk.platform_of(f))
+                for sym, val, f in rows]
+
+    def test_flags_the_same_symbol_given_two_values(self):
+        findings = chk.check_shared_facts(self._facts(
+            ("M$Mode", "$37", "common/memory-and-io.md"),
+            ("M$Mode", "$39", "systems/device-drivers.md"),
+        ))
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0].check, "shared-fact")
+        self.assertEqual(findings[0].syscall, "M$Mode")
+        self.assertIn("$37", findings[0].message)
+        self.assertIn("$39", findings[0].message)
+
+    def test_reports_every_contributing_location(self):
+        findings = chk.check_shared_facts(self._facts(
+            ("M$Mode", "$37", "common/a.md"),
+            ("M$Mode", "$37", "common/b.md"),
+            ("M$Mode", "$39", "common/c.md"),
+        ))
+        self.assertEqual(len(findings[0].locations), 3)
+
+    def test_agreement_is_not_a_finding(self):
+        self.assertEqual(chk.check_shared_facts(self._facts(
+            ("M$Mode", "$37", "common/a.md"),
+            ("M$Mode", "$37", "systems/b.md"),
+        )), [])
+
+    def test_same_name_different_architecture_is_legitimate(self):
+        """6809 and 68k number their calls differently -- not drift."""
+        self.assertEqual(chk.check_shared_facts(self._facts(
+            ("F$Link", "$00", "references/6809/syscalls.md"),
+            ("F$Link", "$1C", "references/68k/syscall-reference.md"),
+        )), [])
+
+    def test_but_a_neutral_file_still_conflicts_with_both(self):
+        findings = chk.check_shared_facts(self._facts(
+            ("F$Link", "$00", "references/6809/syscalls.md"),
+            ("F$Link", "$1C", "references/common/shared.md"),
+        ))
+        self.assertEqual(len(findings), 1)
+
+
 class TestExtractDocReferences(unittest.TestCase):
     def test_finds_backticked_and_bare_md_tokens(self):
         line = "| Read | `common/foo.md` | and also bar.md plain |"

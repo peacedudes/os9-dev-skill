@@ -4,3 +4,6 @@
 # Python (doc-consistency checker)
 __pycache__/
 *.pyc
+
+# Internal worklists — never ship, never track
+maintainer/

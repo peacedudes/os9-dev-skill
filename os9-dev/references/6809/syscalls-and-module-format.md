@@ -125,6 +125,14 @@ Codes `$00-$1D` are ordinary user-mode `F$` calls (Table C.1 of the System Progr
 
 ### User-mode F$ (process/memory management)
 
+**Register contracts verified 2026-07-23 against the System Programmer's Manual
+§11.1** (per-call INPUT/OUTPUT): `F$Fork` (A=lang/type, B=data pages, X=name,
+Y=param size, U=param → A=PID, X=updated), `F$Wait` (→ A=child PID, B=status),
+`F$ID` (→ A=PID, Y=user ID), `F$Link` (A=type/lang, X=name → A=type/lang,
+B=attr/rev, X=updated, Y=entry, U=header), `F$Load`, `F$UnLink` (U=header),
+`F$Mem` (D=size → Y=upper bound, D=actual), `F$CmpNam`, `F$CRC`, `F$Icpt`,
+`F$Sleep` (X=ticks → X=remaining), `F$PrsNam` all match register-for-register.
+
 | Call | Code | Params | Notes |
 |---|---|---|---|
 | F$Link | $00 | A=type/lang, X=name | Returns A=type/lang, B=attr/rev, X=past name, Y=entry point, U=header addr. **`Live`, 2026-07-19**: register contract confirmed exact (self-linking a running process's own module, A=0 accepted as "any type"; returned Y is a plausible in-range code address). **`Live`**: only searches the *resident, in-memory* module directory — fails `E$MNF` (221, "module not found") against a name that has a real file on disk but was never loaded by anything, it does not fall back to a filesystem search the way `F$Load` does. Test: `test/6809-live-verification/syscall-flink-ffork-fwait.a` in the os9exec repo |

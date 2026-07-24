@@ -57,8 +57,9 @@ NitrOS-9 under XRoar. Every claim carries an inline tag:
 itself.** Both emulators are community-written reverse-engineered work and
 both have had real errors. Where a runtime and a Microware manual disagree,
 the manual is the specification and the runtime is the candidate defect; the
-disagreement is recorded in `DIVERGENCES.md` rather than resolved by whichever
-one happened to run. Only Microware, or real hardware, settles those.
+claim records both readings rather than resolving in favour of whichever one
+happened to run. Only Microware, or real hardware, settles those.
+`DIVERGENCES.md` collects the handful worth raising directly.
 `SOURCE-AUTHORITY.md` says what counts as Microware's word — several excellent
 books do not.
 

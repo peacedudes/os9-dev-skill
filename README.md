@@ -104,7 +104,6 @@ SOURCE-AUTHORITY.md     what counts as Microware's word
 tools/
   check_doc_consistency.py   doc linter (stdlib only)
   tests/                     python3 -m unittest discover -s tools/tests
-maintainer/                  working notes; not part of either skill
 ```
 
 Run the checker over **both** skills at once — narrowing it to one root

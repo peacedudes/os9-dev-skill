@@ -110,6 +110,9 @@ between two manual editions that was deliberately not resolved.
 
 ### 000:001 – 000:067 — Process, terminal, and math-trap errors
 
+Nothing between 004 and 064 appears in either primary source — the gap below
+is the manuals' own, not a transcription loss.
+
 | Code | Symbolic name | Meaning | Cause |
 |---|---|---|---|
 | 000:001 | — | Process aborted | The process has aborted |

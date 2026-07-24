@@ -130,7 +130,9 @@ but never bind across clause punctuation (`,;:()`), so a later clause's
    for disagreement.
 
    Three kinds of line are skipped, because each states a number it is not
-   claiming: one tagged `Flag`, one carrying a `DIVERGENCE D-NNN` marker, and
+   claiming: one tagged `Flag`, one carrying a `DIVERGENCE D-NNN` marker (a
+   retired convention — the skip rule is kept as harmless dead code rather
+   than re-tested away), and
    one whose wording disowns the value it quotes (`scan error`, `OCR`, `typo`,
    `misread`, `garbl`, `obsolete`, `stale`, `incorrect`). The corpus really
    does quote bad values on purpose — `module-format.md` prints `M$Parity` at

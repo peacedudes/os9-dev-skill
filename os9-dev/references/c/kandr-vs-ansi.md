@@ -54,10 +54,7 @@ printf("Value: %d\x0D");       /* or just be explicit with \x0D / \x0A */
 `Source` (OS-9 C Compiler manual, Microware, 1983, 6809 edition — the
 compiler's own "Control Character Escape Sequences" section, extending
 K&R p.181): `\e` is documented explicitly "to distinguish LF from `\n`
-which on OS9 is the same as `\r`." (Previously this file said `\LF`,
-which conflicted with `common/unix-differences.md` and
-`common/os9-mental-model.md`'s `\e` — corrected here to match, since
-`\e` is the one with a direct primary-source citation.)
+which on OS9 is the same as `\r`."
 
 ## Porting checklist
 

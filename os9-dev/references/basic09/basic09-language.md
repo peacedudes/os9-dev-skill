@@ -229,15 +229,11 @@ ENDLOOP
 
 **EXITIF always closes with ENDEXIT** — both the BASIC09 Reference Manual
 (Rev H) and the OS-9 BASIC User Manual (Rev G) show `EXITIF expr THEN
-stmts ENDEXIT` consistently. `Live`: `EXITIF`/`ENDEXIT` inside
-a `LOOP`/`ENDLOOP` correctly exits the loop (see
-`tools/benchmarks/basic09-langtest.bas`).
+stmts ENDEXIT` consistently. `Live`: `EXITIF`/`ENDEXIT` inside a
+`LOOP`/`ENDLOOP` correctly exits the loop.
 
 **`WHILE` requires `DO`** — a bare `WHILE expr` (no `DO`) is a live syntax
-error (`Error #000:031`). Both this and `WHILE expr DO` were tried; only
-the `DO` form compiles and runs (`Live`, 3-iteration loop
-confirmed — see `tools/benchmarks/basic09-langtest.bas`). Earlier drafts
-of this file omitted `DO`; corrected here.
+error (`Error #000:031`); only the `DO` form compiles and runs (`Live`).
 
 An INTEGER-typed FOR loop counter compiles to direct machine instructions
 and runs quickly; a REAL-typed counter invokes library routines at
@@ -257,16 +253,10 @@ procedure call frame, popped by `RETURN`. Confirmed live: a `GOTO` past two
 intervening lines correctly skipped them; a `GOSUB`/`RETURN` correctly
 returned to the caller with a value modified inside the subroutine.
 
-**Corrected finding, superseding an earlier false report:** an earlier
-verification pass concluded GOTO/GOSUB were "confirmed non-functional,"
-based on targeting the hex byte-offset addresses `LIST` displays for
-unnumbered structured code (e.g. `GOTO 6` aimed at a statement `LIST`
-showed at offset `0006`). **Those byte offsets are not valid GOTO/GOSUB
-targets at all** — they're `LIST`'s own internal display annotation for
-structured (non-numbered) code, unrelated to the classic line-number
-addressing GOTO/GOSUB actually use. The "confirmed non-functional" result
-was a test-methodology mistake, not a real language or emulator bug; both
-statements work fine once given real, explicitly-typed line numbers.
+**The hex byte offsets `LIST` displays for unnumbered structured code are
+not valid `GOTO`/`GOSUB` targets** — they are `LIST`'s own display
+annotation, unrelated to the classic line-number addressing these statements
+use. Aiming a `GOTO` at one reads as "GOTO is broken" and isn't.
 
 **The manual actually defines two distinct `IF` forms, and conflating
 them produces invalid syntax that looks reasonable but isn't:**

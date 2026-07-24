@@ -62,21 +62,22 @@ much weight it bears:
 | `Flag` | Sources disagree; unresolved. |
 
 Running things changed the picture more than once. Manuals turned out to be
-wrong. So did the emulators — several bugs found this way were fixed upstream
-rather than documented around. And so did earlier conclusions here: a pair of
-confidently-written findings about signal handling were **retracted** after it
-emerged that the tests behind them never exercised the mechanism they claimed
-to. Those retractions are left in place, visible, instead of being quietly
-deleted. A `Live` claim is only as good as the build it ran against, so each
-one is dated and `CONFIDENCE-TAGS.md` stamps the exact emulator versions.
+wrong. So did the emulators — several bugs found that way were fixed upstream
+rather than documented around. And so did earlier conclusions here, more than
+once; where a claim was withdrawn it was withdrawn outright rather than hedged.
+
+A `Live` claim is evidence about a reimplementation, never about OS-9 itself.
+Where a runtime and a Microware manual disagree, the manual is the
+specification and the runtime is the candidate defect — the disagreement is
+recorded in `DIVERGENCES.md`, not resolved by whichever one happened to run.
 
 ## What's solid, and what isn't
 
 The 68000 material has been through a thorough live-verification pass and is
-largely `Live`. **The 6809 material is mostly still `Manual`** — cross-checked
-between manuals, but not yet run the same way. Both are useful; they are not
-equally proven, and the tags will tell you which is which on any given line.
-`os9-dev/references/VERIFICATION-BACKLOG.md` tracks what is still open.
+largely `Live`. The 6809 side has had one too — the assembler and debugger
+core, roughly 70 of the ~93 documented syscalls, and most of the GFX2 calling
+sequences are `Live` — but CoCo/Dragon hardware and the 68k networking
+material remain `Manual` only. The tags say which is which on any given line.
 
 Nothing here has been checked against real hardware. Everything `Live` is
 emulated by necessity, and neither emulator is treated as an oracle — where
@@ -111,13 +112,15 @@ os9-dev/
   references/
     CONFIDENCE-TAGS.md  the tag system above
     INDEX.md            topic -> file
-    VERIFICATION-BACKLOG.md
     common/ 68k/ 6809/ basic09/ c/
 os9-systems-dev/
   SKILL.md  SOURCES.md  references/
+DIVERGENCES.md          where a runtime disagrees with a manual
+SOURCE-AUTHORITY.md     what counts as Microware's word
 tools/
   check_doc_consistency.py   doc linter (stdlib only)
   tests/                     python3 -m unittest discover -s tools/tests
+maintainer/                  working notes; not part of either skill
 ```
 
 Run the checker over **both** skills at once — narrowing it to one root

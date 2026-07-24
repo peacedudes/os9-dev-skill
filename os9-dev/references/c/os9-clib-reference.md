@@ -23,7 +23,7 @@ names (`F$xxx`/`I$xxx`).
 | `<ctype.h>` | Character classification (macros, K&R-era coverage) |
 | `<setjmp.h>` | `setjmp()`, `longjmp()` |
 | `<time.h>` | OS-9-specific system time (see "File Dates and Time Zones" below) |
-| `<errno.h>` | OS-9 error-code extensions. **`Live` — correction:** the macro names `EFPOVR`/`EDIVERR`/`EINTERR` this row previously gave (with values 40/41/42) are **not** defined in the 68k `DEFS/errno.h` — each is an "undeclared identifier" at compile. The real header uses different OS-9-style short names; consult it (or `common/error-codes.md`) for the actual FP/divide/overflow codes rather than trusting these names. |
+| `<errno.h>` | OS-9 error-code extensions. **The 6809 runtime's `EFPOVR`/`EDIVERR`/`EINTERR` (40/41/42) are not in the 68k header** — `Live`: each is an "undeclared identifier" at compile. 68k uses different OS-9-style short names; read the header itself, or `common/error-codes.md`, for the actual FP/divide/overflow codes. |
 | `<module.h>` | OS-9 module linking |
 | `<sgstat.h>` | OS-9 file status/setstat (`I$SetStt`) |
 | `<modes.h>` | File status/mode bits (owner/public only, no group class). **`Live`: `<stat.h>` does NOT exist on the 68k `DEFS` — use `<modes.h>`** (see File Permissions below) |
@@ -40,7 +40,7 @@ names (`F$xxx`/`I$xxx`).
 | `fseek`/`rewind`/`ftell` | `fseek` place: 0=start, 1=current, 2=end. |
 | `getc`/`getchar`/`getw`/`gets`/`fgets` | `getc()` **auto-selects** `read()` (raw/binary) vs `readln()` (line-edited terminal) based on file type — override with `_SCF`/`_RBF` flags before the first read if you need to force one. `gets()` replaces the trailing `\n` with a null. |
 | `putc`/`putchar`/`putw`/`puts`/`fputs` | `puts()` appends `\n`; `fputs()` does not. |
-| `printf`/`fprintf`/`sprintf` | **Gotcha — wrong as stated for 68k (`Live`, both markers now tested)**: this table claimed printing a `long` requires one call to `_pfltinit()` first, and `float`/`double` requires `_prfloat()` first. Both are false on 68k: calling `_pfltinit()` before a `%ld`, or `_prfloat()` before a `%f`, each fails to *link* outright (`Symbol '_pfltinit'`/`'_prfloat' unresolved`, `l68: error - unresolved references`) — not a silent no-op as claimed. Dropping the calls, `%ld` and `%f` both printed correctly with no marker function at all (a bare `printf("%f", 3.14159)` gave `3.141590`). Neither symbol exists in 68k `clib.l`. Cause: this file's data-types table notes 68k's `int`/`long` are both 32-bit and its float handling differs from the 6809 C compiler manual (this claim's sole source), where `int` is 16-bit and `float`/`double` are a proprietary sign-magnitude format — a width/format-disambiguating marker is meaningful on 6809 but dead weight on 68k, the same cross-architecture-noise pattern as other findings in this file's Pitfalls section. **6809 behavior unverified — the markers may genuinely be required there (`Manual`); do not assume this is also wrong on 6809.** |
+| `printf`/`fprintf`/`sprintf` | **No marker call is needed on 68k** — `Live`: `%ld` and `%f` both print correctly with nothing called first (a bare `printf("%f", 3.14159)` gives `3.141590`). The `_pfltinit()`/`_prfloat()` markers some documentation requires before printing a `long`/`double` **don't exist in 68k `clib.l`** at all: calling either fails to *link* (`Symbol '_pfltinit'`/`'_prfloat' unresolved`). They're a 6809-era artifact — with a 16-bit `int` and a proprietary float format a width-disambiguating marker is meaningful, but on 68k, where `int`/`long` are both 32-bit and floats are IEEE, it's dead weight. **6809 behavior unverified (`Manual`) — the markers may genuinely be required there.** |
 | `scanf`/`fscanf`/`sscanf` | Specs: `%d %o %x %u %f %e %g %c %s`, plus `%D %O %X` for long and `[...]` for character-set match. **Every argument must be a pointer** — passing a value instead of `&value` is an easy mistake the compiler won't catch. |
 | `setbuf(FILE *fp, char *buffer)` | Call after `fopen()`, before any I/O. Pass `NULL` to disable buffering. `stderr` is always unbuffered by default. |
 | `write(int path, char *buf, int count)` / `read(int path, char *buf, int count)` | Raw path-based I/O (OS-9 `I$Write`/`I$Read` directly, no `FILE *` or buffering) — the primitive underneath the numbered stdin/stdout/stderr paths (0/1/2). **Do not mix these with `printf`/`fprintf`/other stdio calls on the same path without an explicit `fflush()` in between.** `Live`: interleaving a raw `write()` with a buffered `fprintf()` on the same fd doesn't just reorder or drop output — the two calls' bytes physically overlay each other in the shared stdio buffer, corrupting both (e.g. `"raw write with fflush first\n"` came out as `"after writeith fflush first"` when a `printf` followed without a flush). `write()`/`read()` used alone, with no stdio calls sharing the same path, work correctly. |
@@ -93,8 +93,8 @@ time. Implement as `isascii(c) && isprint(c) && c != ' '`.
 
 ## File Permissions (`<modes.h>`)
 
-**`Live` — header correction:** the mode/permission bits live in
-`<modes.h>`, **not `<stat.h>`**. `#include <stat.h>` fails `cpp` outright
+**The mode/permission bits live in `<modes.h>`, not `<stat.h>`** —
+`Live`: `#include <stat.h>` fails `cpp` outright
 (`can't open /dd/DEFS/stat.h`, err 216 — there is no `stat.h` in the 68k
 `DEFS`), while `<modes.h>` is present and compiles. `<stat.h>` was a Unix-ism
 that doesn't exist on this toolchain.
@@ -201,7 +201,7 @@ memory:** whatever's left after static/stack allocation feeds the
 
 | Feature | Status |
 |---------|-------|
-| `stdlib.h` (full) | No `rand()` (`Live`: unresolved at link), and no `abs()`/`div()` (`Manual`). But `atoi()`/`atol()` **are** present and work — `Live`: `atol("77")`→77, `atoi` likewise (the earlier "may be absent" was wrong) |
+| `stdlib.h` (full) | No `rand()` (`Live`: unresolved at link), and no `abs()`/`div()` (`Manual`). But `atoi()`/`atol()` **are** present and work — `Live`: `atol("77")`→77, `atoi` likewise |
 | `strings.h` | Use this, not `string.h` (different API: `index`/`rindex` not `strchr`/`strrchr`) |
 | `ctype.h` (full ANSI) | Missing `isgraph()` and other ANSI additions; link errors, not compile errors |
 | `stat.h` (absent entirely) | **`Live`:** there is no `stat.h` on the 68k `DEFS` — `#include <stat.h>` fails to open. File mode bits are in `<modes.h>` (owner/public only, no group class) |

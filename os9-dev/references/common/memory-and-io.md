@@ -199,9 +199,8 @@ A path descriptor has three sections:
 
 1. A universal 42-byte section (`PD_PD` through `PD_SysGlob`, offsets
    $00-$29 — includes `PD_LProc`, `PD_ErrNo`, and `PD_SysGlob`) common to
-   every path descriptor. (Corrected from an earlier "30-byte" claim — the
-   Technical I/O Manual states the universal section explicitly as 42
-   bytes.)
+   every path descriptor. (The Technical I/O Manual states this section's
+   size explicitly as 42 bytes.)
 2. A file-manager-specific section (`PD_FST`) for that manager's file
    pointers/state.
 3. The 128-byte option area (`PD_OPT`), initialized from the device
@@ -213,15 +212,14 @@ skips the file manager and driver entirely — it just increments `PD_COUNT`
 on the *existing* descriptor, letting multiple processes share one
 open-file context cheaply. `I$Close` decrements `PD_COUNT`; only at 0 is the
 descriptor actually deallocated and removed from the path table.
-Note that os9exec's own path-descriptor header defines a separate field,
-`PD_CNT`, at offset `$03` — the manual lists both, marking `$03` obsolete
-(see `os9-systems-dev/file-managers.md`). os9exec implements `I$Dup`
-(`Live`), but shares paths via host-native bookkeeping, never touching
-`PD_CNT` — that field is dead and unreferenced in its source,
-so there's still no live guest-visible share-counter to observe either
-offset against. Treat both offsets as unconfirmed until checked against a
-primary source directly; full note in `os9-systems-dev` skill's
-`file-managers.md`.
+os9exec's own path-descriptor header defines a second field, `PD_CNT`, at
+offset `$03`; the manual lists both, marking `$03` obsolete. **Neither
+offset is live-confirmable**: os9exec implements `I$Dup` (`Live`) but
+shares paths through host-native bookkeeping and never touches `PD_CNT`,
+which is dead and unreferenced in its source, so no guest-visible share
+counter exists to observe either offset against. Treat both as
+`Manual`-only until checked against a primary source. Full note:
+`os9-systems-dev` skill's `file-managers.md`.
 
 ### Multi-port and multi-class drivers
 

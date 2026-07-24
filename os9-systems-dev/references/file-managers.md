@@ -1,47 +1,25 @@
 # OS-9 File Managers
 
-**Verification status:** baseline is `Manual` — cross-referenced across
-multiple manuals. **Exception: the Record Locking section is now largely
-`Live` on 68k** — the mechanism was implemented in `os9exec` and each
-behavior verified with a paired before/after transcript (2026-07-19). Read
-that section's "Implemented and verified" and "Testing this" subsections
-before porting it anywhere; the design intent itself stays `Hearsay` (the
-designer's own account) and cannot be upgraded, but the *behavior* is now
-demonstrated. One prior `Live` claim there is **retracted** — a lost-update
-counter race that passed against code with no locking at all. The path-descriptor byte-offset claims below are
-`Source` — **fully cross-checked 2026-07-21** against `os9exec`'s own C
-source: the whole common-header `PD_` table ($00–$29, `PD_FST` at $2A) and
-the 128-byte SCF options region (`struct _sgs` at `PD_OPT` $80) both match
-(see those sections). The `PD_COUNT` "Known gap" note below is the one
-`Source, Flag` offset conflict that check turned up.
+Baseline `Manual`, cross-referenced across multiple manuals; path-descriptor
+byte offsets are additionally `Source` against os9exec's C.
 
-**Entry-point conventions below are untestable on `os9exec`, not just
-untested — confirmed the same platform gap as `device-drivers.md`, and
-the same root cause, not just a similar symptom.** `Live`:
-a correctly-assembled, byte-verified custom file manager module,
-installed exactly per this file's own guidance, was never invoked by the
-kernel. Source-confirmed: `OS9_I_OpenCreate` (`icalls.c`) classifies
-every path via `IO_Type()`'s hardcoded string matching, then dispatches
-through `filestuff.c`'s fixed `fmgr_op[]` C table — **the literal same
-function and table used for device-driver dispatch**, with no code
-anywhere that loads an installed file-manager or driver module. See
-`os9-systems-dev/SKILL.md` and `device-drivers.md`'s equivalent note, and
-`test/68k-live-verification/dogfood-report-filemgr-2026-07-18.md` (in the
-`os9exec` repo) for the full investigation. Treat the entry-point
-conventions below as `Manual` indefinitely, same as `device-drivers.md`.
+**The entry-point conventions below are untestable on os9exec**, not merely
+untested — it dispatches every path through a fixed C table keyed by
+hardcoded string matching, with no code anywhere that loads an installed
+file-manager or driver module. A correctly-assembled, byte-verified custom
+file manager installs and is never invoked. Treat this file's entry-point
+conventions as `Manual` indefinitely; same for `device-drivers.md`.
 
-A file manager sits between application I$ calls and a device driver — it's
-the layer that understands filesystem/protocol structure (directories,
-segments, line editing) while the driver only knows raw sector/character
-transfer. RBF, SCF, and SBF are the three standard ones (PIPEMAN is a
-fourth, for pipes — see below); a custom file manager (module type `FlMgr`,
-code `$0D`) follows the same entry-point shape and must be owned by the
-super-user with the system-state attribute bit set, like a driver.
-**`Manual, Flag`**: a live-loaded custom file manager module was accepted
-by `load` under owner `0.259`, not UID 0 — either the super-user-ownership
-requirement isn't enforced at `load` time on `os9exec` (only checked
-later, somewhere this session's testing never reached given the dispatch
-wall above), or the claim needs a narrower scope. Not chased further.
+A file manager sits between application I$ calls and a device driver — the
+layer that understands filesystem or protocol structure (directories,
+segments, line editing) while the driver knows only raw sector or character
+transfer. RBF, SCF and SBF are the three standard ones; PIPEMAN is a fourth,
+for pipes. A custom file manager (module type `FlMgr`, code `$0D`) follows
+the same entry-point shape and must be owned by the super-user with the
+system-state attribute bit set, like a driver. `Manual, Flag`: os9exec's
+`load` accepted a custom file manager owned by `0.259` rather than UID 0, so
+either that ownership requirement isn't enforced at load time there, or the
+claim needs a narrower scope.
 
 ## Entry Point Table (13 subroutines)
 
@@ -72,154 +50,111 @@ Called by the kernel with `(a1)`=path descriptor, `(a4)`=process descriptor,
   file. Where a file manager has no multi-file support, `Create` is treated
   as synonymous with `Open`.
 - **`MakDir`** is unusual: it's never preceded by `Create` or followed by
-  `Close` the way every other entry point implicitly is — it's a one-shot
-  operation, and a file manager without directory support simply returns
-  carry set / unknown-service.
-- **`ChgDir`** doesn't change anything about the *caller's* current
-  directory concept by itself — it searches the target directory and
-  stashes its address in the process descriptor; the shell-level `chd`/`chx`
-  semantics (see `os9-dev`'s `common/os9-mental-model.md`) are built on top
-  of this, one layer up.
+  `Close` the way every other entry point implicitly is — a one-shot
+  operation. A file manager without directory support returns carry set /
+  unknown-service.
+- **`ChgDir`** doesn't change the *caller's* current directory by itself — it
+  searches the target directory and stashes its address in the process
+  descriptor; shell-level `chd`/`chx` semantics are built on top of this, one
+  layer up.
 - **`Seek`** is purely logical: it repositions the file pointer with no
-  physical device access and no error if the new position is past EOF.
-  File managers without random access (e.g. SCF) simply no-op it.
-- **`Read`** returns the requested byte count or an EOF error if no more
-  data is available, generally with no editing of the bytes transferred.
-  **`ReadLn`** differs by stopping at the first CR (end-of-record) and
-  applying whatever input editing is appropriate for the device class.
-- **`Write`** expands the file when past current EOF. On RBF, a partial-sector
-  write triggers a read-modify-write cycle unless the entire sector is replaced.
-  **`WriteLn`** stops at the first CR and applies output editing (SCF appends a
-  linefeed after CR, plus nulls, where configured).
-- **`Read`/`Write` are where RBF's record-locking actually happens** — see
-  the Record Locking section below, and `os9-dev`'s `common/error-codes.md`
-  (`E$DeadLk`) for the deadlock-detection behavior this produces at the
-  application level.
+  physical device access and no error past EOF. File managers without random
+  access (e.g. SCF) no-op it.
+- **`Read`** returns the requested byte count or an EOF error, generally with
+  no editing of the bytes transferred. **`ReadLn`** stops at the first CR and
+  applies whatever input editing suits the device class.
+- **`Write`** expands the file when past current EOF. On RBF, a
+  partial-sector write triggers a read-modify-write cycle unless the entire
+  sector is replaced. **`WriteLn`** stops at the first CR and applies output
+  editing (SCF appends a linefeed after CR, plus nulls, where configured).
+- **`Read`/`Write` are where RBF's record locking happens** — see Record
+  Locking below, and `os9-dev`'s `common/error-codes.md` (`E$DeadLk`) for the
+  deadlock-detection this produces at the application level.
 
 ## GetStat/SetStat Dispatch Model
 
 `GetStat`/`SetStat` are open-ended rather than fixed enumerations: the file
 manager handles codes it recognizes (file size, EOF position, record-lock
-control, path options, ...) and **passes unrecognized codes straight through to
+control, path options, …) and **passes unrecognized codes straight through to
 the device driver** for hardware-specific handling (formatting a track, tape
-motion control, baud rate, etc.). This lets RBF or SCF work with diverse
+motion control, baud rate). This lets RBF or SCF work with diverse
 controllers without hardcoding their status codes.
 
 ## Path Descriptor Internals
 
-Path descriptors are dynamically created at open time and freed when the
-last reference closes. Each descriptor is a composite structure, divided
-into three regions:
+Path descriptors are created at open time and freed when the last reference
+closes. Each is a composite structure in three regions.
 
-The **first 42 bytes** form a file-manager- and driver-agnostic header:
-path number, access mode, references to the active file manager and driver,
-and other bookkeeping the kernel manages. Every path descriptor starts with
-this section regardless of which file manager is driving the I/O.
-**`Manual`, verified 2026-07-23 against the OS-9 Technical I/O Manual**
-(§1, "Path Descriptors" universal table) — and independently matching
-os9exec's `PD_` common-header offsets (`sgstat_from_book.h`). The full
-universal header: `PD_PD` $00 (path number), `PD_MOD` $02 (access mode),
-`PD_CNT` $03 (open count — **manual marks this obsolete**; see the `I$Dup`
-note below), `PD_DEV` $04 (device-table pointer), `PD_CPR` $08 (requester
-PID), `PD_RGS` $0A (caller register stack), `PD_BUF` $0E (buffer), `PD_USER`
-$12 (owner group/user), `PD_PATHS` $16 (open-path list), `PD_COUNT` $1A (open
-count — the current, non-obsolete one), `PD_LProc` $1C (last active PID),
-`PD_ErrNo` $20 and `PD_SysGlob` $24 (C-language file-manager `errno` / system-
-global pointer), then `PD_FST` $2A (file-manager work area) and `PD_OPT` $80 —
-i.e. the 42-byte common header runs $00–$29, exactly as stated.
+The **first 42 bytes** ($00–$29) are a file-manager- and driver-agnostic
+header the kernel manages. `Manual` (OS-9 Technical I/O Manual §1, universal
+table), independently matching os9exec's `PD_` offsets:
 
-Beyond that sits a **file-manager-defined working area** (`PD_FST`) whose
-layout and meaning vary by file-manager type. RBF uses it for file
-pointers, current logical sector number, and record-lock tracking. SCF
-uses it for line-buffer state and input editing data. A custom file
-manager defines this section for its own needs — the kernel allocates
-space, the file manager owns it.
+`PD_PD` $00 (path number), `PD_MOD` $02 (access mode), `PD_CNT` $03 (open
+count — **the manual marks this obsolete**), `PD_DEV` $04 (device-table
+pointer), `PD_CPR` $08 (requester PID), `PD_RGS` $0A (caller register stack),
+`PD_BUF` $0E (buffer), `PD_USER` $12 (owner group/user), `PD_PATHS` $16
+(open-path list), `PD_COUNT` $1A (open count — the current one), `PD_LProc`
+$1C (last active PID), `PD_ErrNo` $20 and `PD_SysGlob` $24 (C-language file
+manager `errno` / system-global pointer), then `PD_FST` $2A and `PD_OPT` $80.
 
-Finally, a fixed **128-byte options region** (`PD_OPT`, at offset `$80`)
-holds device-specific and I/O-behavior parameters: baud rate, parity,
-flow control, terminal echo, backspace/delete character codes, buffering
-strategy. At open time, the kernel populates this region by copying the
-device descriptor's initialization table (`M$DTyp` through `M$Opt` — see
-`device-drivers.md`). A user program can read the whole region via
-`I$GetStt(SS_Opt)` and modify selected fields via `I$SetStt`, subject to
-write-protection rules the file manager enforces.
+`PD_CNT` and `PD_COUNT` are two genuine fields at two offsets, not a
+conflict — the manual lists both, marking `$03` obsolete.
 
-**`Manual`, verified 2026-07-23 against the OS-9 Technical I/O Manual** (§3,
-"SCF Path Descriptor Definitions") — and independently matching os9exec's
-`struct _sgs` (`Source/OS9exec_core/os9defs/sgstat_from_book.h`, `sizeof == 128`,
-*actively used* by its SCF driver). **One framing note that matters:** the
-offsets here are **relative to the option region** (`PD_OPT` = `$80`), while the
-manual lists the same fields as **absolute path-descriptor offsets** — so each
-manual value is `$80` + the value here. They agree field-for-field:
-`PD_DTP` byte 0 (manual `$80`), `PD_EOR` `$0B` (manual `$8B`), `PD_INT` `$10`
-(manual `$90`, keyboard interrupt char), `PD_QUT` `$11` (manual `$91`, keyboard
-abort — `_sgs_kbach`, read by the Ctrl-E handler), `PD_PAR` `$14` (manual `$94`,
-parity/stop-bits/bits-per-char), `PD_BAU` `$15` (manual `$95`, baud rate). (The
-per-field offsets are now manual-confirmed, no longer only book-derived and not
-individually
-compile-asserted the way the module header's are — only the total size is.)
+Beyond the header sits a **file-manager-defined working area** (`PD_FST`)
+whose layout varies by file-manager type. RBF uses it for file pointers,
+current logical sector number, and record-lock tracking; SCF for line-buffer
+state and input editing. A custom file manager defines this section for its
+own needs — the kernel allocates the space, the file manager owns it.
 
-**`Source`:** `os9exec`'s own device-descriptor
-header (`module_from_book.h`, Guru-derived, same source as the rest of
-this file) confirms `M$Mode`/`$37`, `M$DevCon`/`$3C`, and `M$Opt`/`$46`
-exactly, and fills in what was previously missing: `M$Port` (hardware
-interface port address) at `$30`, and — answering "which driver/file
-manager does this descriptor select" — `M$FMgr` (offset to file manager
-name string) at `$38` and `M$PDev` (offset to device driver name string)
-at `$3A`. `M$DTyp` still isn't a distinct field: it's byte 0 of the
-128-byte options table itself (starting at `$48`), same as `PD_DTP` is
-byte 0 of the path-descriptor options section — not a separate top-level
-descriptor field, so there's nothing further to resolve there.
+Finally a fixed **128-byte options region** (`PD_OPT`, offset `$80`) holds
+device-specific and I/O-behavior parameters: baud rate, parity, flow control,
+terminal echo, backspace/delete codes, buffering strategy. At open time the
+kernel populates it by copying the device descriptor's initialization table
+(`M$DTyp` through `M$Opt` — see `device-drivers.md`). A user program can read
+the whole region via `I$GetStt(SS_Opt)` and modify selected fields via
+`I$SetStt`, subject to write-protection rules the file manager enforces.
 
-Path descriptors support sharing through a reference counter (`PD_COUNT`,
-offset `$1A`). When `I$Open` or `I$Create` allocates a new descriptor, the
-count starts at 1. `I$Dup` doesn't involve the file manager or driver —
-it simply increments the count on the existing descriptor, allowing
-parent and child processes (or any multiple processes) to share the same
-open-file context without re-opening. Only when `I$Close` drives the count
-to zero does the kernel deallocate and unlink the descriptor.
+SCF field offsets, `Manual` (Technical I/O Manual §3), matching os9exec's
+`struct _sgs`. **Offsets here are relative to the option region**, while the
+manual lists the same fields as absolute path-descriptor offsets — each
+manual value is `$80` plus the value here: `PD_DTP` byte 0, `PD_EOR` `$0B`,
+`PD_INT` `$10` (keyboard interrupt char), `PD_QUT` `$11` (keyboard abort),
+`PD_PAR` `$14` (parity/stop-bits/bits-per-char), `PD_BAU` `$15` (baud rate).
 
-**`Manual`, flag RESOLVED 2026-07-23 against the OS-9 Technical I/O Manual.**
-The `$03`-vs-`$1A` "conflict" was never a conflict — Microware's own universal
-path-descriptor table (I/O Technical Manual, §1, "Path Descriptors") lists
-**both fields, at both offsets**:
-- **`PD_CNT` at `$03`** — "Number of Paths using this PD (**obsolete**)"
-- **`PD_COUNT` at `$1A`** — "Number of Paths using this PD" (the current one)
+Device-descriptor offsets, `Source`: `M$Port` (hardware interface port
+address) `$30`, `M$Mode` `$37`, `M$FMgr` (offset to file manager name string)
+`$38`, `M$PDev` (offset to device driver name string) `$3A`, `M$DevCon`
+`$3C`, `M$Opt` `$46`. `M$DTyp` is not a distinct field — it's byte 0 of the
+128-byte options table starting at `$48`, exactly as `PD_DTP` is byte 0 of
+the path descriptor's options section.
 
-So os9exec's header (`PD_CNT`/`$03`) and this skill's table (`PD_COUNT`/`$1A`)
-were each describing a *different, genuine* field. The manual's "obsolete" tag
-on `PD_CNT` also explains why it is dead, unreferenced code in os9exec:
-`OS9_I_Dup` (dispatch `$82`, `Live`-confirmed working,
-`test/68k-live-verification/batch2-01.a`) does its share-counting through
-host-native bookkeeping (`usrpaths[]` + `usrpath_link()`), touching neither
-guest offset — which is fine, because the live counter (`PD_COUNT`/`$1A`) is
-itself the non-obsolete one the kernel would maintain on real hardware. Both
-offsets are now primary-source confirmed; no flag remains.
+Path descriptors support sharing through `PD_COUNT`. `I$Open`/`I$Create`
+start it at 1. `I$Dup` doesn't involve the file manager or driver — it simply
+increments the count, letting parent and child (or any set of processes)
+share one open-file context without re-opening. Only when `I$Close` drives
+the count to zero does the kernel deallocate and unlink the descriptor.
 
-**Kernel-side bookkeeping** (not the file manager's job, but what the file
-manager's Open/Close calls are embedded inside): the kernel maintains a
-device table (one entry per attached device — file manager/driver names,
-the driver's static-storage pointer, a use count) and a path table (one
-entry per open path). A path's device-table entry and descriptor are
-resolved on `I$Attach`; see `device-drivers.md` for the INIT/TERM lifecycle
-this drives on the driver side.
+**Kernel-side bookkeeping** — not the file manager's job, but what its
+Open/Close calls are embedded inside: the kernel maintains a device table
+(one entry per attached device: file manager and driver names, the driver's
+static-storage pointer, a use count) and a path table (one entry per open
+path). A path's device-table entry and descriptor are resolved on `I$Attach`;
+see `device-drivers.md` for the INIT/TERM lifecycle this drives.
 
 ## RBF Disk Structure
 
-RBF implements a tree-structured filesystem: every disk has the same basic
-layout — identification sector at LSN 0, allocation bitmap (usually LSN 1),
-root directory immediately following the bitmap, then file data organized
-into segments with allocation tracked via the bitmap. LSNs are logical
-sector numbers (0 to n-1); mapping an LSN to a physical track/head/sector
-is entirely the driver's job, not RBF's.
+RBF implements a tree-structured filesystem. Every disk has the same layout:
+identification sector at LSN 0, allocation bitmap (usually LSN 1), root
+directory immediately following the bitmap, then file data in segments with
+allocation tracked via the bitmap. LSNs are logical sector numbers (0 to
+n-1); mapping an LSN to a physical track/head/sector is entirely the driver's
+job, not RBF's.
 
 ### Identification Sector (LSN 0)
 
-**`Manual`, verified 2026-07-23 against the OS-9 Technical Manual "Disk File
-Organization"** — its identification-sector table lists every field at exactly
-these offsets (19/19). The only field it carries that this table omits is a
-2-byte `DD_RES` reserved slot at `$13` (between `DD_SPT` and `DD_BT`); harmless,
-noted for completeness.
+`Manual`, verified against the OS-9 Technical Manual "Disk File
+Organization". That manual carries one field this table omits: a 2-byte
+`DD_RES` reserved slot at `$13`, between `DD_SPT` and `DD_BT`.
 
 | Field | Offset | Size | Contents |
 |---|---|---|---|
@@ -245,17 +180,14 @@ noted for completeness.
 
 ### Allocation Map
 
-One bit per **cluster** (the true allocation unit — one or more sectors,
-always a power-of-2 sector count, per `DD_BIT`), not one bit per sector. A
-set bit means the cluster is in use, defective, or non-existent; a clear
-bit means free.
+One bit per **cluster** — the true allocation unit, one or more sectors,
+always a power-of-2 sector count per `DD_BIT` — not one bit per sector. A set
+bit means the cluster is in use, defective, or non-existent; a clear bit
+means free.
 
 ### File Descriptor Sector
 
-**`Manual`, verified 2026-07-23 against the OS-9 "Disk File Organization"
-manual** — all 7 fields at the documented offsets (`FD_ATT` $00, `FD_OWN` $01,
-`FD_DAT` $03 as Y/M/D/H/M, `FD_LNK` $08, `FD_SIZ` $09 four-byte size, `FD_CREAT`
-$0D as Y/M/D, `FD_SEG` $10 = 240-byte segment list of five-byte entries).
+`Manual`, verified against the OS-9 "Disk File Organization" manual.
 
 | Field | Offset | Size | Contents |
 |---|---|---|---|
@@ -265,127 +197,105 @@ $0D as Y/M/D, `FD_SEG` $10 = 240-byte segment list of five-byte entries).
 | `FD_LNK` | $08 | 1 | Hard-link count for this file descriptor |
 | `FD_SIZ` | $09 | 4 | File size in bytes |
 | `FD_CREAT` | $0D | 3 | Creation date, Y/M/D |
-| `FD_SEG` | $10 | 240 | Segment list: 5-byte entries (3-byte LSN + 2-byte sector count) to the end of the sector — 48 entries at 256-byte sectors. Unused entries must be zero. |
+| `FD_SEG` | $10 | 240 | Segment list: 5-byte entries (3-byte LSN + 2-byte sector count) to the end of the sector — 48 entries at 256-byte sectors. Unused entries must be zero |
 
 **`FD_ATT` bit layout**: 0x01 owner-read, 0x02 owner-write, 0x04
-owner-execute, 0x08 public-read, 0x10 public-write, 0x20 public-execute,
-0x80 directory. There is no "group" class — only owner and public. Bit
-0x40 controls shareability: `Live, Flag` — an os9lib `<stat.h>` mapping
-treats it as `S_ISHARE` (set = sharable), while the Disk File Organization
-manual's own file-descriptor prose labels it "non-sharable" (set =
-single-user). Treat this bit's polarity as unresolved until independently
-verified against a real disk image, rather than trusting either source blind.
+owner-execute, 0x08 public-read, 0x10 public-write, 0x20 public-execute, 0x80
+directory. There is no "group" class — only owner and public. Bit 0x40
+controls shareability: `Live, Flag` — an os9lib `<stat.h>` mapping treats it
+as `S_ISHARE` (set = sharable), while the Disk File Organization manual's own
+prose labels it "non-sharable" (set = single-user). Treat this bit's polarity
+as unresolved.
 
 **Segments**: OS-9 uses multiple-contiguous-segment file structure — each
-segment is a run of physically contiguous sectors; a file that outgrows one
-segment (on creation-time expansion, or when no single contiguous run is
-free) gets additional segments, kept in close physical proximity to
-minimize head movement. Small files typically fit one segment. On write
-past EOF, the file manager first tries to expand the last segment in
-place before allocating a new one, in minimum-allocation-size increments.
-On close, unused sectors in the last segment are normally deallocated
-(truncated) — **except** when the file is closed in write/update mode
-while *not* at EOF, where truncation is deliberately skipped to preserve
-reserved space for random-access/database files; a `seek(0)` before close
-is the way to force truncation in that case. The segment list is also what
-lets random access translate a logical file offset into an actual physical
-sector.
+segment is a run of physically contiguous sectors. A file that outgrows one
+segment gets additional segments, kept in close physical proximity to
+minimize head movement; small files typically fit one. On write past EOF, the
+file manager first tries to expand the last segment in place before
+allocating a new one, in minimum-allocation-size increments. On close, unused
+sectors in the last segment are normally deallocated — **except** when the
+file is closed in write/update mode while *not* at EOF, where truncation is
+deliberately skipped to preserve reserved space for random-access and
+database files; a `seek(0)` before close forces truncation in that case. The
+segment list is also what lets random access translate a logical file offset
+into a physical sector.
 
 ### Directory File Format
 
-Directories are files made of 32-byte entries: a 28-byte name field
-(`DIR_NM`, bytes 0-27, sign bit set on the name's last character), one
-unused byte (byte 28, must be zero), and a 3-byte LSN of the entry's file
-descriptor (`DIR_FD`, bytes 29-31). A zero first byte marks a
-deleted/unused entry. Every directory automatically gets `.` (itself) and
-`..` (parent) entries when created.
+Directories are files of 32-byte entries: a 28-byte name field (`DIR_NM`,
+bytes 0-27, sign bit set on the name's last character), one unused byte (byte
+28, must be zero), and a 3-byte LSN of the entry's file descriptor (`DIR_FD`,
+bytes 29-31). A zero first byte marks a deleted or unused entry. Every
+directory automatically gets `.` and `..` entries when created.
 
 ## Raw Physical I/O
 
-Appending `@` to a device name (e.g. `/d2@`) opens it for raw physical I/O
-— standard open/close/read/write/seek apply, addressing by physical byte
-offset and bypassing the filesystem (and its security) entirely. Seek
-address = LSN × logical sector size (read `PD_SctSiz` from the path
-descriptor; 256 if zero). Only super-users may open the raw device for
-write; non-super-users can read only the identification sector and
-allocation bitmap through it — any read attempt past that returns EOF.
+Appending `@` to a device name (`/d2@`) opens it for raw physical I/O —
+standard open/close/read/write/seek apply, addressing by physical byte offset
+and bypassing the filesystem and its security entirely. Seek address = LSN ×
+logical sector size (read `PD_SctSiz` from the path descriptor; 256 if zero).
+Only super-users may open the raw device for write; non-super-users can read
+only the identification sector and allocation bitmap, and any read past that
+returns EOF.
 
 ## Record Locking
 
-**What it is.** RBF hands out short-term exclusive access to *part* of a
-file — a byte range, not the whole file — and does it by itself, as a side
-effect of ordinary reads and writes. A read on a path open for update locks
-the bytes it just returned; the next write on that path releases them.
-Anything else touching those bytes meanwhile waits. No locking calls appear
-anywhere in the program. The same mechanism, applied past the last byte where
-no data exists yet, is what makes a reader wait at end-of-file for a writer
-that has not finished — so "record locking" and "EOF lock" are one feature,
-not two.
+**What it is.** RBF hands out short-term exclusive access to *part* of a file
+— a byte range, not the whole file — and does it by itself, as a side effect
+of ordinary reads and writes. A read on a path open for update locks the
+bytes it just returned; the next write on that path releases them. Anything
+else touching those bytes meanwhile waits. No locking calls appear anywhere
+in the program. The same mechanism, applied past the last byte where no data
+exists yet, is what makes a reader wait at end-of-file for a writer that has
+not finished — so "record locking" and "EOF lock" are one feature, not two.
 
-**Why this matters, before the mechanics — this is not a defensive
-feature you invoke, it's a design opportunity most programmers using it
-never fully exploited, because it was never explained well enough
-(firsthand from the person who designed it at Microware): RBF's locking
-is automatic and silent. It protects a program whether or not the
-programmer ever thought about concurrency — but it also *enables*
-designs that would otherwise need real synchronization primitives, and
-those designs only get built by someone who knows the guarantee exists.**
-Two concrete cases worth designing around deliberately, not just
-tolerating as a safety net:
+**This is not a defensive feature you invoke; it's a design opportunity.**
+RBF's locking is automatic and silent. It protects a program whether or not
+its author ever thought about concurrency — but it also *enables* designs
+that would otherwise need real synchronization primitives, and those designs
+only get built by someone who knows the guarantee exists. Two cases worth
+designing around deliberately rather than merely tolerating as a safety net
+(`Hearsay` — firsthand from the mechanism's designer at Microware):
 
 1. **A database-style read-modify-write cycle is safe under concurrent
-   access with zero application-level locking calls.** A `Read` (in
-   update mode) automatically locks the record just read; the following
-   `Write` on that same path automatically releases it. Two processes
-   both doing "read a record, change it, write it back" on the same file
-   can't silently corrupt each other's update (the classic lost-update
-   race) — the kernel serializes them without either program ever
-   calling `SS_Lock`. Write a database this way *on purpose* and you get
-   real concurrency safety for free.
-2. **A plain, ordinary growing file can coordinate a slow producer and a
-   slow consumer as if it were a pipe, with a persistent on-disk
-   record.** A write landing at the current end of file takes a
-   EOF lock — a "ghost lock" past the last byte, not a lock on any real
-   data — specifically so a reader catching up to a live
-   writer stalls right at the edge instead of racing ahead and mistaking
-   "caught up to current EOF" for "the writer is done." A spooler
-   appending output over a long run and a slow consumer (e.g. feeding a
-   printer) can be built around a plain file instead of an actual pipe —
-   useful specifically because, unlike a pipe, the data also persists
-   after both processes exit. This has no real equivalent on Unix
-   systems of that era — a single ordinary file coordinating a
-   slow-producer/slow-consumer pair, backed by real storage, isn't
-   something a plain `open()`/`read()`/`write()` model gives you.
+   access with zero application-level locking calls.** A `Read` in update
+   mode automatically locks the record just read; the following `Write` on
+   that path releases it. Two processes both doing "read a record, change it,
+   write it back" on one file cannot silently corrupt each other's update —
+   the classic lost-update race — because the kernel serializes them without
+   either program calling `SS_Lock`. Write a database this way *on purpose*
+   and concurrency safety is free.
+2. **A plain growing file can coordinate a slow producer and a slow consumer
+   as if it were a pipe, with a persistent on-disk record.** A write landing
+   at the current end of file takes an EOF lock — a "ghost lock" past the
+   last byte, not a lock on any real data — specifically so a reader catching
+   up to a live writer stalls at the edge instead of mistaking "caught up to
+   current EOF" for "the writer is done." A spooler appending output over a
+   long run and a slow consumer feeding a printer can be built around a plain
+   file rather than an actual pipe, and unlike a pipe the data persists after
+   both processes exit. Unix of that era had no equivalent.
 
-The mechanics that implement both cases:
+### Mechanics
+
 - A **read** (or `ReadLn`) on a path opened for update locks the bytes it
   requested, from the file pointer it started at — a `ReadLn` asking 256
-  bytes locks 256 regardless of where the CR landed. `Manual`, and what
-  `os9exec` implements as of 2026-07-19. (The designer's recollection was
-  *delivered* rather than requested, offered with the explicit caveat that he
-  was unsure; the manual was followed.)
-  **But clamped to the end of the file**, which is not optional. A read that
-  locks past EOF holds ground that belongs to whoever is appending, and the
-  result is a genuine deadlock: demonstrated live — an update-mode follower
-  read one record, locked 511 bytes past its position, the producer's next
-  append collided with that lock, and both waited on each other forever, with
-  no `E$DEADLK` to catch it because they are different processes. The
-  invariant to hold is **no path ever locks a byte that does not exist yet**.
-  Practical consequence of the requested rule, accepted deliberately: BASIC09
-  asks 511 bytes on every `READ` whatever the target string's size, so two
-  records closer together than that can never be held independently. Fine for
-  record-oriented code that asks for its record size; coarse for BASIC09.
-  Reads on read-only or execute-mode paths never lock anything,
-  since those modes can't update records anyway — prefer read-only opens
-  when writing isn't needed, both for this reason and for speed.
-- A **write** always releases any record currently locked by that path; it
-  doesn't itself lock anything *unless* it lands at EOF, in which case it
-  takes the **EOF lock** — a lock on the position past the last byte.
-  **This does NOT serialize appenders**, and an earlier revision of this file
-  saying so was wrong. Nothing real is locked: the range covers bytes that do
-  not exist. Its only job is to stop a *reader* concluding the file is
-  finished. Two programs appending to one log do not shut each other out —
-  they never contend, because each append lands at a different offset, and a
+  bytes locks 256 regardless of where the CR landed. **Clamped to the end of
+  the file**, which is not optional: a read that locks past EOF holds ground
+  belonging to whoever is appending, and the result is a genuine deadlock
+  that no `E$DEADLK` catches, because the two paths are different processes.
+  The invariant is **no path ever locks a byte that does not exist yet**.
+  Consequence: BASIC09 asks 511 bytes on every `READ` whatever the target
+  string's size, so two records closer together than that can never be held
+  independently — fine for record-oriented code that asks for its record
+  size, coarse for BASIC09. Reads on read-only or execute-mode paths never
+  lock anything, since those modes can't update records anyway; prefer
+  read-only opens when writing isn't needed, both for that reason and speed.
+- A **write** always releases any record currently locked by that path, and
+  locks nothing itself *unless* it lands at EOF, in which case it takes the
+  EOF lock. **This does not serialize appenders.** Nothing real is locked —
+  the range covers bytes that do not exist. Its only job is to stop a
+  *reader* concluding the file is finished. Two programs appending to one log
+  do not shut each other out: each append lands at a different offset, and a
   write-only path takes no record lock at all. Getting this backwards means
   building mutual exclusion between writers that the design never had.
 - **Which opens lock what**, since "locks only happen in update mode" is only
@@ -397,307 +307,98 @@ The mechanics that implement both cases:
     irrelevant — a follower opens plain `READ`; it is the *producer* that
     must open `>+`. A sequential writer that wants followers says so by
     opening for update; one that opens `>` is invisible to the mechanism and
-    nobody waits on it, which is precisely what keeps two plain loggers from
-    ever getting in each other's way.
-  - *explicit `SS_Lock`*: **update mode too**, same rule as the automatic
-    lock — a path that cannot modify what it read has nothing to protect, and
-    allowing it a lock would hand it a way to hold up writers, which is the
-    lockout this design exists to avoid. A *release* is always allowed; it can
-    only ever let something go. (`os9exec` accepted a lock from any path until
-    2026-07-19; no manual consulted, this follows the designer's one rule.)
-- A lock is released by: the next read, the next write, a path close, or
-  an explicit `SS_Lock` `SetStat`. A zero-byte read or write drops every
-  lock that path holds — record, EOF, or whole-file — outright. `seek()`
-  never affects locking.
-- `SS_Lock` locks/releases part of a file directly; `SS_Ticks` sets how
-  long a caller will wait for a lock held by someone else before giving up.
+    nobody waits on it, which is exactly what keeps two plain loggers out of
+    each other's way.
+  - *explicit `SS_Lock`*: **update mode too**, same rule — a path that cannot
+    modify what it read has nothing to protect, and allowing it a lock would
+    hand it a way to hold up writers, the very lockout this design avoids. A
+    *release* is always allowed; it can only let something go.
+- A lock is released by the next read, the next write, a path close, or an
+  explicit `SS_Lock` SetStat. A zero-byte read or write drops every lock that
+  path holds — record, EOF, or whole-file. `seek()` never affects locking.
+- `SS_Lock` locks or releases part of a file directly; `SS_Ticks` sets how
+  long a caller waits for someone else's lock before giving up.
 
-**RETRACTED 2026-07-19 — that 600/600 proved nothing.** The counter race
-below passed against an `os9exec` that had **no record locking whatsoever**:
-`SS_Lock` was `pNop`, there was no lock state in any path structure, and
-`E_LOCK`/`E_DEADLK` appeared only in a debugger string table. It passed
-because `os9exec` never pre-empts (the emulator's own
-"Cooperative-Multiprocess" source banner), so a read-modify-write essentially never
-interleaves and the race never opens. **A counter race cannot detect a
-missing lock.** To tell a working lock from a scheduler that never
-interleaves, force a conflict and check it is *refused* — see "Testing this"
-below. Kept here because the trap is easy to fall into twice. Original
-(now-uninformative) run: `Live`, on a real RBF disk image (`/h1/CLAUDETEST/counter.dat`):
-two separate processes raced 300 iterations each of unprotected
-read-modify-write (`SEEK` to a fixed record offset mid-file, not at EOF /
-`GET` / `+1` / `SEEK` / `PUT`, path held open across all iterations, no
-`SS_Lock` anywhere in either program) against the same shared counter.
-Final count landed exactly on 2×300=600 in two independent full races. See
-`test/68k-live-verification/dogfood-report-lostupdate-2026-07-18.md`
-(in the `os9exec` repo) for the full pass, including a real but
-unrelated blocker hit and worked around (BASIC09 needs the `math` trap
-handler resident for any numeric operation; the account's own
-`/h0/startup` `load -s cio csl math` line silently fails to make it
-resident — `load math` without `-s` works).
+### Implementing it — four things that bite
 
-## Implemented and verified on `os9exec`/68k (2026-07-19)
+Learned implementing the mechanism on 68k; a 6809 port would hit all four.
 
-`Live`. All of it was missing before this: RBF had no record locking at all,
-`SS_Lock` was `pNop` (returning **success** while doing nothing, so a program
-that locked defensively was told it had worked), `SS_Ticks` was absent, and a
-reader at end-of-file was told the file was finished while a writer was still
-appending. Each behavior below has a paired before/after transcript against a
-baseline binary in the `os9exec` repo,
-`test/68k-live-verification/dogfood-report-eoflock-fix-2026-07-19.md`.
+1. **Two paths on one file must actually see the same file.** Before locking
+   can matter at all, check this: if each path keeps its own copy of the FD
+   sector taken at open and its own data sector buffer, a reader never sees
+   size, segment list or sector contents change underneath it, and a lock is
+   pointless. Link paths on the same file into a ring and treat their buffers
+   as a shared cache.
+2. **The directory walk goes through the same read path.** Opening a file for
+   update walks directories via the ordinary read routine, so the path takes
+   a lock on *directory* bytes and carries those offsets onto the file it
+   ends up at — its own first read then collides with its own stale lock.
+   Drop locks whenever a path changes which file it refers to.
+3. **Judge a read conflict on bytes delivered, not bytes requested.** A
+   caller may offer a buffer far larger than the record. Since reading is not
+   destructive, the honest order is: read, check what was actually touched,
+   unwind if it conflicts. Writes are the opposite — destructive, exact
+   length known up front, so check before.
+4. **Refuse a same-process conflict rather than sleeping on it**
+   (`E_DEADLK`). The only process that could release the lock is the one
+   about to wait for it. Without this, a single-process test doesn't fail, it
+   *hangs* — and this refusal is what makes the whole mechanism testable
+   without concurrency.
 
-**The prerequisite nobody expects.** Before any locking can matter, two paths
-on one file have to be looking at the same file. In `os9exec` they were not:
-each path kept its own copy of the FD sector taken at open, and its own data
-sector buffer, so a reader never saw the size, the segment list or the sector
-contents change underneath it. Fixed by linking paths on the same file into a
-ring and treating their buffers as a shared cache. **Anyone porting this
-should check the same thing first** — a lock is pointless if the reader cannot
-see what the writer wrote.
+Also: **`SS_Ticks` is only as good as the scheduling under it.** A timeout
+can fire only if the blocked process is re-run while it waits, so on a
+non-preemptive host a blocked reader may never notice its deadline.
 
-**What the mechanism turned out to be**, from the designer directly: it is one
-lock, not two. A read locks the record it read; the next write releases it;
-a conflicting access sleeps and every release wakes all waiters. The EOF case
-is that same lock placed where there is no data yet — a **ghost lock** past
-the last byte. Nothing real is locked, which is why a second appender is
-unaffected and why two programs logging to one file do not shut each other
-out. End-of-file is therefore a *lock to acquire*, not a condition to compute
-— which is exactly what both reimplementations got wrong.
+### Testing it
 
-**Four things that bit, all of which a 6809 port would hit too:**
-
-1. **The directory walk goes through the same read path.** Opening a file for
-   update walks directories via the ordinary read routine, so the path takes a
-   lock on *directory* bytes and carries those offsets onto the file it ends
-   up at. Its own first read then collides with its own stale lock. Locks must
-   be dropped whenever a path changes which file it refers to.
-2. **Judge a read conflict on bytes delivered, not bytes requested.** A caller
-   may offer a buffer far larger than the record. Since reading is not
-   destructive, the honest order is: read, then check what was actually
-   touched, and unwind if it conflicts. Writes are the opposite — destructive,
-   exact length known up front, so check before.
-3. **Refuse a same-process conflict rather than sleeping on it** (`E_DEADLK`).
-   The only process that could release the lock is the one about to wait for
-   it. Without this a single-process test does not fail, it *hangs* — and it
-   is what makes the whole thing testable without concurrency.
-4. **`SS_Ticks` is only as good as the scheduling under it.** A timeout can
-   only fire if the blocked process is re-run while it waits. On `os9exec`,
-   which does not pre-empt, a blocked reader got two chances to check its
-   deadline and then none until the holder released — so the limit was never
-   noticed. It works with the emulator's optional tick on.
-
-## Testing this
-
-The counter race cannot detect a missing lock (see the retraction above).
-What does:
+**A lost-update counter race cannot detect a missing lock.** On a runtime
+that never pre-empts, a read-modify-write essentially never interleaves, so
+the race never opens and the counter lands on the expected total against an
+implementation with no locking whatsoever. What works instead:
 
 - **Force a conflict and check it is refused.** One process, two paths on one
   file, both open for update: path A reads a record, path B reads the same
   bytes. B must be refused with `E_DEADLK`. Deterministic, no timing, cannot
-  hang. (`dogfood-recordlock.bas`)
+  hang.
 - **Cross-process, for the blocking path.** A holder that reads a record and
   sits on it across yield points, and a waiter that tries the same bytes. The
-  waiter must not return until the holder writes. Compare the *values*: before
-  the fix the waiter got the stale pre-update record, which is the lost update
-  caught in the act. (`dogfood-recordlock-holder/-waiter.bas`)
-- **`SS_Lock` needs assembly** — no BASIC09 route to a SetStat.
-  (`dogfood-sslock.a`)
-- **Single-process, deterministic tests are worth more than they look**: one
+  waiter must not return until the holder writes — and compare the *values*:
+  a waiter that returns the stale pre-update record is the lost update caught
+  in the act.
+- **`SS_Lock` needs assembly** — there's no BASIC09 route to a SetStat.
+- **Single-process deterministic tests are worth more than they look**: one
   process with two paths covers visibility, cache invalidation, the
   writer-closes-first lifecycle, and the deadlock refusal, with no timing at
   all.
 
-**Does NOT reproduce on NitrOS-9 (6809) — real, reproducible lost
-updates.** `Live`, identical test design (10-byte record,
-`count` field pushed away from EOF by 4 `INTEGER` filler fields, no
-`SS_Lock` anywhere, N=300 per racer) run against real RBF on the 6809 EOU
-test disk, under NitrOS-9 (via XRoar): **two independent races both
-landed short of 2×300=600** — 457 (143 lost) and 584 (16 lost). Two
-things rule out the obvious alternative explanations: the racers' own
-"last local count seen" values (340/457 and 564/584 — neither racer's own
-iteration count) directly prove genuine interleaved access, stronger
-evidence of real concurrency than the 68k pass had; and neither racer
-sets `ON ERROR GOTO`, so if lock contention were erroring, the process
-would have dropped into interactive Debug Mode rather than completing
-cleanly — both races completed with no crash, ruling out "an unhandled
-I/O error let stale data through" as the mechanism. **The lock contention
-is not erroring — it is genuinely not being prevented in this build, in
-this test.**
-
-**Important scope note, easy to misread this as saying more than it
-does: this is a finding about NitrOS-9's own RBF implementation, not
-about "6809" as an architecture, and not about genuine Microware OS-9.**
-NitrOS-9 is an independent, community-written clone of OS-9 Level 2 — it
-does not contain licensed Microware source, and its own reimplementation
-of a mechanism can diverge from the original design intent (see the
-firsthand design-intent note at the top of this section) in ways that
-have nothing to do with what real Microware-authored code on real 1980s
-6809 hardware actually did. `os9exec` is likewise an independent
-reimplementation, of the 68k side. Both are being measured here against
-the same authoritative design intent, and each has now shown its own,
-different divergence (this case for NitrOS-9; case 2 below for
-`os9exec`) — that is two separate reimplementation gaps, not "68k is
-correct and 6809 is broken" or vice versa. Root mechanism for NitrOS-9's
-gap not yet determined (candidates: the automatic per-record lock
-genuinely isn't acquired/enforced for this access pattern in this
-codebase; a BASIC09-on-6809 `GET`/`PUT` buffering layer doesn't route
-through the lock-acquiring path). Full investigation:
-`test/6809-live-verification/dogfood-report-lostupdate-6809-2026-07-19.md`
-(in the `os9exec` repo). **Case 1's design intent is therefore confirmed
-`Live` on `os9exec`/68k only — do not assume it extends to NitrOS-9, and
-do not read either result as evidence about what genuine Microware OS-9
-did.**
-
-**Follow-up `Live` — NitrOS-9's record lock is real, not
-absent; the lost-update gap is narrower than "no locking exists."** A
-decisive contention test settles the question the lost-update pass left
-open (does a conflicting accessor ever actually block, the same
-discriminating test that established `os9exec` has zero locking at the
-source level): one process `GET`s a record and deliberately holds it —
-burning real wall-clock time without releasing — while a second process
-concurrently tries to `GET` the same record. **In both of two independent
-runs, the second process's `GET` did not return until after the first
-process's `PUT` released the lock, and it read back the released value,
-never the stale pre-lock value.** This is real, observed blocking — the
-opposite of "no lock." Reconciling this with the lost-update result
-above: NitrOS-9's lock works correctly for a single, well-separated
-lock/hold/release cycle, but does not fully prevent lost updates under
-*rapid, tight-loop re-acquisition* (300 back-to-back iterations with no
-gap between a `PUT` and the next `GET`) — the likely mechanism (not
-confirmed further) is a narrow race window in the release-then-reacquire
-sequence itself, consistent with the variable, non-total loss magnitude
-observed (143 lost in one race, only 16 in another, never all 600).
-**So: NitrOS-9 has a real record-lock mechanism whose failure mode is a
-timing-dependent reacquisition race, not an absent or no-op lock.** This
-is a meaningfully different, more specific characterization than "record
-locking doesn't work on NitrOS-9" — don't collapse it back to that
-simpler-but-wrong claim. Full investigation:
-`test/6809-live-verification/dogfood-report-lockcontention-6809-2026-07-19.md`
-(in the `os9exec` repo).
-
-**`os9exec`'s actual behavior vs. the design intent above — confirmed
-divergent for case 2, likely a real `os9exec` bug** (the
-pipe-like producer/consumer coordination). `Live`, on a real
-RBF disk image (`/h1`, not a host-native mount — host-native mounts have
-no real locking machinery underneath):
-**a reader path opened while a writer path is concurrently open on the
-same file sees zero bytes of that file's data for the reader's entire
-remaining lifetime — not "not yet," but never, even long after the
-writer closes.** Reproduced cleanly across multiple runs (immediate
-open, and opening after 34 records were already flushed — ruling out a
-startup race), identically in both `READ`-only and `UPDATE` modes. Each
-failed read returns `E$EOF` (211) **immediately, non-blocking** — the
-mechanism is poll-based, not a real blocking wait. A **brand-new** `OPEN`
-issued after the writer closes reads the file perfectly, proving the
-data itself is intact; the bug is specific to a path that was already
-open during the writer's activity, and that path never recovers
-visibility for the rest of its own life. This is worse than a simple
-"locked out until the writer exits" reading — the writer exiting doesn't
-fix it either. Plausible mechanism (not confirmed further): a
-concurrently-opened path's cached view of the file's current extent
-isn't refreshed by anything, including the writer's own close. Full
-investigation: `test/68k-live-verification/dogfood-report-eoflock-2026-07-18.md`
-(in the `os9exec` repo). **Not fixed as part of documenting this** — flagged
-for whoever picks up `os9exec`-side RBF work next.
-Separately, missing from this section before now: nothing stated whether
-a reader catching up to a live writer blocks or returns immediately —
-now known (immediate-return, poll-yourself), added above.
-
-**NitrOS-9 (6809) does NOT reproduce this specific bug — but read that
-narrowly, not as "6809 gets it right."** `Live`, same
-experiment (a concurrently-opened reader path racing an active writer
-path on a shared, growing file), run against real RBF on the 6809 EOU
-test disk under NitrOS-9 (`tools/nitros9repl.sh`), not `os9exec`: **the
-reader eventually sees every byte the writer wrote, correctly, in every
-clean run** — never the permanent, zero-visibility lockout `os9exec`
-produces. **NitrOS-9 is a community-written clone of OS-9 Level 2, not
-licensed or verified Microware source** — this result says NitrOS-9's
-own RBF doesn't share `os9exec`'s specific permanent-lockout bug, not
-that it correctly implements "the mechanism" as Microware originally
-built it, and not that "6809" as an architecture is inherently more
-correct than 68k. It's a second independent reimplementation with its
-own behavior, being compared against the same design-intent statement
-`os9exec` is measured against — and its behavior isn't a clean match for
-the pipe-like ideal either, a third data point distinct from both
-candidates above: the reader's first `READ` call didn't return for
-~12 real seconds (well past when the specific record it was reading had
-already been flushed and the writer had moved on to later records),
-and — the key fact — `E$EOF` was never returned to the caller during
-that wait (a retry counter gated on catching that specific error stayed
-at 0 the whole time). This is genuine kernel-level **blocking**, the
-opposite of `os9exec`'s immediate-return/poll-yourself behavior, and it
-released **all** buffered records at once, timestamped to the same real
-second the writer's path closed. Best read as "the reader blocks for
-the writer's entire remaining lifetime, then everything unblocks at
-once when the writer's path closes" — closer to the "locked out until
-the writer exits" fallback than to "unblocks promptly on each write,"
-but critically it *does* eventually deliver everything correctly, which
-`os9exec` does not. **Note the asymmetry with case 1 above: this same
-NitrOS-9 codebase gets case 2 right and case 1 wrong**, while `os9exec`
-gets case 1 right and case 2 wrong — so neither reimplementation is
-"the more correct one" in general; treat each case/platform combination
-as independently verified, not as evidence about the other three. Full
-investigation:
-`test/6809-live-verification/dogfood-report-eoflock-6809-2026-07-18.md`
-(in the `os9exec` repo).
-
-**Follow-up `Live` sharpens/revises the paragraph above: the
-~12-second block was a small-file artifact, not evidence that CLOSE is the
-only release trigger.** The original run's file was tiny (13 records, well
-under one 256-byte RBF sector); a repeat with a much larger file (50
-fixed-80-content-byte records, 4050 bytes on disk once BASIC09's
-sequential `WRITE` trailing-CR delimiter is counted, ~15.8 sectors) —
-writer bulk-writes all
-50 records fast, then deliberately holds the path open-but-idle for a real
-~10-second pause before closing — shows a concurrently-opened reader
-reading the large majority of already-flushed records (46 of 50, in both of
-two clean runs) **live, incrementally, well before the writer's close**,
-while the writer was merely holding the path open and producing no further
-data. Only the last few records (47-50 both runs) blocked, and that block
-released exactly at CLOSE, with `retries=0` throughout (still a genuine
-kernel wait, not polling). Read together, the two file sizes show: a reader
-**can** see already-flushed data through a live writer's EOF lock — it
-isn't held for the writer's whole lifetime — but once it catches up to the
-true current end of file (the writer has stopped producing, nothing more
-to flush), it correctly stalls right at that live edge until the next
-event that moves the edge, which for an idle-but-open writer is only its
-own CLOSE. This is much closer to the pipe-like design intent's actual
-promise than the small-file run alone suggested; the small file simply
-never accumulated enough buffered/flushed data for the reader to ever get
-ahead of the write-in-progress tail, so every one of its reads landed on
-that same trailing, not-yet-visible edge, making the whole run look like a
-single close-gated block. The exact granularity of "already flushed vs.
-still trailing" (RBF sector boundary vs. some other buffer threshold, e.g.
-in BASIC09's own I/O layer) is not resolved further here — flagged for
-whoever looks at RBF's or BASIC09's actual buffering code next. Full
-investigation:
-`test/6809-live-verification/dogfood-report-eoflock-6809-largefile-2026-07-18.md`
-(in the `os9exec` repo).
+Neither os9exec nor NitrOS-9 matches the design intent above in full, and
+they fail differently — do not treat either as a reference for this
+mechanism, and do not read either one's behavior as evidence about what
+genuine Microware OS-9 did.
 
 ## File Security
 
-Every file open checks access permission on every directory in the
-pathlist plus the target file itself — no read permission on a directory
-means nothing under it is reachable, regardless of the target file's own
-permissions. One gotcha for a file-manager author porting or debugging
-security logic: `FD_OWN` is nominally a 2-byte owner-ID field, but RBF only
-ever compares the **low-order byte** of both group and user ID from the
-password file — a user with ID 256 (or group 256) collides with ID 0,
-which RBF treats as the super-user. Also note that a file manager module
-itself, like a driver, must be owned by super-user with the system-state
-attribute bit set, or OS-9 refuses to load it.
+Every file open checks access permission on every directory in the pathlist
+plus the target file itself — no read permission on a directory means nothing
+under it is reachable, whatever the target file's own permissions say.
+
+One gotcha for a file-manager author porting or debugging security logic:
+`FD_OWN` is nominally a 2-byte owner-ID field, but RBF compares only the
+**low-order byte** of both group and user ID from the password file — a user
+with ID 256 (or group 256) collides with ID 0, which RBF treats as
+super-user. A file manager module itself, like a driver, must be owned by
+super-user with the system-state attribute bit set or OS-9 refuses to load it.
 
 ## Device-Independence in Practice
 
-The whole reason this layer exists: a program's `I$Read` call is identical
-whether the underlying device is a disk (RBF), a terminal (SCF), a tape
-(SBF), or a pipe (PIPEMAN) — the *file manager* is what's actually
-different per device class, not the application-facing system call.
-PIPEMAN in particular needs no physical device at all: a pipe's path
-descriptor uses a null driver, backed by a plain FIFO memory buffer
-(default 90 bytes) rather than any hardware. When writing a new file
-manager, the 13-entry table above is the complete contract the kernel
-expects; everything below that (how "Seek" or "Read" map onto your
-protocol) is entirely up to the implementation.
+The reason this layer exists: a program's `I$Read` is identical whether the
+device is a disk (RBF), a terminal (SCF), a tape (SBF), or a pipe (PIPEMAN) —
+the *file manager* is what differs per device class, not the
+application-facing system call. PIPEMAN needs no physical device at all: a
+pipe's path descriptor uses a null driver backed by a plain FIFO memory
+buffer (default 90 bytes). When writing a new file manager, the 13-entry
+table above is the complete contract the kernel expects; how "Seek" or "Read"
+map onto your protocol is entirely up to the implementation.
 
 ---
 
@@ -705,9 +406,8 @@ protocol) is entirely up to the implementation.
 v2.4 (file-manager entry points, GetStat/SetStat dispatch, path descriptor
 structure); Disk File Organization manual (RBF disk structure, record
 locking, raw I/O, file security) — cross-checked against The OS-9 Guru and
-OS-9 v2.4 Technical Reference Manual for pipes. See `device-drivers.md` in
-this skill for the driver side of the same layered model. The File
-Descriptor Sector table's `FD_LNK` row is confirmed against both the Disk
-File Organization manual's own field table (Figure 7-2)
-and an independent 1985-era OS-9/68000 technical manual, which
-independently list the same 1-byte link-count field at offset $08.
+the v2.4 Technical Reference Manual for pipes. The File Descriptor Sector
+table's `FD_LNK` row is confirmed against both the Disk File Organization
+manual's own field table (Figure 7-2) and an independent 1985-era OS-9/68000
+technical manual. See `device-drivers.md` for the driver side of the same
+layered model.

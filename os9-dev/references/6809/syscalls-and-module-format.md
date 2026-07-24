@@ -240,6 +240,14 @@ Every code here is `Manual`, cross-confirmed by at least two independent sources
 
 ### I/O I$ calls
 
+**Register contracts verified 2026-07-23 against the System Programmer's Manual
+§11.3** (per-call INPUT/OUTPUT listings): `I$Open` (A=mode, X=pathlist → A=path,
+X=updated), `I$Create` (A=mode, B=attrs, X=pathlist → A=path), `I$Delete`
+(X=pathlist), `I$MakDir` (B=attrs, X=pathlist), `I$ChgDir` (A=mode, X=pathlist),
+`I$Read`/`I$Write` (A=path, X=buffer, Y=count → Y=actual), `I$ReadLn`, `I$Seek`
+(A=path, X=hi16, U=lo16), `I$GetStt`/`I$SetStt` (A=path, B=function code) all
+match register-for-register.
+
 | Call | Code | Params | Notes |
 |---|---|---|---|
 | I$Attach | $80 | A=access mode, X=device name | Returns U=device table entry. **`Live`, 2026-07-19**: confirmed against `/N1` (the REPL's own already-attached channel device) — a real, in-range device table entry address came back with no error. Test: `test/6809-live-verification/batch4-04.a` |

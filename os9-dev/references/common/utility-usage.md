@@ -42,7 +42,10 @@ for" descriptions: `os9-tools-and-shell.md`.
 - `copy [<opts>] <path1> [<path2>]` — `-a` abort on first error, `-f`
   overwrite write-protected destinations, `-r` overwrite existing, `-v`
   verify result, `-w=<dir>` copy multiple sources *into* a directory
-  (`-p` suppresses the per-file listing in that mode).
+  (`-p` suppresses the per-file listing in that mode), `-b=<size>` use a
+  larger transfer buffer (e.g. `-b=20k`; bigger buffers speed up large
+  copies — the manual's own examples lean on this). `Manual` (*Using
+  Professional OS-9* v2.4).
 - `count [<opts>] {<path>}` — `-l` lines, `-w` words, `-c` characters,
   `-b` per-character frequency breakdown.
 - `del [<opts>] {<path>}` — `-f` delete write-protected, `-p` prompt per

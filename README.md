@@ -27,12 +27,11 @@ docs; it isn't needed to use the skills.
 
 ## Scope
 
-OS-9 is a living product — Microware still sells OS-9/68k and still brings the
-system up on new processors. These skills document the older end of that line,
-the v2.4-era 68000 system and 6809 Level 2, whose documentation was never
-centralized and now circulates through preservation archives: manuals in
-varying states of OCR, editions of the same book that don't quite agree, and
-files whose names misdescribe their contents.
+These skills document the older end of the line — the v2.4-era 68000 system
+and 6809 Level 2 — whose documentation was never centralized and now
+circulates through preservation archives: manuals in varying states of OCR,
+editions of the same book that don't quite agree, and files whose names
+misdescribe their contents.
 
 Some thirty published manuals, quick references and training guides stand
 behind these files; `SOURCES.md` in each skill says which ones back which
@@ -72,8 +71,7 @@ any given line.
 
 ## Provenance
 
-OS-9 is still a commercial product with an active rights holder, so the line
-was drawn conservatively at every step.
+The line was drawn conservatively at every step.
 
 All source material is public-domain or freely-published Microware/Tandy
 documentation, or historical-preservation archives. **No proprietary Microware

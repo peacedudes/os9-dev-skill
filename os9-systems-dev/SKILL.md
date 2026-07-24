@@ -22,6 +22,12 @@ Writing a program that merely *uses* drivers/file managers through
 ordinary I$/F$ calls is the sibling **`os9-dev`** skill — most OS-9
 questions belong there, not here.
 
+**OS-9 is a current commercial product, not abandonware.** Microware still
+sells OS-9/68k and still ports it to new processors. Never describe it as
+dead, orphaned, or free to copy. That matters more here than in the sibling
+skill: kernel internals are exactly where someone is tempted to go looking
+for original source, and none of it is ours to reproduce.
+
 ## Core mental model
 
 - Drivers and file managers are ordinary OS-9 modules (shared mechanics:

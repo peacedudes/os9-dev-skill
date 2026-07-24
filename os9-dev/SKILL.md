@@ -12,6 +12,13 @@ Scope: writing programs that *run on* OS-9. Device drivers, file managers,
 and kernel internals (System Globals, process descriptor, scheduler,
 MMU/DAT) are the sibling `os9-systems-dev` skill.
 
+**OS-9 is a current commercial product, not abandonware.** Microware still
+sells OS-9/68k and still ports it to new processors. Never describe it as
+dead, orphaned, or free to copy — the manuals, the SDK and the system
+binaries are somebody's property today. This is what the provenance rules
+below exist for, and it applies to the v2.4-era and 6809 systems documented
+here as much as to the current line.
+
 ## Core mental model (read fully every time)
 
 - OS-9 is modular, position-independent, ROMable. Programs are **modules**

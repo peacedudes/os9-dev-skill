@@ -22,35 +22,28 @@ ln -s ~/Developer/os9/os9-dev-skill/os9-dev         ~/.claude/skills/os9-dev
 ln -s ~/Developer/os9/os9-dev-skill/os9-systems-dev ~/.claude/skills/os9-systems-dev
 ```
 
-Nothing else to build. `tools/` holds a consistency checker used while
-editing the docs; it isn't needed to use the skills.
+Nothing to build. `tools/` holds a consistency checker used while editing the
+docs; it isn't needed to use the skills.
 
-## How this was assembled
+## Scope
 
-OS-9 is a living product. Microware still sells OS-9/68k and still brings the
-system up on new processors as they appear. What these skills document is the
-older end of that line — the v2.4-era 68000 system and 6809 Level 2 — whose
-documentation was never centralized and now circulates mainly through
-preservation archives and hobbyist sites: manuals in varying states of OCR,
-several editions of the same book that don't quite agree, and files whose names
-lie about their contents. One manual circulating in the 68k archives is
-actually a 6809 manual. Two files labelled `Gimix_*` turn out to be a
-byte-identical duplicate and a second OCR pass of documents already present
-under other names.
+OS-9 is a living product — Microware still sells OS-9/68k and still brings the
+system up on new processors. These skills document the older end of that line,
+the v2.4-era 68000 system and 6809 Level 2, whose documentation was never
+centralized and now circulates through preservation archives: manuals in
+varying states of OCR, editions of the same book that don't quite agree, and
+files whose names misdescribe their contents.
 
-Some thirty of those published manuals, quick references and training guides
-were read and cross-referenced against one another, and the findings condensed
-into these files in their own words. No raw manual text is reproduced, no
-worked code example is preserved verbatim, and no file mirrors any source's
-chapter structure. `SOURCES.md` in each skill lists which manuals stand behind
-which file. Where two manuals disagree, both readings are recorded and marked
+Some thirty published manuals, quick references and training guides stand
+behind these files; `SOURCES.md` in each skill says which ones back which
+file. Where two manuals disagree, both readings are recorded and marked
 `Flag` rather than silently resolved in favour of one.
 
-That much is a literature review. The part that makes it worth trusting is
-what came next: the claims were **run**. OS-9/68k under the
+## Confidence
+
+Claims were not only read but **run** — OS-9/68k under the
 [os9exec](https://github.com/peacedudes/os9exec) emulator, OS-9/6809 as
-NitrOS-9 under XRoar. Every factual claim carries an inline tag saying how
-much weight it bears:
+NitrOS-9 under XRoar. Every claim carries an inline tag:
 
 | Tag | Means |
 |---|---|
@@ -61,41 +54,34 @@ much weight it bears:
 | `Absent` | Searched for and confirmed not to exist — not merely unchecked. |
 | `Flag` | Sources disagree; unresolved. |
 
-Running things changed the picture more than once. Manuals turned out to be
-wrong. So did the emulators — several bugs found that way were fixed upstream
-rather than documented around. And so did earlier conclusions here, more than
-once; where a claim was withdrawn it was withdrawn outright rather than hedged.
-
-A `Live` claim is evidence about a reimplementation, never about OS-9 itself.
-Where a runtime and a Microware manual disagree, the manual is the
-specification and the runtime is the candidate defect — the disagreement is
-recorded in `DIVERGENCES.md`, not resolved by whichever one happened to run.
-
-## What's solid, and what isn't
+**A `Live` claim is evidence about a reimplementation, never about OS-9
+itself.** Both emulators are community-written reverse-engineered work and
+both have had real errors. Where a runtime and a Microware manual disagree,
+the manual is the specification and the runtime is the candidate defect; the
+disagreement is recorded in `DIVERGENCES.md` rather than resolved by whichever
+one happened to run. Only Microware, or real hardware, settles those.
+`SOURCE-AUTHORITY.md` says what counts as Microware's word — several excellent
+books do not.
 
 The 68000 material has been through a thorough live-verification pass and is
-largely `Live`. The 6809 side has had one too — the assembler and debugger
-core, roughly 70 of the ~93 documented syscalls, and most of the GFX2 calling
-sequences are `Live` — but CoCo/Dragon hardware and the 68k networking
-material remain `Manual` only. The tags say which is which on any given line.
-
-Nothing here has been checked against real hardware. Everything `Live` is
-emulated by necessity, and neither emulator is treated as an oracle — where
-one disagrees with the documentation, that is recorded as a disagreement.
+largely `Live`. So has the 6809 side: the assembler and debugger core, roughly
+70 of the ~93 documented syscalls, and most of the GFX2 calling sequences.
+CoCo/Dragon hardware and the 68k networking material are `Manual` only.
+Nothing has been checked against real hardware. The tags say which is which on
+any given line.
 
 ## Provenance
 
-Because OS-9 is still a commercial product with an active rights holder, the
-line was drawn conservatively at every step, and drawn the same way whether or
-not anyone was likely to check.
+OS-9 is still a commercial product with an active rights holder, so the line
+was drawn conservatively at every step.
 
 All source material is public-domain or freely-published Microware/Tandy
 documentation, or historical-preservation archives. **No proprietary Microware
-source code was used anywhere in this chain.** Facts are facts and are stated
-as such — a register contract, an error number, a struct offset — but the prose
-around them is written here rather than borrowed: no raw manual text
-reproduced, no worked code example kept verbatim, no file mirroring a source's
-chapter structure.
+source code was used anywhere in this chain.** Facts are stated as facts — a
+register contract, an error number, a struct offset — but the prose around
+them is written here rather than borrowed: no raw manual text reproduced, no
+worked code example kept verbatim, no file mirroring a source's chapter
+structure.
 
 What was deliberately *not* used is recorded too, in `SOURCES.md`, with the
 reasoning. An archive of genuine Microware 6809 source sits in the wider

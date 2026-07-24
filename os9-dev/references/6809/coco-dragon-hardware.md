@@ -1,6 +1,6 @@
 # CoCo/Dragon Hardware-Specific Reference
 
-`Manual` (see `6809/STATUS.md`). Scope: facts genuinely tied to specific 6809 hardware (Tandy Color Computer 1/2/3, Dragon 64/128), not generic OS-9/6809. If you're writing ordinary OS-9/6809 code with a glass-TTY terminal and no graphics hardware, most of this file doesn't apply to you — see `syscalls-and-module-format.md` and `assembly-and-tools.md` for what does.
+`Manual`. Scope: facts genuinely tied to specific 6809 hardware (Tandy Color Computer 1/2/3, Dragon 64/128), not generic OS-9/6809. If you're writing ordinary OS-9/6809 code with a glass-TTY terminal and no graphics hardware, most of this file doesn't apply to you — see `syscalls-and-module-format.md` and `assembly-and-tools.md` for what does.
 
 The split matters: some 6809 OS-9 systems were plain serial terminals with no local graphics; CoCo and Dragon had built-in video/graphics hardware and a correspondingly larger set of OS-9-adjacent conventions for driving it. Treat this file as "if you're targeting this specific hardware," not "true of 6809 in general."
 

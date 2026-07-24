@@ -13,14 +13,12 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
   procedure name or an explicit `>pathlist`. If the file "didn't appear,"
   check CHX — it was written, just not where you were looking. (`asm`
   behaves the same way.)
-- **`SAVE` and `PACK` do NOT redirect to the same place** — `Live` (6809,
-  2026-07-23), and worth internalising because an earlier revision of this
-  file said they behaved alike. With a *relative* target from the same
-  workspace, in the same session: `SAVE proc >name` lands in **CHD** (the
-  data directory), `PACK proc >name` lands in **CHX**. Reproduced twice
-  with fresh names. So `PACK`'s CHX rule above is `PACK`'s alone; `SAVE`
-  follows ordinary data-file resolution. Use an absolute path for either
-  when it matters.
+- **`SAVE` and `PACK` do NOT redirect to the same place** — `Live` (6809).
+  With a *relative* target, from the same workspace in the same session:
+  `SAVE proc >name` lands in **CHD** (the data directory), `PACK proc >name`
+  lands in **CHX**. The CHX rule above is `PACK`'s alone; `SAVE` follows
+  ordinary data-file resolution. Use an absolute path for either when it
+  matters.
 - **Packing does not speed up in-workspace execution** — measured
   identical times packed vs. unpacked under interactive `basic`; BASIC09
   always executes I-code. The manual's 10–30% speedup claim applies to
@@ -40,12 +38,11 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
   NOT real OS-9.** `Live` (68k): `PACK name >target` (and `SAVE ...
   >target`) print `Error #000:043` (relative name) or `#000:051`
   (absolute path) even though the output file is complete, correct, and
-  runnable. Verify the file; don't trust the message. **`Live` (6809,
-  2026-07-23): real NitrOS-9 BASIC09 prints nothing at all** — `SAVE proc
-  >rel`, `SAVE proc >/DD/abs/path` and `PACK proc >rel` all returned a
-  clean `Ready`, with correct files on disk. The spurious errors are an
-  `os9exec` defect, not OS-9 behaviour to be reproduced; logged on the
-  emulator's `ROADMAP.md`. (`> pathlist` with a space is different —
+  runnable. Verify the file; don't trust the message. **`Live` (6809):
+  real NitrOS-9 BASIC09 prints nothing at all** — `SAVE proc >rel`, `SAVE
+  proc >/DD/abs/path` and `PACK proc >rel` all return a clean `Ready` with
+  correct files on disk. The spurious errors are an os9exec defect, not OS-9
+  behaviour to reproduce. (`> pathlist` with a space is different —
   that's just unrecognized syntax.)
 
 ## What a packed module is
@@ -127,12 +124,10 @@ This banner + `Error #000:216 (E_PNNF)` has several distinct causes:
    for at least these two modules (confirmed reproducible: `load -s
    math` alone also silently fails to add it to `mdir`, while a plain
    `load math`, no flag, succeeds immediately every time). Root cause
-   not chased further (unclear whether the bug is in `os9exec`'s own
-   command handling or in the real Microware `load` utility's `-s`
-   path); workaround is a manual `load math`/`load cio` (no `-s`) once
-   per fresh session before running anything that needs them. See
-   `test/68k-live-verification/dogfood-report-lostupdate-2026-07-18.md`
-   (in the `os9exec` repo).
+   unestablished — it may be os9exec's command handling or the real
+   Microware `load` utility's `-s` path. Workaround: a plain `load
+   math`/`load cio` with no `-s`, once per fresh session, before running
+   anything that needs them.
 2. **`cio`/`csl` genuinely not resident** (check `mdir`): `load cio`. A
    binary linked against the proprietary `cio` handler dies with this
    banner on any disk lacking it — see `common/using-os9exec-repl.md` for

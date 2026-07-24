@@ -33,44 +33,23 @@ independent of any manual.
 | 6809/using-nitros9-repl.md | `Live` (NitrOS-9 EOU under XRoar via DriveWire) |
 
 Known-bad source note: the "OS-9 Relocating Macro Assembler" manual
-circulating in 68k archives is actually a **6809** manual (documents 6809
-registers/addressing) — never use it for a 68k-specific claim. Its 6809
-content is now fully mined into `6809/assembly-and-tools.md` (RMA
-options, input/listing format, expression evaluation, the macro facility,
-PSECT/VSECT/CSECT semantics, data-area access, RLINK options, and the
-RMA-vs-Interactive-Assembler differences appendix). The symbol-length
-discrepancy `VERIFICATION-BACKLOG.md` flagged (RMA manual says 1-9 chars,
-case-sensitive; the file previously said 1-8) turned out to be a plain
-correction, not an asm-vs-rma divergence — the existing "8" sentence
-already used `PSECT`-scoping language, confirming it was describing RMA
-all along, so it's been fixed to 1-9 with the manual cited directly.
-Mining this manual also surfaced two more RMA-attribution errors in the
-same file, now corrected/flagged in place: an OPT-directive row claiming
-`M`=Motorola-compatible-mode and `O`=object-file, and a "two assembler
-modes" paragraph — neither exists in the RMA manual's real option set
-(`l c f g x e s d w`); most likely both describe `asm` instead, but that's
-unconfirmed pending `asm`'s own manual.
+circulating in 68k archives is actually a **6809** manual (it documents 6809
+registers and addressing) — never use it for a 68k-specific claim. Its 6809
+content is fully mined into `6809/assembly-and-tools.md`.
 
-Provenance note on `../os9/txtResources/6809/OS-9_6809_Level1_Source.tar.gz`:
-this is actual Microware 6809 Level 1 source code, not a manual. Per
-2026-07-17 owner decision it is held to the same rule as the NitrOS-9
-kernel-source cross-check (`kernel-source-VERIFICATION-ONLY-do-not-extract/`,
-see project memory `nitros9-kernel-source-crosscheck`): cross-check-only,
-never a primary source, never extracted at length. It has not been opened
-for any purpose as of this writing.
+Provenance note on the Microware 6809 Level 1 source archive held alongside
+this corpus: it is actual Microware source code, not a manual, and is held to
+the same rule as the NitrOS-9 kernel-source cross-check — cross-check only,
+never a primary source, never extracted at length. It has not been opened for
+any purpose.
 
-Two files in `../os9/txtResources/6809/` are named `Gimix_OS-9_*` but are
-**not** Gimix-specific content — `Gimix_OS-9_Programmers_Manual_Jan83.txt`
-is a byte-length-identical duplicate of `OS-9_System_Programmers_Manual_
-Rev_F1_1983.txt` (already cited above), and `Gimix_OS-9_Users_Manual_
-1983.txt` is an independent OCR pass of the same Rev G User's Manual as
-`OS-9_Users_Manual_1983.txt` (also already cited, one of the "two
-independent User's Guides"). Misleading filenames only — confirmed
-2026-07-17, no separate Gimix content exists in either file. Real
-Gimix-specific material (`O-FLEX_Operating_System_for_OS-9_Level_II_
-Gimix.txt`, `OS-9_GMX_III_Support_ROM_User_Manual_RevC.txt`) is handled
-elsewhere: O-FLEX is out-of-scope (see `VERIFICATION-BACKLOG.md` item 5),
-the GMX III ROM manual is already cited in `os9-systems-dev/SOURCES.md`.
+Two files in the 6809 text-resource set are named `Gimix_OS-9_*` but carry no
+Gimix-specific content: `Gimix_OS-9_Programmers_Manual_Jan83.txt` is a
+byte-identical duplicate of the System Programmer's Manual Rev F1 cited above,
+and `Gimix_OS-9_Users_Manual_1983.txt` is an independent OCR pass of the same
+Rev G User's Manual. Misleading filenames only. Genuinely Gimix-specific
+material — the O-FLEX operating system and the GMX III Support ROM manual — is
+handled separately; the GMX III manual is cited in `os9-systems-dev/SOURCES.md`.
 
 Where two manuals disagree, both readings are recorded in the file with
 a `Flag` tag, rather than silently picking one (see common/error-codes.md

@@ -53,8 +53,8 @@ the `0x20` "reserved" span into `_mident` at `$20` + a 12-byte `_mspare` at
 `$22`.) M$Attr at 0x14 is additionally `Live`: real 68k C-runtime startup
 code tests bit 5 of offset 0x14 against the module base.
 
-**Independently re-verified against a second Microware manual, 2026-07-23:**
-the *OS-9/68000 Technical Manual*'s own header figure (ch. 1) lists the same
+**Independently confirmed against a second Microware manual:** the
+*OS-9/68000 Technical Manual*'s own header figure (ch. 1) lists the same
 offsets. One OCR trap in that scan, called out so it isn't mistaken for a
 conflict: it prints `M$Parity` at `$28`. That is a scan error (8-for-E, the
 same misread that turns I$SetStt's `$8E` into `$BE` in the 6809 manuals) —
@@ -143,11 +143,8 @@ Compiler-specific values worth isolating:
 
 - The 6809 C compiler's module type/language byte and attribute/revision
   `$81` (reentrant, rev 1) are compiler-specific values, not general
-  constants. **The `$04`-vs-`$11` divergence this file used to carry as an
-  unresolved tag is now settled against `$11`** — an earlier revision
-  glossed the byte as `$4` ("C program — 6809 object"), which cannot be
-  right. **`Manual` + `Live` (6809, 2026-07-23):** the packing is documented, not just
-  inferred — the *OS-9 System Programmer's Manual* §4.2.1 states "the module
+  constants; the byte is `$11`, not `$04`. **`Manual` + `Live` (6809):**
+  the packing is documented, not merely inferred — the *OS-9 System Programmer's Manual* §4.2.1 states "the module
   type is coded into the four most significant bits of byte 6" and lists
   `$10` Prgrm, `$20` Sbrtn, `$40` Data; the language occupies the low nibble.
   `ident` on real modules confirms it directly: the byte is `(type << 4) |
@@ -178,9 +175,7 @@ Compiler-specific values worth isolating:
   convention beyond RMA, `Live`**: the 68k assembler (`r68`) uses the
   same lowercase `psect` directive with the identical argument shape
   (`psect name,type_lang,attr_rev,edition,stacksize,entrylabel`),
-  consumed by `l68` at link time to build the module header — used
-  successfully in every one of the 68k syscall-verification batches
-  this project has run (`test/68k-live-verification/batch*.a`).
+  consumed by `l68` at link time to build the module header.
 
 ## Program-module extended header (68k, offset 0x30+)
 

@@ -1,35 +1,23 @@
 # OS-9 Device Drivers
 
-**Verification status:** baseline is `Manual` — cross-referenced across
-multiple manuals. The Device Descriptor field table below is now **`Manual`,
-verified 2026-07-23 against the authoritative primary source**: the OS-9
-Technical I/O Manual (§1, device-descriptor module figure) lists every field
-at exactly these offsets — `M$Port` $30, `M$Vector` $34, `M$IRQLvl` $35,
-`M$Prior` $36, `M$Mode` $37, `M$FMgr` $38, `M$PDev` $3A, `M$DevCon` $3C,
-`M$Opt` $46 (initialization-table size), `M$DTyp` $48 (device type, first field
-of the init table). It *additionally* matches os9exec's `mod_dev` struct
-(`module_from_book.h`), which carries a **compile-time** `offsetof` assertion
-per field — so the layout is confirmed against Microware's own manual *and*
-continuously enforced in the emulator build.
+Baseline `Manual`, cross-referenced across multiple manuals. The Device
+Descriptor field table is verified against the OS-9 Technical I/O Manual (§1,
+device-descriptor module figure), which lists every field at exactly these
+offsets — `M$Port` $30, `M$Vector` $34, `M$IRQLvl` $35, `M$Prior` $36,
+`M$Mode` $37, `M$FMgr` $38, `M$PDev` $3A, `M$DevCon` $3C, `M$Opt` $46
+(initialization-table size), `M$DTyp` $48 (device type, first field of the
+init table) — and additionally matches os9exec's `mod_dev` struct, which
+carries a compile-time `offsetof` assertion per field.
 
-**Entry-point register conventions below are untestable on `os9exec`, not
-just untested** — `Live` (2026-07-18, first real attempt): a
-correctly-assembled, CRC-valid `Drivr`-type module, installed exactly per
-this file's own guidance, was never invoked by the kernel at any entry
-point. Confirmed at the source level: `os9exec`'s `I$Attach` is a dummy
-that never allocates driver storage or calls `Init`; device I/O dispatch
-uses a fixed internal table keyed by hardcoded path-prefix matching, not
-by executing an installed module's code; `iniz` has no emulator-side
-implementation. This is a real `os9exec` feature gap, not a bug — see
-`os9-systems-dev/SKILL.md`'s Verification section and
-`test/68k-live-verification/dogfood-report-driver-2026-07-18.md` (in the
-`os9exec` repo) for the full investigation. **Practical implication**:
-the toolchain/module-format content in this file (byte layout, `psect`
-authoring) can be built and verified byte-correct on `os9exec` today; the
-entry-point register conventions below cannot be live-tested here at all
-until `os9exec` implements real driver dispatch — treat them as `Manual`
-indefinitely unless testing against real hardware or a different
-emulator.
+**The entry-point register conventions below are untestable on os9exec**, not
+merely untested: its `I$Attach` never allocates driver storage or calls
+`Init`, device I/O dispatch uses a fixed internal table keyed by hardcoded
+path-prefix matching rather than executing an installed module's code, and
+`iniz` has no emulator-side implementation. A correctly-assembled, CRC-valid
+`Drivr` module installs and is never invoked at any entry point. The
+toolchain and module-format content here (byte layout, `psect` authoring)
+*can* be built and verified byte-correct there; the register conventions
+cannot, so treat them as `Manual` short of real hardware.
 
 A device driver is an OS-9 module (type `Drivr`, code `$0E`) owned by the
 super-user, with the system-state and re-entrant attribute bits set. Its

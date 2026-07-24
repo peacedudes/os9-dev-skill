@@ -1,40 +1,32 @@
 # OS-9 Kernel Internals
 
-**Verification status:** baseline is `Manual` — cross-referenced across
-multiple manuals; not live-tested, since no OS-9/68k program has been run
-to directly observe these structures in memory. The **Process Descriptor**
-layout, however, is `Source` — checked against `os9exec`'s own C source:
-its `procid` struct (derived from the same Guru-book source as this file,
-and wired byte-for-byte into `F$GPrDsc`/`F$GPrDBT` as the actual
-guest-visible descriptor image) matches every offset and field described
-below. That check surfaced one real `os9exec` bug — `P$SigLvl` ($370) was
-never populated from the emulator's actual signal-mask-nesting counter, so
-`F$GPrDsc`/`F$GPrDBT` always reported it as stale/zero — now fixed.
-**Authority ceiling, confirmed 2026-07-23:** the field *offsets* here are
-not published in any authoritative Microware manual in this corpus. The
-68k manuals describe the process descriptor only in prose (state, priority,
-paths, memory list); no 68k manual gives a `P$` offset table (the one offset
-table that exists, in the 6809 *System Programmer's Manual*, is the 6809
-descriptor — a different, smaller layout). The offsets therefore trace to the
-**Guru book** (Dayan — third-party, see the repo `SOURCE-AUTHORITY.md`) as
-reflected in os9exec's reconstructed `procid` struct. Microware manuals and the
-Guru corroborate the field *names and semantics* (`P$SigLvl`, `P$Signal`,
-`P$State`), but the numeric offsets are `Source` resting on a third-party
-foundation — the strongest tier available here, and not Microware-authoritative.
-Real hardware or a Microware internal header would be needed to lift it. The
-**System Global Memory** section stays `Manual` only: `os9exec` has no
-in-memory struct corresponding to real System Globals at all — `F$SetSys`
-is a self-described "half-dummy" that stubs most `D_*` variables (including
-`D_MinPty`/`D_MaxAge`/`D_ActAge`, so the scheduler algorithm below is real
-OS-9 behavior `os9exec` does not itself replicate; it schedules processes
-its own way). Two individual System Global values are `Source` — confirmed
-exact matches to real OS-9's documented values: the 16-byte minimum
-allocation unit and the 100Hz default tick rate. The **Module Directory**
-struct shape (address / group / size / link-count) is `Source` — confirmed
-structurally — but `os9exec`'s module-group tracking is a known
-simplification, not a layout bug: its group field mirrors the module's own
-address rather than tracking true same-file groups. See os9-dev
-`references/VERIFICATION-BACKLOG.md` for the session that did this pass.
+Baseline `Manual`, cross-referenced across multiple manuals.
+
+**Authority ceiling on the Process Descriptor offsets.** The field *offsets*
+here are not published in any authoritative Microware manual in this corpus:
+the 68k manuals describe the process descriptor only in prose (state,
+priority, paths, memory list), and the one `P$` offset table that exists — in
+the 6809 *System Programmer's Manual* — is the 6809 descriptor, a different
+and smaller layout. These offsets trace to the Guru book (Dayan;
+third-party, see `SOURCE-AUTHORITY.md`) as reflected in os9exec's
+reconstructed `procid` struct, against which they are `Source`-confirmed
+byte-for-byte. Microware manuals and the Guru corroborate the field *names
+and semantics* (`P$SigLvl`, `P$Signal`, `P$State`), but the numeric offsets
+rest on a third-party foundation — the strongest tier available here, and not
+Microware-authoritative. Real hardware or a Microware internal header would
+lift it.
+
+**System Global Memory** is `Manual` only: os9exec has no in-memory struct
+corresponding to real System Globals, and its `F$SetSys` stubs most `D_*`
+variables (including `D_MinPty`/`D_MaxAge`/`D_ActAge`) — so the scheduler
+algorithm below is real OS-9 behavior that os9exec does not replicate; it
+schedules its own way. Two System Global values are `Source`, confirmed exact
+matches to real OS-9's documented values: the 16-byte minimum allocation unit
+and the 100Hz default tick rate. The **Module Directory** struct shape
+(address / group / size / link-count) is `Source` — structurally confirmed —
+but os9exec's module-group tracking is a known simplification rather than a
+layout bug: its group field mirrors the module's own address rather than
+tracking true same-file groups.
 
 Structures and algorithms below the level any ordinary I$/F$ call exposes —
 relevant if you're inspecting/modifying kernel state directly, writing a
@@ -170,12 +162,6 @@ mean anything, and it is why a read-modify-write cycle can genuinely be cut in
 half by another process on real hardware. System-state code (kernel calls and
 I/O operations mid-call) is never preempted mid-operation: it must complete or
 voluntarily sleep/yield, to protect kernel data-structure consistency.
-
-*(An earlier revision of this file stated the opposite for user code — "the
-scheduler does not interrupt it" — which contradicted the clock-driven
-timeslicing described immediately above it and would have made time slices
-meaningless. That was the system-state rule mistakenly restated as applying to
-user code. Corrected 2026-07-19.)*
 
 ### How `os9exec` emulates this (differs from real OS-9) — `Source`, for extending the emulator
 

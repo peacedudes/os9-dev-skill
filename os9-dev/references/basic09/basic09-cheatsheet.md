@@ -12,8 +12,7 @@ INTEGER overflow and hex-constant sign below are `Live` (real Microware
 BASIC09 "6809 VERSION 01.01.00" under XRoar, harness:
 `6809/using-nitros9-repl.md`); REAL width/range/precision are `Manual`
 (BASIC09 Reference Manual Rev H, OS-9 BASIC User Manual Rev G, 1991) —
-not yet independently measured against the running system. See
-`6809/STATUS.md` for what's been checked so far.
+not yet independently measured against the running system.
 
 ## Data Types (6809 widths)
 

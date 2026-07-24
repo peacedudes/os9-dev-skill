@@ -57,7 +57,7 @@ in this file:
   the data-types reference table below).
 - **`\n` is CR (0x0D), not LF** — matches OS-9's own line convention, but
   will silently produce the wrong bytes if you're thinking in Unix terms.
-  **`Live`, 2026-07-21** (os9exec 68k): `putc('\n', f)` to a file wrote the
+  **`Live`** (os9exec 68k): `putc('\n', f)` to a file wrote the
   single byte `0x0D` (the file read back `58 0D 59` for `X`,`\n`,`Y`) — the
   compiler maps the escape to CR at compile time; a raw `putc(0x0A, f)` stays
   `0x0A`, so there is no I/O-layer translation, it is purely what `\n` compiles
@@ -150,11 +150,11 @@ toolchain): `int`, `long`, and pointers are all 32-bit there, not the
 | `int` | 2 bytes | **4 bytes** (`Live`) |
 | `unsigned` | 2 bytes | presumably 4 bytes (follows `int`; not independently spot-checked) |
 | `long` | 4 bytes | 4 bytes (`Live`) |
-| `float` | 4 bytes — proprietary sign-magnitude binary format (exponent biased by 128, 3-byte mantissa with implied leading 1), **not IEEE 754** | **4 bytes, IEEE-754 single (`Live`, 2026-07-21)** — a C `float`=1.0 stored `3F 80 00 00` (big-endian), textbook IEEE single. NOT the 6809 proprietary format |
-| `double` | 8 bytes — same proprietary format, 7-byte mantissa | **8 bytes, IEEE-754 double (`Live`, 2026-07-21)** — a C `double`=1.0 stored `3F F0 00 00 00 00 00 00` (big-endian), textbook IEEE double |
+| `float` | 4 bytes — proprietary sign-magnitude binary format (exponent biased by 128, 3-byte mantissa with implied leading 1), **not IEEE 754** | **4 bytes, IEEE-754 single (`Live`)** — a C `float`=1.0 stored `3F 80 00 00` (big-endian), textbook IEEE single. NOT the 6809 proprietary format |
+| `double` | 8 bytes — same proprietary format, 7-byte mantissa | **8 bytes, IEEE-754 double (`Live`)** — a C `double`=1.0 stored `3F F0 00 00 00 00 00 00` (big-endian), textbook IEEE double |
 
 **`float`/`double` *storage* is IEEE-754, but *arithmetic* is single-precision
-on os9exec (`Live`, 2026-07-21).** A `double` computation loses precision to
+on os9exec (`Live`).** A `double` computation loses precision to
 about single-precision magnitude: `0.1+0.2-0.3` (and the runtime-computed
 `1.0/10.0+2.0/10.0-3.0/10.0`, so it isn't constant-parsing) yielded a 2⁻²²
 residual — `0.1+0.2 != 0.3` is still true (C does a real IEEE compare, unlike
@@ -163,7 +163,7 @@ default soft-float math (the `math` trap handler), shared with BASIC09 REAL, and
 it's fixed at compile time — `load math881` at runtime does NOT change an
 already-compiled program (`Live`). **To get full precision, compile for the
 68881 FPU: `cc -K=2F` (`-K=2` = target 68020, `F` = 68881; uses the `c68020`/
-`r68020` passes).** `Live`, 2026-07-21: with `-K=2F`, the runtime-computed
+`r68020` passes).** `Live`: with `-K=2F`, the runtime-computed
 `1.0/10.0+2.0/10.0-3.0/10.0` gave a residual of **exactly 0** (the 68881's 80-bit
 extended precision — even tighter than 64-bit double), vs 2⁻²² without it. So the
 68881 emulation is accurate; the single-precision default is a `math`-trap
@@ -179,7 +179,7 @@ does not hold on 68k.
 **String termination differs between the two languages, and this bites
 in practice.** A C string is NUL-terminated (`0x00`); a BASIC09 STRING is
 terminated by a sentinel byte **whose value differs by target** — and
-**`$FF` is the 6809 value, NOT 68k's.** `Live`, 2026-07-21 (byte-dump of a
+**`$FF` is the 6809 value, NOT 68k's.** `Live` (byte-dump of a
 `PUT` on 68k os9exec): a `STRING[8]` set to `"XY"` after being filled with
 `"ABCDEFGH"` stored `58 59 00 44 45 46 47 48` — i.e. `"XY"` then a **`00`
 (NUL)** terminator (overwriting the old `C`), so **68k BASIC09 terminates a
@@ -196,7 +196,7 @@ shape row-wise. Concretely: BASIC09's `DIM array(5,3):INTEGER` and C's
 same logical element requires transposed subscripts — BASIC09's
 `array(4,2)` is C's `array[2][4]`, not `array[4][2]`. Passing a
 multi-dimensional array between the two languages without accounting for
-this silently reads/writes the wrong elements. **`Live`, 2026-07-21** (68k):
+this silently reads/writes the wrong elements. **`Live`** (68k):
 a `DIM m(2,3):BYTE` filled `m(i,j)=i*16+j` and `PUT` to a file stored
 `11 21 12 22 13 23` — i.e. `m(1,1),m(2,1),m(1,2),m(2,2),m(1,3),m(2,3)`, the
 first subscript varying fastest, confirming BASIC09's column-major layout.

@@ -76,7 +76,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   if unavailable. Coordinate origin (0,0) is the **lower-left** corner, all
   coordinates positive. A separate invisible "draw pointer" starts at 0,0;
   some functions (`LINE`) move it as a side effect, tracked independently
-  of anything visible on screen. **Attempted `Live`, 2026-07-19, origin
+  of anything visible on screen. **Attempted `Live`, origin
   claim still `Manual` — for a documented reason, not an oversight.**
   `RUN GFX("MODE",0,1)` plus two `LINE` calls forming an "L" anchored at
   `(0,0)` was accepted with no error (confirmed by stray control-byte
@@ -154,7 +154,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   point) starts from wherever the draw pointer currently is. Coordinates
   are screen-relative unless `SCALESW` is off, in which case they become
   relative to the window's own working-area origin.
-  **`Live`, 2026-07-18 — substantially correct, but incomplete in a way
+  **`Live` — substantially correct, but incomplete in a way
   that misleads.** "Screen-relative" is right: with scaling **on** (the
   default) a coordinate is in the **screen's** pixel space and is then
   **rescaled into the device window**, not clipped to it. The scale factor is
@@ -188,7 +188,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   `utility-usage.md` (`Live` there) exactly on byte counts and
   resolution/color combinations: `1` = 40-column text (2K), `2` =
   80-column text (4K), `5` = 640×192 2-color graphics / 80-column (16K),
-  **`Live`, 2026-07-18 — column counts confirmed** by what `wcreate`
+  **`Live` — column counts confirmed** by what `wcreate`
   accepts: `-s=6` and `-s=8` take 40 columns but reject 80 with
   `Error #189 Illegal Coordinates`, while `-s=7` takes 80. Type 5's screen
   also measured **640 pixels wide** directly (a 40-column window covered
@@ -246,7 +246,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   save it and restore it when the overlay ends. `xpos`/`ypos` = character
   column/row of the overlay's upper-left corner; `xsize`/`ysize` = its
   width/depth in characters; `fg`/`bg` = its initial colors.
-  **`Live`, 2026-07-19** — `xpos`/`ypos`/`xsize`/`ysize` confirmed as
+  **`Live`** — `xpos`/`ypos`/`xsize`/`ysize` confirmed as
   character-grid units (matches `CURXY`/`CWAREA`): `OWSET(1,5,3,20,8,2,1)`
   over an existing full-color `BAR` punched a rectangular hole at character
   column 5, row 3, sized 20×8, filled with the overlay's own `bg` register
@@ -258,7 +258,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   manuals all invoke it bare, `RUN GFX2("OWEND")`, never with a `path` or
   any other argument — consistent enough across independent sources to
   treat as the real call shape, not just an inference.
-  **`Live`, 2026-07-19 — call shape confirmed, but the documented restore
+  **`Live` — call shape confirmed, but the documented restore
   did not reproduce.** `RUN GFX2("OWEND")` right after the `OWSET` above
   left the punched-out area still background-colored — the original bar
   content underneath was not restored, contradicting "restoring the
@@ -282,7 +282,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   calling code is currently running from — from inside the window being
   switched to, it shows immediately; from elsewhere, the switch is
   deferred and only takes visible effect on the next CLEAR keypress.
-  **`Live`, 2026-07-18 — necessary, but not sufficient.** Two results, and
+  **`Live` — necessary, but not sufficient.** Two results, and
   the second corrects a first impression:
   - It does **not** display the window by itself. Writing `WSelect` ($1b21)
     to a window changed nothing, including when the writing process had
@@ -303,7 +303,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   of a window that output is confined to; everything drawn afterward gets
   rescaled into that smaller region — graphics geometry and any placed
   images scale down with it, but text glyphs keep their original pixel
-  size rather than shrinking too. **`Live`, 2026-07-19** — the parameters
+  size rather than shrinking too. **`Live`** — the parameters
   are character-grid units, the same convention as `OWSET`/`CURXY`, not
   pixels: `CWAREA(0,0,20,12)` on a 40×24-character window, followed by a
   `BOX` at the full nominal `(0,0)`-`(639,191)` range, rendered compressed
@@ -319,7 +319,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
 
 - `POINT([path,][xcor,ycor])` — sets one pixel to the current foreground
   color, at the draw pointer or at given coordinates.
-- **`Live`, 2026-07-18 — `LINE` does move the draw pointer, confirmed, but
+- **`Live` — `LINE` does move the draw pointer, confirmed, but
   mind the layer.** windint has *two* line opcodes and they differ: `WLine`
   `$1b44` draws without moving the pointer, `WLineM` `$1b46` draws and moves
   it (verified live — a following bare `CIRCLE` centered on the line's start
@@ -346,7 +346,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   diagonal corners; does not move the draw pointer.
 - `BOX([path,][xcor1,ycor1,]xcor2,ycor2)` — rectangle outline, same corner
   convention as `BAR`; also does not move the draw pointer.
-  **`Live`, 2026-07-18** — confirmed on all counts: `BOX` renders as an
+  **`Live`** — confirmed on all counts: `BOX` renders as an
   outline and `BAR` as a solid fill; after a box drawn (100,50)→(400,150) a
   following bare `CIRCLE` centered on (100,50), proving the draw pointer never
   moved. Bare `CIRCLE`/`ELLIPSE` centering on the draw pointer, and
@@ -359,11 +359,11 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   moves the same way but blanks (invisibly) — an offscreen `B` move hides
   whatever's drawn next. Options are separated by spaces or commas; a
   comma is specifically required between `B`/`U` and their coordinate
-  pair. **`Live`, 2026-07-19** — `SETDPTR(50,50)` then
+  pair. **`Live`** — `SETDPTR(50,50)` then
   `DRAW("N40E60S40W60")` rendered a clean closed rectangle outline,
   confirming the direction codes compose and the path closes correctly
   when the N/S and E/W magnitudes cancel.
-- **`Live`, 2026-07-18** — `FCIRCLE`, `FELLIPSE`, `ARC` (8-argument form) and
+- **`Live`** — `FCIRCLE`, `FELLIPSE`, `ARC` (8-argument form) and
   `FILL` all render as documented: the F-variants come out solid, `ARC` draws
   an arc, and `FILL` from a point inside a `BOX` outline fills it completely.
   Documented argument counts accepted in every case.
@@ -420,7 +420,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   description, and example) — genuinely never states the register's
   valid numeric range anywhere in that section (presumably 0-15, matching
   the 16-register hardware limit noted under "Concepts" above, but not
-  explicitly confirmed by any source checked). **`Live`, 2026-07-18**:
+  explicitly confirmed by any source checked). **`Live`**:
   this GFX2 build's client-side implementation performs **no range
   validation** on either `register` or `color` — calls with `register`
   up to 99 and `color` up to 200 (both far outside the presumed
@@ -438,7 +438,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   every subsequent drawing call until changed: `"OFF"` (none), `"AND"`,
   `"OR"`, `"XOR"`. `XOR` is the one commonly used for toggle-effects (e.g.
   drawing and re-drawing the same shape to erase it without touching what
-  else is on screen). **`Live`, 2026-07-19 — real, but the erase-by-redraw
+  else is on screen). **`Live` — real, but the erase-by-redraw
   idiom is unreliable for filled shapes.** Drawing `FCIRCLE(100,100,30)`,
   then `LOGIC "XOR"` and the identical `FCIRCLE` call again, did **not**
   cleanly erase back to background — it left a mottled residue with a
@@ -451,7 +451,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
 
 ### Buffers, fonts, and the graphics cursor
 
-- **`Live`, 2026-07-18 — calling sequences accepted as documented** for
+- **`Live` — calling sequences accepted as documented** for
   `DRAW("N40E60S40W60")`, `BORDER(color)`, `CURXY(col,row)`,
   `LOGIC("XOR")`, `DEFBUFF(group,buffer,size)`,
   `GET(group,buffer,x,y,xsize,ysize)` and `PUT(group,buffer,x,y)`. Note
@@ -484,7 +484,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   dimensions come from what `GET` recorded, not from a parameter here.
   Repeated `PUT` calls at incrementing coordinates is the documented
   technique for simple animation — each call overwrites what the last one
-  drew. **`Live`, 2026-07-19** — `FCIRCLE(50,50,20)`, `DEFBUFF(1,1,2000)`,
+  drew. **`Live`** — `FCIRCLE(50,50,20)`, `DEFBUFF(1,1,2000)`,
   `GET(1,1,30,30,40,40)`, `PUT(1,1,150,100)` produced two identical
   filled circles: the original plus a second copy at the `PUT` target,
   confirming both the capture and the block-copy.
@@ -500,7 +500,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   A pattern tile is 32×8 pixels; how many bytes that needs depends on the
   active screen's color depth (1/2/4 bits per pixel needs a 32/64/128-byte
   buffer) since the color mode dictates how many pixels each byte packs.
-  **`Live`, 2026-07-19** — captured a hand-drawn 4-stripe 32×8 tile with
+  **`Live`** — captured a hand-drawn 4-stripe 32×8 tile with
   `GET`, then `PATTERN(1,3)` before a `BAR`: the bar rendered as a
   repeating tiled texture, clearly distinct from a flat `PATTERN(0,0)`
   control bar drawn beside it. **Trap hit building this test:** an earlier
@@ -518,7 +518,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   (previously only its garbled numeric example had been checked), which
   states the group number in plain prose rather than digits, resolving it
   in favor of 200 over the earlier-flagged 206 misreading.
-  **`Live`, 2026-07-19** — `FONT(200,3)` was accepted with no error
+  **`Live`** — `FONT(200,3)` was accepted with no error
   *without* first merging `SYS/Stdfonts`, but the text it rendered was
   garbled repeating glyphs, visibly different from a normal
   `PRINT #p,"HELLO WORLD"` line drawn with the default font just above it
@@ -563,7 +563,7 @@ apparently short for "color group," reused across several unrelated
 here, just a false positive from seeing the string appear near color-
 related code.
 
-**Resolved `Live`, 2026-07-18** (see
+**Resolved `Live`** (see
 `test/6809-live-verification/dogfood-report-gfx2-2026-07-18.md` and
 `dogfood-gfx2-goset-palette-test.bas` in the os9exec repo): the
 community `gfx.asm`/`gfx2.asm` package (this project's own copy) was

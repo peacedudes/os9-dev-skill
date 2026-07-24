@@ -29,7 +29,7 @@ for" descriptions: `os9-tools-and-shell.md`.
   attribute printout. Owner = same group ID; only owner/superuser may
   change. Can clear `d` on an emptied directory (never set it — only
   `makdir` creates directories). Bare `attr <path>` prints an 8-character
-  string, `Live`-decoded 2026-07-19: positions 1-4 are `d`/`s`/`pe`/`pw`
+  string, `Live`-decoded: positions 1-4 are `d`/`s`/`pe`/`pw`
   (directory, sharable, public-execute, public-write) and 5-8 are
   `pr`/`e`/`w`/`r` (public-read, owner-execute, owner-write, owner-read),
   each either the letter or `-`; e.g. `----r-wr` = no directory/sharable/

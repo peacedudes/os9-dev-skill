@@ -17,7 +17,7 @@ the 128-byte SCF options region (`struct _sgs` at `PD_OPT` $80) both match
 
 **Entry-point conventions below are untestable on `os9exec`, not just
 untested — confirmed the same platform gap as `device-drivers.md`, and
-the same root cause, not just a similar symptom.** `Live` (2026-07-18):
+the same root cause, not just a similar symptom.** `Live`:
 a correctly-assembled, byte-verified custom file manager module,
 installed exactly per this file's own guidance, was never invoked by the
 kernel. Source-confirmed: `OS9_I_OpenCreate` (`icalls.c`) classifies
@@ -422,8 +422,7 @@ interleaves and the race never opens. **A counter race cannot detect a
 missing lock.** To tell a working lock from a scheduler that never
 interleaves, force a conflict and check it is *refused* — see "Testing this"
 below. Kept here because the trap is easy to fall into twice. Original
-(now-uninformative) run: `Live`
-(2026-07-18), on a real RBF disk image (`/h1/CLAUDETEST/counter.dat`):
+(now-uninformative) run: `Live`, on a real RBF disk image (`/h1/CLAUDETEST/counter.dat`):
 two separate processes raced 300 iterations each of unprotected
 read-modify-write (`SEEK` to a fixed record offset mid-file, not at EOF /
 `GET` / `+1` / `SEEK` / `PUT`, path held open across all iterations, no
@@ -508,7 +507,7 @@ What does:
   all.
 
 **Does NOT reproduce on NitrOS-9 (6809) — real, reproducible lost
-updates.** `Live` (2026-07-19), identical test design (10-byte record,
+updates.** `Live`, identical test design (10-byte record,
 `count` field pushed away from EOF by 4 `INTEGER` filler fields, no
 `SS_Lock` anywhere, N=300 per racer) run against real RBF on the 6809 EOU
 test disk, under NitrOS-9 (via XRoar): **two independent races both
@@ -548,7 +547,7 @@ through the lock-acquiring path). Full investigation:
 do not read either result as evidence about what genuine Microware OS-9
 did.**
 
-**Follow-up `Live` (2026-07-19) — NitrOS-9's record lock is real, not
+**Follow-up `Live` — NitrOS-9's record lock is real, not
 absent; the lost-update gap is narrower than "no locking exists."** A
 decisive contention test settles the question the lost-update pass left
 open (does a conflicting accessor ever actually block, the same
@@ -577,7 +576,7 @@ simpler-but-wrong claim. Full investigation:
 
 **`os9exec`'s actual behavior vs. the design intent above — confirmed
 divergent for case 2, likely a real `os9exec` bug** (the
-pipe-like producer/consumer coordination). `Live` (2026-07-18), on a real
+pipe-like producer/consumer coordination). `Live`, on a real
 RBF disk image (`/h1`, not a host-native mount — host-native mounts have
 no real locking machinery underneath):
 **a reader path opened while a writer path is concurrently open on the
@@ -604,7 +603,7 @@ a reader catching up to a live writer blocks or returns immediately —
 now known (immediate-return, poll-yourself), added above.
 
 **NitrOS-9 (6809) does NOT reproduce this specific bug — but read that
-narrowly, not as "6809 gets it right."** `Live` (2026-07-18), same
+narrowly, not as "6809 gets it right."** `Live`, same
 experiment (a concurrently-opened reader path racing an active writer
 path on a shared, growing file), run against real RBF on the 6809 EOU
 test disk under NitrOS-9 (`tools/nitros9repl.sh`), not `os9exec`: **the
@@ -641,7 +640,7 @@ investigation:
 `test/6809-live-verification/dogfood-report-eoflock-6809-2026-07-18.md`
 (in the `os9exec` repo).
 
-**Follow-up `Live` (2026-07-18) sharpens/revises the paragraph above: the
+**Follow-up `Live` sharpens/revises the paragraph above: the
 ~12-second block was a small-file artifact, not evidence that CLOSE is the
 only release trigger.** The original run's file was tiny (13 records, well
 under one 256-byte RBF sector); a repeat with a much larger file (50

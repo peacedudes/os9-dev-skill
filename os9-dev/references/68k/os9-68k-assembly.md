@@ -220,7 +220,7 @@ live) before relying on details:
   comma-separated `dc.b 0,0,0,...` instead (confirmed repeatedly across
   `test/68k-live-verification/batch*.a`, most recently `batch10-01.a`).
 - **Mutable data in a program needs address-register indirect, not a
-  PC-relative destination** (`Live`, 2026-07-22): `move.l d0,x(pc)` /
+  PC-relative destination** (`Live`): `move.l d0,x(pc)` /
   `subq.l #1,cnt(pc)` do not work — `(d16,PC)` is a **source-only**
   addressing mode on the 68000. Load the address first, write through it:
   `lea cnt(pc),a1` then `subq.l #1,(a1)`. `os9exec` lets a `Prgrm` module

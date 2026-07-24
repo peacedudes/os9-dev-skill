@@ -92,7 +92,7 @@ as a complete, unmodified whole hasn't been run start-to-finish.
 | BYTE | 0-255, unsigned. Truncates silently on overflow. **Cannot be passed as a procedure parameter** — see Pitfalls. |
 | INTEGER | Signed. Faster than REAL (see Control Structures below). Width/range/overflow behavior is architecture-specific — see the per-architecture file. |
 | REAL | Width/range/precision is architecture-specific — see the per-architecture file. |
-| STRING | Declared via `STRING[len]` (max length, default 32 if omitted). Fixed buffer, silently truncates past max. **Terminator is target-specific:** `0x00` (NUL) on **68k** (`Live`, 2026-07-21 — byte-dump: `STRING[8]="XY"` after `"ABCDEFGH"` → `58 59 00 44...`), `$FF` on **6809**. A string filling its declared max length has **no** terminator byte at all (`Live` on 68k: `STRING[3]="XYZ"` → exactly `58 59 5A`). |
+| STRING | Declared via `STRING[len]` (max length, default 32 if omitted). Fixed buffer, silently truncates past max. **Terminator is target-specific:** `0x00` (NUL) on **68k** (`Live` — byte-dump: `STRING[8]="XY"` after `"ABCDEFGH"` → `58 59 00 44...`), `$FF` on **6809**. A string filling its declared max length has **no** terminator byte at all (`Live` on 68k: `STRING[3]="XYZ"` → exactly `58 59 5A`). |
 | BOOLEAN | TRUE / FALSE. Not usable in numeric expressions — storing anything else into a BOOLEAN fails at runtime instead of being silently coerced. |
 
 Undeclared numeric variables default to REAL; a name ending in `$` and
@@ -349,7 +349,7 @@ concurrent activation records of the same procedure, not just a simple
 chain). `fact(5)=120`, `fib(10)=55`, both correct.
 
 **BYTE variables cannot be passed as parameters.** Pass a BYTE array
-instead. **`Manual`-confirmed 2026-07-23** — the *BASIC09 Reference Manual*
+instead. **`Manual`-confirmed** — the *BASIC09 Reference Manual*
 (Rev H) parameter-passing section is explicit: parameters "can be of any type
 (EXCEPT variables of type BYTE, but BYTE arrays are O.K.)". So the skill matches
 Microware here; the emulator behaviour below is faithful, not a quirk.
@@ -635,12 +635,12 @@ way you'd expect:**
 - **INTEGER ÷ 0** (e.g. `i = i / 0` with `i: INTEGER`): a genuine
   **6809-vs-68k divergence, both now `Live`.** **6809**: generates
   `Error #045 -- Divide by Zero` and drops into interactive Debug Mode if
-  left unhandled, same as REAL÷0 on 6809. **68k** (`Live`, 2026-07-21, os9exec):
+  left unhandled, same as REAL÷0 on 6809. **68k** (`Live`, os9exec):
   the **opposite** — INTEGER÷0 is **silent, no error at all**: a procedure that
   divides an INTEGER by 0 and then `PRINT`s ran straight through and printed
   (`ON ERROR GOTO` never fired). Don't count on an INTEGER÷0 being caught on
   68k. (The silence is a **BASIC09-level guard**, not an emulation gap:
-  `Live`, 2026-07-21 — a *C* program doing integer `1/0` on os9exec traps
+  `Live` — a *C* program doing integer `1/0` on os9exec traps
   correctly with `Error #000:105 (E_ZERDIV) zero divide TRAP 5` and aborts,
   so the 68000 core does raise vector 5; BASIC09 must be checking the divisor
   itself and quietly not dividing.)
@@ -651,8 +651,7 @@ way you'd expect:**
   an `os9exec` bug (four stacked `F$STrap` dispatch bugs), now fixed —
   see `basic09/gotchas.md`'s divide-by-zero entry. `REAL÷0` is now a
   catchable trap on 68k, matching 6809's always-catchable behavior
-  (drops into interactive Debug Mode if left unhandled). **`Live`,
-  2026-07-21** (os9exec): `ON ERROR GOTO` caught a 68k REAL÷0 and `ERR`
+  (drops into interactive Debug Mode if left unhandled). **`Live`** (os9exec): `ON ERROR GOTO` caught a 68k REAL÷0 and `ERR`
   returned **107** (the `E_TRAPV` code) — vs 6809's `Error #045`, so the
   *number* differs across platforms even though both are now catchable.
   **Still avoid REAL division where the divisor

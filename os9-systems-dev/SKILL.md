@@ -40,47 +40,27 @@ side (e.g. testing a new driver from a C program), read `os9-dev` too.
 
 ## Verification
 
-os9exec emulates the kernel side of every mechanism here, so its C source
-(`Source/OS9exec_core/`) is a second, independent ground truth beyond the
-manuals, and the emulator can host live tests for most of what's
-documented here (driving it: os9-dev `common/using-os9exec-repl.md`) —
-**except driver/file-manager module dispatch itself, confirmed
-unimplemented, not just untested.** `Live` (2026-07-18, first real
-attempt): a hand-written, correctly-assembled, CRC-valid `Drivr`-type
-module was built, linked, and installed exactly per this skill's own
-guidance — the kernel never invoked it, at any entry point. Root cause
-confirmed at the source level: `os9exec`'s `I$Attach` (`icalls.c`) is an
-explicit dummy that never allocates driver storage or calls `Init`; all
-device I/O dispatches through a fixed C table keyed by hardcoded
-path-prefix matching, never by executing an installed module's code; the
-shell's `iniz` command has no emulator-side implementation at all
-(`grep -rin iniz Source/` — zero hits). This is a real `os9exec` feature
-gap (implementing it would be a substantial addition, not a bug fix),
-not a documentation problem — but it means **no amount of reading either
-skill will get a driver/file-manager's entry-point register convention
-live-tested on this emulator as it stands.** The toolchain half (module
-format, assembly/linking a `Drivr`/`Devic`-type module byte-correctly) IS
-now live-confirmed working, per the same test — see
-`test/68k-live-verification/dogfood-report-driver-2026-07-18.md`
-in the `os9exec` repo. Reference files carry inline confidence tags —
-legend in the sibling skill's `os9-dev/references/CONFIDENCE-TAGS.md`.
-
 **Neither emulator is OS-9.** `os9exec` and NitrOS-9 are reverse-engineered
 reimplementations built by the user community, and both have had real errors.
-This matters more here than in the sibling skill: kernel structures, dispatch
+That matters more here than in the sibling skill: kernel structures, dispatch
 conventions and scheduler behaviour are exactly where a reimplementation is
-most likely to have simplified something, and `os9exec` in particular does not
-implement large parts of what these files describe. A `Source` tag here means
-"this is what os9exec's C does" — which is a statement about os9exec, not
-about OS-9. Where an authoritative Microware manual disagrees with either
-runtime, the manual is the specification and the disagreement is recorded in
-`DIVERGENCES.md`; only Microware or genuine hardware resolves it. See
-`SOURCE-AUTHORITY.md` for what counts as Microware's word.
-**Confidence gap, refined**: the driver/file-manager/kernel files here
-are mostly `Manual`, with several struct-layout offsets now `Source`
-(checked against os9exec's own code) — the entry-point calling
-convention itself remains untestable on this platform, not merely
-untested. Don't assume "68k" implies "checked" in this skill.
+likeliest to have simplified something. A `Source` tag here means "this is
+what os9exec's C does" — a statement about os9exec, not about OS-9. Where a
+Microware manual disagrees with a runtime, the manual is the specification;
+the disagreement is recorded in `DIVERGENCES.md` and only Microware or genuine
+hardware resolves it. `SOURCE-AUTHORITY.md` defines what counts as Microware's
+word. Tag legend: sibling skill's `os9-dev/references/CONFIDENCE-TAGS.md`.
+
+**Driver and file-manager entry points cannot be tested on os9exec.** It has
+no module dispatch for them: `I$Attach` (`icalls.c`) never allocates driver
+storage or calls `Init`, device I/O routes through a fixed C table keyed by
+hardcoded path prefixes rather than by executing an installed module, and
+`iniz` has no emulator-side implementation. A correctly-assembled, CRC-valid
+`Drivr` module installs and is never invoked. The toolchain half — assembling
+and linking a `Drivr`/`Devic` module byte-correctly — does work.
+
+So the files here are mostly `Manual`, with some struct offsets `Source`
+against os9exec's code. Don't read "68k" as "checked" in this skill.
 
 ## Rules of engagement
 

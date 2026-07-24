@@ -43,7 +43,7 @@ Core facts:
 
 Type-specific fields begin at 0x30. Offsets are from the v2.4 Technical
 Reference Manual's header figure; per-field sizes are derived from the
-gaps between documented offsets. **`Source`, 2026-07-21:** every offset in
+gaps between documented offsets. **`Source`:** every offset in
 this universal-header table matches os9exec's own `modhcom` struct
 (`Source/OS9exec_core/os9defs/module_from_book.h`), which carries
 **compile-time** offset assertions (`offsetof` checks that fail the build
@@ -193,7 +193,7 @@ Compiler-specific values worth isolating:
 | Data init offset | 0x40 | 4 | → data-initialization table | `M$IData` |
 | Pointer init offset | 0x44 | 4 | → pointer-relocation tables | `M$IRefs` |
 
-All 32-bit fields. **`Source`, 2026-07-21:** all six offsets match os9exec's
+All 32-bit fields. **`Source`:** all six offsets match os9exec's
 `mod_exec` struct (`Source/OS9exec_core/os9defs/module_from_book.h`) with
 compile-time `offsetof` assertions (`_mexec` $030 through `_midref` $044) plus
 a `sizeof == 0x048` check — the build fails if any move. Entry point = load

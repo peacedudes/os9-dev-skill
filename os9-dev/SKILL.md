@@ -37,33 +37,24 @@ MMU/DAT) are the sibling `os9-systems-dev` skill.
 
 Read `references/INDEX.md` first when a question goes beyond the model
 above — it routes to the right reference file. Prefer these curated
-references over raw manual text. Setting up a REPL harness from scratch
-(not just operating an existing one): `common/os9exec-repl-setup.md` (68k),
-`6809/nitros9repl-setup.md` (6809).
+references over raw manual text.
 
 ## Verification
 
 **Neither emulator is OS-9.** `os9exec` and NitrOS-9 are reverse-engineered
-reimplementations built by the user community. Both have had real errors.
-Running one and watching what it does tells you what *it* does — it is not
-evidence about what OS-9 is specified to do, and it never makes a Microware
-manual wrong. Where a runtime and an authoritative manual disagree, the manual
-is the specification, the runtime is the candidate defect, and the
-disagreement gets recorded in `DIVERGENCES.md` rather than resolved by
-whichever one you happened to run. Only Microware or genuine OS-9 hardware
-settles those. `SOURCE-AUTHORITY.md` says what counts as Microware's word —
-note that several excellent books (the OS-9 Guru especially) do not.
+reimplementations built by the user community, and both have had real errors.
+Running one tells you what *it* does; it is not evidence about what OS-9 is
+specified to do. Where a runtime and an authoritative manual disagree, the
+manual is the specification and the runtime is the candidate defect — the
+disagreement is recorded in `DIVERGENCES.md`, and only Microware or genuine
+OS-9 hardware settles it. `SOURCE-AUTHORITY.md` says what counts as
+Microware's word; several excellent books (the OS-9 Guru especially) do not.
 
-When a claim can be run instead of asserted, run it — then say what you ran it
-against. Live harnesses (in the os9exec repo): 68k — `tools/os9repl.sh`
-driving os9exec (operating guide: `references/common/using-os9exec-repl.md`);
-6809 — `tools/nitros9repl.sh` driving NitrOS-9 under XRoar
-(`references/6809/using-nitros9-repl.md`). Both have real gotchas (gated
-send goes silent inside sub-programs; use raw key mode there). Reference
-files carry inline confidence tags — legend in `references/CONFIDENCE-TAGS.md`.
-The tier ordering `Live` > `Source` > `Manual` > `Hearsay` ranks *how well we
-know what the runtimes do*; it does not rank authority over what OS-9 is. A
-`Flag` means sources disagree (unresolved). OS-9000 claims: punt to manuals.
+Claims carry inline confidence tags — legend in
+`references/CONFIDENCE-TAGS.md`. `Flag` means sources disagree. Prefer running
+a claim to asserting it: 68k via os9exec (`common/using-os9exec-repl.md`),
+6809 via NitrOS-9 under XRoar (`6809/using-nitros9-repl.md`). OS-9000 claims:
+punt to the manuals.
 
 ## Rules of engagement
 

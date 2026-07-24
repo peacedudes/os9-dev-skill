@@ -29,7 +29,7 @@ Unix has one cwd. OS-9 has two:
 when run — running searches `chx`/`PATH`, not `chd`. Like Unix `cd`, `chd`
 with no argument returns to `$HOME` (the `HOME` env var, **not** the
 password-file login data dir); `chx` with no argument does nothing
-(**`Live`, 2026-07-21** on os9exec — see `os9-tools-and-shell.md` for the
+(**`Live`** on os9exec — see `os9-tools-and-shell.md` for the
 test). Full resolution rule, `PATH` guidance, and the
 compiler-driver exception: `os9-mental-model.md`'s "Two current
 directories, not one" section; practical gotchas hitting this live:
@@ -110,7 +110,7 @@ default, not guaranteed. Full key set and remapping:
 
 ## Tier 2 — same concept, different contract (close, but specifics differ)
 
-### fork() doesn't share memory
+### forkdoesn't share memory
 
 `F$Fork` gives the child a fully independent data area — no
 copy-on-write, no shared pages. Only deliberate IPC (pipes, data modules,

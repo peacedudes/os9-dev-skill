@@ -52,7 +52,7 @@ direction, independent source.
   by 1024, and a 52-bit mantissa with an implied leading one. Unlike the
   6809's proprietary format, this one is a real, standard IEEE-754 double —
   bit-for-bit rounding behavior should follow normal IEEE-754 semantics.
-  **`Live`, 2026-07-21 — storage format confirmed, but arithmetic precision
+  **`Live` — storage format confirmed, but arithmetic precision
   diverges (os9exec):** a byte-dump settles the format — `PUT`ting `1.0` to a
   file wrote exactly **8 bytes `3F F0 00 00 00 00 00 00`**, the textbook
   IEEE-754 *double* encoding of 1.0. So the **storage format is genuine IEEE
@@ -65,7 +65,7 @@ direction, independent source.
   **EQUAL** (the residual is below single-precision resolution) and `1.0/3.0`
   gives ~9 good digits, not 15-16. So on os9exec, **68k BASIC REAL stores as
   double but computes at single precision** — don't rely on bit-for-bit
-  IEEE-double arithmetic. **`Live`, 2026-07-21 — NOT BASIC09-specific:** the
+  IEEE-double arithmetic. **`Live` — NOT BASIC09-specific:** the
   same C test (`c/os9-c-cheatsheet.md`) shows os9exec's **C `double` arithmetic
   is also single-precision** — `0.1+0.2-0.3` (and even the *runtime*-computed
   `1.0/10.0 + 2.0/10.0 - 3.0/10.0`, ruling out constant-parsing) stored a
@@ -73,13 +73,13 @@ direction, independent source.
   would be ~2⁻⁵⁴. So this is os9exec's **shared default soft-float math** (C and
   BASIC09 alike) computing at single precision, not a BASIC09 quirk — it's the
   default `math` *trap handler*, not the CPU core. **The 68881 FPU emulation is
-  accurate and gives full precision** (`Live`, 2026-07-21): a C program compiled
+  accurate and gives full precision** (`Live`): a C program compiled
   `cc -K=2F` (target 68020 + 68881, via the `c68020`/`r68020` passes) computed
   the runtime `1.0/10.0+2.0/10.0-3.0/10.0` to a residual of **exactly 0** (the
   68881's 80-bit extended precision), vs 2⁻²² without the flag.
   **BASIC09's knob differs from C's:** BASIC09 uses the `math` *module*
   dynamically, so **`load /dd/CMDS/math881` before running `basic` upgrades its
-  REAL math to the FPU** — `Live`, 2026-07-21: with math881 loaded,
+  REAL math to the FPU** — `Live`: with math881 loaded,
   `0.1+0.2-0.3` gave a residual of **exactly 0** (vs 2⁻²² under the default
   software `math`). A `cc` program can't be fixed this way (it links software FP
   *statically*, ignoring the `math` module — it needs the `-K=2F` recompile).

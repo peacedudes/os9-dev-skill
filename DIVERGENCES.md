@@ -86,10 +86,10 @@ Manual passage located *and* runtime behaviour observed.
   `6809/BASIC09_Reference_Manual_Tandy.txt:18148`.
 - **Observed:** 6809 NitrOS-9 matches — `Error #045 -- Divide by Zero`, Debug
   Mode if unhandled. 68k `os9exec` does not — `Error #000:105 (E_ZERDIV) zero
-  divide TRAP 5`, breaking into the debugger (`Live`, 2026-07-23:
+  divide TRAP 5`, breaking into the debugger (`Live`:
   `a=10 : b=0 : c=a/b`, all INTEGER).
 - **Our own error, recorded:** this skill previously stated 68k INTEGER÷0 was
-  **silent, no error at all**, tagged `Live` (2026-07-21). Direct retest shows
+  **silent, no error at all**, tagged `Live`. Direct retest shows
   that is wrong. A reminder that a `Live` tag records what one run appeared to
   show, not a fact — the earlier test most likely had an `ON ERROR` handler
   swallowing the trap.

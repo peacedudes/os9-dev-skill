@@ -55,7 +55,7 @@ A packed+saved procedure is an OS-9 **subroutine module**: type 2
 architecture-specific — don't carry one form to the other.** On 68k the
 header has separate `M$Type`/`M$Lang` bytes and `ident` shows `Ty/La
 $0202`. On 6809 it is a single packed byte `(type << 4) | language`, so
-the same module reads **`Ty/La $22`** (`Live`, 2026-07-23, with `At/Rv
+the same module reads **`Ty/La $22`** (`Live`, with `At/Rv
 $81` — re-entrant, revision 1). See `common/module-format.md` for the
 encoding and what it settles about the 6809 C compiler's own value. It is not a
 program module; something must interpret it.
@@ -121,8 +121,7 @@ This banner + `Error #000:216 (E_PNNF)` has several distinct causes:
 
 1. **First `LOAD`/`RUN` touching numeric variables → the `math` trap
    module (TRAP #15) isn't reachable.** Fix: `load math` (put it in the
-   startup file). See `basic09-vs-68k-differences.md`. **`Live`
-   (2026-07-18)**: even with `load -s cio csl math` already present in
+   startup file). See `basic09-vs-68k-differences.md`. **`Live`**: even with `load -s cio csl math` already present in
    `/h0/startup`, a fresh boot's `mdir` showed only `csl` resident, not
    `cio`/`math` — the `-s` flag on a multi-name `load` silently fails
    for at least these two modules (confirmed reproducible: `load -s

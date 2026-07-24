@@ -26,7 +26,7 @@
   argument is simply discarded — the parameter never gets bound and reads
   as its default/uninitialized value (`Live`, 68k). Don't expect
   a compile or runtime error to catch this mistake.
-- **PEEK/POKE and ADDR() are not portable across targets** — 6809 and 68k
+- **PEEK/POKE and ADDRare not portable across targets** — 6809 and 68k
   have entirely different address spaces and memory layouts. Treat any
   code using them as hardware/target-specific; stick to OPEN/READ/WRITE
   for portable I/O.
@@ -96,7 +96,7 @@
   alike). **6809** NitrOS-9 matches it: `Error #045 -- Divide by Zero`,
   dropping into Debug Mode if unhandled. **68k** `os9exec` does not — it
   raises `Error #000:105 (E_ZERDIV) zero divide TRAP 5`, the 68000 CPU
-  trap, and breaks into the debugger (`Live`, 2026-07-23).
+  trap, and breaks into the debugger (`Live`).
   **This file previously claimed 68k was silent with no error at all. That
   was wrong** — retested directly and it raises 105. Treat the old claim as
   retracted, not merely refined. See `DIVERGENCES.md`. `REAL÷0`

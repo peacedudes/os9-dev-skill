@@ -1,22 +1,20 @@
 # Driving os9exec as an Agent
 
 Operational mechanics for running an OS-9/68k system through the os9exec
-emulator: launching, running programs, editing files, accounts, recovery.
-Everything here was verified against a live emulator. The 6809 equivalent
-(NitrOS-9 under XRoar) is `6809/using-nitros9-repl.md`.
+emulator: launching, running programs, editing files, accounts, recovery. The
+6809 equivalent (NitrOS-9 under XRoar) is `6809/using-nitros9-repl.md`.
 
-## Platforms
+os9exec **is** the CPU plus an OS-9 kernel implementation, not a hardware
+emulator running real firmware — no ROM, no video/keyboard console to bridge
+around. Its stdin/stdout are the OS-9 console, so a plain PTY/pipe harness
+works directly. It builds native on macOS and Linux and cross-compiles to a
+Windows PE via mingw-w64. A few *host*-filesystem behaviors differ on Windows
+(NTFS permission mapping, device-alias path resolution) — emulator-platform
+quirks, not OS-9 facts; don't encode them as OS-9 behavior.
 
-os9exec is one C codebase that builds native on **macOS** and **Linux**
-(`make`) and cross-compiles to a genuine Windows PE via **mingw-w64**
-(`make OS=Windows_NT CC=x86_64-w64-mingw32-gcc`) — no Wine involved; the PE
-runs natively (an x86_64 build executes on ARM64 Windows through the OS's own
-x64 emulation). The repo's `test/` integration suite (a Swift `OS9Tests`
-runner that pipes commands to the emulator) drives it identically on all
-three, so REPL sessions and batch tests behave the same cross-platform. A few
-*host*-filesystem behaviors legitimately differ on Windows (NTFS permission
-mapping, device-alias path resolution) — those are emulator-platform quirks,
-not OS-9 facts, so don't encode them as OS-9 behavior.
+Genuine OS-9/68k binaries (Microware's shell, compilers, utilities) are
+proprietary and none ship with the emulator: supply a legally-held disk image
+or SDK. A host directory of your own files works identically for basic testing.
 
 ## Launching and disks
 
@@ -34,64 +32,46 @@ not OS-9 facts, so don't encode them as OS-9 behavior.
   missing C-library trap handler, so rule this out first.
 - **Verify which host directory a device maps to before creating host-side
   test files**: run `dir` inside the emulator and `ls` on the host and
-  compare. Mount conventions drift; a file dropped into the wrong host
-  directory is simply invisible inside the emulator and mimics a "can't
-  open file" bug.
-- Booting a full system: `os9exec shell /h0/startup` (the startup file is
-  an argument to the `shell` boot program — booting the file directly
-  fails with `E_FNA`). A startup file typically `load`s the toolchain and
-  common utilities, then runs `tsmon /term` for a login prompt. With
-  `OS9STOP=1` in the host environment, typing `stop` shuts the emulator
-  down cleanly.
-- **Default to full speed unless a test specifically depends on real-time
-  pacing.** `os9exec` paces terminal output to the path's configured baud
-  rate by default (`baud_throttle`, on by default) — pass `-r` on launch
-  (`./tools/os9repl.sh start -r`, or `os9exec -r ...` directly) to disable
-  it and run at full host speed. Only skip `-r` for a test that genuinely
-  needs realistic timing (e.g. measuring how far behind a slow reader
-  falls against a producer writing on a real-time cadence) — for
-  everything else (the overwhelming majority of verification/dogfood
-  work), `-r` just makes the session faster with no downside.
+  compare. A file dropped into the wrong host directory is simply invisible
+  inside the emulator and mimics a "can't open file" bug.
+- Booting a full system: `os9exec shell /h0/startup` — the startup file is
+  an argument to the `shell` boot program; booting the file directly fails
+  `E_FNA`. A startup file typically `load`s the toolchain and common
+  utilities, then runs `tsmon /term` for a login prompt. With `OS9STOP=1` in
+  the host environment, typing `stop` shuts the emulator down cleanly.
+- **Default to full speed.** os9exec paces terminal output to the path's
+  configured baud rate (`baud_throttle`, on by default); `-r` disables it.
+  Keep the throttle only for a test that genuinely depends on real-time
+  pacing.
 
 ## REPL harness: two send modes
-
-A tmux-based harness (e.g. `tools/os9repl.sh`) typically has:
 
 - **Gated `send`** — waits for a recognized prompt (shell `$`, debugger)
   before and after sending. **It goes silent inside any sub-program with
   its own prompt** (BASIC09's `B:`/`E:`, an editor, a custom login
   prompt): the send times out with zero pane change because the gate
-  failed *before* sending. Not a bug — switch to raw mode. **A program's
-  own raw output can trigger the same desync**, `Live`: a bare CR (no LF)
-  written mid-output by the program under test repositions the terminal
-  cursor to column 0 without clearing the line, so a genuine fresh shell
-  prompt ends up sitting mid-line behind leftover garbled text instead of
-  at line-start — the gate's prompt-matching wants the prompt at the
-  start of a line, so it times out even though the underlying shell is
-  fine. Recovery is the same as the sub-prompt case: one raw `key Enter`
-  to force a blank prompt line (confirm with `snap`), then resend — the
-  originally "timed out" command was never actually sent, so nothing is
-  lost.
+  failed *before* sending. Switch to raw mode. **A program's own raw output
+  can trigger the same desync**, `Live`: a bare CR (no LF) written mid-output
+  repositions the cursor to column 0 without clearing the line, so a genuine
+  fresh prompt sits mid-line behind leftover text and the gate — which wants
+  the prompt at line-start — times out even though the shell is fine.
+  Recovery for both cases: one raw `key Enter` to force a blank prompt line,
+  confirm, resend. The timed-out command was never sent, so nothing is lost.
 - **Raw `key`** — no gating, returns after a fixed delay **without waiting
-  for the program to finish**. Poll the pane (`snap`) until the expected
-  prompt returns; never treat `key`'s return as completion.
+  for the program to finish**. Poll the pane until the expected prompt
+  returns; never treat `key`'s return as completion.
 
-Rule: if the pane's last non-blank line isn't the shell's `$`, use raw
-keys until you're back at the shell.
-
-Session discipline: one command at a time, read the result before the next
-send; never pipe a blind script of commands into an interactive session;
-prefer running a claim over asserting it; on a wedged/garbled session a
-full restart is cheap and reliable; if 2–3 attempts at the same problem
-fail, stop and write up what's ruled out.
+Rule: if the pane's last non-blank line isn't the shell's `$`, use raw keys
+until you're back at the shell. One command at a time; never pipe a blind
+script into an interactive session. On a wedged or garbled session, restart —
+it's cheap and reliable.
 
 ## Host-side output filtering: always `grep -a`
 
 OS-9 programs emit control bytes freely; plain `grep` decides the stream
 is binary and replaces real output with `Binary file matches`, silently
 fabricating batch results (a failing program's error text vanishes and it
-"passes"). Always `grep -a`; distrust suspiciously clean output in batch
-runs.
+"passes"). Always `grep -a`; distrust suspiciously clean output in batch runs.
 
 ## Batch-testing binaries
 
@@ -120,19 +100,15 @@ Three routes, in order of preference by size:
    inside an RBF image has no host file to touch). `flip -m` → CR-only
    (OS-9), `flip -u` → LF (Unix), `flip -t` reports current state. Best
    route for large sources; the file must end up CR-only or the compiler
-   reads it as one giant line. **`flip -t` before every `-m`, not just the
-   first time** — `Live`: running `flip -m` a second time on a file
-   that's already CR-only silently collapses it to a single line (all
-   line-ending bytes vanish, not a harmless no-op or a CR↔LF swap). Easy
-   to hit in an iterate-edit-reflip loop; recoverable with `flip -u` back
-   to LF and re-editing, but check state first rather than reflipping
-   blind.
+   reads it as one giant line. **`flip -t` before every `-m`** — `Live`:
+   running `flip -m` on a file that's already CR-only silently collapses it
+   to a single line (all line-ending bytes vanish). Recoverable with `flip
+   -u` and re-editing, but check state first rather than reflipping blind.
 
 **tmux eats a trailing semicolon**: `send-keys` treats a final `;` as its
 own separator even with `-l`, so a typed C line arrives without its
 semicolon — a baffling syntax error on a line that looks correct in the
-pane. Escape it (`\;`) or don't end the send with `;`. Another reason to
-prefer the `flip` route for source files.
+pane. Escape it (`\;`) or don't end the send with `;`.
 
 ## Compiling and running C
 
@@ -144,18 +120,15 @@ cc /dd/source.c
 
 - `cc` forks its sub-tools (`cpp`, `c68`, `o68`, `r68`, `l68`) by bare
   name, which resolves against the **execution directory, not PATH** (see
-  below). Keep `chx` parked at the shared command directory (via
-  `.login`); a mid-session `chx` you must remember to undo is a smell.
+  below). Keep `chx` parked at the shared command directory via `.login`.
 - `cc: cannot execute the pre-processor` usually means the sub-tools
   aren't loaded/reachable — `load` them in the startup file rather than
   patching `chx` around it.
-- **Hand-invoking `l68` directly (bypassing `cc`) writes its `-o=<name>`
-  output to the execution directory (`chx`), not the current data
-  directory** — `Live`, same `chx`-not-`PATH`/output-defaults-to-`chx`
-  pattern as `cc`'s `-F=` flag below, just not previously stated for
-  `l68` on its own. Symptom: the linker reports no error, no output file
-  appears in the data directory — check `chx` (typically `/h0/CMDS`)
-  before assuming the link silently failed.
+- **Hand-invoking `l68` directly writes its `-o=<name>` output to the
+  execution directory (`chx`), not the current data directory** — `Live`,
+  same pattern as `cc`'s `-F=` flag. Symptom: the linker reports no error
+  and no output file appears in the data directory; check `chx` (typically
+  `/h0/CMDS`) before assuming the link failed.
 - A freshly compiled program in your data directory can fail to run by
   bare name (`chd` doesn't affect command search). Run it by full path, or
   put its directory on `PATH`.
@@ -179,13 +152,12 @@ B:bye          → back to the OS-9 shell
 - **Memory:** `basic #32k` (the shell's `#<size>k` modifier — see
   `os9-tools-and-shell.md`) fixes load/run failures caused by the small
   default allocation. Reach for it before suspecting the program.
-- **Loading host-authored source:** write plain BASIC09 text (no editor
-  artifacts), `flip -m`, place it where OS-9 sees it, then `B: LOAD
-  <exact-filename>` and `RUN <procedure-name>` (from the file's PROCEDURE
-  line — need not match the filename). `LOAD` compiles plain source
-  directly and does a **literal name match** — no extension inference
-  (OS-9 convention is no extension at all; `LOAD qt` will not find
-  `qt.bas`).
+- **Loading host-authored source:** write plain BASIC09 text, `flip -m`,
+  place it where OS-9 sees it, then `B: LOAD <exact-filename>` and `RUN
+  <procedure-name>` (from the file's PROCEDURE line — need not match the
+  filename). `LOAD` compiles plain source directly and does a **literal
+  name match** — no extension inference (OS-9 convention is no extension at
+  all; `LOAD qt` will not find `qt.bas`).
 - **Don't start the file with a `!` comment above PROCEDURE** if the same
   source might ever run on 6809 — fine on 68k, but 6809 fails the whole
   `LOAD` with `Error #043`. See `basic09/gotchas.md`.
@@ -206,15 +178,12 @@ immediately with `**** Can't install trap handler **** / **** cio ****`.
   Only `cio`/`csl` are fatal.
 - A statically linked "cio-free" build of the same utility is noticeably
   larger; prefer it when both exist.
-- Escape hatch: anything compiled with a public compiler (e.g. gcc2) plus
-  a POSIX-compatibility header set that wraps syscalls directly needs no
-  trap handler. Small utilities are often quicker to rewrite and recompile
-  than to hunt down cio-free.
+- Escape hatch: anything compiled with a public compiler plus a POSIX
+  wrapper header set that calls syscalls directly needs no trap handler.
 - A trap handler's companion module must be reachable from the current
   `chx` (that's `F$Load`'s search path) — a module on another device fails
   with a generic Path-Not-Found even though the file exists. Check `chx`
-  before suspecting a wrong-CPU binary; a path issue is likelier and
-  cheaper to rule out.
+  before suspecting a wrong-CPU binary.
 
 ## Discovering what's installed
 
@@ -234,17 +203,16 @@ Booting straight into `shell` runs as group 0 (superuser — `procs` shows
   (`login` is already running). At a shell prompt, `login <user>` works
   too (empty-password accounts skip the password prompt; an account with
   an empty password that still prompts wants a bare Enter).
-- **Never use `login` as os9exec's boot program** (`os9exec login user`
-  prints the banner then exits the emulator with no error). Boot to a
-  shell or tsmon first; `login` from there works.
+- **Never use `login` as os9exec's boot program** — it prints the banner
+  then exits the emulator with no error. Boot to a shell or tsmon first.
 - Login authenticates against `/dd/SYS/password` (comma-separated:
   user, password, group.user, priority, initial execution dir, initial
   data dir, initial program) and forks a genuinely separate process under
   that identity. Exit with `logout` (not `bye` — that's BASIC09's).
 - A fresh login inherits nothing: without a `.login` in the account's data
   directory setting `PATH` and `TERM`, even `procs` fails and `vi`
-  misbehaves. A custom prompt set at login also breaks a REPL harness's
-  gated send — switch to raw keys.
+  misbehaves. A custom prompt set at login also breaks a harness's gated
+  send — switch to raw keys.
 - **Per-account layout that works**: a personal execution directory
   *inside* the shared `CMDS` (e.g. `/dd/CMDS/ALICE`) plus a personal home
   elsewhere (e.g. `/dd/USR/ALICE`), with `.login`:
@@ -255,21 +223,15 @@ Booting straight into `shell` runs as group 0 (superuser — `procs` shows
   setenv PATH .:ALICE:SHARE
   ```
 
-  **Park `chx` at the shared CMDS** — pointing it at the personal
-  directory breaks more than compiler sub-tool forking: `Live`, it breaks
-  **plain interactive command lookup too** (`basic #32k` failing with
-  `Error #000:216 (E_PNNF)` right after a `chx` to a personal directory) —
-  `PATH` entries resolve relative to `chx`, not just a compiler driver's
-  own sub-process forking, so moving `chx` anywhere off the shared command
-  path breaks ordinary command resolution generally, not a narrower
-  compiler-specific case. With `chx` at CMDS, `PATH` entries are just
-  names below it; no `..` traversal. This matches real historical
-  practice: `chx` is a per-session identity set once at login, not a
-  scratch variable — to make a directory runnable, extend `PATH` instead.
+  **Park `chx` at the shared CMDS.** `PATH` entries resolve relative to
+  `chx`, so pointing it at a personal directory breaks ordinary interactive
+  command lookup, not just compiler sub-tool forking — `Live`, `basic #32k`
+  fails with `Error #000:216 (E_PNNF)` right after such a `chx`. `chx` is a
+  per-session identity set once at login, not a scratch variable; to make a
+  directory runnable, extend `PATH` instead.
 - Tradeoff: with `chx` at shared CMDS, compilers *default* their output
-  there — name outputs explicitly (`gcc -o <name>` lands relative to
-  `chd`; `cc -F=ALICE/<name>`). And `copy prog ALICE/prog` resolves
-  against `chd`, not `chx` — install with a full path.
+  there — name outputs explicitly (`cc -F=ALICE/<name>`). And `copy prog
+  ALICE/prog` resolves against `chd`, not `chx` — install with a full path.
 
 ## Fork lookups use chx, not PATH
 
@@ -296,52 +258,35 @@ Two different things behind the same device names:
   from a blank file on an `OS9Hx` device when RBF-specific behavior needs
   testing.
 
-**Host links inside a device root — avoid; if present, know the quirks**
-(all verified): hard links behave as ordinary files (deleting one name
-leaves the other's content). In-root symlinks resolve correctly.
-A symlink pointing *outside* the device root is silently redirected to the
-device root — no error, wrong data; a single such stray link can corrupt
-`dsave` output downstream. `deldir` recurses into and deletes a
-directory-symlink's real target (OS-9 has no link concept, so it can't
-tell). Symlink cycles can crash the emulator after ~40–60 hops.
+**Host links inside a device root — avoid; if present, know the quirks**:
+hard links behave as ordinary files (deleting one name leaves the other's
+content). In-root symlinks resolve correctly. A symlink pointing *outside*
+the device root is silently redirected to the device root — no error, wrong
+data; a single such stray link can corrupt `dsave` output downstream.
+`deldir` recurses into and deletes a directory-symlink's real target (OS-9
+has no link concept, so it can't tell). Symlink cycles can crash the
+emulator after ~40–60 hops.
 
-## Launching two concurrent background processes reliably
+## Launching two concurrent background processes
 
-`Live`: sending a second `key` command (to launch process B) while
-process A's already-backgrounded job is actively streaming output to the
-same terminal is **unreliable** — sends can be silently dropped (no
-echo, no effect), land several seconds late, or land visibly
-character-interleaved mid-line with A's own output. Retrying a send that
-looks like it didn't land is risky: it sometimes *did* land the first
-time, launching a duplicate process and producing hopelessly interleaved
-output from here on. **Reliable fix**: launch both in a single combined
-shell command line in one `key` call (e.g. `procA & procB &`), sent while
-the terminal is still idle — both start within the same real second and
-there's only one send to ever retry-or-not. **Also `Live`**: an
-unthrottled polling loop (no delay between retries) in two concurrent
-processes can generate 1000+ retries/second combined and appears to
-starve a concurrently-running process of CPU entirely (its own progress
-stalls for 60+ real seconds) — a scheduler-fairness issue, not just log
-noise. Give any tight retry/poll loop a small busy-wait between attempts
-when running it alongside another process that needs to make progress.
+`Live`: sending a second `key` command (to launch process B) while process
+A's backgrounded job is actively streaming output to the same terminal is
+**unreliable** — sends can be silently dropped, land seconds late, or land
+character-interleaved mid-line. Retrying a send that looks like it didn't
+land is risky: it sometimes *did* land, launching a duplicate. **Fix**:
+launch both in a single combined command line in one send (`procA & procB
+&`) while the terminal is idle.
+
+`Live`: an unthrottled polling loop in two concurrent processes can generate
+1000+ retries/second combined and starve a concurrent process of CPU for 60+
+real seconds. Give any tight retry/poll loop a small busy-wait when running
+it alongside another process that needs to make progress.
 
 ## Stopping a runaway program
 
 - **Ctrl-C**: shell keeps the prompt, child continues in background.
-- **Ctrl-E**: kills the child. Acts immediately regardless of what the
-  process is doing — compute loop, blocked read, **or blocked write**.
-  **`Source`+`Live`, 2026-07-21 — was a real os9exec bug, now root-caused
-  and fixed:** a process blocked writing to a full named pipe (no reader)
-  parks in `pSysTask` state, and the emulator main loop's `pSysTask` branch
-  never drained the async signal queue — only the `pActive`/`pWaitRead`
-  path (`os9exec_nt.c` ~2158) and the `pSleeping` arbitration path
-  (`procstuff.c` ~1238) did. So a queued Ctrl-C/Ctrl-E abort sat undelivered
-  and the writer wedged until a full restart (45+ s observed originally).
-  This is exactly why blocked *reads* (`pWaitRead`) could always be
-  interrupted but blocked *writes* couldn't. Fixed by draining pending
-  signals in the `pSysTask` branch too, guarded so a delivered abort skips
-  the write-continuation. Regression (proven to fail without the fix):
-  `test/68k-live-verification/pipe-abort-repro.sh` in the os9exec repo.
+- **Ctrl-E**: kills the child, immediately, regardless of what the process
+  is doing — compute loop, blocked read, or blocked write.
 - `kill <pid>` after `procs`.
 - **ESC on a blank line** exits the shell; a harness restart is the
   reliable reset when state is unknown.

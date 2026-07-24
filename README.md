@@ -22,8 +22,7 @@ ln -s ~/Developer/os9/os9-dev-skill/os9-dev         ~/.claude/skills/os9-dev
 ln -s ~/Developer/os9/os9-dev-skill/os9-systems-dev ~/.claude/skills/os9-systems-dev
 ```
 
-Nothing to build. `tools/` holds a consistency checker used while editing the
-docs; it isn't needed to use the skills.
+Nothing to build.
 
 ## Scope
 
@@ -102,14 +101,4 @@ os9-systems-dev/
   SKILL.md  SOURCES.md  references/
 DIVERGENCES.md          where a runtime disagrees with a manual
 SOURCE-AUTHORITY.md     what counts as Microware's word
-tools/
-  check_doc_consistency.py   doc linter (stdlib only)
-  tests/                     python3 -m unittest discover -s tools/tests
-```
-
-Run the checker over **both** skills at once — narrowing it to one root
-reports the deliberate cross-skill references as broken:
-
-```sh
-python3 tools/check_doc_consistency.py
 ```

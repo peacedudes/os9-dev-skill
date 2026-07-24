@@ -277,14 +277,23 @@ the Part 1 entries above:
   apparent mismatch resolved to scan damage via a second Microware source, none
   to a real skill error.
 
-**Behavioural long-tail — NOT yet audited.** The remaining `Live` claims are
-mostly *behavioural* (what a call/utility does, timing, edge cases) rather than
-structural, and are lower-consequence — a wrong description misleads, but does
-not silently corrupt a struct or dispatch. Still worth doing: utility/shell
-command option flags, the less-common 6809 privileged calls in full, and the
-GFX/windowing behaviour claims.
-- **Priority order for continuing**, highest consequence first: utility
-  behaviour → less-common privileged calls → GFX/windowing.
+**Utility tier — coverage + fabrication check DONE (2026-07-23).** The skill's
+utility documentation was diffed against *Using Professional OS-9*'s canonical
+utility list: **all 70 are documented**, plus legitimate architecture-specific
+extras (6809 CoCo `cobbler`/`montype`/`tuneport`/`wcreate`/`wmode`/`config`/
+`display`, and `pwd`/`pxd` — all confirmed real in Microware manuals). **Zero
+fabrications.** Option-flag spot-checks (`dir`, `attr`, `copy`) matched the
+manual and were correctly architecture-scoped; one omission fixed (`copy
+-b=<size>`).
+
+**Behavioural long-tail — NOT yet exhaustively audited.** The remaining `Live`
+claims are mostly *behavioural* (exact timing, edge cases, per-option nuance)
+and lower-consequence — a wrong description misleads, but does not silently
+corrupt a struct or dispatch. Still open: exhaustive per-option flags across all
+70 utilities, the less-common 6809 privileged calls in full, and GFX/windowing
+behaviour claims.
+- **Priority order for continuing**, highest consequence first: remaining
+  utility option flags → less-common privileged calls → GFX/windowing.
 - **The instrument that would automate most of this** is the live-verification
   corpus, if it is made rerunnable on genuine OS-9. Then every PASS/FAIL
   mismatch is a divergence report rather than a hand audit. Scoped in the

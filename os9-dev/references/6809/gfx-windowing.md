@@ -9,59 +9,25 @@ reprinted in the Tandy BASIC09 Reference Manual. Both sources are
 OCR-scanned and locally dirty — curly quotes, `l`/`1`/`I`, and `O`/`0`
 routinely garble, and the module name itself is misOCR'd in most of the
 Tandy source's worked examples (`GEX2`, `GEN2`, `GEXA`, etc.). Where the two
-sources agreed it's `Manual`; disagreements are tagged `Manual, Flag`
-inline rather than silently picked. Most of this content has not been run
-against a real system — a text REPL cannot observe a screen, so this file
-has stayed `Manual` for most claims. **That constraint is now lifted:**
-`6809/reading-the-coco-screen.md` describes a working screenshot + keystroke
-path (`tools/cocoscreen.sh`), so visual claims here are verifiable and should
-be promoted to `Live` as they are checked. Note one already-corrected error
-below: SELECT is windint `$1b21`, and an earlier "confirmation" of its
-deferral behavior was invalid because it used `$1b22` (`WOWSet`) by mistake —
-the deferral claim remains **unverified**.
+sources agreed it's `Manual`; disagreements are tagged `Manual, Flag` inline
+rather than silently picked. Notation: `[..]` optional, `{..}` repeatable.
 
-**2026-07-18, the BASIC09 calling sequence is `Live`.** Driving real
-`RUN GFX2(...)` calls (not just the windint escape codes underneath them)
-confirmed the documented **argument order and arity** for `DWSET` (nine
-parameters after the path), `SELECT`, `COLOR`, `LINE`, `BOX` and `CIRCLE`,
-and that the path-as-first-argument form works. Harness: `tools/b09run.sh`
-in the os9exec repo. **Assume no argument validation anywhere in this file** —
-`LINE` at x=639 on a 320-pixel-wide screen is accepted silently, matching the
-earlier `PALETTE` result (register 99, color 200 also accepted). Bad
-coordinates fail silently, never diagnosably.
+Calling sequences and error behavior are largely `Live` against the
+community-maintained `gfx.asm`/`gfx2.asm` package on a real NitrOS-9 system.
+What stays `Manual` is concentrated in the window/screen format codes, the
+full 16-entry default palette table, `PUTGC`'s screen-relative coordinate
+claim, and `BELL`'s optional-`path` question.
 
-**2026-07-18, first pixels actually observed.** A box and a circle were drawn
-on a `wcreate`d 320x192 4-color window and photographed. First result:
-**the X coordinate range claims below are suspect.** Y behaves as documented,
-X does not — a box spanning the nominal `(0,0)`-`(639,191)` space filled the
-full height but only about half the width, and a radius-64 circle came out
-markedly wider-than-tall in the wrong direction. Either drawing clips at the
-device window's pixel width or X is scaled; mechanism not yet established, so
-nothing here is re-tagged `Live` yet. Method and the exact next experiment:
-`test/6809-live-verification/dogfood-gfx-pixels-2026-07-18.md` (os9exec repo). **2026-07-18**: the community-maintained
-`gfx.asm`/`gfx2.asm` package (this project's own copy, at
-`os9/nitros9/source/3rdparty/packages/basic09/`) was built with `asm`
-and installed on the live NitrOS-9 test disk for the first time,
-unblocking `Live` testing of the non-visual bookkeeping/error-behavior
-claims below (still not pixel output itself — see the "Open ends"
-section for what that testing found). Notation: `[..]` optional, `{..}`
-repeatable.
+**Assume no argument validation anywhere in this file.** `LINE` at x=639 on
+a 320-pixel-wide screen is accepted silently; `PALETTE` accepts register 99
+and color 200. Bad coordinates fail silently, never diagnosably.
 
-**2026-07-19, visual confirmation pass completed for the remaining known-
-accepted calls.** `DRAW`'s polyline, `GET`/`PUT` block copying, `LOGIC`'s
-raster op, `PATTERN`, and `FONT` are all now `Live` below, along with the
-`OWSET`/`OWEND` overlay family (`OWSET` confirmed as documented; `OWEND`'s
-restore did **not** reproduce, twice, on two window geometries — a real
-black-box finding about NitrOS-9's own windowing driver, not an `os9exec`
-bug) and `CWAREA` (resolved: character-grid units, matching `OWSET`;
-2026-07-18's "black band" was almost certainly a wrong-byte-width guess in
-a hand-driven raw escape, not a real defect). Level-1 `GFX`'s lower-left-
-origin claim stays `Manual` — its `MODE` call is accepted but never produced
-a screen reachable through this NitrOS-9 build's CLEAR-cycle mechanism
-across three different output-routing attempts, an environment limitation
-rather than a falsified claim. Full detail on all of the above:
-`test/6809-live-verification/dogfood-gfx-pixels-2026-07-18.md` in the
-os9exec repo.
+**The X coordinate range claims below are suspect** (`Flag`). Y behaves as
+documented; X does not — a box spanning the nominal `(0,0)`-`(639,191)` space
+on a 320x192 window filled the full height but only about half the width, and
+a radius-64 circle came out markedly wider than tall in the wrong direction.
+Either drawing clips at the device window's pixel width or X is scaled;
+mechanism unestablished.
 
 ## GFX (Level 1 low-resolution VDG graphics)
 
@@ -76,25 +42,13 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   if unavailable. Coordinate origin (0,0) is the **lower-left** corner, all
   coordinates positive. A separate invisible "draw pointer" starts at 0,0;
   some functions (`LINE`) move it as a side effect, tracked independently
-  of anything visible on screen. **Attempted `Live`, origin
-  claim still `Manual` — for a documented reason, not an oversight.**
-  `RUN GFX("MODE",0,1)` plus two `LINE` calls forming an "L" anchored at
-  `(0,0)` was accepted with no error (confirmed by stray control-byte
-  fragments leaking into whatever text channel served as output), but never
-  produced a screen reachable by CLEAR-cycling, tried three different ways
-  of routing the call's output (`GFX`, unlike `GFX2`, takes no `path`
-  argument, so it always draws to the calling process's own default
-  output): backgrounded with stdout to `/nil`, held open in the foreground
-  on the process's default DriveWire stdout, and with `basic09`'s own
-  stdout explicitly redirected to a real `/wN` window at invocation. All
-  three left only the pre-existing text/window screens reachable — no new
-  graphics screen ever appeared, on the same disk where GFX2 windows work
-  reliably. Reads as a genuine incompatibility between Level-1 GFX and this
-  NitrOS-9 build's Level-2/windowed environment (see "Reaching a specific
-  window's screen" in the test report below), not evidence for or against
-  the lower-left-origin claim. Full detail:
-  `test/6809-live-verification/dogfood-gfx-pixels-2026-07-18.md` in the
-  os9exec repo.
+  of anything visible on screen. **The lower-left-origin claim stays
+  `Manual`**: on a Level-2/windowed NitrOS-9 build, `MODE` is accepted with
+  no error but never produces a screen reachable by CLEAR-cycling, across
+  three different ways of routing its output (`GFX`, unlike `GFX2`, takes no
+  `path` argument, so it always draws to the calling process's own default
+  output). That reads as a genuine Level-1-GFX/Level-2-environment
+  incompatibility, not as evidence for or against the origin claim.
 - `RUN GFX("ALPHA")` — switches to the text screen; the graphics screen
   stays intact in memory (can switch back).
 - `RUN GFX("QUIT")` — switches to the text screen **and** deallocates the
@@ -269,13 +223,10 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   identically on a type-7 (640×192, 80-column) window with proportionally
   scaled parameters. Both calls' arity is independently confirmed correct
   (foreground `PRINT`-marker pass, no errors) — it's specifically the
-  restore behavior that's suspect. No `windint` source is available in
-  this repo to check the real implementation the way `LINE`/`LINEM` was
-  settled from `gfx2.asm` itself, so this is a black-box finding about
-  NitrOS-9's own CoCo3 windowing driver — not an `os9exec` bug, since
-  `os9exec` only runs the 6809 code and has no windowing logic of its own.
-  Full detail:
-  `test/6809-live-verification/dogfood-gfx-pixels-2026-07-18.md`.
+  restore behavior that's suspect. A black-box finding about NitrOS-9's own
+  CoCo3 windowing driver, unresolved — `windint`'s implementation was not
+  available to check it against the way `LINE`/`LINEM` was settled from
+  `gfx2.asm` itself.
 - `SELECT([path])` — makes a window the active display target; if
   omitted, defaults to the standard input/output/error paths (0/1/2).
   Whether the switch is visible right away depends on which window the
@@ -545,100 +496,42 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   example from either source; whether it accepts an optional `path` the
   way most other GFX2 functions do is unclear — not stated either way.
 
-## Open ends from this extraction pass
-
-**Resolved in a follow-up gap-closing pass (2026-07-17), sources checked
-beyond the original two:** `GCOLR`'s full syntax (found in the BASIC09
-Reference Manual Rev G, a source not used in the original pass), `OWEND`'s
-no-argument call shape (five converging worked examples across two
-manuals), `DEFBUFF`'s spelling (re-checked against the primary source's
-own header/syntax/index, all three agree — the single-F reading was the
-Tandy cross-check's own OCR error), and `FONT`'s built-in font group
-number (Group 200, confirmed from the primary source's own prose, not
-just its garbled numeric example). **`COLGR` turned out not to be a
-function at all** — it's a plain BASIC09 variable name the manual's own
-example programs happen to declare (`DIM X,Y,R,T,COLGR: INTEGER`),
-apparently short for "color group," reused across several unrelated
-`PALETTE`/`COLOR` example listings. There was never a documentation gap
-here, just a false positive from seeing the string appear near color-
-related code.
-
-**Resolved `Live`** (see
-`test/6809-live-verification/dogfood-report-gfx2-2026-07-18.md` and
-`dogfood-gfx2-goset-palette-test.bas` in the os9exec repo): the
-community `gfx.asm`/`gfx2.asm` package (this project's own copy) was
-built with `asm` (four porting fixes needed — a comment-leader mismatch,
-three 8-char label-truncation collisions, an undefined `H6309`
-conditional symbol, and three over-length source lines; none changed
-program behavior) and installed on the live NitrOS-9 test disk, finally
-unblocking the two items below.
+## Unresolved
 
 - **`GOSET`** (selecting a graphics-cursor shape for `PUTGC`) — `Live,
   Absent`: `RUN GFX2("GOSET",1)` gives `Error #048 -- Unimplemented
-  Routine` (GFX2's own function-dispatch table reporting "not found"),
-  and a direct grep of `gfx2.asm`'s ~60-entry function table confirms
-  `GOSET` is not a registered function name anywhere in this
-  implementation. Not just undocumented — genuinely absent from this
-  real, community-maintained build. The one worked example mentioning it
-  appears to be aspirational/mistaken, not a trustworthy syntax source.
-  Whatever mechanism (if any, beyond `GCSET`, which *is* real) actually
-  selects a `PUTGC` cursor shape in practice remains unknown.
-- **`PALETTE`'s register-number range** — `Live`: not bracketable the way
-  planned, because nothing tested was rejected. `register` values up to
-  99 and `color` values up to 200 (both far past the presumed 0-15/0-63
-  hardware ranges) all executed with no OS-9 error, including against a
-  real, explicitly-opened window path (`/W1`), ruling out "the default
-  target isn't a real window anyway" as the explanation. Source-confirmed:
-  the handler only validates BASIC09's parameter *count*, not the values
-  themselves, before writing them straight out via `I$Write`. So the
-  confirmed fact is that this implementation performs **no software range
-  validation** on either argument — not that 0-15/0-63 is confirmed as
-  the real range, which remains genuinely unknown (real CoCo3 GIME
-  hardware might wrap/alias an out-of-range value, or something else
-  might silently misbehave; establishing that needs actual pixel/palette
-  observation, not attempted here — a text-only REPL channel can't do it
-  regardless). The full 16-entry default color table beyond registers 0-7
-  (black/red/green/yellow/blue/magenta/cyan/white) also wasn't cleanly
-  recovered by either OCR pass and remains open.
+  Routine`, and `gfx2.asm`'s ~60-entry function table contains no such
+  name. Not merely undocumented: genuinely absent from this real build. The
+  one worked example mentioning it is mistaken, not a syntax source.
+  Whatever selects a `PUTGC` cursor shape in practice — beyond `GCSET`,
+  which *is* real — remains unknown.
+- **`PALETTE`'s register-number range** — `Live`: not bracketable, because
+  nothing tested was rejected. `register` up to 99 and `color` up to 200,
+  both far past the presumed 0-15/0-63 hardware ranges, all executed with no
+  error against a real opened window path. `Source`-confirmed: the handler
+  validates BASIC09's parameter *count* only, never the values, before
+  writing them straight out via `I$Write`. So this implementation performs
+  **no software range validation** — which does not confirm 0-15/0-63 as the
+  real range. Real GIME hardware might wrap or alias an out-of-range value.
+  The full 16-entry default color table beyond registers 0-7
+  (black/red/green/yellow/blue/magenta/cyan/white) was not cleanly recovered
+  by either OCR pass.
 - **Window/screen format codes** (`DWSET`'s and `GPLOAD`'s `format`
   parameter) are `Manual`, cross-referenced against `wcreate -s=<type>`'s
-  `Live` table, but GFX2's own use of those codes has not itself been
-  confirmed `Live`.
-- **`OWEND`'s restore, 2026-07-19** — reproduced twice (two window
-  geometries) that it does not visibly restore content saved by
-  `OWSET(1,...)`, contradicting the documented behavior. See the `OWEND`
-  entry above for the full test and the varied-configuration controls that
-  ruled out a single-geometry fluke. Unresolved because no `windint` source
-  is available in this repo to check the real implementation the way
-  `LINE`/`LINEM` was settled from `gfx2.asm` itself — a future pass with
-  such a source, or further black-box variation (delay before `OWEND`,
-  content drawn into the overlay first, a smaller overlay), could take
-  this further.
-- **Level-1 `GFX`'s screen, 2026-07-19** — `MODE` is accepted with no
-  error but never produced a screen reachable through CLEAR-cycling across
-  three different output-routing attempts (see the `MODE` entry above).
-  Most likely the same underlying reachability gap noted below for
-  `wcreate`d windows with no live process, not evidence against the
-  lower-left-origin claim, which stays `Manual`.
-- Most of the calling-sequence and error-behavior claims in this file are
-  now `Live` as of the 2026-07-18/19 passes; what remains genuinely
-  `Manual` is concentrated in: the window/screen format codes above, the
-  full 16-entry default palette table, `PUTGC`'s screen-relative coordinate
-  claim, `BELL`'s optional-`path` question, and the mechanics noted in the
-  main "Open questions" section of
-  `test/6809-live-verification/dogfood-gfx-pixels-2026-07-18.md` (the
-  normalized-vs-scaled coordinate question, and reaching a `wcreate`d
-  window that has no live process on it — the same gap that blocks
-  Level-1 `GFX`'s screen above).
+  `Live` table, but GFX2's own use of those codes is not itself confirmed.
+- **`OWEND`'s restore** does not visibly restore content saved by
+  `OWSET(1,...)`, reproduced on two window geometries, contradicting the
+  documented behavior.
+- **`COLGR` is not a function at all** — it's a plain BASIC09 variable name
+  the manual's own example programs declare (`DIM X,Y,R,T,COLGR: INTEGER`),
+  apparently short for "color group", reused across several unrelated
+  `PALETTE`/`COLOR` listings. Never a documentation gap, just a string
+  appearing near color-related code.
 
 ---
 Sources: OS-9 Level 2 Operating System Manual (GFX/GFX2 chapter, Chapter 9)
-is primary; the BASIC09 Reference Manual (Tandy) reprints the same
-appendix and was used as an independent second OCR pass to cross-check
-function names and syntax the primary source's own scan had garbled — it
-reported no actual behavioral disagreements with the primary, only heavier
-OCR noise (notably on the module name `GFX2` itself). All text here is
-paraphrased, not quoted, from those sources — see
-`docs/superpowers/plans/2026-07-17-6809-gfx-windowing/cards/` in the
-os9exec repo for the underlying atomic-fact extraction if a claim needs
-re-tracing to its origin.
+is primary; the BASIC09 Reference Manual (Tandy) reprints the same appendix
+and served as an independent second OCR pass to cross-check function names
+and syntax the primary source's scan had garbled — it showed no behavioral
+disagreements with the primary, only heavier OCR noise (notably on the module
+name `GFX2` itself). All text here is paraphrased, not quoted.

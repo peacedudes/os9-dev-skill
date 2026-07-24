@@ -1,7 +1,8 @@
 # OS-9 Shell and Utilities
 
 Shell syntax, line editing, terminal configuration, and the standard utility
-set. Architecture-independent unless a row says otherwise.
+set. Architecture-independent unless a row says otherwise — except the
+utility catalog at the end, which is the 68k set with 6809 noted alongside.
 
 ## Shell model
 

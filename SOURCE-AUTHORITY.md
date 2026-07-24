@@ -116,7 +116,7 @@ authority a divergence is scored against.
 | `OS-9_Processors_Hardware_Support.txt` | RadiSys 2006 marketing data sheet — no technical content |
 | `Motorola_M68000_Programmers_Reference_Manual.txt` | Motorola 1992 — **authoritative for the CPU, not for OS-9** |
 
-## Judgment calls the owner should confirm
+## Judgment calls, recorded so they can be challenged
 
 - **`os9insights` (ed2/ed3) and `OS-9_Primer` are copyright Microware Systems
   Corporation**, so by the rule above they are authoritative — even though both
@@ -129,17 +129,16 @@ authority a divergence is scored against.
   document a later major version. Mining them into v2.4 material risks
   importing v3.2 semantics; kept out of scope, flagged rather than deleted.
 
-## Coverage gaps found while building this (2026-07-23)
+## Where the weight still sits
 
-Authoritative Microware sources sitting **unmined or barely mined**, measured
-by citations across both skills:
+Every authoritative Microware source listed above is now drawn on somewhere:
+the Primer across ten files, the Disk File Organization manual throughout
+`os9-systems-dev`'s RBF material, the Internet Software Reference Manual as
+the sole source of `68k/network-sockets.md`, and the Training & Education
+seminar manuals in the memory, IPC and kernel material.
 
-| Source | Citations | Why it matters |
-|---|---|---|
-| `OS-9_Primer.txt` | **0** | An official Microware introduction to the system; never consulted |
-| `OS-9_Internet_Software_Reference_Manual.txt` | **0** | `68k/network-sockets.md` carries claims marked "unverified"/"inferred by analogy" while the authoritative manual sits unread |
-| `OS9_Technical_Manual_Disk_File_Organization.txt` | **0** | `os9-systems-dev` documents RBF disk structure without citing Microware's own file-organization manual |
-| `Microware_Training_OS-9_{Starter,Intermediate,Advanced}.txt` | 2 files total | Official Microware training material, used in only `memory-and-io.md` and `ipc.md` |
-
-For contrast, the third-party Guru and FARNA references are cited ~21 times
-each — a ratio worth closing for a document set being sent to Microware.
+The third-party Guru and FARNA references are nonetheless still cited more
+often than any single Microware manual. That reflects how the corpus was
+assembled — the third-party books are better indexed and far easier to search
+than OCR'd manual scans — rather than a judgment about authority, which the
+rule at the top of this file settles the other way.

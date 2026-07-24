@@ -180,6 +180,12 @@ what's available.
 
 ### Privileged system-mode F$ ($28-$52; kernel-internal, listed for completeness, not for ordinary programs)
 
+**Register-contract spot-check, 2026-07-23:** a batch of these was diffed
+directly against the System Programmer's Manual's own per-call INPUT/OUTPUT
+listings (§11.2/12.1) — `F$NProc`, `F$SRqMem`, `F$AllImg`, `F$AllPrc`,
+`F$AllRAM`, `F$AllTsk`, `F$Move` all match register-for-register. No divergence
+found in the sample; the Params column here is faithful to the manual.
+
 Every code here is `Manual`, cross-confirmed by at least two independent sources (the System Programmer's Manual's own Appendix C, Table C.2, and the 1982 OS-9 Quick Reference's own per-call code citations — a different, earlier document from the 1992 FARNA Quick Reference cited elsewhere in this file), except where noted. **Params** below (added in a later pass) come from the same manual's Chapters 11.2 and 12.1, which give full INPUT/OUTPUT register listings per call — codes themselves were NOT re-derived from those chapters (their OCR has code collisions in a couple of spots) and still trust this table's own pre-existing, cross-confirmed Code column. A follow-up gap-closing pass added `F$SSvc`/`F$GCMDir`/`F$LDAXYP`/`F$DATTmp` from two further sources missed the first time: the Gimix OS-9 Programmers Manual's own copy of the Rev F1 Appendix E (which does cover `F$LDAXYP`/`F$DATTmp` — the original pass's search of that appendix used a regex that silently skipped entries with leading whitespace) and the OS-9 Technical Reference (Tandy)'s independent per-call catalog (for `F$SSvc`/`F$GCMDir`).
 
 | Call | Code | Params | Level 2? | Notes |

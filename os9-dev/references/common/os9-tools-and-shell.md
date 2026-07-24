@@ -103,7 +103,7 @@ remedy are in `using-os9exec-repl.md`.
   (`baud`/`par`/`cs`/`stop`/`type`) need `deiniz` → `xmode` → `iniz`.
   Settable: control-key assignments, echo, backspace behavior, page
   pause, EOF character, etc. — full parameter table in
-  `utility-usage.md`.
+  `common/utility-usage.md`.
 - Page pause (`tmode pause` / `tmode nopause`): output halts after each full
   screen until a key is pressed. Lines longer than the screen width wrap
   without being counted, so the pause point drifts on wrapped output.
@@ -111,13 +111,15 @@ remedy are in `using-os9exec-repl.md`.
 ## Standard utility set
 
 Names below are the Professional OS-9 v2.4 (68k) set; most exist on 6809 as
-well. `help <name>` (or `<name> -?`) prints usage for any of them.
-**Per-command syntax and option letters: `utility-usage.md`** — read it
-before invoking a utility with options rather than guessing flags.
+well, often with different option letters. `help <name>` (or `<name> -?`)
+prints usage for any of them. **Per-command syntax and option letters:
+`common/utility-usage.md` for 68k, `6809/utility-usage.md` for 6809** — read
+the right one before invoking a utility with options rather than guessing
+flags.
 
 **Files and directories:** `attr` (show/change permissions —
 output-string decoding and the `-e` privilege gotcha, both `Live`:
-`utility-usage.md`'s `attr` entry), `build` (create
+`common/utility-usage.md`'s `attr` entry), `build` (create
 a small text file from console input, `?` prompt per line, EOF ends),
 `copy`, `del`, `deldir` (recursive directory delete), `dir` (`-e` for full
 listing), `dsave` (emit a procedure file that copies a directory tree),

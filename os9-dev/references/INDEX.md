@@ -2,6 +2,16 @@
 
 Topic → target → file. Keywords are deliberately dense; scan for yours.
 
+**Directory convention.** `common/` holds what applies to both targets — but
+where a value differs, **68k is the default** and the 6809 delta is called
+out inline or lives under `6809/`. Two files there are 68k-only despite the
+directory, each with a 6809 counterpart; cite them by full path, never by
+bare filename:
+
+- `common/utility-usage.md` (v2.4 68k utility set) ↔ `6809/utility-usage.md`
+- `common/using-os9exec-repl.md` (os9exec is the 68k emulator) ↔
+  `6809/using-nitros9-repl.md`
+
 ## Quick rosetta (inline — check before loading a file)
 
 - `fork()`/`exec()` → `F$Fork` / `F$Chain`

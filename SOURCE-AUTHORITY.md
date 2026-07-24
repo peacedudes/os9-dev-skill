@@ -142,6 +142,4 @@ by citations across both skills:
 | `Microware_Training_OS-9_{Starter,Intermediate,Advanced}.txt` | 2 files total | Official Microware training material, used in only `memory-and-io.md` and `ipc.md` |
 
 For contrast, the third-party Guru and FARNA references are cited ~21 times
-each. That ratio is backwards for a document set being sent to Microware, and
-closing it is tracked in `DIVERGENCES.md` under "Microware material we do not
-cover".
+each — a ratio worth closing for a document set being sent to Microware.

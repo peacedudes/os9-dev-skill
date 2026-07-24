@@ -53,9 +53,9 @@ reimplementations built by the user community, and both have had real errors.
 Running one tells you what *it* does; it is not evidence about what OS-9 is
 specified to do. Where a runtime and an authoritative manual disagree, the
 manual is the specification and the runtime is the candidate defect — the
-disagreement is recorded in `DIVERGENCES.md`, and only Microware or genuine
-OS-9 hardware settles it. `SOURCE-AUTHORITY.md` says what counts as
-Microware's word; several excellent books (the OS-9 Guru especially) do not.
+claim records both readings and only Microware or genuine OS-9 hardware
+settles it. `SOURCE-AUTHORITY.md` says what counts as Microware's word;
+several excellent books (the OS-9 Guru especially) do not.
 
 Claims carry inline confidence tags — legend in
 `references/CONFIDENCE-TAGS.md`. `Flag` means sources disagree. Prefer running

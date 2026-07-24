@@ -35,9 +35,9 @@ does; it is not evidence that Microware's manual is wrong.
 - `Live` clears a `Flag` only where **no authoritative manual speaks** — an
   emulator-internal detail, a harness behaviour, a question the manuals don't
   address.
-- Where a manual **does** speak and a runtime disagrees, the `Flag` stays, the
-  claim gets an entry in `DIVERGENCES.md`, and an inline `⚠ DIVERGENCE D-NNN`
-  marker sits at the point of use.
+- Where a manual **does** speak and a runtime disagrees, the `Flag` stays and
+  the claim records **both readings at the point of use** — what the manual
+  specifies and what the runtime does — rather than picking one.
 - Only Microware, or a test on genuine OS-9 hardware, resolves a divergence.
 
 Phrasing follows from this: write "os9exec and NitrOS-9 both do X, the manual

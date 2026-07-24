@@ -5,9 +5,8 @@ language on 6809 and 68k OS-9 — same statements, same keywords, same
 built-in functions, same control-flow constructs. Everything on this page
 applies to both architectures identically. The only things that differ
 between 6809 and 68k are numeric type widths/ranges/precision and a
-handful of platform-specific facts — those live in
-`os9-68k-basic-cheatsheet.md` and `basic09-cheatsheet.md` (6809), each a
-short delta file, not a second copy of this one.
+handful of platform-specific facts — those live in `basic09-per-target.md`,
+a delta file, not a second copy of this one.
 
 **Verification status:** baseline is `Manual` — claims are cross-referenced
 across the BASIC09 Reference Manual (Rev H) and the OS-9 BASIC User Manual
@@ -149,25 +148,17 @@ compile to identical I-code.
 
 ### TYPE records
 
-**There is no multi-line `TYPE`/`ENDTYPE` block form — that construct
-never existed in BASIC09** (a plausible-looking fabrication; don't emit
-it). The BASIC09
-Reference Manual's own formal grammar for the TYPE statement (Rev H,
-p.54-55) is unambiguous: `TYPE type_decl {; type_decl}` — a single
-statement, semicolon-separated fields, with `{; type_decl}` as the only
-repetition mechanism. `ENDTYPE` does not appear anywhere in that grammar,
-anywhere else in either primary manual, or in any of the manual's own
-worked examples — which cover both a flat record and a record containing
-another record's type as a field, and every one is a single `TYPE`
-statement with semicolon-separated fields, no closing keyword. The block
-form was a fabrication introduced somewhere in this skill's own extraction
-history, not a real feature that happens to be broken in this build —
-`Live` (loaded directly via `LOAD`, bypassing any editor
-involvement) as a syntax error regardless: every line inside a
-`TYPE point` / `x: INTEGER` / `y: INTEGER` / `ENDTYPE` block is rejected
-individually (`Error #000:027` on each). The one-liner form is the only
-form that has ever existed, works correctly, and supports both nesting and
-array fields:
+**There is no multi-line `TYPE`/`ENDTYPE` block form — that construct never
+existed in BASIC09.** It is a plausible-looking fabrication; don't emit it.
+The BASIC09 Reference Manual's formal grammar (Rev H, p. 54-55) is
+unambiguous — `TYPE type_decl {; type_decl}`, one statement with
+semicolon-separated fields and no closing keyword — and `ENDTYPE` appears
+nowhere in that grammar, anywhere else in either primary manual, or in any
+of their worked examples, which cover both flat and nested records. `Live`
+(loaded via `LOAD`, so no editor is involved): every line of a `TYPE point` /
+`x: INTEGER` / `y: INTEGER` / `ENDTYPE` block is rejected individually
+(`Error #000:027` on each). The one-liner is the only form, and it supports
+both nesting and array fields:
 
 ```basic
 TYPE point = x:INTEGER; y:INTEGER
@@ -281,14 +272,12 @@ ENDIF
 (`Live`).
 
 **`IF i<5 THEN GOTO 10` — a single line, `GOTO` keyword present, no
-`ENDIF` — is neither form.** It's an invalid hybrid: Type 1 syntax
-forbids the `GOTO` keyword; Type 2 syntax requires `ENDIF`. `Live`:
-this correctly fails to compile (`Error #000:069`), and it fails even
-as the *only* statement in an otherwise-empty procedure — this is
-**not** a compiler bug, direction-dependent, GOTO-vs-GOSUB-specific, or
-about combining with other constructs; it's the compiler correctly
-rejecting syntax that was never valid (easy to misdiagnose as a bug if
-you don't check the manual's two-form grammar).
+`ENDIF` — is neither form.** It's an invalid hybrid: Type 1 forbids the
+`GOTO` keyword, Type 2 requires `ENDIF`. `Live`: it correctly fails to
+compile (`Error #000:069`), including as the sole statement of an otherwise
+empty procedure — so it is not a compiler bug, not direction-dependent, and
+not about interaction with other constructs. It is easy to misdiagnose as a
+bug without the manual's two-form grammar in hand.
 **Use Type 1 (`IF cond THEN linenum`) for a bare conditional jump, or
 Type 2 with `ENDIF` on its own line for anything else** — never mix a
 `GOTO`/`GOSUB` keyword into a same-line `THEN` clause without `ENDIF`.
@@ -345,8 +334,7 @@ Microware here; the emulator behaviour below is faithful, not a quirk.
 **This fails silently, not loudly:** `PARAM b: BYTE` is accepted
 with zero error at both edit time and run time, but the passed argument
 is simply discarded — the parameter never gets bound and reads as its
-default/uninitialized value (`Live` (68k) — see
-`tools/benchmarks/basic09-langtest.bas`). Don't expect a compile or
+default/uninitialized value (`Live`, 68k). Don't expect a compile or
 runtime error to catch this mistake; it won't.
 
 ## I/O
@@ -381,31 +369,21 @@ DATA wraps around when exhausted rather than erroring.
 code and auto-resets to 0 once read; `POS` reports the current print
 column.
 
-**`EOF()` behaves like C's `feof()` — a sticky flag set only by an
-actual failed read, not a live position check.** `Live`: reading
-a 2-line sequential file, `EOF(#path)` is still `FALSE` immediately
-after the second (last) successful `READ`. Only a further `READ`
-attempt — which raises `Error #000:211 (E$EOF)` — makes `EOF(#path)`
-become `TRUE`. **Confirmed this is NOT a position-tracking bug**: `SEEK`
-to computed positions ranging from just-past-end up to `1000` bytes
-into a 6-byte file leaves `EOF()` unchanged (`FALSE`) every time — `SEEK`
-by itself never sets the flag, no matter how far past the end. Only an
-actual I/O attempt that hits the real end sets it, exactly like C's
-`feof()` after `fseek()`. This is a well-precedented, ordinary I/O
-pattern once recognized, not an emulator defect or a language design
-flaw — it just surprises anyone expecting a look-ahead EOF check. This
-means the naive loop idiom `WHILE NOT EOF(#path) DO READ #path,x ...
-ENDWHILE` will always attempt one over-read on its final iteration and
-needs an `ON ERROR GOTO` to catch it cleanly, or a different loop
-structure (check `EOF` after the read, not before). `E$EOF` (211) is a
-standard OS-9 system-level I/O error code (documented in
-`common/error-codes.md`), not one of BASIC09's own low-numbered
-compiler/runtime error codes — `READ`/`WRITE` surface it via `ERR` like
-any other OS-9 file-manager error. (os9exec's own `pReof()` — `Source/
-OS9exec_core/file_rbf.c` — does a straightforward `currPos>=lastPos`
-position comparison and looks correct on inspection; BASIC09's `EOF()`
-evidently isn't driven by a live call to that check the way a
-look-ahead EOF would require, which is what produces this behavior.)
+**`EOF()` behaves like C's `feof()` — a sticky flag set only by an actual
+failed read, not a live position check.** `Live`: reading a 2-line
+sequential file, `EOF(#path)` is still `FALSE` immediately after the last
+successful `READ`; only a further `READ` attempt — which raises
+`Error #000:211 (E$EOF)` — makes it `TRUE`. **Not a position-tracking bug**:
+`SEEK` to anywhere from just-past-end to 1000 bytes into a 6-byte file
+leaves `EOF()` `FALSE` every time. Only an I/O attempt that hits the real
+end sets it, exactly like C's `feof()` after `fseek()`.
+
+Consequence: the naive idiom `WHILE NOT EOF(#path) DO READ #path,x ...
+ENDWHILE` always over-reads on its final iteration. Either catch it with
+`ON ERROR GOTO` or restructure to check `EOF` *after* the read. `E$EOF`
+(211) is a standard OS-9 I/O error code (`common/error-codes.md`), not one
+of BASIC09's own low-numbered errors — `READ`/`WRITE` surface it via `ERR`
+like any other file-manager error.
 
 **`READ` is context-sensitive.** `READ var_list` (no `#path`) reads the next
 `DATA` items. `READ #path, var` (with `#path`) reads from an open file
@@ -456,8 +434,7 @@ read/written mid-record. `PUT`/`GET` also work on whole arrays in one call
 — storing or loading N records in a single bulk operation instead of
 looping. Structured `TYPE` records combine naturally with this: dimension
 an array of a `TYPE`, and `PUT`/`GET` moves whole records (or the whole
-array) at once. `Live` (68k)
-(`tools/benchmarks/basic09-randfile-test.bas`): pre-allocate several
+array) at once. `Live` (68k): pre-allocate several
 empty `TYPE` records, `SEEK` to
 a computed `SIZE()`-based offset, `PUT` a record there, `SEEK` back and
 `GET` it — round-trips correctly, and a neighboring untouched record is
@@ -530,7 +507,7 @@ and Tandy 1983 BASIC09 manuals state BOOLEAN values print as `"TRUE"`/`"FALSE"`
 68k os9exec *and* on real Microware BASIC09 6809 01.01.00 under NitrOS-9 —
 mixed case, correct 8-char field width, on both architectures. So it is not an
 os9exec artifact; whether the manual overstates or shipping code always
-diverged is Microware's call. See `DIVERGENCES.md`.
+diverged is unresolved.
 
 ```basic
 PRINT [ print-list ]
@@ -608,34 +585,31 @@ procedure, no `ON ERROR` call between them): the trap fired both times
 with a bare `ON ERROR` — it does not need to be (and is not) re-armed
 after each trip.
 
-**Divide-by-zero has two very different outcomes depending on type —
-neither goes through the documented "Divide by Zero" error path in the
-way you'd expect:**
-- **INTEGER ÷ 0** (e.g. `i = i / 0` with `i: INTEGER`): a genuine
-  **6809-vs-68k divergence, both now `Live`.** **6809**: generates
-  `Error #045 -- Divide by Zero` and drops into interactive Debug Mode if
-  left unhandled, same as REAL÷0 on 6809. **68k** (`Live`, os9exec):
-  the **opposite** — INTEGER÷0 is **silent, no error at all**: a procedure that
-  divides an INTEGER by 0 and then `PRINT`s ran straight through and printed
-  (`ON ERROR GOTO` never fired). Don't count on an INTEGER÷0 being caught on
-  68k. (The silence is a **BASIC09-level guard**, not an emulation gap:
-  `Live` — a *C* program doing integer `1/0` on os9exec traps
-  correctly with `Error #000:105 (E_ZERDIV) zero divide TRAP 5` and aborts,
-  so the 68000 core does raise vector 5; BASIC09 must be checking the divisor
-  itself and quietly not dividing.)
-- **REAL ÷ 0** (e.g. `z = x / y` with `y: REAL` = 0): **used to crash the
-  entire BASIC process** (`Error #000:107 (E_TRAPV) TrapV instruction
-  TRAP 7 occurred`, `E_PRCABT(228)`) — a raw, uncatchable 68k CPU trap
-  that `ON ERROR GOTO` never got a chance to run against. Root cause was
-  an `os9exec` bug (four stacked `F$STrap` dispatch bugs), now fixed —
-  see `basic09/gotchas.md`'s divide-by-zero entry. `REAL÷0` is now a
-  catchable trap on 68k, matching 6809's always-catchable behavior
-  (drops into interactive Debug Mode if left unhandled). **`Live`** (os9exec): `ON ERROR GOTO` caught a 68k REAL÷0 and `ERR`
-  returned **107** (the `E_TRAPV` code) — vs 6809's `Error #045`, so the
-  *number* differs across platforms even though both are now catchable.
-  **Still avoid REAL division where the divisor
-  could be zero** — catchable now, but there is still no automatic
-  recovery without an explicit `ON ERROR GOTO`.
+**Divide-by-zero outcomes differ by operand type and by target — neither
+goes through the documented "Divide by Zero" path the way you'd expect:**
+
+- **INTEGER ÷ 0** — `Live` on both. **6809** raises the documented
+  `Error #045 -- Divide by Zero`. **68k** raises `Error #000:105
+  (E_ZERDIV) zero divide TRAP 5` — the 68000 hardware zero-divide
+  exception (vector 5), dispatched through `F$STrap`, not BASIC09's own
+  documented error 45.
+- **REAL ÷ 0** — `Live` on both. **6809** raises `Error #045` here too;
+  **68k** raises `Error #000:107 (E_TRAPV)`, and `ON ERROR GOTO` catching
+  it sees `ERR` = **107**.
+
+Left unhandled, all four cases drop into interactive Debug Mode. All four
+are catchable with `ON ERROR GOTO`.
+
+**Portable code must not test for a specific code.** 6809 reports
+Microware's documented BASIC09 error 45 for both operand types; 68k reports
+the underlying 68000 CPU exception instead — 105 for INTEGER, 107 for REAL.
+Branch on "an error occurred," not on its number, and guard divisors that
+could be zero rather than relying on the trap: catchable is not recovered,
+and nothing happens automatically without a handler.
+
+(An older `os9exec` had four stacked `F$STrap` dispatch bugs that broke
+this dispatch — REAL÷0 killed the process uncatchably and INTEGER÷0 passed
+silently. Fixed. If you see either symptom, update the emulator.)
 
 ## Debug Mode
 
@@ -699,5 +673,4 @@ per-architecture file.
 (Revision G, 1991) — architecture-independent language mechanics, shared
 across the 6809 and 68k editions, plus 5 authored BNF-grammar cards.
 Numeric widths, the 6809/68k delta, and remaining platform-specific facts:
-see `os9-68k-basic-cheatsheet.md`, `basic09-cheatsheet.md`,
-`basic09-vs-68k-differences.md`, and `gotchas.md`.
+`basic09-per-target.md`. Trap digest: `gotchas.md`.

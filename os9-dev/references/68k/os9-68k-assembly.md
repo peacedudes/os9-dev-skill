@@ -207,7 +207,7 @@ live) before relying on details:
 
 - Exact `psect`/`vsect`/`csect` directive syntax and parameter order (the
   documented PSECT/VSECT syntax is the **6809** RMA's) — **but see
-  Cross-references below**: `basic09/basic09-vs-68k-differences.md` has
+  Cross-references below**: `basic09/basic09-per-target.md` has
   a complete, `Live`-tested worked example that fills this gap in
   practice, even though it isn't a manual citation.
 - `ds.w`/`ds.l` and other data-definition directive syntax specifics —
@@ -216,8 +216,7 @@ live) before relying on details:
   length, `dc.b "text"` (double-quoted) assembles clean — use double
   quotes for string data. **`ds.b` is not a valid directive on `r68`**
   (`*** error - bad mnemonic ***`) — reserve space with an explicit
-  comma-separated `dc.b 0,0,0,...` instead (confirmed repeatedly across
-  `test/68k-live-verification/batch*.a`, most recently `batch10-01.a`).
+  comma-separated `dc.b 0,0,0,...` instead.
 - **Mutable data in a program needs address-register indirect, not a
   PC-relative destination** (`Live`): `move.l d0,x(pc)` /
   `subq.l #1,cnt(pc)` do not work — `(d16,PC)` is a **source-only**
@@ -225,8 +224,7 @@ live) before relying on details:
   `lea cnt(pc),a1` then `subq.l #1,(a1)`. `os9exec` lets a `Prgrm` module
   write into its own `dc`-defined storage this way (each process gets its
   own image), so a scratch counter/flag/saved-ID can sit beside the code
-  with no `vsect` — the pattern used throughout the event/alarm tests
-  (`test/Sources/OS9Tests/main.swift`).
+  with no `vsect`.
 - ~~The external-symbol "trailing colon = public" visibility convention~~
   — resolved: `Live`, confirmed via `l68 -s` and `debug`'s `sc` symbol
   listing. Colon-suffixed labels (`start:`, `sumloop:`) are
@@ -243,7 +241,7 @@ live) before relying on details:
 
 - **The `psect` directive syntax gap above, resolved in practice —
   but only for `mod_exec`-shaped module types.**
-  `basic09/basic09-vs-68k-differences.md`'s "Calling 68000 machine-language
+  `basic09/basic09-per-target.md`'s "Calling 68000 machine-language
   procedures from BASIC09" section has a complete, `Live`-tested
   hand-written 68k assembly example (`psect addone,Type_Lang,Attr_Rev,
   0,0,addone` — the 6-operand shape is `name,typelang,attrrev,edition,

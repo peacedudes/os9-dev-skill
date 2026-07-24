@@ -118,16 +118,14 @@ This banner + `Error #000:216 (E_PNNF)` has several distinct causes:
 
 1. **First `LOAD`/`RUN` touching numeric variables → the `math` trap
    module (TRAP #15) isn't reachable.** Fix: `load math` (put it in the
-   startup file). See `basic09-vs-68k-differences.md`. **`Live`**: even with `load -s cio csl math` already present in
-   `/h0/startup`, a fresh boot's `mdir` showed only `csl` resident, not
-   `cio`/`math` — the `-s` flag on a multi-name `load` silently fails
-   for at least these two modules (confirmed reproducible: `load -s
-   math` alone also silently fails to add it to `mdir`, while a plain
-   `load math`, no flag, succeeds immediately every time). Root cause
-   unestablished — it may be os9exec's command handling or the real
-   Microware `load` utility's `-s` path. Workaround: a plain `load
-   math`/`load cio` with no `-s`, once per fresh session, before running
-   anything that needs them.
+   startup file); the lazy-linking mechanism is in
+   `basic09-per-target.md`. **`Live`**: `load`'s `-s` flag silently fails
+   to make `cio`/`math` resident — `load -s cio csl math` in `/h0/startup`
+   left only `csl` in `mdir` after a fresh boot, and `load -s math` alone
+   fails the same way, while a plain `load math` succeeds every time.
+   Whether this is os9exec's command handling or the real Microware
+   `load`'s `-s` path is unestablished. Workaround: plain `load math` /
+   `load cio`, no flag, once per session.
 2. **`cio`/`csl` genuinely not resident** (check `mdir`): `load cio`. A
    binary linked against the proprietary `cio` handler dies with this
    banner on any disk lacking it — see `common/using-os9exec-repl.md` for

@@ -52,10 +52,10 @@ That matters more here than in the sibling skill: kernel structures, dispatch
 conventions and scheduler behaviour are exactly where a reimplementation is
 likeliest to have simplified something. A `Source` tag here means "this is
 what os9exec's C does" — a statement about os9exec, not about OS-9. Where a
-Microware manual disagrees with a runtime, the manual is the specification;
-the disagreement is recorded in `DIVERGENCES.md` and only Microware or genuine
-hardware resolves it. `SOURCE-AUTHORITY.md` defines what counts as Microware's
-word. Tag legend: sibling skill's `os9-dev/references/CONFIDENCE-TAGS.md`.
+Microware manual disagrees with a runtime, the manual is the specification,
+the claim records both readings, and only Microware or genuine hardware
+resolves it. `SOURCE-AUTHORITY.md` defines what counts as Microware's word.
+Tag legend: sibling skill's `os9-dev/references/CONFIDENCE-TAGS.md`.
 
 **Driver and file-manager entry points cannot be tested on os9exec.** It has
 no module dispatch for them: `I$Attach` (`icalls.c`) never allocates driver

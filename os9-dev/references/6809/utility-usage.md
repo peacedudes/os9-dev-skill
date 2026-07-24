@@ -499,6 +499,6 @@ plus the 1982 Tandy CoCo quick reference, were treated as 6809
 cross-checks for that gap. A handful of items (`dcheck`'s options,
 `wcreate -s=<type>`, the `tmode`/`xmode` `baud=`/`psc=` parameters,
 `cobbler`'s existence, and NitrOS-9's own `format` syntax) are
-additionally tagged `Live`, confirmed against a real NitrOS-9 session via
-`tools/nitros9repl.sh`. NitrOS-9's utilities are a modern rewrite — flag
-any live divergence you find as such, not as a manual error.
+additionally tagged `Live`, confirmed against a real NitrOS-9 session.
+NitrOS-9's utilities are a modern rewrite — flag any live divergence you
+find as such, not as a manual error.

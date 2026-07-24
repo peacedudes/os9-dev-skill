@@ -33,10 +33,8 @@ Topic → target → file. Keywords are deliberately dense; scan for yours.
 | Question about… | Target | Read |
 |---|---|---|
 | Syntax, types, PROCEDUREs, I/O, operators, functions, error handling, debug mode | all | basic09/basic09-language.md |
-| Numeric widths/ranges, overflow, 68k specifics | 68k | basic09/os9-68k-basic-cheatsheet.md |
-| 6809 specifics: 16-bit INTEGER, 40-bit REAL, hex-constant sign flip, Graphics Interface Module | 6809 | basic09/basic09-cheatsheet.md |
-| Porting between 6809/68k, calling machine-language modules from BASIC09 | both | basic09/basic09-vs-68k-differences.md |
-| Common mistakes, PRINT USING format strings, `!` comment divergences | all | basic09/gotchas.md |
+| Numeric widths/ranges/precision per target, INTEGER overflow, hex-constant sign flip, REAL formats and the single-precision-`math` trap, 68k-only commands (SHELL/CHAIN/command-line PARAM), Graphics Interface Module, **calling 68k assembly or C from BASIC09** (worked `psect`/`r68`/`l68` examples) | both | basic09/basic09-per-target.md |
+| Digest of every trap, one line each with a pointer: porting hazards, fabricated syntax, surprising behavior | all | basic09/gotchas.md |
 | PACK, RunB, packed-module resolution (F$Link/CHX), PARAM argument binding, "Can't install trap handler" triage | all | basic09/pack-and-runb.md |
 
 ## C
@@ -52,7 +50,8 @@ Topic → target → file. Keywords are deliberately dense; scan for yours.
 | Question about… | Read |
 |---|---|
 | F$/I$ syscall catalog, TRAP #0 convention, register contracts, F$Event/F$Alarm subfunctions, debugger-support calls (F$DFork/F$DExec) | 68k/syscall-reference.md |
-| Assembly: psect/vsect, register conventions, embedded asm, exception vectors, TRAP mnemonics | 68k/os9-68k-assembly.md |
+| Assembly: register conventions, program-entry register state, embedded asm, exception vectors, TRAP mnemonics, `r68`/`l68` gotchas | 68k/os9-68k-assembly.md |
+| **Working `psect` syntax for a hand-written 68k module** (the assembly file flags this as a manual gap; the only live-verified example lives here) | basic09/basic09-per-target.md |
 | TCP/IP sockets, SOCKMAN/IFMAN/mbuf, hosts/inetdb config, ifgen/ipconfig/routed, ftp | 68k/network-sockets.md |
 
 ## 6809

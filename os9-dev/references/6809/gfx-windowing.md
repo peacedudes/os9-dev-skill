@@ -216,25 +216,20 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   did not reproduce.** `RUN GFX2("OWEND")` right after the `OWSET` above
   left the punched-out area still background-colored — the original bar
   content underneath was not restored, contradicting "restoring the
-  previous screen contents if they were saved." Varied twice before
-  reporting this: a `save_switch=0` control on the same geometry never
-  erased the area in the first place (so, consistently, nothing needed
-  restoring), and the same `OWSET(1,...)`+`OWEND` sequence reproduced
-  identically on a type-7 (640×192, 80-column) window with proportionally
-  scaled parameters. Both calls' arity is independently confirmed correct
-  (foreground `PRINT`-marker pass, no errors) — it's specifically the
-  restore behavior that's suspect. A black-box finding about NitrOS-9's own
-  CoCo3 windowing driver, unresolved — `windint`'s implementation was not
-  available to check it against the way `LINE`/`LINEM` was settled from
-  `gfx2.asm` itself.
+  previous screen contents if they were saved." Reproduced on a second
+  geometry (type-7, 640×192, 80-column, proportionally scaled), with a
+  `save_switch=0` control confirming nothing was erased to restore in that
+  case, and both calls' arity independently confirmed — so it is
+  specifically the restore that is suspect. A black-box finding about
+  NitrOS-9's own CoCo3 windowing driver; `windint`'s implementation wasn't
+  available to settle it the way `gfx2.asm` settled `LINE`/`LINEM`.
 - `SELECT([path])` — makes a window the active display target; if
   omitted, defaults to the standard input/output/error paths (0/1/2).
   Whether the switch is visible right away depends on which window the
   calling code is currently running from — from inside the window being
   switched to, it shows immediately; from elsewhere, the switch is
   deferred and only takes visible effect on the next CLEAR keypress.
-  **`Live` — necessary, but not sufficient.** Two results, and
-  the second corrects a first impression:
+  **`Live` — necessary, but not sufficient**, in two parts:
   - It does **not** display the window by itself. Writing `WSelect` ($1b21)
     to a window changed nothing, including when the writing process had
     *all* its std paths on that window (`display 1b 21 <>/w4`). A CLEAR
@@ -258,13 +253,10 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   are character-grid units, the same convention as `OWSET`/`CURXY`, not
   pixels: `CWAREA(0,0,20,12)` on a 40×24-character window, followed by a
   `BOX` at the full nominal `(0,0)`-`(639,191)` range, rendered compressed
-  into roughly the top-left half of the window, matching the 20/40 × 12/24
-  = 50%/50% shrink exactly. An earlier session's raw-escape test of this
-  call produced a corrupted "black band" and was read as a parameter-unit
-  mystery; re-testing through the validated `RUN GFX2(...)` call path
-  (letting `gfx2.asm`'s own encoder build the escape sequence instead of
-  guessing byte widths by hand) resolved cleanly, so that result was almost
-  certainly a wrong-byte-width guess in the raw escape, not a real defect.
+  into roughly the top-left half of the window — exactly the 20/40 × 12/24
+  shrink. **Test calls like this through `RUN GFX2(...)`, not a hand-built
+  raw escape**: guessing an argument's byte width in the `$1B` sequence
+  yields a corrupted result that reads as a real defect in the call.
 
 ### Drawing primitives
 

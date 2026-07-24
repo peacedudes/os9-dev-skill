@@ -81,10 +81,9 @@ lists exactly three modifiers: "`<` Redirects the standard input path,
 `>` Redirects the standard output path, `>>` Redirects the standard error
 path." The Unix reflex that `>>` means append is the trap. OS-9 additionally
 has output-redirection modifiers `>+` (append to existing file or create) and
-`>-` (truncate existing file or create) — these two are **not** in the v2.4
-manual, but both are `Live` on 6809 and 68k (`>+` appends, `>-` truncates,
-both create when absent; see `DIVERGENCES.md`), though standard `>` (create
-only, fail if exists) remains the default.
+`>-` (truncate existing file or create) — undocumented in the v2.4 manual but
+both `Live` on 6809 and 68k. Standard `>` (create only, fail if exists)
+remains the default.
 Details: `os9-tools-and-shell.md`.
 
 ### 5. Control keys are inverted or unfamiliar
@@ -111,7 +110,7 @@ default, not guaranteed. Full key set and remapping:
 
 ## Tier 2 — same concept, different contract (close, but specifics differ)
 
-### forkdoesn't share memory
+### `fork` doesn't share memory
 
 `F$Fork` gives the child a fully independent data area — no
 copy-on-write, no shared pages. Only deliberate IPC (pipes, data modules,

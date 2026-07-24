@@ -167,7 +167,7 @@ already-compiled program (`Live`). **To get full precision, compile for the
 `1.0/10.0+2.0/10.0-3.0/10.0` gave a residual of **exactly 0** (the 68881's 80-bit
 extended precision — even tighter than 64-bit double), vs 2⁻²² without it. So the
 68881 emulation is accurate; the single-precision default is a `math`-trap
-limitation, not the CPU core. See `basic09/basic09-vs-68k-differences.md`.
+limitation, not the CPU core. See `basic09/basic09-per-target.md`.
 
 On the 6809 compiler only, `SHORT`/`SHORT INT` are synonyms for plain
 `int`, `LONG INT` is a synonym for `long`, and `LONG FLOAT` means `double`
@@ -264,7 +264,7 @@ document (explicit 6809 references, zero 68000 mentions) despite
 sometimes circulating in 68k archive folders. `c-link`, named throughout
 below, is a 6809 tool — it does not exist on 68k SDKs (exhaustively
 searched on a real 68k disk image). **For 68K, use the `Live` method
-in `basic09/basic09-vs-68k-differences.md`'s "Calling 68000
+in `basic09/basic09-per-target.md`'s "Calling 68000
 machine-language procedures from BASIC09" section instead**: compile
 the C function with ordinary `cc -r -s`, then hand-write a small
 assembly shim (assembled with `r68`, linked with the ordinary `l68` —
@@ -337,5 +337,5 @@ summary, if precision matters.)*
 Radio-Shack/CoCo-branded) and "The OS-9 Primer" (documents the later
 "Ultra C" 68k compiler and its register conventions). 68k data-type
 sizes: `Live`, confirmed on a real toolchain, not just documentation. The
-68K way to call C from BASIC09 (`basic09/basic09-vs-68k-differences.md`)
+68K way to call C from BASIC09 (`basic09/basic09-per-target.md`)
 is `Live`, not `Manual`.

@@ -19,7 +19,7 @@ names (`F$xxx`/`I$xxx`).
 | Header | Notes |
 |--------|-------|
 | `<stdio.h>` | File I/O, printf/scanf; defines `FILE`, `stdin`, `stdout`, `stderr` |
-| `<stdlib.h>` | `exit()`, `system()`; limited (no `rand()`, etc.). **Not on Ultra C's default `CDEF` include path** — `Live` (68k): `#include <stdlib.h>` fails `cpp` with `can't open /h0/DEFS/stdlib.h (err=216)` under the standard `cc` toolchain; the file exists on-disk only under the gcc2-specific `DEFS/os9lib`/`DEFS/GCC2` trees (`-I/h0/DEFS/os9lib`, see `os9-c-compiler-setup` in project history). K&R doesn't require a prototype for `exit()`, so dropping the include and declaring nothing works fine |
+| `<stdlib.h>` | `exit()`, `system()`; limited (no `rand()`, etc.). **Not on Ultra C's default `CDEF` include path** — `Live` (68k): `#include <stdlib.h>` fails `cpp` with `can't open /h0/DEFS/stdlib.h (err=216)` under the standard `cc` toolchain; the file exists on-disk only under the gcc2-specific `DEFS/os9lib`/`DEFS/GCC2` trees (reachable with `-I/h0/DEFS/os9lib`). K&R doesn't require a prototype for `exit()`, so dropping the include and declaring nothing works fine |
 | `<ctype.h>` | Character classification (macros, K&R-era coverage) |
 | `<setjmp.h>` | `setjmp()`, `longjmp()` |
 | `<time.h>` | OS-9-specific system time (see "File Dates and Time Zones" below) |

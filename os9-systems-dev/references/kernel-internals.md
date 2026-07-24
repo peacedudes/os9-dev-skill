@@ -372,8 +372,8 @@ The OS-9 Guru (module directory, memory allocation, process
 descriptor internals — including the detailed
 `F$AProc`/`D_ActAge`/`P$Sched` scheduler walkthrough behind the
 system-wide-counter description above); cross-checked against OS-9
-Insights (editions 2-8)
-and the OS-9 v2.4 Technical Reference Manual. (The rejected per-process
+Insights (editions 2-3) and the OS-9 v2.4 Technical Reference Manual. (The
+rejected per-process
 "age by one on each arrival" description conflicts with that walkthrough —
 the real mechanism is a single decrementing system-wide counter plus
 a per-process scheduling constant fixed at insertion time).

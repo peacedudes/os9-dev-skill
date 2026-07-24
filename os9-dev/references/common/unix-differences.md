@@ -82,8 +82,9 @@ lists exactly three modifiers: "`<` Redirects the standard input path,
 path." The Unix reflex that `>>` means append is the trap. OS-9 additionally
 has output-redirection modifiers `>+` (append to existing file or create) and
 `>-` (truncate existing file or create) — these two are **not** in the v2.4
-manual (they're a `Live` 6809 finding; see `DIVERGENCES.md` Part 4), though
-standard `>` (create only, fail if exists) remains the default.
+manual, but both are `Live` on 6809 and 68k (`>+` appends, `>-` truncates,
+both create when absent; see `DIVERGENCES.md`), though standard `>` (create
+only, fail if exists) remains the default.
 Details: `os9-tools-and-shell.md`.
 
 ### 5. Control keys are inverted or unfamiliar

@@ -276,7 +276,7 @@ match register-for-register.
 | I$Close | $8F | A=path | Implicit Detach. **`Live`, 2026-07-19** (already exercised by `dogfood-asm-line-counter.a`, 2026-07-18, but never credited here until now): register contract confirmed — closing a valid open path succeeds cleanly, both in the read-only line-counter test and in `syscall-ftime-iread-iwrite.a`'s write+read round trip |
 | I$DeletX | $90 | A=access mode (1/2/3=data,4=exec), X=pathlist | Added in Rev F1 (1983); delete with explicit directory selection. **`Live`, 2026-07-19**: `A=1` (data) confirmed deleting a file created by the same test, no error. Test: `test/6809-live-verification/batch3-04.a` |
 
-Common GETSTAT/SETSTAT function codes: 0=option section (`SS.OPT`, read/write raw path descriptor options), 1=`SS.RDY` data-ready test (SCF), 2=`SS.SIZ` file size, 5=`SS.POS` file position, 6=`SS.EOF` test. CoCo adds `SS.Mouse` ($89 as a GetStat sub-function) — see `coco-dragon-hardware.md`.
+Common GETSTAT/SETSTAT function codes (**`Manual`, verified 2026-07-23 against the System Programmer's Manual §11.3 GetStat table**; the manual's canonical spellings are `SS.Opt`/`SS.Ready`/`SS.Size`/`SS.Pos`/`SS.EOF`): 0=option section (`SS.OPT`, read/write raw path descriptor options), 1=`SS.RDY` data-ready test (SCF), 2=`SS.SIZ` file size, 5=`SS.POS` file position, 6=`SS.EOF` test. The manual lists two more the CoCo work rarely needs: `SS.DevNm` ($E, return device name — IOMAN) and `SS.FD` ($F, read file-descriptor sector — RBF, Level II). Record locking added `SS.Lock`/`SS.Ticks` (setstat) in Rev F1. CoCo adds `SS.Mouse` ($89 as a GetStat sub-function) — see `coco-dragon-hardware.md`.
 
 ## Signals
 

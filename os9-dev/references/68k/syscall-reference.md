@@ -11,7 +11,6 @@ Chapter 16 system-mode requests (`F$Move`, `F$SLink`, `F$SSvc`, `F$SetSys`,
 `F$GPrDsc`/`F$GPrDBT`, …) are kernel-internal and belong to the
 `os9-systems-dev` skill — deliberately absent here, not overlooked.
 
-Rows tagged `Flag` carry a known cross-manual register-layout conflict.
 Verify against a primary manual before coding against exact register slots on
 anything not tagged `Live`.
 
@@ -43,8 +42,8 @@ on TRAP #1–#15 via F$TLink.
 
 | Call | Purpose | Key inputs | Key outputs | Notes |
 |------|---------|-----------|------------|-------|
-| **F$Fork** | Create process | d0.w=module type (0=any), d1.l=extra stack/mem, d2.l=param size, d3.w=# I/O paths, d4.w=priority, (a0)=module name, (a1)=params | d0.w=child PID, (a0)=updated past the module name | Child inherits priority, open paths, user/group ID, current dirs, environment — never memory. `Live`; contract is the *OS-9/68000 Operating System Technical Manual* (1984) ch. 14. Conflicting passages in *other* Microware manuals are a documentation inconsistency, logged in `DIVERGENCES.md` Part 4 |
-| **F$Chain** | Replace current program | as F$Fork `Manual, Flag` | doesn't return | Fork+Exit in one: reuses the caller's process descriptor and PID, preserves open paths. **A failed chain kills the caller** — the caller's image is torn down (unlink, free) *before* the new name is resolved, so a bad name lands on an already-gutted process with nothing left to return an error to; the bare `E$MNF` you see is printed by the kernel, not the program. Faithful to the contract on both os9exec and NitrOS-9 (`fchain.asm`) — do not flag it as a bug. `Live` |
+| **F$Fork** | Create process | d0.w=module type (0=any), d1.l=extra stack/mem, d2.l=param size, d3.w=# I/O paths, d4.w=priority, (a0)=module name, (a1)=params | d0.w=child PID, (a0)=updated past the module name | Child inherits priority, open paths, user/group ID, current dirs, environment — never memory. `Live`; contract confirmed against the *OS-9/68000 Operating System Technical Manual* (1984) ch. 14 |
+| **F$Chain** | Replace current program | as F$Fork | doesn't return | Fork+Exit in one: reuses the caller's process descriptor and PID, preserves open paths. **A failed chain kills the caller** — the caller's image is torn down (unlink, free) *before* the new name is resolved, so a bad name lands on an already-gutted process with nothing left to return an error to; the bare `E$MNF` you see is printed by the kernel, not the program. Faithful to the contract on both os9exec and NitrOS-9 (`fchain.asm`) — do not flag it as a bug. `Live` |
 | **F$Exit** | Terminate | d1.w=status | — | Closes paths. Auto-unlinks only the *primary* module and trap handlers — anything else you linked/loaded leaks unless unlinked first. `Live` |
 | **F$Wait** | Wait for child | — | d0.w=child PID, d1.w=status | Also reclaims the dead child's process descriptor; forking without matching waits can fill the process table. `Live` |
 | **F$SPrior** | Set priority | d0.w=PID, d1.w=priority (0=min, 65535=max) | — | Same-user rule; superuser (group 0) can set any. Shell: `setpr`. `Live` |

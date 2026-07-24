@@ -64,17 +64,11 @@
 - **`PRINT USING`'s optional path number goes right after `PRINT`, before
   `USING`** — `PRINT #path USING fmt, list`, not `PRINT USING #path,
   ...` (the latter is a syntax error, `Error #000:018`).
-- **⚠ DIVERGENCE D-001**: `PRINT USING`'s `B` (boolean) format is documented by
-  Microware as printing `"TRUE"`/`"FALSE"`, but both reimplementations print
-  mixed-case `"True    "` / `"False   "` (8-char field, correct width) — `Live`
-  on both (68k os9exec; 6809 real Microware BASIC09 01.01.00).
-  **Two community reimplementations agreeing is not the manual being wrong** —
-  they may share an inherited defect. Unresolved pending Microware; see
-  `DIVERGENCES.md` and `basic09-language.md`'s PRINT USING section.
-  Given 68k `os9exec` faithfully reproduces real Microware BASIC09
-  behavior elsewhere, this is very likely the Microware runtime itself
-  rather than an emulator artifact, but that's an inference, not a
-  6809-confirmed fact yet.
+- **BOOLEAN prints mixed-case, contra the manual.** `PRINT USING`'s `B`
+  format is documented by Microware as printing `"TRUE"`/`"FALSE"`, but every
+  runtime tested prints `"True    "` / `"False   "` (8-char field, correct
+  width) — `Live` on 68k os9exec and on real Microware BASIC09 6809 01.01.00.
+  A genuine divergence from the documented behaviour; see `DIVERGENCES.md`.
 - **A literal `;` inside a string constant gets a spurious backslash
   escape** — `PRINT "Enter lines of text; blank line ends input:"`
   stores and echoes as `Enter lines of text\; blank line ends input:`,

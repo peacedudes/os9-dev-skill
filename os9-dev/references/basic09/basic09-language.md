@@ -524,23 +524,13 @@ after it (`PRINT USING #path, ...` is a syntax error, `Error #000:018`).
 `12.35`. `PRINT #path USING "I4", 10`, `"S8", "HELLO"`, `"H4", 100`
 (→ `0064`, correct hex of 100) all compiled and ran with no error.
 
-**⚠ DIVERGENCE D-001 — both reimplementations disagree with two Microware
-manuals here; do not treat either side as settled.** The manuals state BOOLEAN
-values print as the strings `"TRUE"` and `"FALSE"` (uppercase) — *BASIC09
-Reference Manual* Rev H (Microware) and the Tandy 1983 edition, independently.
-Both `os9exec` and real 6809 Microware BASIC09 render mixed case instead. Which
-side is in error is Microware's call, not ours; see `DIVERGENCES.md`.
-`Live` (68k): `PRINT #path USING "B8", TRUE`
-produces `"True    "` — mixed case (capital T, lowercase `rue`), not
-`"TRUE"`. Field width is still exactly correct (8 chars).
-
-**`Live` (6809) — identical on real Microware BASIC09 "6809 VERSION
-01.01.00" under NitrOS-9, so it is not an os9exec artifact.** Same file
-round-trip method: `TRUE` → `"True    "`,
-`FALSE` → `"False   "`, `LEN()` = 8 for both, and the output file measured
-exactly 18 bytes on disk — 2 × (8-char field + CR), an independent check
-on the field width that doesn't rely on `LEN()` at all. The manual is
-wrong on both architectures.
+**BOOLEAN prints mixed-case, contra the manual.** Both the Rev H (Microware)
+and Tandy 1983 BASIC09 manuals state BOOLEAN values print as `"TRUE"`/`"FALSE"`
+(uppercase). `Live`: `PRINT #path USING "B8", TRUE` produces `"True    "` on
+68k os9exec *and* on real Microware BASIC09 6809 01.01.00 under NitrOS-9 —
+mixed case, correct 8-char field width, on both architectures. So it is not an
+os9exec artifact; whether the manual overstates or shipping code always
+diverged is Microware's call. See `DIVERGENCES.md`.
 
 ```basic
 PRINT [ print-list ]

@@ -141,26 +141,22 @@ The 6809 header is a different, shorter layout (9 bytes, sync `$87,$CD`,
 16-bit fields) — full byte layout in `6809/syscalls-and-module-format.md`.
 Compiler-specific values worth isolating:
 
-- The 6809 C compiler's module type/language byte and attribute/revision
-  `$81` (reentrant, rev 1) are compiler-specific values, not general
-  constants; the byte is `$11`, not `$04`. **`Manual` + `Live` (6809):**
-  the packing is documented, not merely inferred — the *OS-9 System Programmer's Manual* §4.2.1 states "the module
-  type is coded into the four most significant bits of byte 6" and lists
-  `$10` Prgrm, `$20` Sbrtn, `$40` Data; the language occupies the low nibble.
-  `ident` on real modules confirms it directly: the byte is `(type << 4) |
-  language`, one byte, so the type nibble is the *high* one — `dir` and `copy` (native 6809 object
-  programs) both read `$11`, `basic09`'s own `BFX` reads `$21` (Sbrtn +
-  object), and a freshly `PACK`ed BASIC09 procedure reads `$22` (Sbrtn +
-  BASIC09 I-code, `At/Rv $81` exactly as above). `$04` would decode as
-  type nibble 0 — not a valid module type at all — with language 4, the
-  nibble `6809/syscalls-and-module-format.md` marks as the *reserved,
-  unimplemented* C I-code. A 6809 C program compiling to native object
-  code is therefore `$11`, agreeing with `c/os9-clib-reference.md`'s
-  `os9fork()` entry (`lang == 1`). **Scope this honestly:** what was run
-  live is the encoding and the native-object-program value; no actual
-  6809 C-compiled module was available to `ident`, so `$11` for that
-  specific compiler's output is a sound inference from a confirmed
-  encoding, not a direct observation.
+- **The 6809 type/language byte is `(type << 4) | language`, a single
+  byte** — so a 6809 C program reads `$11`, not `$04`. `Manual` (the *OS-9
+  System Programmer's Manual* §4.2.1: "the module type is coded into the
+  four most significant bits of byte 6", listing `$10` Prgrm, `$20` Sbrtn,
+  `$40` Data, language in the low nibble) and `Live` via `ident` on real
+  modules — `dir` and `copy` (native 6809 object programs) read `$11`,
+  `basic09`'s own `BFX` reads `$21` (Sbrtn + object), and a freshly
+  `PACK`ed procedure reads `$22` (Sbrtn + BASIC09 I-code) with `At/Rv $81`
+  (reentrant, rev 1). `$04` would decode as type nibble 0 — not a valid
+  module type at all — with language 4, which
+  `6809/syscalls-and-module-format.md` marks reserved and unimplemented.
+  **Scope:** the encoding and the native-object value are `Live`; no 6809
+  C-compiled module was available to `ident`, so `$11` for that compiler's
+  own output is inference from a confirmed encoding rather than a direct
+  observation. It agrees with `c/os9-clib-reference.md`'s `os9fork()` entry
+  (`lang == 1`). These are compiler-specific values, not general constants.
 - `os9fork()`/`chain()` on 6809 want `lang == 1` (6809 machine code).
   Numerically equal to 68k's Objct=1 but a mutually incompatible format —
   never merge the two facts.

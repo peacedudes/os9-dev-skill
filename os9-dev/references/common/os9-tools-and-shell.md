@@ -161,9 +161,6 @@ Sources: Using Professional OS-9 v2.4 (shell, basic commands, utilities);
 The OS-9 Primer (environment variables, built-ins); The OS-9 Guru §2.1–2.2;
 OS-9 v2.4 Technical Reference Manual; Technical I/O Manual v2.4. The
 `#<size>k` modifier behavior is additionally `Live` on os9exec.
-`chd`/`chx`-with-no-argument behavior: **`Live`** (os9exec).
-Bare `chd` goes to `$HOME` — set `HOME=/dd/DEFS`, `chd /dd/CMDS`, then a bare
-`chd` landed in `/dd/DEFS` (the env var, *not* the login/password data dir).
-Bare `chx` is a no-op — after `chx /dd/CMDS`, a bare `chx` left the exec dir
-there (a command in `/dd/CMDS` still resolved, where it failed under a
-different `chx`).
+Bare `chd` (to `$HOME`, the environment variable rather than the
+password-file data directory) and bare `chx` (a no-op) are both **`Live`**
+on os9exec.

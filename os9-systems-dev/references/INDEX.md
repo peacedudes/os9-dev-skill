@@ -15,9 +15,9 @@ application-level work and live in the sibling `os9-dev` skill
 `common/memory-and-io.md` also covers a mental-model-level pass over
 device descriptors, `I$Attach`/device-table matching, and path-descriptor
 structure — the same territory `device-drivers.md`/`file-managers.md`
-cover in full systems depth here; the two are meant to agree, cross-check
-`memory-and-io.md` when changing a shared fact (offset, field name,
-matching rule) in either of those two files.
+cover in full systems depth here; the two are meant to agree, so cross-check
+`os9-dev`'s `memory-and-io.md` when changing a shared fact (offset, field
+name, matching rule) in either of those two files.
 
 **Confidence.** Tag legend: sibling skill's
 `os9-dev/references/CONFIDENCE-TAGS.md`. The split in this skill is

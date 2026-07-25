@@ -139,6 +139,30 @@ but never bind across clause punctuation (`,;:()`), so a later clause's
    does quote bad values on purpose — `module-format.md` prints `M$Parity` at
    `$28` specifically to warn the reader that that scan is wrong.
 
+7. **Skill boundary** — a citation that stops resolving once a skill is
+   installed on its own. Each skill is symlinked into `~/.claude/skills/`
+   individually, so anything it names must be findable from inside that one
+   directory. Three ways that breaks, all of which really happened:
+   a **root doc** (`SOURCE-AUTHORITY.md`, `DIVERGENCES.md`, `README.md` sit
+   beside the skills, not in them — four payload files pointed at
+   `SOURCE-AUTHORITY.md` and none could resolve it once installed); a **bare
+   sibling filename** (`6809-level2-mmu.md` written unqualified in an os9-dev
+   file names nothing an os9-dev reader can find); and **shared content
+   duplicated into both skills**, which the layout rule puts in os9-dev alone.
+   Fails the run.
+
+   The sibling test looks for the owning skill's name on the citing line **or
+   the one above**, because the qualifier routinely wraps ("Full mechanism:
+   `os9-systems-dev`" / "skill's `kernel-internals.md`"). `INDEX.md`,
+   `SOURCES.md` and `SKILL.md` are exempt from the duplication rule — each
+   skill legitimately has its own.
+
+   Deliberately mechanical: it checks that a citation **resolves**, not whether
+   it is a dependency or a scope marker ("drivers are the sibling's job"). No
+   regex separates those, and os9-dev names the sibling legitimately and often.
+   This is the one check that must see `SKILL.md`/`SOURCES.md`, so `run()`
+   reads them into the doc set — they are still never scanned as claim sources.
+
 Meta-docs (`CONFIDENCE-TAGS.md`, `VERIFICATION-BACKLOG.md`, `INDEX.md`,
 `SOURCES.md`) are excluded from checks 1–3 (used only for their tag set) but
 `INDEX.md` is exactly what check 4 scans — they quote calls as examples but
@@ -182,6 +206,16 @@ vs. the real `feedback_commit_approval`) — real data the check was never
 tuned against, which is why it's convincing rather than circular. That
 inventory is a maintenance worklist, not fixed by this change; see the
 `doc-consistency-checker` memory.
+
+Check 7 was proven against the two breaks that motivated it, both real and both
+already fixed by the time the check existed: reintroducing the
+`SOURCE-AUTHORITY.md` pointer into `os9-dev/SKILL.md` and the bare
+`6809-level2-mmu.md` into `6809/utility-usage.md` makes the checker flag
+exactly those two lines, exit 1; restoring both is silent again, exit 0. Run
+for real it also found one break nobody had noticed — `os9-systems-dev`'s
+`INDEX.md` citing `memory-and-io.md` with the `os9-dev` qualifier four lines
+upstream, out of any reasonable reader's reach — which is the useful kind of
+result, since the check was written before that line was looked at.
 
 Check 6 was proven the same way, and the vacuity trap was checked explicitly
 first: the extractor really does bind 182 facts across the corpus, so a silent

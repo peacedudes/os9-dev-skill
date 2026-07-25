@@ -54,6 +54,19 @@ _DOC_TOKEN = re.compile(r"[\w./-]+\.md")
 
 INDEX_FILENAME = "INDEX.md"
 DIVERGENCE_FILENAME = "DIVERGENCES.md"
+
+# The two installed skills, and the rule between them (README, "Layout"):
+# shared content lives in os9-dev, which stands alone; os9-systems-dev may
+# depend on it. Only os9-dev is named here because that direction is the one
+# the rule fixes -- the check below is symmetric about *qualification*.
+SKILL_DIRS = ("os9-dev", "os9-systems-dev")
+# Docs that live at the repo root. They are review material: neither skill
+# directory contains them, so a payload file citing one points at nothing once
+# the skill is installed (symlinked) on its own.
+ROOT_ONLY_DOCS = frozenset({"DIVERGENCES.md", "SOURCE-AUTHORITY.md", "README.md"})
+# Per-skill manifests: each skill legitimately has its own copy, so a basename
+# appearing in both skills is duplication only outside this set.
+PER_SKILL_DOCS = frozenset({"INDEX.md", "SOURCES.md", "SKILL.md"})
 # A register entry is defined by its `### D-NNN` heading; a claim cites it with
 # an inline `DIVERGENCE D-NNN` marker (the warning glyph is not required here,
 # so the check does not depend on an emoji surviving an edit).
@@ -416,6 +429,91 @@ def check_cross_references(files, known_basenames):
     return findings
 
 
+def skill_of(path):
+    """Return which skill directory `path` sits under, or None if neither."""
+    parts = path.replace(os.sep, "/").split("/")
+    return next((part for part in parts if part in SKILL_DIRS), None)
+
+
+def check_skill_boundaries(files):
+    """Flag references that break when a skill is installed on its own.
+
+    Each skill is symlinked into `~/.claude/skills/` by itself, so anything it
+    cites has to be resolvable from inside that one directory. Two ways that
+    breaks, both of which have actually happened here:
+
+    - **A root doc.** `SOURCE-AUTHORITY.md` and friends live beside the skills,
+      not inside them. Four payload files pointed at `SOURCE-AUTHORITY.md`
+      before this check existed; installed, none of them could resolve it.
+    - **A bare sibling filename.** `6809-level2-mmu.md` lives in
+      os9-systems-dev; written unqualified in an os9-dev file it names nothing
+      a reader of that skill can find. Naming the owning skill fixes it, so the
+      check looks for that name on the citing line or the one above (the
+      qualifier routinely wraps onto the previous line).
+
+    Also flags a non-manifest basename present in *both* skills: shared content
+    is supposed to live in os9-dev alone, with the sibling depending on it.
+
+    Deliberately mechanical -- it checks that a citation *resolves*, not whether
+    it is a dependency or a scope marker ("drivers are the sibling's job"),
+    which no regex can tell apart. `files` is (filename, text) pairs.
+    """
+    owners = {}
+    for filename, _text in files:
+        skill = skill_of(filename)
+        if skill:
+            owners.setdefault(os.path.basename(filename), set()).add(skill)
+
+    findings = []
+    for basename, skills in sorted(owners.items()):
+        if len(skills) > 1 and basename not in PER_SKILL_DOCS:
+            findings.append(
+                Finding(
+                    "skill-boundary",
+                    None,
+                    f"`{basename}` exists in both skills -- shared content belongs in "
+                    "os9-dev alone, with os9-systems-dev citing it",
+                    sorted((f, 0) for f, _ in files if os.path.basename(f) == basename),
+                )
+            )
+
+    for filename, text in files:
+        skill = skill_of(filename)
+        if not skill:
+            continue
+        lines = text.splitlines()
+        for lineno, line in enumerate(lines, start=1):
+            context = (lines[lineno - 2] if lineno >= 2 else "") + " " + line
+            for ref in extract_doc_references(line):
+                base = os.path.basename(ref)
+                if base in ROOT_ONLY_DOCS:
+                    findings.append(
+                        Finding(
+                            "skill-boundary",
+                            None,
+                            f"`{base}` lives at the repo root, outside the installed "
+                            "skill -- state the fact inline instead of pointing at it",
+                            [(filename, lineno)],
+                        )
+                    )
+                    continue
+                elsewhere = owners.get(base, set()) - {skill}
+                if not elsewhere or skill in owners.get(base, set()):
+                    continue
+                other = sorted(elsewhere)[0]
+                if other not in context:
+                    findings.append(
+                        Finding(
+                            "skill-boundary",
+                            None,
+                            f"`{base}` lives in `{other}`; name the skill when citing "
+                            "across the split, or this resolves to nothing",
+                            [(filename, lineno)],
+                        )
+                    )
+    return findings
+
+
 def check_divergence_links(files, register_text):
     """Flag any break in the two-way link between `DIVERGENCES.md` and the claims.
 
@@ -571,14 +669,19 @@ def run(roots, register_text=None):
     """
     files = collect_markdown(roots)
     known = load_known_tags(files)
-    known_basenames = {os.path.basename(p) for p in files + _index_adjacent_files(roots)}
+    adjacent = _index_adjacent_files(roots)
+    known_basenames = {os.path.basename(p) for p in files + adjacent}
     mentions, facts, findings, inventory, doc_texts = [], [], [], [], []
-    for path in files:
+    # SKILL.md/SOURCES.md are read for boundary and cross-reference purposes but
+    # never scanned as claim sources -- they are entry points and manifests, and
+    # the boundary check is precisely the one that has to see them (the first
+    # dangling root-doc reference this check caught lived in SKILL.md).
+    for path in files + adjacent:
         display = os.path.relpath(path)
         with open(path, encoding="utf-8") as handle:
             text = handle.read()
         doc_texts.append((display, text))
-        if os.path.basename(path) in META_DOCS:
+        if path in adjacent or os.path.basename(path) in META_DOCS:
             continue
         mentions.extend(find_mentions(text, display, known))
         facts.extend(extract_shared_facts(text, display))
@@ -586,6 +689,7 @@ def run(roots, register_text=None):
         inventory.extend(scan_open_flags(text, display, known))
     findings = check_presence_contradiction(mentions) + check_shared_facts(facts) + findings
     findings += check_cross_references(doc_texts, known_basenames)
+    findings += check_skill_boundaries(doc_texts)
     if register_text is None:
         register_text = next(
             (text for name, text in doc_texts if os.path.basename(name) == DIVERGENCE_FILENAME),

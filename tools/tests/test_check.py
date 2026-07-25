@@ -394,6 +394,111 @@ class TestExtractDocReferences(unittest.TestCase):
         self.assertEqual(chk.extract_doc_references(line), ["references/6809/using-nitros9-repl.md"])
 
 
+class TestSkillOf(unittest.TestCase):
+    def test_reads_the_skill_from_the_path(self):
+        self.assertEqual(chk.skill_of("os9-dev/references/common/ipc.md"), "os9-dev")
+        self.assertEqual(chk.skill_of("os9-systems-dev/SKILL.md"), "os9-systems-dev")
+
+    def test_the_two_names_do_not_shadow_each_other(self):
+        """`os9-dev` must not match inside `os9-systems-dev`, or every
+        systems-dev file would be misattributed to the sibling."""
+        self.assertEqual(chk.skill_of("os9-systems-dev/references/x.md"), "os9-systems-dev")
+
+    def test_none_outside_the_skills(self):
+        self.assertIsNone(chk.skill_of("DIVERGENCES.md"))
+        self.assertIsNone(chk.skill_of("tools/DESIGN.md"))
+
+
+class TestSkillBoundaries(unittest.TestCase):
+    """Each skill is symlinked into ~/.claude/skills/ alone, so every citation
+    has to resolve from inside that one directory."""
+
+    SIBLING = ("os9-systems-dev/references/6809-level2-mmu.md", "# MMU\n")
+
+    def test_flags_a_root_doc_cited_from_the_payload(self):
+        # The real defect this check was written for: SKILL.md pointed at a
+        # file that is not inside the installed skill.
+        files = [("os9-dev/SKILL.md", "See `SOURCE-AUTHORITY.md` for authority.\n")]
+        findings = chk.check_skill_boundaries(files)
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0].check, "skill-boundary")
+        self.assertIn("repo root", findings[0].message)
+        self.assertEqual(findings[0].locations, [("os9-dev/SKILL.md", 1)])
+
+    def test_flags_every_root_doc(self):
+        for doc in ("DIVERGENCES.md", "SOURCE-AUTHORITY.md", "README.md"):
+            files = [("os9-dev/references/common/ipc.md", "see `%s`\n" % doc)]
+            self.assertEqual(len(chk.check_skill_boundaries(files)), 1, doc)
+
+    def test_root_doc_named_outside_a_skill_is_fine(self):
+        """tools/ and the root docs themselves may cite each other freely."""
+        files = [("tools/DESIGN.md", "See `SOURCE-AUTHORITY.md`.\n")]
+        self.assertEqual(chk.check_skill_boundaries(files), [])
+
+    def test_flags_a_bare_sibling_filename(self):
+        files = [
+            ("os9-dev/references/6809/utility-usage.md", "see `6809-level2-mmu.md` for DAT\n"),
+            self.SIBLING,
+        ]
+        findings = chk.check_skill_boundaries(files)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("os9-systems-dev", findings[0].message)
+
+    def test_sibling_named_on_the_same_line_resolves(self):
+        files = [
+            ("os9-dev/references/6809/utility-usage.md",
+             "see `os9-systems-dev`'s `6809-level2-mmu.md` for DAT\n"),
+            self.SIBLING,
+        ]
+        self.assertEqual(chk.check_skill_boundaries(files), [])
+
+    def test_sibling_named_on_the_previous_line_resolves(self):
+        """The qualifier routinely wraps -- "Full mechanism: `os9-systems-dev`"
+        ends one line and the filename starts the next."""
+        files = [
+            ("os9-dev/references/common/os9-mental-model.md",
+             "Full mechanism: `os9-systems-dev`\nskill's `kernel-internals.md`.\n"),
+            ("os9-systems-dev/references/kernel-internals.md", "# Kernel\n"),
+        ]
+        self.assertEqual(chk.check_skill_boundaries(files), [])
+
+    def test_citing_a_file_in_your_own_skill_needs_no_qualifier(self):
+        files = [
+            ("os9-dev/references/common/ipc.md", "see `error-codes.md`\n"),
+            ("os9-dev/references/common/error-codes.md", "# Errors\n"),
+        ]
+        self.assertEqual(chk.check_skill_boundaries(files), [])
+
+    def test_flags_shared_content_duplicated_into_both_skills(self):
+        files = [
+            ("os9-dev/references/CONFIDENCE-TAGS.md", "# Tags\n"),
+            ("os9-systems-dev/references/CONFIDENCE-TAGS.md", "# Tags\n"),
+        ]
+        findings = chk.check_skill_boundaries(files)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("os9-dev alone", findings[0].message)
+
+    def test_per_skill_manifests_may_exist_in_both(self):
+        """INDEX/SOURCES/SKILL are each skill's own; only shared *content*
+        is supposed to live in os9-dev alone."""
+        files = [
+            ("os9-dev/references/INDEX.md", "# Index\n"),
+            ("os9-systems-dev/references/INDEX.md", "# Index\n"),
+            ("os9-dev/SOURCES.md", "# Sources\n"),
+            ("os9-systems-dev/SOURCES.md", "# Sources\n"),
+        ]
+        self.assertEqual(chk.check_skill_boundaries(files), [])
+
+    def test_systems_dev_may_depend_on_os9_dev(self):
+        """The allowed direction: shared content lives in os9-dev and the
+        sibling cites it by path."""
+        files = [
+            ("os9-systems-dev/SKILL.md", "Legend: `os9-dev/references/CONFIDENCE-TAGS.md`.\n"),
+            ("os9-dev/references/CONFIDENCE-TAGS.md", "# Tags\n"),
+        ]
+        self.assertEqual(chk.check_skill_boundaries(files), [])
+
+
 class TestCrossReferences(unittest.TestCase):
     def test_flags_index_entry_with_no_matching_file(self):
         files = [("os9-dev/references/INDEX.md", "| Topic | ghost-file.md |\n")]

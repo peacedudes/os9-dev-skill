@@ -9,6 +9,8 @@ case is a real sentence pattern that must never be mistaken for a contradiction,
 and the "must flag" case is a reintroduced I$Dup-style bug.
 """
 
+import contextlib
+import io
 import os
 import sys
 import tempfile
@@ -497,6 +499,42 @@ class TestSkillBoundaries(unittest.TestCase):
             ("os9-dev/references/CONFIDENCE-TAGS.md", "# Tags\n"),
         ]
         self.assertEqual(chk.check_skill_boundaries(files), [])
+
+
+class TestNoInventoryFlag(unittest.TestCase):
+    """The pre-commit hook passes --no-inventory so a failure shows the finding,
+    not ~16 lines of unrelated `Flag` worklist above the prompt."""
+
+    def _corpus(self, extra=""):
+        root = tempfile.mkdtemp()
+        os.makedirs(os.path.join(root, "68k"))
+        with open(os.path.join(root, chk.CONFIDENCE_TAGS_FILE), "w") as handle:
+            handle.write("| Tag | Meaning |\n|---|---|\n| `Live` | ran it |\n| `Flag` | disagree |\n")
+        with open(os.path.join(root, "68k", "s.md"), "w") as handle:
+            handle.write("**F$Fork** forks. `Live`, `Flag` disputed.\n" + extra)
+        return root
+
+    def test_inventory_is_printed_by_default(self):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = chk.main([self._corpus()])
+        self.assertEqual(code, 0)
+        self.assertIn("divergence inventory", out.getvalue())
+
+    def test_no_inventory_suppresses_it_but_keeps_findings(self):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = chk.main([self._corpus("`LIVE` is a miswritten tag.\n"), "--no-inventory"])
+        printed = out.getvalue()
+        self.assertEqual(code, 1)
+        self.assertNotIn("divergence inventory", printed)
+        self.assertIn("miswritten", printed)
+
+    def test_flag_order_does_not_matter(self):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            chk.main(["--no-inventory", self._corpus()])
+        self.assertNotIn("divergence inventory", out.getvalue())
 
 
 class TestCrossReferences(unittest.TestCase):

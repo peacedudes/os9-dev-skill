@@ -21,6 +21,26 @@ clean-run claim must be based on.
 
 Exit status is nonzero if there are any presence/hygiene **findings**; the
 `Flag` **inventory** is informational and never fails the run.
+`--no-inventory` suppresses the inventory, leaving findings only.
+
+## Pre-commit hook
+
+`hooks/pre-commit` runs the checker and the test suite before every commit and
+rejects the commit if either fails. Both together take well under a second, so
+it always runs rather than trying to guess which edits matter.
+
+Enable it once per clone — the hook is tracked, but which hooks directory git
+consults is local config:
+
+```
+git config core.hooksPath tools/hooks
+```
+
+Silent when green; on a failure it prints the findings and stops, having
+committed nothing. `git commit --no-verify` bypasses it for the one commit.
+The checker is invoked with `--no-inventory` there: on a failure the ~16-line
+`Flag` worklist would otherwise sit between the finding and the prompt and
+scroll the one line the author needs off the top.
 
 ## Problem
 

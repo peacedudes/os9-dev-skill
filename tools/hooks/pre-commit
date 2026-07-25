@@ -1,0 +1,21 @@
+#!/bin/sh
+set -u
+
+root=$(git rev-parse --show-toplevel) || exit 1
+cd "$root" || exit 1
+
+run_gate() {
+    label=$1
+    shift
+    if ! output=$("$@" 2>&1); then
+        printf '%s\n\n' "$output"
+        printf 'pre-commit: %s failed -- nothing committed.\n' "$label"
+        printf 'Fix it, or bypass this once with: git commit --no-verify\n'
+        exit 1
+    fi
+}
+
+run_gate "doc-consistency check" python3 tools/check_doc_consistency.py --no-inventory
+run_gate "checker test suite" python3 tools/tests/test_check.py
+
+exit 0

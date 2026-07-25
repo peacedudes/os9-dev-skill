@@ -722,8 +722,15 @@ def main(argv=None):
 
     `--memory-dir DIR` additionally scans DIR's memory files for orphaned
     `[[name]]` links; the path is project-specific so it is never hardcoded.
+
+    `--no-inventory` suppresses the informational `Flag` worklist, leaving only
+    findings. For the pre-commit hook: on a failure the inventory's ~16 lines
+    would otherwise sit between the finding and the prompt, scrolling the one
+    thing the author needs to read off the top.
     """
     argv = list(sys.argv[1:] if argv is None else argv)
+    show_inventory = "--no-inventory" not in argv
+    argv = [a for a in argv if a != "--no-inventory"]
     memory_dir = None
     if "--memory-dir" in argv:
         i = argv.index("--memory-dir")
@@ -750,7 +757,7 @@ def main(argv=None):
     else:
         print("Doc-consistency: no presence/hygiene findings.")
 
-    if inventory:
+    if inventory and show_inventory:
         print(f"\n`Flag` divergence inventory ({len(inventory)} unresolved -- for tracking):")
         for item in inventory:
             print(_format(item))

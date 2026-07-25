@@ -14,31 +14,19 @@ becker port** (`-cart-becker -becker-port <port>`), which tunnels the DriveWire
 protocol over TCP to a DW4 server, one of whose virtual serial channels carries
 a shell.
 
-**Use the stock inetd path; do not patch the server.** NitrOS-9 ships the guest
-half already: `inetd` reads `/DD/SYS/inetd.conf`, opens `/N`, and sends the
-server a `tcp listen <port>` command over that channel (the command vocabulary
-— `tcp connect|listen|join|kill` — lives in NitrOS-9's `lib/net.as`). When a
-client connects, the server announces `<id> <port> <address>` on the control
-channel; inetd opens a second `/N` channel, sends `tcp join <id>`, turns on
-echo and auto-LF, dups the channel onto stdin/stdout/stderr and forks the
-configured program. A DW4 server that implements those commands therefore needs
-no modification. A conf line is `port[ options],program,params`; options are
-server-side (`telnet auth protect banner`) and a server may ignore them, which
-for a scripted harness is what you want — no telnet negotiation to strip.
+The guest supplies the channel, so a stock DW4 server needs no patching:
+`inetd` reads `/DD/SYS/inetd.conf`, opens `/N` and sends `tcp listen <port>`;
+on a connection the server announces `<id> <port> <address>`, inetd opens a
+second `/N`, sends `tcp join <id>`, dups it onto stdin/stdout/stderr and forks
+the configured program. That vocabulary — `tcp connect|listen|join|kill` — is
+NitrOS-9's own `lib/net.as`. Conf line is `port[ options],program,params`;
+the options (`telnet auth protect banner`) are server-side and may be ignored,
+which suits a harness — no telnet negotiation to strip.
 
-**Spawn `login`, not `shell`.** A bare `shell` runs as the unauthenticated boot
-identity, which owns nothing — see the ownership trap under Session facts.
-`login` prompts `User name?: ` (and `Password: ` only if that user's password
-field is non-empty), then sets the session's user number, execution directory
-and data directory from the user's `SYS/password` entry. A scripted harness
-answers the prompt itself; note it must do so on **every** connection, not just
-at boot, because inetd forks a fresh login per connection.
-
-The alternative — having the boot script park a shell on a fixed channel
-(`shell <>>>/n1&`) and teaching the server to bridge that channel straight to
-a TCP port — works, but it is a private server fork. On a channel with nothing
-joined to it, a DW4 server reads guest output as *command* text, so the two
-models are mutually exclusive: pick inetd.
+**Spawn `login`, not `shell`** (ownership — see Session facts). It prompts
+`User name?: `, and `Password: ` only when that user's password field is
+non-empty. Answer on *every* connection: inetd forks a fresh login per
+connection.
 
 Prerequisites, each obtained separately: XRoar; a **CoCo3 ROM image**
 (proprietary, Tandy-derived, not redistributable); a bootable NitrOS-9 IDE
@@ -88,16 +76,19 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
 - **Prompts have no trailing newline**, so any pipeline displaying channel
   output must be unbuffered — line-buffering holds the prompt back and the
   harness never sees it.
-- **Echo depends on who set up the channel.** inetd turns the guest's own echo
-  (PD.EKO) and auto line feed (PD.ALF) on, so the guest echoes input and
-  terminates lines CR LF; the client must then suppress *local* echo, and
-  collapse CR LF to one newline (dropping LF and mapping CR to NL is chunk-safe;
-  a plain CR→NL translation double-spaces everything). A shell parked directly
-  on a channel by the boot script has neither flag set.
-- **Under inetd each connection is a separate session**: the server forks a new
-  shell per accepted connection, so disconnecting ends that shell, reconnecting
-  starts a fresh one (new pid, cwd back at the root) and nothing is replayed.
-  Don't rely on a session surviving a dropped client.
+- **inetd turns guest echo (PD.EKO) and auto-LF (PD.ALF) on**, so the guest
+  echoes input and ends lines CR LF. Suppress *local* echo, and collapse CR LF
+  to one newline — drop LF then map CR to NL, which is chunk-safe; a plain
+  CR→NL translation double-spaces everything. A shell parked on a channel by
+  the boot script instead has neither flag set.
+- **Each connection is a separate session**: disconnecting ends that shell,
+  reconnecting forks a new one (new pid, cwd back at the root), nothing is
+  replayed. Don't rely on a session surviving a dropped client.
+- **The listen port does not exist until the guest has booted far enough to
+  run inetd**, so a client started with the emulator is refused; retry.
+- **A channel with nothing joined to it parses guest output as `tcp`/`dw`
+  command text** and answers `FAIL`. That is what a shell parked on a bare
+  channel looks like against a DW4 server.
 - **Guest time is already correct at boot** if the disk's `clock2_dw` fetches
   it from the DriveWire server (OP_TIME). Don't run `setime`.
 - **A literal `$` in a shell-quoted harness argument needs escaping.** Typing
@@ -108,30 +99,20 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
 
 ## Session facts
 
-- **An unauthenticated session owns nothing.** Files left by one are owned by
-  the default boot identity (user 0), and a later session's write or delete
-  fails `E$FNA` (214) unless it is that same identity. Two ways to avoid it:
-  have inetd spawn `login` so every connection is authenticated (preferred —
-  it cannot be forgotten), or run `login USER1` as the first command of any
-  session that creates, deletes, or modifies files. `Live`: with inetd
-  spawning login, `procs` shows the session's User Number as 1 and `dir -e`
-  shows new files owned by 1. Don't build tests around a fixture's assumed
-  ownership across sessions.
-- **`.login` is a 68k thing; 6809 does not have it.** On OS-9/68k a `.login`
-  in the account's data directory runs at login and is where `PATH`/`TERM`/
-  `chx`/`chd` get set (`common/using-os9exec-repl.md`) — do not carry that
-  assumption across. `Live`, checked four ways on an EOU disk: no
-  `.login`/profile string in `login` or in any of the four shells present
-  (`shell` = Shell+ v2.2a, `shellplus`, `MShell`, `pshell`), no such file on
-  the disk, and no hit anywhere in the NitrOS-9 source. The real per-user hooks
-  are the password entry's own fields —
-  `name,password,uid,priority,execdir,datadir,program`.
-  `datadir` is the login-time working directory (the closest thing to a home),
-  `execdir` is where commands are found, and **`program` is the per-user
-  startup hook**: it is normally `SHELL`, but point it at a procedure file and
-  that runs on every login. A stock entry like `USER1,,1,128,.,.,SHELL` uses
-  `.` for both directories, i.e. inherit whatever the parent had. `login` also
-  prints `SYS/MOTD`.
+- **An unauthenticated session owns nothing.** Files it leaves are owned by the
+  boot identity (user 0), and a later session's write or delete fails `E$FNA`
+  (214) unless it is that same identity. Authenticate every connection via
+  inetd's `login`, or run `login USER1` as the first command. `Live`: with
+  login, `procs` shows User Number 1 and `dir -e` shows new files owned by 1.
+  Don't build tests around a fixture's assumed ownership across sessions.
+- **`.login` is 68k-only** (`Live`; on 68k it sets `PATH`/`TERM`/`chx`/`chd` —
+  `common/using-os9exec-repl.md`). Nothing on 6809 reads one: not `login`, not
+  any shell on the disk. Per-user setup is the `SYS/password` fields instead —
+  `name,password,uid,priority,execdir,datadir,program`. `datadir` is the
+  login-time working directory, `execdir` is command search, and **`program`
+  is the per-user startup hook**: normally `SHELL`, but point it at a procedure
+  file and that runs on every login. `.` in either directory field means
+  inherit. `login` also prints `SYS/MOTD`.
 - **The `.ide` disk image persists across restarts** — it's a real file edited
   in place, not a pristine snapshot. Source files survive a restart, but so do
   stale outputs from a failed attempt, which make a fresh run look like it

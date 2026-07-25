@@ -30,6 +30,191 @@ source.)
   old binary. Always `del` the output first, or link to a never-before-
   used name, before trusting a rerun's result.
 
+## A complete worked program (`Live`)
+
+Everything else in this file is a contract; this is the idiom. The tables
+below give the right register names, but nothing here showed the `psect`
+preamble, the `trap #0` sequence, or the error convention as code — so
+assembly written from the tables alone names the right registers and still
+won't assemble. This program is the smallest one that exercises all three.
+It creates a file, writes a line, closes it, then deliberately opens a file
+that does not exist.
+
+```
+Prgrm     set 1
+Objct     set 1
+ReEnt     set $80
+Type_Lang set (Prgrm<<8)+Objct
+Attr_Rev  set (ReEnt<<8)+1
+
+ICreate   set $83
+IOpen     set $84
+IWrite    set $8A
+IClose    set $8F
+FPErr     set $0F
+FExit     set $06
+
+READ      set 1          access mode: read
+WRITE     set 2          access mode: write
+ATTRS     set $03        new file attributes: owner read + owner write
+STDOUT    set 1          path 1 is always standard output
+
+ psect exfileio,Type_Lang,Attr_Rev,0,1024,start
+
+start
+* I$Create(d0.b=mode, d1.b=attrs, d2.l=size hint, (a0)=path) -> d0.w=path
+ lea    fname(pc),a0
+ moveq  #WRITE,d0
+ moveq  #ATTRS,d1
+ moveq  #0,d2
+ trap   #0
+ dc.w   ICreate
+ bcs    failed
+ move.w d0,d7           keep the path number; d0 is scratch from here on
+
+* I$Write(d0.w=path, d1.l=count, (a0)=buffer)
+ move.w d7,d0
+ lea    line(pc),a0
+ move.l #linelen,d1
+ trap   #0
+ dc.w   IWrite
+ bcs    failed
+
+* I$Close(d0.w=path)
+ move.w d7,d0
+ trap   #0
+ dc.w   IClose
+ bcs    failed
+
+ lea    okmsg(pc),a0
+ move.l #okmsglen,d1
+ move.w #STDOUT,d0
+ trap   #0
+ dc.w   IWrite
+
+* Error path. Carry SET means the call failed and d1.w holds the code.
+ lea    missing(pc),a0
+ moveq  #READ,d0
+ trap   #0
+ dc.w   IOpen
+ bcc    unexpected       succeeding here is itself the failure
+ move.w d1,d6            save the code before anything else clobbers d1
+
+ lea    experr(pc),a0
+ move.l #experrlen,d1
+ move.w #STDOUT,d0
+ trap   #0
+ dc.w   IWrite
+
+* F$PErr(d0.w=error-message file path, 0=none; d1.w=error code)
+ move.w d6,d1
+ moveq  #0,d0
+ trap   #0
+ dc.w   FPErr
+
+ moveq  #0,d1
+ trap   #0
+ dc.w   FExit
+
+unexpected
+ lea    unexpmsg(pc),a0
+ move.l #unexplen,d1
+ move.w #STDOUT,d0
+ trap   #0
+ dc.w   IWrite
+ moveq  #1,d1
+ trap   #0
+ dc.w   FExit
+
+failed
+ move.w d1,d6
+ lea    failmsg(pc),a0
+ move.l #faillen,d1
+ move.w #STDOUT,d0
+ trap   #0
+ dc.w   IWrite
+ move.w d6,d1
+ moveq  #0,d0
+ trap   #0
+ dc.w   FPErr
+ moveq  #1,d1
+ trap   #0
+ dc.w   FExit
+
+fname    dc.b "exfile.txt",0
+missing  dc.b "no.such.file",0
+line     dc.b "written by example-fileio",13
+linelen  equ *-line
+okmsg    dc.b "PASS create/write/close",13,10
+okmsglen equ *-okmsg
+experr   dc.b "PASS open of a missing file failed as expected: "
+experrlen equ *-experr
+unexpmsg dc.b "FAIL open of a missing file succeeded",13,10
+unexplen equ *-unexpmsg
+failmsg  dc.b "FAIL happy path: "
+faillen  equ *-failmsg
+ ends
+```
+
+Built and run, and what it actually printed:
+
+```
+r68 exfileio.a -O=exfileio.r
+l68 exfileio.r -o=exfio1
+exfio1
+
+PASS create/write/close
+PASS open of a missing file failed as expected: Error #000:216 (E_PNNF) Path Name Not Found
+```
+
+`dump exfile.txt` confirms the write landed byte-for-byte: 26 bytes,
+`written by example-fileio` plus the trailing `$0D` — matching `linelen`.
+
+What the program demonstrates that the tables alone don't:
+
+- **The call code is an inline `dc.w` immediately after `trap #0`**, not a
+  register argument. The kernel reads it from the instruction stream and
+  resumes past it.
+- **Names like `I$Create` are not symbols** — they must be `set` locally, as
+  above. See the TRAP #0 section below for why nothing on the disk defines
+  them.
+- **Carry set = failure, `d1.w` = error code.** Save it immediately: the very
+  next call overwrites `d1`. The program stashes it in `d6` before doing
+  anything else. `F$PErr` then turns the code into the printed message.
+- **`d0` is both an input and a result register.** `I$Create` returns the path
+  number there, and every following call wants something else in `d0`, so the
+  path is parked in `d7` first.
+- **Reach your own data `(pc)`-relative via `lea`** — see the addressing-mode
+  note under "Known gaps"; a PC-relative *destination* is not available.
+- `r68` emits `*** warning - destination in short branch range ***` for each
+  `bcs`/`bcc` here. It is a size hint, not an error (`Errors: 00000`);
+  `bcs.s`/`bcc.s` silences it.
+- **After `l68 -o=exfio1` the program was not in the data directory** — it
+  landed in the execution directory, as the toolchain section above warns.
+  `dir` showed only the `.a` and `.r`; the linked module ran by bare name.
+
+### The rootless-object error (`Live`)
+
+`l68`'s "no root psect found" is worth causing once, so it's recognizable.
+A `psect` whose type/language and attribute/revision operands are zero
+assembles perfectly cleanly:
+
+```
+ psect noroot,0,0,0,0,0
+```
+
+```
+r68 noroot.a -O=noroot.r
+Errors: 00000
+
+l68 noroot.r -o=noroot1
+l68: error - no root psect found
+```
+
+The object is structurally valid — it simply declares no entry point, so
+there is nothing for the linker to make a program out of. An assembler that
+reports zero errors is not evidence that a module will link.
+
 ## System call mechanism (TRAP #0)
 
 Full dispatch mechanism (`TRAP #0`/vector 32, the `OS9`/`tcall` macros,
@@ -206,10 +391,11 @@ No surveyed source is a real 68k assembler manual, so the following are
 live) before relying on details:
 
 - Exact `psect`/`vsect`/`csect` directive syntax and parameter order (the
-  documented PSECT/VSECT syntax is the **6809** RMA's) — **but see
-  Cross-references below**: `basic09/basic09-per-target.md` has
-  a complete, `Live`-tested worked example that fills this gap in
-  practice, even though it isn't a manual citation.
+  documented PSECT/VSECT syntax is the **6809** RMA's) — **unverified as a
+  manual citation, but resolved in practice**: the worked program above uses
+  the 6-operand `psect` form and is `Live`, and
+  `basic09/basic09-per-target.md` has a second `Live` example of the same
+  shape for a `Sbrtn` module.
 - `ds.w`/`ds.l` and other data-definition directive syntax specifics —
   two now resolved, both `Live`: `dc.b 'text'` (single-quoted) fails on
   `r68` with `*** error - value out of range ***` regardless of string
@@ -257,11 +443,10 @@ live) before relying on details:
   different shape at those same offsets, so this recipe silently
   misaligns a hand-authored descriptor. A shorter 4-operand `psect` line
   fails outright (`*** error - comma expected ***`); no working syntax
-  for authoring a `Devic`-type module byte-accurately was found this
-  session — open gap. This is currently the skill's *only*
-  live-verified 68k assembly syntax source for executable module types —
-  it just isn't a manual citation, which is why it's easy to miss
-  searching this file alone.
+  for authoring a `Devic`-type module byte-accurately is known — open gap.
+  For an ordinary `Prgrm` module, prefer the worked program near the top of
+  this file; the `basic09-per-target.md` example matters when the target is
+  a BASIC09-callable `Sbrtn`.
 - **A linked module's registered name comes from `l68 -o=<name>`'s
   output-file argument, not from the source's `nam`/`psect` name
   operand.** `Live`: linking the same object twice under two different

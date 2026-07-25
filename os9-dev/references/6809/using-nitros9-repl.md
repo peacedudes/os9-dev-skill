@@ -11,9 +11,34 @@ software-CPU-plus-kernel shortcut — and its console is a video+keyboard GUI,
 not stdio. A plain PTY/pipe harness has nothing to attach to, so a text-channel
 bridge is mandatory. The established one is **DriveWire over XRoar's built-in
 becker port** (`-cart-becker -becker-port <port>`), which tunnels the DriveWire
-protocol over TCP to a DW3/DW4 server whose virtual serial channel `/N1`
-carries a shell. The guest's own boot script must open that shell on the
-channel.
+protocol over TCP to a DW4 server, one of whose virtual serial channels carries
+a shell.
+
+**Use the stock inetd path; do not patch the server.** NitrOS-9 ships the guest
+half already: `inetd` reads `/DD/SYS/inetd.conf`, opens `/N`, and sends the
+server a `tcp listen <port>` command over that channel (the command vocabulary
+— `tcp connect|listen|join|kill` — lives in NitrOS-9's `lib/net.as`). When a
+client connects, the server announces `<id> <port> <address>` on the control
+channel; inetd opens a second `/N` channel, sends `tcp join <id>`, turns on
+echo and auto-LF, dups the channel onto stdin/stdout/stderr and forks the
+configured program. A DW4 server that implements those commands therefore needs
+no modification. A conf line is `port[ options],program,params`; options are
+server-side (`telnet auth protect banner`) and a server may ignore them, which
+for a scripted harness is what you want — no telnet negotiation to strip.
+
+**Spawn `login`, not `shell`.** A bare `shell` runs as the unauthenticated boot
+identity, which owns nothing — see the ownership trap under Session facts.
+`login` prompts `User name?: ` (and `Password: ` only if that user's password
+field is non-empty), then sets the session's user number, execution directory
+and data directory from the user's `SYS/password` entry. A scripted harness
+answers the prompt itself; note it must do so on **every** connection, not just
+at boot, because inetd forks a fresh login per connection.
+
+The alternative — having the boot script park a shell on a fixed channel
+(`shell <>>>/n1&`) and teaching the server to bridge that channel straight to
+a TCP port — works, but it is a private server fork. On a channel with nothing
+joined to it, a DW4 server reads guest output as *command* text, so the two
+models are mutually exclusive: pick inetd.
 
 Prerequisites, each obtained separately: XRoar; a **CoCo3 ROM image**
 (proprietary, Tandy-derived, not redistributable); a bootable NitrOS-9 IDE
@@ -55,15 +80,24 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   does it. Switch to raw keys once inside; a bare Enter exits `help`'s
   `Topic:`.
 - **Escape ($1B) is SCF's default end-of-file character.** A program reading
-  `/n1` that receives one reads EOF; the `/n1` shell exits normally on it and
-  nothing respawns it, so recovery is a full restart. Filter Escape out of
-  anything meant as literal content; a deliberate EOF is a raw Escape key.
+  the channel that receives one reads EOF, and the shell exits normally on it.
+  Under inetd that is cheap to recover from — reconnecting forks a new shell —
+  but it still destroys the session's state. Filter Escape out of anything
+  meant as literal content; a deliberate EOF is a raw Escape key.
 - **OS-9 wants CR line endings on input**, not CRLF/LF.
-- **The guest does not echo input on `/N1`**, and prompts have no trailing
-  newline — any pipeline displaying channel output must be unbuffered
-  (line-buffering holds the prompt back).
-- **One client per channel**: connecting displaces the previous client. The
-  guest shell is unaffected and backlogged output replays to the new client.
+- **Prompts have no trailing newline**, so any pipeline displaying channel
+  output must be unbuffered — line-buffering holds the prompt back and the
+  harness never sees it.
+- **Echo depends on who set up the channel.** inetd turns the guest's own echo
+  (PD.EKO) and auto line feed (PD.ALF) on, so the guest echoes input and
+  terminates lines CR LF; the client must then suppress *local* echo, and
+  collapse CR LF to one newline (dropping LF and mapping CR to NL is chunk-safe;
+  a plain CR→NL translation double-spaces everything). A shell parked directly
+  on a channel by the boot script has neither flag set.
+- **Under inetd each connection is a separate session**: the server forks a new
+  shell per accepted connection, so disconnecting ends that shell, reconnecting
+  starts a fresh one (new pid, cwd back at the root) and nothing is replayed.
+  Don't rely on a session surviving a dropped client.
 - **Guest time is already correct at boot** if the disk's `clock2_dw` fetches
   it from the DriveWire server (OP_TIME). Don't run `setime`.
 - **A literal `$` in a shell-quoted harness argument needs escaping.** Typing
@@ -74,13 +108,30 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
 
 ## Session facts
 
-- **`start` boots straight to a shell with no login — that identity owns
-  nothing.** Files left by a never-logged-in session are owned by the default
-  identity, and a later session's write or delete fails `E$FNA` (214) unless
-  it is that same identity. **Run `login USER1` as the first command of any
-  session that creates, deletes, or modifies files** — no password prompt, and
-  it avoids a whole class of confusing permission failures. Don't build tests
-  around a fixture's assumed ownership across sessions.
+- **An unauthenticated session owns nothing.** Files left by one are owned by
+  the default boot identity (user 0), and a later session's write or delete
+  fails `E$FNA` (214) unless it is that same identity. Two ways to avoid it:
+  have inetd spawn `login` so every connection is authenticated (preferred —
+  it cannot be forgotten), or run `login USER1` as the first command of any
+  session that creates, deletes, or modifies files. `Live`: with inetd
+  spawning login, `procs` shows the session's User Number as 1 and `dir -e`
+  shows new files owned by 1. Don't build tests around a fixture's assumed
+  ownership across sessions.
+- **`.login` is a 68k thing; 6809 does not have it.** On OS-9/68k a `.login`
+  in the account's data directory runs at login and is where `PATH`/`TERM`/
+  `chx`/`chd` get set (`common/using-os9exec-repl.md`) — do not carry that
+  assumption across. `Live`, checked four ways on an EOU disk: no
+  `.login`/profile string in `login` or in any of the four shells present
+  (`shell` = Shell+ v2.2a, `shellplus`, `MShell`, `pshell`), no such file on
+  the disk, and no hit anywhere in the NitrOS-9 source. The real per-user hooks
+  are the password entry's own fields —
+  `name,password,uid,priority,execdir,datadir,program`.
+  `datadir` is the login-time working directory (the closest thing to a home),
+  `execdir` is where commands are found, and **`program` is the per-user
+  startup hook**: it is normally `SHELL`, but point it at a procedure file and
+  that runs on every login. A stock entry like `USER1,,1,128,.,.,SHELL` uses
+  `.` for both directories, i.e. inherit whatever the parent had. `login` also
+  prints `SYS/MOTD`.
 - **The `.ide` disk image persists across restarts** — it's a real file edited
   in place, not a pristine snapshot. Source files survive a restart, but so do
   stale outputs from a failed attempt, which make a fresh run look like it
@@ -134,8 +185,8 @@ key Escape        # EOF for tee, consumed by tee — not a shell exit
 ```
 
 Then `LOAD progname` inside `basic09` compiles the text directly. The Escape
-is consumed by whichever process is reading `/n1` at that moment; the shell
-prompt reappears normally afterward.
+is consumed by whichever process is reading the channel at that moment; the
+shell prompt reappears normally afterward.
 
 - **Don't lead the file with a comment.** A `!` comment as the literal first
   line, before `PROCEDURE`, makes `LOAD` fail the *entire file* with `Error
@@ -145,7 +196,7 @@ prompt reappears normally afterward.
   trap.** If `tee` fails (`Error #218 - File Already Exists`) and you type the
   rest of the file blind, every line runs as a shell command, and the final
   Escape meant as `tee`'s EOF hits the **shell**, which also treats it as EOF
-  and exits — killing the `/n1` shell. Confirm `tee >file` actually opened
+  and exits — killing the session shell. Confirm `tee >file` actually opened
   first: a gated send blocks on a real `tee`, so a fast return means it failed.
 - **Injecting files too large to type**: ToolShed can extract the RBF
   filesystem straight out of the `.ide` container and inject files host-side,
@@ -224,4 +275,7 @@ Guest-side driver architecture (`Source`, `Live`): `scdwv.dr` is the SCF
 driver (SERINIT carries the port number at open; FASTWRITE = $80 + port for
 output); the SERREAD polling loop lives in the `dwio` subroutine module's VIRQ
 handler at 3/6/40-tick adaptive rates — which is why the DWINIT response gates
-whether polling happens at all. `/N1` is wire channel 1; channel 0 is unused.
+whether polling happens at all. `/N<n>` is wire channel n; channel 0 is unused.
+Opening the bare `/N` descriptor makes the multiplexer hand out the lowest free
+channel, so an inetd session's device name (and hence its shell prompt) varies
+run to run — match the prompt loosely, not against a fixed `N1`.

@@ -68,7 +68,7 @@ bare filename:
 
 | Question about… | Read |
 |---|---|
-| Driving live NitrOS-9 as an agent (nitros9repl.sh), DriveWire facts, SCF Escape=EOF, no-echo gotchas | 6809/using-nitros9-repl.md |
+| Driving live NitrOS-9 as an agent (nitros9repl.sh), stock-inetd `tcp listen`/`join` bridge, per-connection login and session ownership, no `.login` on 6809, DriveWire facts, SCF Escape=EOF, echo/auto-LF gotchas | 6809/using-nitros9-repl.md |
 | Registers, SWI2 syscall convention, F$/I$ code catalog, 6809 module header bytes | 6809/syscalls-and-module-format.md |
 | Per-command syntax/options for the Level 2 utility set (attr…xmode, tmode/xmode parameter table, CoCo/Dragon-only commands called out separately), Level1-vs-Level2 divergences found while cross-checking | 6809/utility-usage.md |
 | Assembler directives (asm/RMA), editor, debugger command set, RLINK | 6809/assembly-and-tools.md |

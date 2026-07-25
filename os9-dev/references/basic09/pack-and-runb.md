@@ -34,16 +34,40 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
 
   Both outputs contain every packed procedure's code; only the entry
   differs. If the entry point matters, name the list explicitly.
-- **`>pathlist` prints spurious errors but works — `os9exec` (68k) only,
-  NOT real OS-9.** `Live` (68k): `PACK name >target` (and `SAVE ...
-  >target`) print `Error #000:043` (relative name) or `#000:051`
-  (absolute path) even though the output file is complete, correct, and
-  runnable. Verify the file; don't trust the message. **`Live` (6809):
-  real NitrOS-9 BASIC09 prints nothing at all** — `SAVE proc >rel`, `SAVE
-  proc >/DD/abs/path` and `PACK proc >rel` all return a clean `Ready` with
-  correct files on disk. The spurious errors are an os9exec defect, not OS-9
-  behaviour to reproduce. (`> pathlist` with a space is different —
-  that's just unrecognized syntax.)
+- **`>pathlist` with a procname list prints a BASIC09 error and still
+  works.** `Live` (68k): `SAVE proc >target` and `PACK proc >target` print
+  `Error #000:043` while writing a correct file. **The codes are BASIC09's
+  own, from its manual's Appendix C — 43 is "Unknown Procedure", 51 is
+  "Line with Compiler Error"** — not OS-9 kernel codes. In particular this
+  is **not** `E$BNam` (which is **235**); an earlier version of this entry
+  blamed `F$PrsNam` and that attribution was wrong. A syscall trace shows
+  `F$PrsNam` behaving exactly as the 2.4 Technical Reference specifies:
+  BASIC09 walks the pathlist with repeated calls and the final `E$BNam` on
+  the empty remainder is the documented multi-call terminator — and the
+  call's *only* possible error — which BASIC09 consumes silently. Every
+  syscall in the failing window returns a spec-conformant value, so on the
+  evidence available **this is BASIC09's own `SAVE`/`PACK` argument
+  handling, not a demonstrated os9exec defect.** `Absent`: whether the
+  genuine 68k binary on real hardware prints it too is untestable here.
+  The trigger is the **procname list**, not the path shape:
+
+  | Form | 68k `os9exec` | Output |
+  |---|---|---|
+  | `SAVE proc >target` (rel *or* abs, space before `>` or not) | `Error #000:043` | correct, byte-identical to the clean form |
+  | `SAVE proc` | clean `Ready` | correct |
+  | `SAVE >target` | clean `Ready` | correct |
+  | `PACK proc >target` | `Error #000:043` (twice) | valid module — `ident` gives Good CRC + Good parity, `Ty/La $202` |
+  | `PACK >target` (no procname) | `Error #000:051` | **0-byte file — this one genuinely fails** |
+
+  So: verify the file rather than trusting the message, but note the last
+  row is a real failure, not a cosmetic one. **`Live` (6809): real NitrOS-9
+  BASIC09 prints nothing at all** for `SAVE proc >rel`, `SAVE proc
+  >/DD/abs/path` and `PACK proc >rel` — a different binary on a different
+  architecture, so suggestive, not proof about the 68k line. (`> pathlist`
+  with a space *after* the `>` is a separate thing — unrecognized syntax.)
+  Resolution targets, 68k: relative `SAVE >name` resolves against **CHD**;
+  `PACK`'s default output is the **execution** directory, so a relative
+  `PACK >name` lands in `/h0/CMDS`.
 
 ## What a packed module is
 

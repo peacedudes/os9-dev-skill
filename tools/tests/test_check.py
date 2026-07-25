@@ -222,6 +222,21 @@ class TestOpenFlags(unittest.TestCase):
         text = "**F$Fork** works fine. `Live`\n"
         self.assertEqual(chk.scan_open_flags(text, "68k/s.md", KNOWN), [])
 
+    def test_lists_a_combined_tier_plus_flag(self):
+        """CONFIDENCE-TAGS.md's own legend writes the combined form inside ONE
+        backtick span (`Source, Flag`), which is what the convention tells
+        authors to use when stronger evidence contradicts a manual. A regex
+        matching only a bare `Flag` silently under-reports the inventory."""
+        for combined in ("`Source, Flag`", "`Live, Flag`", "`Manual, Flag`"):
+            text = "os9exec accepts `{` as a name char. %s\n" % combined
+            inv = chk.scan_open_flags(text, "68k/syscall-reference.md", KNOWN)
+            self.assertEqual(len(inv), 1, "missed %s" % combined)
+            self.assertEqual(inv[0].locations, [("68k/syscall-reference.md", 1)])
+
+    def test_combined_flag_still_skips_resolved(self):
+        text = "| **F$Fork** | `Source, Flag` resolved: offset confirmed |\n"
+        self.assertEqual(chk.scan_open_flags(text, "68k/s.md", KNOWN), [])
+
 
 # --------------------------------------------------------------------------
 # driver

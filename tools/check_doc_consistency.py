@@ -59,7 +59,13 @@ DIVERGENCE_FILENAME = "DIVERGENCES.md"
 # so the check does not depend on an emoji surviving an edit).
 _DIVERGENCE_HEADING = re.compile(r"^###\s+(D-\d+)", re.MULTILINE)
 _DIVERGENCE_MARKER = re.compile(r"DIVERGENCE\s+(D-\d+)")
-_FLAG_TOKEN = re.compile(r"`Flag`")
+# `Flag` alone, or the combined form the convention prescribes when stronger
+# evidence contradicts a manual -- one backtick span holding the higher tier
+# plus Flag, e.g. `Source, Flag` (CONFIDENCE-TAGS.md, "Ordering"). Matching only
+# the bare token silently under-reports the inventory.
+_FLAG_TOKEN = re.compile(
+    r"`(?:(?:Hearsay|Manual|Source|Live|Absent)\s*,\s*)*Flag`"
+)
 
 # A wiki-style memory cross-link, e.g. "see [[user-designed-rbf-eof-lock]]".
 # Optional surrounding backticks are captured so a backtick-quoted occurrence

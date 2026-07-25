@@ -184,14 +184,51 @@ family; and **the pattern is purely length-bounded by `d1.w`**, needing no
 terminator of its own. `d1`'s upper word is irrelevant.
 
 **F$PrsNam** ((a0)=path string → d0.b=terminator character, d1.w=element
-length, (a0)=updated past a leading `/` if present, (a1)=pointer to the
-terminator): parses one pathlist element at a time. `Live`.
+length, (a0)=updated past a leading `/` if present, (a1)=address of the last
+character of the name +1, i.e. the terminator): parses **one** element per
+call, so a multi-element pathlist takes several. `Live`.
 
-**F$PErr** (d0.w=error message path, 0=none and the only mode os9exec honors;
-d1.w=error code): prints a formatted `Error #nnn:nnn (E$NAME) description`
-line. On os9exec it writes directly to the emulator console, **not** through
-`I$Write`, so it bypasses per-process I/O redirection entirely — the same
-channel a kernel-level error prints through. `Live`.
+Valid element characters are `A-Z a-z 0-9 . _ $`. **No character is
+"invalid"** — anything else simply terminates the element and is returned as
+the delimiter. That is why **`E$BNam` (235) is this call's only possible
+error, and a zero-length element is the only way to raise it**; reaching
+`E$BNam` at the end of a pathlist is the **documented way a caller's parse
+loop ends**, not a fault. 68k BASIC09 depends on exactly that and consumes it
+silently (`Live`) — see `basic09/pack-and-runb.md`.
+
+Two os9exec divergences:
+- It additionally accepts `{` and `}` as element characters (a deliberate
+  MPW-shell-variable convenience, per its own source comment). `Source, Flag`
+  against the manual's character set. It makes os9exec *more* permissive, so
+  it cannot produce a spurious `E$BNam`.
+- **It implements no trailing-delimiter skip, and sets no registers on the
+  error path** — `E$BNam` returns with `d0.b`/`a1` untouched, so the caller
+  reads back its own pre-call values. The 68k manual's ERROR OUTPUT promises
+  only carry + `d1.w`, so this is within *its* letter — but the 6809 manual
+  documents the same primitive far more fully (an error-path pointer, plus
+  skipping one trailing comma or any number of trailing spaces), and os9exec
+  does neither. `Source, Flag`; see the `F$PrsNam` row in
+  `6809/syscalls-and-module-format.md` before assuming the 68k silence means
+  the behaviour is absent from real OS-9.
+
+**F$PErr** (d0.w=path to an **error-message file**, 0=none; d1.w=error code):
+writes an error message to the **standard error path**. `d0.w` is *not* a mode
+switch — given a path, the kernel searches that ASCII file for a line whose
+first seven characters match the error number (`000:215`) and prints the rest
+of that line after the number (continuation lines begin with a space); with
+`d0.w=0` there is no such file and a stock system prints just
+`ERROR #mmm.nnn`. Numbers `000:000`–`063:255` are reserved for the OS.
+`Manual`.
+
+**os9exec ignores `d0.w` entirely** and always prints its own built-in
+`Error #nnn:nnn (E$NAME) description` line — so it emits a description where
+spec emits a bare number, and silently ignores a supplied message file.
+`Source, Flag`. It also writes straight to the emulator console rather than
+through `I$Write`, bypassing per-process I/O redirection — the same channel a
+kernel-level error prints through. `Live`. Useful tell: a code missing from
+its table prints `(E_???) <<unknown error code>>`, which marks the number as
+**not** an OS-9 kernel error; that is how 68k BASIC09's own error 43 was
+identified.
 
 ## Debugger support
 

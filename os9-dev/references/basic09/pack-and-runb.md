@@ -45,10 +45,17 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
   BASIC09 walks the pathlist with repeated calls and the final `E$BNam` on
   the empty remainder is the documented multi-call terminator — and the
   call's *only* possible error — which BASIC09 consumes silently. Every
-  syscall in the failing window returns a spec-conformant value, so on the
-  evidence available **this is BASIC09's own `SAVE`/`PACK` argument
-  handling, not a demonstrated os9exec defect.** `Absent`: whether the
-  genuine 68k binary on real hardware prints it too is untestable here.
+  syscall in the failing window returns a value that conforms to the **68k**
+  manual, so this is **not** a demonstrated os9exec defect — but it is not
+  cleared either. One candidate mechanism remains open: the **6809** manual
+  documents `F$PrsNam` skipping one trailing comma / any number of trailing
+  spaces and returning a continuation pointer even on `E$BNam`, and os9exec's
+  68k side does neither (see `68k/syscall-reference.md`). Implementing that
+  skip was **tried and refuted** — error 43 was unchanged and 42 of 148
+  suite tests broke, because os9exec's own path consumers rely on `a1`
+  pointing at the terminator. So the gap is real but is not, by itself, what
+  produces error 43. `Absent`: whether the genuine 68k binary on real
+  hardware prints it too is untestable here.
   The trigger is the **procname list**, not the path shape:
 
   | Form | 68k `os9exec` | Output |

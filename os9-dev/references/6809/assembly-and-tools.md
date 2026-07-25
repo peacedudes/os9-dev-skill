@@ -6,15 +6,227 @@ toolchain. The Editor section is `Manual`.
 
 Register set and calling convention: `syscalls-and-module-format.md`.
 
+## A complete worked program (`Live`)
+
+Assembled with `asm` and run on NitrOS-9. It creates a file, writes a line,
+closes it, then deliberately opens a file that does not exist. The 68k
+counterpart is in the sibling `68k/os9-68k-assembly.md`; comparing the two
+is the fastest way to see what does and does not carry across.
+
+**It defines its own constants on purpose.** `/dd/defs/os9defs.a` on this
+disk is RMA-format — it opens with `psect` and declares call codes as
+`RMB` entries — and `asm` cannot parse any of it. See "Why not `use`
+os9defs.a" below.
+
+```
+        nam ExFileI
+* Constants are defined here rather than pulled from /dd/defs/os9defs.a,
+* which is RMA-format and cannot be assembled by asm.
+Prgrm   equ $10
+Objct   equ $01
+ReEnt   equ $80
+ICreat  equ $83
+IOpen   equ $84
+IWrite  equ $8A
+IClose  equ $8F
+FPErr   equ $0F
+FExit   equ $06
+READ    equ 1
+WRITE   equ 2
+ATTRS   equ $03
+* Data area: offsets from U. Its size is the mod directive's last operand.
+        org 0
+path    rmb 1
+        rmb 200
+size    equ .
+        mod eom,name,Prgrm+Objct,ReEnt+1,start,size
+name    fcs /ExFileI/
+* --- happy path: create, write one line, close ---
+start   leax fname,pcr
+        lda #WRITE
+        ldb #ATTRS
+        swi2
+        fcb ICreat
+        bcs failed
+        sta path,u
+        leax line,pcr
+        ldy #linelen
+        lda path,u
+        swi2
+        fcb IWrite
+        bcs failed
+        lda path,u
+        swi2
+        fcb IClose
+        bcs failed
+        leax okmsg,pcr
+        ldy #okmsgln
+        lda #1
+        swi2
+        fcb IWrite
+* --- error path: open a file that is not there ---
+        leax missing,pcr
+        lda #READ
+        swi2
+        fcb IOpen
+        bcc unexpec
+        pshs b
+        leax experr,pcr
+        ldy #experrl
+        lda #1
+        swi2
+        fcb IWrite
+        puls b
+        swi2
+        fcb FPErr
+        clrb
+        swi2
+        fcb FExit
+unexpec leax unexmsg,pcr
+        ldy #unexln
+        lda #1
+        swi2
+        fcb IWrite
+        ldb #1
+        swi2
+        fcb FExit
+failed  pshs b
+        leax failmsg,pcr
+        ldy #failln
+        lda #1
+        swi2
+        fcb IWrite
+        puls b
+        swi2
+        fcb FPErr
+        ldb #1
+        swi2
+        fcb FExit
+fname   fcc /exfile.txt/
+        fcb $0D
+missing fcc /no.such.file/
+        fcb $0D
+line    fcc /written by exfilei/
+        fcb $0D
+linelen equ *-line
+okmsg   fcc /PASS create-write-close/
+        fcb $0D
+okmsgln equ *-okmsg
+experr  fcc /PASS open of a missing file: /
+experrl equ *-experr
+unexmsg fcc /FAIL open of a missing file succeeded/
+        fcb $0D
+unexln  equ *-unexmsg
+failmsg fcc /FAIL happy path: /
+failln  equ *-failmsg
+        emod
+eom     equ *
+```
+
+Built and run, and what it actually printed:
+
+```
+asm exfilei.a -O=exfilei
+00000 error(s)
+00000 warning(s)
+$012E 00302 program bytes generated
+$00C9 00201 data bytes allocated
+
+exfilei
+PASS create-write-close
+PASS open of a missing file: Error #216 - Path Name Not Found
+```
+
+`dump exfile.txt` shows 18 bytes, `written by exfilei` plus the trailing
+`$0D`. **Error 216 is the same number the 68k and C examples report for the
+same mistake** — OS-9 error codes are shared across architectures and
+languages, and the C library passes them through as `errno`.
+
+### The module the assembler produced
+
+```
+dump /dd/cmds/exfilei
+
+00000000 87CD 012E 000D 1181 0700 1400 0045 7846  .M...........ExF
+00000010 696C 65C9 308D 007C 8602 C603 103F 8325  ileI0..|..F..?.%
+```
+
+| Bytes | Field | Reads as |
+|---|---|---|
+| `87CD` @ `$00` | sync | the 6809 module signature — *not* the 68k `$4AFC` |
+| `012E` @ `$02` | module size | 302 bytes |
+| `000D` @ `$04` | name offset | `$0D`, where `ExFileI` sits |
+| `11` @ `$06` | type/language | `Prgrm`(`$10`) + `Objct`(`$01`) — the `mod` operand |
+| `81` @ `$07` | attributes/revision | `ReEnt`(`$80`) + 1 |
+| `07` @ `$08` | header parity | one byte here, not the 68k's word |
+| `0014` @ `$09` | exec offset | entry 20 bytes in |
+| `00C9` @ `$0B` | data size | 201 — the `rmb` block, see below |
+
+Note `fcs /ExFileI/` at `$0D`: the final byte is `C9`, `'I'` with bit 7 set.
+That high bit *is* the terminator — `fcs` is not a NUL-terminated string.
+
+### `*` is the program counter, `.` is the data counter
+
+`asm` in its normal mode keeps **two separate location counters**, and the
+`mod` directive's last operand wants the data one. Writing `size equ *`
+assembles cleanly and produces a module that `ident` calls good — with a
+**data size of `$0000`**. Writing `size equ .` gives the intended `$00C9`.
+Both were confirmed by `ident` on modules built the two ways, from otherwise
+identical source.
+
+This is the quietest failure in this file. A program with a zero-sized data
+area may still appear to work — this one did, storing a path number through
+`U` — because the process gets a usable page anyway. Nothing warns you.
+(The `hello.a` sample on this disk uses `size equ *`, so its declared data
+size is its module length by accident rather than by intent.)
+
+### Why not `use` os9defs.a
+
+`asm` cannot assemble `/dd/defs/os9defs.a`. The file is RMA source: it
+opens with `psect _os9defs,0,0,0,0,0`, uses `csect`, declares `true:`/
+`false:` with trailing-colon labels, and defines every call code as an
+`RMB 1` slot in a counted table. Feeding it to `asm` produces a cascade of
+`***** Error: bad instr` on those directives, then `undefined name` on every
+`OS9`/`I$`/`F$` symbol that never got defined, then `phasing` errors as the
+two passes disagree. **The disk's own `hello.a` fails this way too** (47
+errors), so a sample that looks canonical is not evidence that `use` works
+here. Define the handful of constants your program actually needs, as above.
+
+Consequently there is no `OS9` macro either — the raw mechanism is `swi2`
+followed by a one-byte `fcb` call code, which is what the macro expands to
+anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
+
+### Assembler and toolchain traps (all `Live`)
+
+- **`asm` writes an object file even when the assembly reports errors.** A
+  source with one bad mnemonic still produced a module that `ident` decoded
+  happily (`Prog mod, 6809 obj, re-en, R/O`); running it failed with
+  `Error #215 - Bad Path Name`, an error with no relationship to the actual
+  mistake. **Check the error count, never the presence of an output file.**
+- **Never redirect `asm`'s standard output away** (`>/nil`, `>file`). Errors
+  go there, so a failing assembly looks silent and successful, and you are
+  left with the broken module described above.
+- **`O=<name>` fails if the output already exists** — `***** Error: can't
+  open <name>` — while `-O=<name>` overwrites silently. Use the leading dash
+  for any rebuild.
+- **Case does not matter**: `o=` and `O=` both work and both produce a valid
+  module (confirmed by `ident` on each). Despite the emphasis under "Two
+  assemblers" below, the distinction that matters is the leading `-`, not
+  the letter's case.
+- The object lands in the **execution** directory (`/dd/cmds`), not the data
+  directory — see the note under "Two assemblers".
+
 ## Two assemblers
 
 - **`asm`** (module name `Asm`, ~7KB) — "Standard NitrOS-9 6809/6309
   Assembler" per its own `help asm`. A smaller, non-relocating assembler,
   and an older, separate tool from `rma`/RLINK. `Live` end-to-end: assemble
   a real MOD/EMOD program, run it, get correct output. Syntax: `Asm filename
-  [<opts>] [>list] [#xxK]`; `O=<name>` (**uppercase** — a different
-  convention from RMA's lowercase `-o=`) generates the object file, a
-  leading `-` on `O` means silent overwrite.
+  [<opts>] [>list] [#xxK]`; `O=<name>` generates the object file, and a
+  leading `-` (`-O=<name>`) means silent overwrite — without it, an
+  existing output file fails the run. **Case is not significant** — `Live`,
+  `o=` and `O=` both produce a valid module; an earlier note here implied
+  otherwise. RMA's equivalent is `-o=`.
 - **`rma`** (~20KB; `rma.6809`/`rma.6309` are byte-identical copies of one
   module, not a real 6309 build) — the Relocating Macro Assembler the
   PSECT/VSECT/RLINK section below describes. **Hangs indefinitely** on the
@@ -381,7 +593,9 @@ table, and cross-validated against `ident`'s decode of real system modules.
 literal `EQU` values — each name is an `RMB 1` entry in a running counted
 table (`I$Read: RMB 1`, `I$ReadLn: RMB 1`, …), so a call's numeric code is
 its *position* in that table, assigned by the location counter rather than
-written per name.
+written per name. **That file is RMA source and `asm` cannot `use` it at
+all** — see "Why not `use` os9defs.a" near the top of this file for what
+happens and what to do instead.
 
 ## Debugger
 

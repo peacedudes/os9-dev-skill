@@ -196,20 +196,23 @@ error, and a zero-length element is the only way to raise it**; reaching
 loop ends**, not a fault. 68k BASIC09 depends on exactly that and consumes it
 silently (`Live`) — see `basic09/pack-and-runb.md`.
 
-Two os9exec divergences:
-- It additionally accepts `{` and `}` as element characters (a deliberate
-  MPW-shell-variable convenience, per its own source comment). `Source, Flag`
-  against the manual's character set. It makes os9exec *more* permissive, so
-  it cannot produce a spurious `E$BNam`.
-- **It implements no trailing-delimiter skip, and sets no registers on the
-  error path** — `E$BNam` returns with `d0.b`/`a1` untouched, so the caller
-  reads back its own pre-call values. The 68k manual's ERROR OUTPUT promises
-  only carry + `d1.w`, so this is within *its* letter — but the 6809 manual
-  documents the same primitive far more fully (an error-path pointer, plus
-  skipping one trailing comma or any number of trailing spaces), and os9exec
-  does neither. `Source, Flag`; see the `F$PrsNam` row in
-  `6809/syscalls-and-module-format.md` before assuming the 68k silence means
-  the behaviour is absent from real OS-9.
+One os9exec divergence: it additionally accepts `{` and `}` as element
+characters (a deliberate MPW-shell-variable convenience, per its own source
+comment). `Source, Flag` against the manual's character set. It makes os9exec
+*more* permissive, so it cannot produce a spurious `E$BNam`.
+
+On the error path os9exec returns `E$BNam` with `d0.b`/`a1` untouched, so the
+caller reads back its own pre-call values. **That conforms** — the 68k ERROR
+OUTPUT specifies carry + `d1.w` and nothing else. `Source`.
+
+**Do not import the 6809 entry's fuller contract here.** The 6809 System
+Programmer's Manual describes this primitive with a trailing comma/space skip
+and a meaningful error-path pointer; the 68k line is an *evolution* of that
+design, not the same implementation, and the 68k TRM specifies neither. Treating
+the 6809 text as the 68k spec was tried: bolting the skip onto os9exec's
+`F$PrsNam` broke **42 of 148** suite tests, because 68k callers — the shell
+included — rely on `a1` pointing *at* the terminator, exactly as the 68k manual
+says. For os9exec, read 68k manuals.
 
 **F$PErr** (d0.w=path to an **error-message file**, 0=none; d1.w=error code):
 writes an error message to the **standard error path**. `d0.w` is *not* a mode

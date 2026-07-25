@@ -28,6 +28,11 @@ which suits a harness — no telnet negotiation to strip.
 non-empty. Answer on *every* connection: inetd forks a fresh login per
 connection.
 
+**The guest picks the port, but the socket is bound host-side.** It comes from
+the disk's `inetd.conf`, so concurrent harness runs need *different* ports and
+each run's disk clone must be edited to match — pointing a client at a port the
+guest never asked for just hangs, with nothing listening and no error.
+
 Prerequisites, each obtained separately: XRoar; a **CoCo3 ROM image**
 (proprietary, Tandy-derived, not redistributable); a bootable NitrOS-9 IDE
 disk image (NitrOS-9 itself is open source, but bundled third-party software

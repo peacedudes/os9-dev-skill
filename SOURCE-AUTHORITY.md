@@ -5,9 +5,8 @@ claim is only as good as what backs it. It answers one question: **for any
 source in the corpus, is it Microware speaking, or is it someone else's
 reading of Microware?**
 
-**The rule, set by the project owner 2026-07-23:** for divergence work
-(`DIVERGENCES.md`), only Microware-published documentation counts as
-authoritative — including documentation published under licence by Tandy /
+**The rule:** for divergence work (`DIVERGENCES.md`), only
+Microware-published documentation counts as authoritative — including documentation published under licence by Tandy /
 Radio Shack, Dragon Data, and Motorola, which are Microware's own manuals
 carrying a licensee's imprint. Third-party books are **not** authoritative,
 however good they are. The OS-9 Guru in particular is an excellent book and is
@@ -32,15 +31,12 @@ throw all four away:
 | `6809/Gimix_OS-9_Users_Manual_1983.txt` | *Microware OS-9 Operating System User's Manual*, Copyright 1980 Microware |
 | `6809/OS-9_Interactive_Debugger_Users_Manual_ROUG.txt` | *Microware Interactive Debugger User's Manual*, (C) 1980, 1981, 1982 Microware |
 
-And one is misleading in the other direction:
+And two are misleading in the other direction:
 
 | Filename | Reality |
 |---|---|
 | `6809/OS-9_Quick_Reference_1982.txt` | Copyright **1992** by F. G. Swygert — a third-party quick reference, not a 1982 document |
-
-A sixth was caught in an earlier pass and is recorded here so it is not
-re-litigated: `6809/OS-9_Quick_Reference_1st_Farna_CoCo.txt` is Professional
-OS-9/**68000** documentation, not CoCo/6809 material.
+| `6809/OS-9_Quick_Reference_1st_Farna_CoCo.txt` | Professional OS-9/**68000** documentation, not CoCo/6809 material despite the filename |
 
 ## Authoritative — Microware, or Microware under licensee imprint
 

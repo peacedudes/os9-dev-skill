@@ -83,7 +83,7 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
 
   Verify the file rather than trusting the message. **Error 51 here means
   something different and is NOT this bug** — see "Packing is destructive to
-  the workspace copy" below; a `#000:051` from `PACK` means you are re-packing
+  the workspace copy" above; a `#000:051` from `PACK` means you are re-packing
   an already-packed procedure, and it **truncates the target to 0 bytes**
   before failing. **`Live` (6809): real NitrOS-9 BASIC09
   prints nothing at all** for `SAVE proc >rel`, `SAVE proc >/DD/abs/path`

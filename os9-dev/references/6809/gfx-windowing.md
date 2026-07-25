@@ -443,16 +443,13 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   A pattern tile is 32×8 pixels; how many bytes that needs depends on the
   active screen's color depth (1/2/4 bits per pixel needs a 32/64/128-byte
   buffer) since the color mode dictates how many pixels each byte packs.
-  **`Live`** — captured a hand-drawn 4-stripe 32×8 tile with
-  `GET`, then `PATTERN(1,3)` before a `BAR`: the bar rendered as a
-  repeating tiled texture, clearly distinct from a flat `PATTERN(0,0)`
-  control bar drawn beside it. **Trap hit building this test:** an earlier
-  attempt used `COLOR 1` for the fill and got nothing visible at all —
-  register 1 was the window's own `bg` register from `DWSET`'s
-  `fg,bg,border` triple, so foreground matched background. This
-  same-register invisibility trap isn't unique to `PALETTE`'s unenforced
-  ranges (see Open ends below); it bites any call whose foreground happens
-  to match whatever `DWSET` assigned as background.
+  **`Live`** — a `GET`-captured 4-stripe 32×8 tile, then `PATTERN(1,3)`
+  before a `BAR`, renders as a repeating tiled texture, clearly distinct
+  from a flat `PATTERN(0,0)` bar drawn beside it. **A fill drawn in the
+  same palette register `DWSET` assigned as `bg` is invisible** — no error,
+  nothing rendered at all. Not specific to `PATTERN` or to `PALETTE`'s
+  unenforced ranges (see Open ends below): it bites any call whose
+  foreground happens to match the window's background register.
 - `FONT(path,group,buffer)` — points BASIC09 at a buffer holding a custom
   character font; **graphics screens only**, no effect on hardware text
   screens. Three fonts ship built-in via `SYS/Stdfonts` (merge that file

@@ -14,6 +14,100 @@ and return values may differ from their raw OS-9 equivalents—verify against
 the manual's cross-reference table between C names and raw service-request
 names (`F$xxx`/`I$xxx`).
 
+## A complete worked program (`Live`, 68k)
+
+Compiled with `cc` and run on os9exec. It covers the three things a C
+program does on OS-9 that a Unix habit gets wrong: path I/O, `errno`
+carrying OS-9 codes, and process creation through `os9fork()` rather than
+`fork()`/`exec()`.
+
+```c
+#include <stdio.h>
+#include <errno.h>
+
+#define READ_MODE  1
+#define ATTRS      0x03
+
+main()
+{
+    int path, child, status;
+
+    /* --- happy path: create, write, close --- */
+    path = creat("cexfile.txt", ATTRS);
+    if (path < 0) {
+        printf("FAIL creat, errno %d\n", errno);
+        exit(1);
+    }
+    write(path, "written by cexample\015", 20);
+    close(path);
+    printf("PASS create/write/close\n");
+
+    /* --- error path: open a file that is not there --- */
+    path = open("no.such.file", READ_MODE);
+    if (path < 0)
+        printf("PASS open of a missing file: errno %d\n", errno);
+    else {
+        printf("FAIL open of a missing file succeeded\n");
+        close(path);
+    }
+
+    /* --- error path: fork a module that is not there --- */
+    child = os9fork("nosuchmod", 0, "", 1, 1, 0);
+    if (child < 0)
+        printf("PASS os9fork of a missing module: errno %d\n", errno);
+    else
+        printf("FAIL os9fork of a missing module returned %d\n", child);
+
+    /* --- happy path: fork a real child and collect its status --- */
+    child = os9fork("exfio1", 0, "", 1, 1, 0);
+    if (child < 0) {
+        printf("FAIL os9fork, errno %d\n", errno);
+        exit(1);
+    }
+    child = wait(&status);
+    printf("PASS child pid %d exited, status %d\n", child, status);
+    exit(0);
+}
+```
+
+Built and run, and what it actually printed (`exfio1` is the worked
+assembly example from `68k/os9-68k-assembly.md`; its two lines appear
+inline because the child shares the terminal):
+
+```
+cc cex.c -f=/dd/CMDS/DOG/cex2
+cex2
+
+PASS create/write/close
+PASS open of a missing file: errno 216
+PASS os9fork of a missing module: errno 221
+PASS create/write/close
+PASS open of a missing file failed as expected: Error #000:216 (E_PNNF) Path Name Not Found
+PASS child pid 7 exited, status 0
+```
+
+What to take from it:
+
+- **`errno` holds OS-9 error codes, not POSIX ones.** A missing file gives
+  **216** (`E$PNNF`), not `ENOENT`/2. Testing `errno == ENOENT` is the
+  reflex to unlearn; the numbers are the same ones a syscall returns in
+  `d1.w`, so `common/error-codes.md` is the table to read.
+- **A missing *file* and a missing *module* are different errors.**
+  `open()` on an absent file gives 216; `os9fork()` on an absent module
+  gives **221** (`E$MNF`), because module lookup is a different search
+  (the execution directory) from file lookup.
+- **`os9fork()` does not block.** It returns the child PID immediately;
+  the parent must `wait()` to collect the status. Here `wait()` returned
+  the same PID and the child's exit status of 0.
+- **Note the K&R shape**: `main()` with no return type and no prototypes.
+  See `c/kandr-vs-ansi.md` before reaching for ANSI syntax.
+- `\015` writes the CR that OS-9 uses as its line terminator; the resulting
+  file dumped as 20 bytes ending `0d`. `\n` is *not* a newline here — see
+  `common/unix-differences.md`.
+- **Don't interleave `write()` and `printf()` on the same path** — this
+  program keeps the file on its own path and messages on stdout. The File
+  I/O section below has the corruption details.
+
 ## Standard Headers Available
 
 | Header | Notes |

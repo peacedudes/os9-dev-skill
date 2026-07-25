@@ -135,6 +135,82 @@ bits instead); OS-9 Insights states the verification result as `0`, which
 is inconsistent with "complement of XOR" — `$FFFF` is treated as
 authoritative here. This parity is unrelated to the module CRC.
 
+## Reading a real module (`Live`, 68k)
+
+The tables above are easier to trust once you have seen them in bytes. This
+is a small hand-written assembly program (the worked example in
+`68k/os9-68k-assembly.md`), linked with `l68 -o=exfio1`, then dumped and
+decoded. Every number below came from the running system.
+
+```
+dump exfio1
+
+00000000  4afc 0001 0000 01c6 0000 0103 0000 0048 J|.....F.......H
+00000010  0555 0101 8001 0000 0000 0000 0000 0000 .U..............
+00000020  0000 0000 0000 0000 0000 0000 0000 31da ..............1Z
+00000030  0000 0050 0000 0000 0000 0000 0000 0400 ...P............
+00000040  0000 01b2 0000 01ba 6578 6669 6f31 0000 ...2...:exfio1..
+00000050  41fa 00ac 7002 7203 7400 4e40 0083 6500 Az.,p.r.t.N@..e.
+```
+
+Mapped onto the universal header table:
+
+| Bytes | Field | Reads as |
+|---|---|---|
+| `4afc` @ `$00` | `M$ID` | the sync word, as documented |
+| `0001` @ `$02` | `M$SysRev` | header format revision 1 |
+| `0000 01c6` @ `$04` | `M$Size` | 454 bytes, header through CRC |
+| `0000 0103` @ `$08` | `M$Owner` | group 0, user 259 |
+| `0000 0048` @ `$0C` | `M$Name` | name lives at `$48` — and `$48` does hold `exfio1` |
+| `0555` @ `$10` | `M$Accs` | read+exec for owner/group/public |
+| `01` `01` @ `$12` | `M$Type`/`M$Lang` | Program / 68000 object code |
+| `80` `01` @ `$14` | `M$Attr`/`M$Revs` | sharable (bit 7), revision 1 |
+| `31da` @ `$2E` | `M$Parity` | the header's last word |
+| `0000 0050` @ `$30` | `M$Exec` | entry at `$50` — where the code starts |
+| `0000 0400` @ `$3C` | `M$Stack` | 1024 bytes |
+
+The type/language and attribute/revision words are exactly what the source's
+`psect` line asked for, and the entry offset lands on real code: `41fa` at
+`$50` is `LEA (d16,PC),A0` — the program's first instruction.
+
+`ident` decodes the same bytes for you:
+
+```
+ident exfio1
+
+Module size:     $1C6        #454
+Module CRC:      $A78133     Good CRC
+Header parity:   $31DA       Good parity
+Ty/La At/Rev     $101        $8001
+Exec off:        $50         #80
+Stack size:      $400        #1024
+68000 Prog Mod, Object Code, Sharable
+```
+
+**A module's registered name is the one in its header, not its filename.**
+Copying this file to `exgood1` and loading it still put `exfio1` in `mdir` —
+worth knowing before hunting for a module under the name you saved it as.
+
+### What each integrity check actually covers (`Live`)
+
+Flipping a single bit in a copy of the module, then re-running `ident`,
+locates the boundary between the two checks precisely:
+
+| Byte corrupted | Where | `ident` reports |
+|---|---|---|
+| `$17` | `M$Edit`, inside the universal header | **Bad parity** *and* Bad CRC |
+| `$3F` | `M$Stack`, in the type-specific fields | Good parity, **Bad CRC** |
+| `$60` | program code | Good parity, **Bad CRC** |
+
+So "protects the header only" means the **universal** header — the words
+before `M$Parity` at `$2E`. The type-specific fields from `$30` on are
+covered by the module CRC alone, exactly like the code. A corrupt
+`M$Stack` or `M$Exec` therefore passes the parity check.
+
+Practical consequence: a module that fails its CRC is refused at load time,
+so a hand-patched module needs `fixmod` before it will run again. Do not
+read a successful parity check as "the header is intact."
+
 ## 6809 header divergence (do not blend with 68k values)
 
 The 6809 header is a different, shorter layout (9 bytes, sync `$87,$CD`,

@@ -20,8 +20,10 @@ the others rather than replacing them.
 
 `Hearsay` < `Manual` < `Source` < `Live`. **This ranks how well we know what
 the runtimes do. It does not rank authority over what OS-9 is.** For that a
-Microware manual is the specification and both runtimes are candidate defects
-— see `SOURCE-AUTHORITY.md`.
+Microware manual is the specification and both runtimes are candidate defects.
+Microware-published documentation is authoritative, including manuals issued
+under licence by Tandy/Radio Shack, Dragon Data or Motorola; third-party books
+are not, however good.
 
 Where stronger evidence **confirms** a weaker claim, replace the tag. Where it
 **contradicts** one, combine — keep the higher tier plus `Flag`, so the

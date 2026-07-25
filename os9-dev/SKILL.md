@@ -54,8 +54,10 @@ Running one tells you what *it* does; it is not evidence about what OS-9 is
 specified to do. Where a runtime and an authoritative manual disagree, the
 manual is the specification and the runtime is the candidate defect — the
 claim records both readings and only Microware or genuine OS-9 hardware
-settles it. `SOURCE-AUTHORITY.md` says what counts as Microware's word;
-several excellent books (the OS-9 Guru especially) do not.
+settles it. **Microware's word** means Microware-published documentation,
+including manuals issued under licence by Tandy/Radio Shack, Dragon Data or
+Motorola. Third-party books are not authoritative however good they are —
+the OS-9 Guru especially is excellent and still not Microware speaking.
 
 Claims carry inline confidence tags — legend in
 `references/CONFIDENCE-TAGS.md`. `Flag` means sources disagree. Prefer running

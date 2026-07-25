@@ -54,8 +54,11 @@ likeliest to have simplified something. A `Source` tag here means "this is
 what os9exec's C does" — a statement about os9exec, not about OS-9. Where a
 Microware manual disagrees with a runtime, the manual is the specification,
 the claim records both readings, and only Microware or genuine hardware
-resolves it. `SOURCE-AUTHORITY.md` defines what counts as Microware's word.
-Tag legend: sibling skill's `os9-dev/references/CONFIDENCE-TAGS.md`.
+resolves it. **Microware's word** means Microware-published documentation,
+including manuals issued under licence by Tandy/Radio Shack, Dragon Data or
+Motorola; third-party books are not authoritative however good — the OS-9
+Guru especially. Tag legend: sibling skill's
+`os9-dev/references/CONFIDENCE-TAGS.md` (install both).
 
 **Driver and file-manager entry points cannot be tested on os9exec.** It has
 no module dispatch for them: `I$Attach` (`icalls.c`) never allocates driver

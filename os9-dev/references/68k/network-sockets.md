@@ -1,5 +1,18 @@
 # OS-9/Internet: Networking and Socket Programming
 
+**`Manual` throughout — nothing in this file has been run.** No claim here is
+reachable at the `Live` tier: the emulator has no network device, and the
+socket library ships with OS-9/Internet rather than the base SDK, so a program
+calling `socket()` fails at *link* time (full detail in the sources note at the
+end). Treat every signature, return value and error code below as unverified.
+
+**The BSD resemblance is the trap.** This API is a deliberate *subset* of BSD
+sockets, so anything familiar-looking invites filling the gaps from general
+Linux/BSD knowledge — and that inference will read as confirmed when it is
+nothing of the kind. Where this file is silent, the silence is a gap in the
+documentation, not permission to assume the BSD behaviour. When answering from
+this file, say which calls it actually documents and which you are inferring.
+
 OS-9/Internet is Microware's TCP/IP stack — a BSD-flavored sockets API layered
 on OS-9's own module/driver architecture, not a bolt-on. This file assumes
 general TCP/IP and BSD sockets knowledge; it covers only what's specific to

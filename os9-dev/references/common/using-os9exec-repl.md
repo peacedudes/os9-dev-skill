@@ -292,12 +292,25 @@ Two different things behind the same device names:
 - A **real RBF image** behaves like OS-9: `..` clamps at the device root
   (real root inode), and genuine RBF mechanics (allocation bitmap, record
   locking) exist.
-- A **host-native directory** is a convenience shim: traversal above the
-  device root is possible, and RBF-specific behavior has nothing real
-  underneath. Behavior observed on a host-native mount may not hold on a
-  real image or real hardware. `format`/`iniz` can build a real RBF image
-  from a blank file on an `OS9Hx` device when RBF-specific behavior needs
-  testing.
+- A **host-native directory** is a convenience shim: RBF-specific behavior has
+  nothing real underneath. Behavior observed on a host-native mount may not
+  hold on a real image or real hardware. `format`/`iniz` can build a real RBF
+  image from a blank file on an `OS9Hx` device when RBF-specific behavior
+  needs testing.
+
+  **Traversal above the root depends on how the device was made.** `Live`
+  (2026-07-25, same binary and session): from a device created by
+  `mount -k=0 hb`, `list ../outside` reads a file above the root and `dir ..`
+  lists the host parent; the same spellings against a device configured through
+  `OS9DISK`/`OS9Hx` are refused with `E_PNNF`. Don't generalise either result.
+
+  **Permissions and ownership are only real on an RBF image.** A host
+  directory cannot carry OS-9 ownership at all. Attributes do map to Unix mode
+  bits in both directions (`Live`: `attr f -e` → host `+x`; `chmod 400` →
+  `-------r`), but Windows cannot represent them and reports read/write/exec
+  forced on. Crucially the `e` attribute is *reported, never enforced* — a
+  module with no `e` still runs from a host mount, because only the RBF path
+  checks attributes before an open. Test permission behaviour on an RBF image.
 
 **Host links inside a device root — avoid; if present, know the quirks**:
 hard links behave as ordinary files (deleting one name leaves the other's

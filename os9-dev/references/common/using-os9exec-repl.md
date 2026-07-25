@@ -86,6 +86,47 @@ timeout 5 env OS9DISK=/abs/path/disk ./os9exec /dd/CMDS/<name> </dev/null 2>&1
 tests "loads and starts" (a usage message is a pass) — the right signal
 for auditing a disk full of binaries, and far faster than driving a shell.
 
+## Batch-driving a whole session: a procedure file, never a pipe
+
+For unattended multi-command work (building an image, populating a disk),
+pass the shell a **procedure file** — the mechanism `os9repl.sh` itself uses
+to boot (`shell /h0/startup`):
+
+```
+gtimeout 60 env OS9DISK=<dir>/h0 OS9STOP=1 ./os9exec shell /h1/<proc> </dev/null 2>&1
+```
+
+`/h1` here is any host directory under the emulator's start path. Two traps,
+both `Live`, both silent:
+
+- **The procedure file must be CR-only.** With LF endings OS-9 sees one
+  enormous line: the shell echoes the entire file and runs nothing, reporting
+  no error. Generate with `tr '\n' '\r'`.
+- Piping the same commands into an interactive `shell` instead **hangs** —
+  and is separately forbidden above. The procedure file is the supported
+  route; a pipe is not.
+
+## Stamping non-super ownership on an RBF image
+
+`Live`. Files are stamped with the creating process's ID, so ownership is set
+by *who creates them*, not by any later command. Inside a build procedure:
+
+```
+mount -k=360k h7
+login claude          ← every file created after this line is owned 1.7
+makdir /h7/CMDS
+```
+
+`dir -e` confirms it — `0.0` for anything created before the `login`, `1.7`
+after. Two consequences worth knowing before shipping an image:
+
+- **A file created by a non-super account has no public read by default**
+  (`------wr`). On any machine where the operator is neither that owner nor
+  in group 0, the disk is unreadable. Set public bits explicitly.
+- **ToolShed's `copy -o=<id>` is not an ownership route**: it sets only the
+  low byte, so the group is always 0 — and Microware defines the super user
+  as *any* user in group zero, so every file would ship privileged.
+
 ## Creating and editing files
 
 Three routes, in order of preference by size:

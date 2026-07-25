@@ -73,6 +73,20 @@ shell to execute it, so built-ins inside it (`chd`, `setenv`, …) cannot
 disturb the invoking shell. Use `profile` when you *want* the changes to
 stick. Relative procedure-file lookups resolve against the data directory.
 
+**Line endings are CR (0x0D), and a procedure file with LF endings fails
+silently** — `Live`. OS-9 does not treat LF as a terminator, so the whole
+file is *one line*: the shell echoes its entire contents and executes
+nothing, with no error message of any kind. Host-generated procedure files
+must be converted (`tr '\n' '\r'`, or `flip -m` on the guest) before use.
+
+## Naming convention: capitalized directories
+
+OS-9 convention capitalizes directory names and leaves file names lowercase
+— `CMDS/`, `SYS/`, `DEFS/` beside `startup`, `password`, `motd`. Not
+enforced by the filesystem, but followed throughout the system disk; ignoring
+it in shipped material reads as foreign. Also noted for the 6809 utility set
+in `6809/utility-usage.md`.
+
 ## Control keys and line editing
 
 Default assignments — every one remappable per-device via `tmode`/`xmode`:

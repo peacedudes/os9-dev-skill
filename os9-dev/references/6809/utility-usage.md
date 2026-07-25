@@ -392,7 +392,8 @@ actually notices:
   because even though DAT gives each task its own *isolated* 64K logical
   space, a chunk of every task's map still has to mirror interrupt
   vectors and kernel entry points unless the hardware does automatic
-  task-switching (see `6809-level2-mmu.md`'s IRQ-masking section). So the
+  task-switching (see `os9-systems-dev`'s `6809-level2-mmu.md`, IRQ-masking
+  section). So the
   practical per-program ceiling barely moves between levels — what Level
   2 actually buys is running several such programs *simultaneously* in
   physically separate memory, not a bigger ceiling for any one of them.

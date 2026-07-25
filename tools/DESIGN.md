@@ -13,7 +13,8 @@ python3 -m unittest discover -s tools/tests       # the test suite (stdlib, no p
 
 **Scan both skills together, or cross-references false-positive.** The two
 skills point at each other's files on purpose (os9-dev's INDEX.md cites
-`6809-level2-mmu.md`, which lives in os9-systems-dev). Narrowing a run to one
+`6809-level2-mmu.md`, which lives in os9-systems-dev — a scope marker, not a
+dependency; shared content lives in os9-dev, see README). Narrowing a run to one
 root — `... check_doc_consistency.py os9-dev` — reports those legitimate
 pointers as broken cross-refs. The no-arg form scans both and is what a
 clean-run claim must be based on.

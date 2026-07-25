@@ -102,3 +102,13 @@ os9-systems-dev/
 DIVERGENCES.md          where a runtime disagrees with a manual
 SOURCE-AUTHORITY.md     what counts as Microware's word
 ```
+
+**Shared content lives in `os9-dev`, which stands alone.** Anything both
+skills need — the confidence tags, the provenance rules — belongs there.
+`os9-systems-dev` may depend on `os9-dev` and cite its files by path;
+`os9-dev` never depends on the sibling, and points at it only to mark
+something as out of scope. Always name the skill when citing across the
+split — a bare filename won't resolve from the other skill's directory.
+
+The two root files are review material, not part of either installed skill;
+nothing under `os9-dev/` or `os9-systems-dev/` may reference them.

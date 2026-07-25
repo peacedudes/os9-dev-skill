@@ -13,12 +13,12 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
   procedure name or an explicit `>pathlist`. If the file "didn't appear,"
   check CHX — it was written, just not where you were looking. (`asm`
   behaves the same way.)
-- **`SAVE` and `PACK` do NOT redirect to the same place** — `Live` (6809).
-  With a *relative* target, from the same workspace in the same session:
-  `SAVE proc >name` lands in **CHD** (the data directory), `PACK proc >name`
-  lands in **CHX**. The CHX rule above is `PACK`'s alone; `SAVE` follows
-  ordinary data-file resolution. Use an absolute path for either when it
-  matters.
+- **`SAVE` and `PACK` do NOT redirect to the same place** — `Live` (6809
+  and 68k). With a *relative* target, from the same workspace in the same
+  session: `SAVE proc >name` lands in **CHD** (the data directory),
+  `PACK proc >name` lands in **CHX** — on 68k, `/h0/CMDS`. The CHX rule
+  above is `PACK`'s alone; `SAVE` follows ordinary data-file resolution.
+  Use an absolute path for either when it matters.
 - **Packing does not speed up in-workspace execution** — measured
   identical times packed vs. unpacked under interactive `basic`; BASIC09
   always executes I-code. The manual's 10–30% speedup claim applies to
@@ -34,29 +34,43 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
 
   Both outputs contain every packed procedure's code; only the entry
   differs. If the entry point matters, name the list explicitly.
+- **Packing is destructive to the workspace copy — this is why the manual
+  says to always `SAVE` first.** `Live` (68k). `PACK` does not merely write a
+  file; it converts the *in-workspace* procedure too. With `aaa` and `bbb` in
+  the workspace and `bbb` current, `PACK aaa >target` leaves `DIR` showing:
+
+  ```
+    aaa    92  66          -*aaa    96  66
+   *bbb    92  66    -->     bbb    92  66
+  ```
+
+  Three separate effects, all on `aaa` alone:
+  1. **A leading `-` marks it packed.** The manual documents `*` (current
+     procedure) but gives no legend for `-`; that it means "packed" is `Live`,
+     confirmed by it attaching only to the packed procedure and by `LIST aaa`
+     afterwards printing **nothing at all** — the manual's "CANNOT be edited or
+     debugged", in practice.
+  2. **`*` moves to it** — packing makes that procedure current. This matters
+     for the `PACK*` entry-point rule in the table above: a preceding `PACK`
+     has already changed which procedure "current" means.
+  3. **It grows slightly** (92 -> 96 here; another run 96 -> 100).
+
+  Consequence: **a second `PACK` of the same procedure in one session fails**
+  with BASIC09 error `#000:051` ("Line with Compiler Error") — there is no
+  longer any source structure to run the extra compiler pass over — and it
+  **creates/truncates the output file to 0 bytes before discovering that**, so
+  it will destroy a good module from an earlier `PACK` to the same path. Both
+  the error and the refusal are correct behaviour, not an os9exec defect.
+  Re-pack from a fresh `LOAD` of the saved source instead.
 - **`>pathlist` with a procname list prints a BASIC09 error and still
   works.** `Live` (68k): `SAVE proc >target` and `PACK proc >target` print
   `Error #000:043` while writing a correct file. **The codes are BASIC09's
-  own, from its manual's Appendix C — 43 is "Unknown Procedure", 51 is
-  "Line with Compiler Error"** — not OS-9 kernel codes. In particular this
-  is **not** `E$BNam` (which is **235**); an earlier version of this entry
-  blamed `F$PrsNam` and that attribution was wrong. A syscall trace shows
-  `F$PrsNam` behaving exactly as the 2.4 Technical Reference specifies:
-  BASIC09 walks the pathlist with repeated calls and the final `E$BNam` on
-  the empty remainder is the documented multi-call terminator — and the
-  call's *only* possible error — which BASIC09 consumes silently. Every
-  syscall in the failing window returns a value that conforms to the **68k**
-  manual, so this is **not** a demonstrated os9exec defect — but it is not
-  cleared either. One candidate mechanism remains open: the **6809** manual
-  documents `F$PrsNam` skipping one trailing comma / any number of trailing
-  spaces and returning a continuation pointer even on `E$BNam`, and os9exec's
-  68k side does neither (see `68k/syscall-reference.md`). Implementing that
-  skip was **tried and refuted** — error 43 was unchanged and 42 of 148
-  suite tests broke, because os9exec's own path consumers rely on `a1`
-  pointing at the terminator. So the gap is real but is not, by itself, what
-  produces error 43. `Absent`: whether the genuine 68k binary on real
-  hardware prints it too is untestable here.
-  The trigger is the **procname list**, not the path shape:
+  own, from its manual's Appendix C** — 43 is "Unknown Procedure", 51 is
+  "Line with Compiler Error" — not OS-9 kernel codes, and **not** `F$PrsNam`'s
+  `E$BNam` (which is **235**); a syscall trace shows `F$PrsNam` conforming to
+  its documented contract throughout, including the terminating `E$BNam` that
+  BASIC09 consumes silently. The trigger is the **procname list**, not the
+  path shape:
 
   | Form | 68k `os9exec` | Output |
   |---|---|---|
@@ -64,17 +78,19 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
   | `SAVE proc` | clean `Ready` | correct |
   | `SAVE >target` | clean `Ready` | correct |
   | `PACK proc >target` | `Error #000:043` (twice) | valid module — `ident` gives Good CRC + Good parity, `Ty/La $202` |
-  | `PACK >target` (no procname) | `Error #000:051` | **0-byte file — this one genuinely fails** |
+  | `PACK >target` (no procname) | clean `Ready` | valid module |
+  | `PACK* <path>` (documented all-form, no `>`) | clean `Ready` | valid module |
 
-  So: verify the file rather than trusting the message, but note the last
-  row is a real failure, not a cosmetic one. **`Live` (6809): real NitrOS-9
-  BASIC09 prints nothing at all** for `SAVE proc >rel`, `SAVE proc
-  >/DD/abs/path` and `PACK proc >rel` — a different binary on a different
-  architecture, so suggestive, not proof about the 68k line. (`> pathlist`
+  Verify the file rather than trusting the message. **Error 51 here means
+  something different and is NOT this bug** — see "Packing is destructive to
+  the workspace copy" below; a `#000:051` from `PACK` means you are re-packing
+  an already-packed procedure, and it **truncates the target to 0 bytes**
+  before failing. **`Live` (6809): real NitrOS-9 BASIC09
+  prints nothing at all** for `SAVE proc >rel`, `SAVE proc >/DD/abs/path`
+  and `PACK proc >rel` — a different binary on a different architecture, so
+  suggestive, not proof about the 68k line. `Absent`: whether the genuine
+  68k binary on real hardware prints it is untestable here. (`> pathlist`
   with a space *after* the `>` is a separate thing — unrecognized syntax.)
-  Resolution targets, 68k: relative `SAVE >name` resolves against **CHD**;
-  `PACK`'s default output is the **execution** directory, so a relative
-  `PACK >name` lands in `/h0/CMDS`.
 
 ## What a packed module is
 

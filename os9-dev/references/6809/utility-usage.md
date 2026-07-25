@@ -40,7 +40,11 @@ layer underneath it.
   read/write/execute), `p` prefix for public (`pr`/`pw`/`pe`), `d`
   (directory), `s` (non-shareable, single-user-at-a-time), `a` (suppress
   the attribute printout after a change). Minus-prefix any letter to turn
-  it off; no permission argument displays current attributes. Only the
+  it off; no permission argument displays current attributes. **68k
+  inverts this** (`Live`, both sides): there `-e` *sets* and `-ne` clears,
+  so the identical `attr f -e` has the opposite effect per target —
+  `common/utility-usage.md`. `Live`: bare `attr` prints no usage text on
+  6809, so the spelling cannot be checked from the guest. Only the
   owner (or user 0) may change a file's attributes. Can convert an
   emptied directory back to a plain file; cannot do the reverse — use
   `makdir` to create a directory.

@@ -25,7 +25,10 @@ for" descriptions: `os9-tools-and-shell.md`.
 
 - `attr [<opts>] {<path>} {<permissions>}` — permissions given as
   `-r -w -e -pr -pw -pe -s -d` to set, `-n<abbrev>` (e.g. `-npw`) to
-  clear; unnamed bits unchanged; none given = display. `-a` suppress
+  clear; unnamed bits unchanged; none given = display. **6809 inverts
+  this** (`Live`, both sides): there a bare letter sets and a minus-prefix
+  clears, so `attr f -e` sets execute here and *clears* it on 6809 —
+  `6809/utility-usage.md`. `-a` suppress
   attribute printout. Owner = same group ID; only owner/superuser may
   change. Can clear `d` on an emptied directory (never set it — only
   `makdir` creates directories). Bare `attr <path>` prints an 8-character

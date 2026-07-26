@@ -564,6 +564,47 @@ class TestCrossReferences(unittest.TestCase):
         self.assertEqual(findings, [])
 
 
+class TestQualifiedReferences(unittest.TestCase):
+    """A directory-qualified `dir/file.md` pointer must name the real directory.
+
+    Complements check_cross_references: that one asks "does this file exist at
+    all", scoped to INDEX.md. This one asks "is the path right", and can run over
+    every payload file without false-positiving on other repos' documents,
+    because a reference whose basename is unknown is skipped entirely.
+    """
+
+    KNOWN = {
+        "os9-dev/references/basic09/gotchas.md",
+        "os9-dev/references/common/module-format.md",
+        "os9-dev/references/CONFIDENCE-TAGS.md",
+    }
+
+    def test_flags_wrong_directory(self):
+        files = [("os9-dev/references/c/os9-c-cheatsheet.md", "See `common/gotchas.md`.\n")]
+        findings = chk.check_qualified_references(files, self.KNOWN)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("common/gotchas.md", findings[0].message)
+        self.assertIn("basic09/gotchas.md", findings[0].message)
+
+    def test_silent_when_directory_correct(self):
+        files = [("os9-dev/references/c/os9-c-cheatsheet.md", "See `basic09/gotchas.md`.\n")]
+        self.assertEqual(chk.check_qualified_references(files, self.KNOWN), [])
+
+    def test_silent_for_bare_basename(self):
+        # Bare names are the INDEX.md convention and are check_cross_references' job.
+        files = [("os9-dev/references/c/os9-c-cheatsheet.md", "See `gotchas.md`.\n")]
+        self.assertEqual(chk.check_qualified_references(files, self.KNOWN), [])
+
+    def test_silent_for_unknown_basename(self):
+        # Another repo's document -- no opinion can be formed, so none is offered.
+        files = [("os9-dev/references/6809/STATUS.md", "See `reports/dogfood-2026-07-18.md`.\n")]
+        self.assertEqual(chk.check_qualified_references(files, self.KNOWN), [])
+
+    def test_sibling_qualified_path_resolves(self):
+        files = [("os9-systems-dev/references/INDEX.md", "See `os9-dev/references/CONFIDENCE-TAGS.md`.\n")]
+        self.assertEqual(chk.check_qualified_references(files, self.KNOWN), [])
+
+
 # --------------------------------------------------------------------------
 # DIVERGENCES.md two-way link integrity
 #

@@ -429,6 +429,45 @@ def check_cross_references(files, known_basenames):
     return findings
 
 
+def check_qualified_references(files, known_paths):
+    """Flag a `dir/file.md` pointer whose directory doesn't match where the file lives.
+
+    Runs over every payload file, not just INDEX.md, and stays quiet on other
+    repos' documents because a reference is only judged when its basename is one
+    we actually own. What it catches is the stale pointer left behind when a file
+    moves between reference directories: the target still exists, so
+    `check_cross_references` sees nothing wrong, but the path sends the reader to
+    the wrong place. Bare basenames are skipped -- resolving those is
+    `check_cross_references`' job.
+    """
+    by_base = {}
+    for path in known_paths:
+        normalised = path.replace(os.sep, "/")
+        by_base.setdefault(os.path.basename(normalised), set()).add(normalised)
+    findings = []
+    for filename, text in files:
+        for lineno, line in enumerate(text.splitlines(), start=1):
+            for ref in extract_doc_references(line):
+                ref_path = ref.replace(os.sep, "/")
+                if "/" not in ref_path:
+                    continue
+                candidates = by_base.get(os.path.basename(ref_path))
+                if not candidates:
+                    continue
+                if any(p == ref_path or p.endswith("/" + ref_path) for p in candidates):
+                    continue
+                actual = ", ".join(sorted(candidates))
+                findings.append(
+                    Finding(
+                        "stale-path",
+                        None,
+                        f"`{ref}` names a directory it does not live in; it is at {actual}",
+                        [(filename, lineno)],
+                    )
+                )
+    return findings
+
+
 def skill_of(path):
     """Return which skill directory `path` sits under, or None if neither."""
     parts = path.replace(os.sep, "/").split("/")
@@ -689,6 +728,9 @@ def run(roots, register_text=None):
         inventory.extend(scan_open_flags(text, display, known))
     findings = check_presence_contradiction(mentions) + check_shared_facts(facts) + findings
     findings += check_cross_references(doc_texts, known_basenames)
+    findings += check_qualified_references(
+        doc_texts, {os.path.relpath(p) for p in files + adjacent}
+    )
     findings += check_skill_boundaries(doc_texts)
     if register_text is None:
         register_text = next(

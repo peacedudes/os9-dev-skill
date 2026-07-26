@@ -368,6 +368,16 @@ child, or where losing the session is acceptable.
 - `kill <pid>` after `procs`.
 - **ESC on a blank line** exits the shell; a harness restart is the
   reliable reset when state is unknown.
+- **But EOF is a per-path setting, and `tmode` changes outlive the process
+  that made them.** An account's `.login` is read from its **data**
+  directory, so `login`ing to one whose `.login` runs `tmode eof=04`
+  (the stock `su` account does — data dir `/dd/SYS`) leaves EOF as Ctrl-D
+  *on the top-level shell too*, after `logout`. A harness that terminates
+  by sending ESC then hangs at a live `$` prompt that is still executing
+  commands perfectly well. This is correct OS-9 behaviour, not a defect —
+  don't file it as one. Terminate with Ctrl-D (`\004`), or with the
+  emulator's own `stop`, which sets `quitFlag` directly and never touches
+  the shell's EOF path at all. (`stop` needs group 0 or `OS9STOP` set.)
 
 From os9exec's own debugger (`idbg` — emulator-level, distinct from the
 OS-9 `debug` command): `break` halts timesharing into the idbg prompt

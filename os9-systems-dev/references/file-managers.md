@@ -292,23 +292,25 @@ designing around deliberately rather than merely tolerating as a safety net
   read-only opens when writing isn't needed, both for that reason and speed.
 - A **write** always releases any record currently locked by that path, and
   locks nothing itself *unless* it lands at EOF, in which case it takes the
-  EOF lock. **This does not serialize appenders.** Nothing real is locked —
-  the range covers bytes that do not exist. Its only job is to stop a
-  *reader* concluding the file is finished. Two programs appending to one log
-  do not shut each other out: each append lands at a different offset, and a
-  write-only path takes no record lock at all. Getting this backwards means
-  building mutual exclusion between writers that the design never had.
+  EOF lock — **in any write mode, not only update**. Nothing real is locked:
+  the range covers bytes that do not exist. It has two jobs, and the second
+  is easy to miss. One, stop a *reader* concluding the file is finished.
+  Two, **stop two writers extending the file at the same time** — which the
+  documentation gives as the reason the EOF lock exists at all. So appenders
+  *are* serialized at the edge. A write-only sequential-output creator gains
+  the EOF lock as soon as it creates the file; that is what keeps a spooler
+  one step behind an assembler writing its listing through plain `>`.
 - **Which opens lock what**, since "locks only happen in update mode" is only
   two-thirds true:
   - *read auto-lock*: **update mode only** (read+write). A read-only path
     cannot modify what it read, so it locks nothing.
-  - *EOF wait*: a reader blocks at end-of-file only while **another process
-    holds that file open for update**. The waiting reader's own mode is
-    irrelevant — a follower opens plain `READ`; it is the *producer* that
-    must open `>+`. A sequential writer that wants followers says so by
-    opening for update; one that opens `>` is invisible to the mechanism and
-    nobody waits on it, which is exactly what keeps two plain loggers out of
-    each other's way.
+  - *EOF wait*: a reader blocks at end-of-file while **another path holds the
+    EOF lock**, and that lock is taken by whoever last wrote at the end — in
+    any write mode. Both the waiting reader's mode and the producer's are
+    irrelevant: a follower opens plain `READ`, and a producer using plain `>`
+    holds the ghost just as an update-mode one does. This is the correction
+    below: there is no way for a sequential writer to opt *out* of being
+    followed by choosing its open mode.
   - *explicit `SS_Lock`*: **update mode too**, same rule — a path that cannot
     modify what it read has nothing to protect, and allowing it a lock would
     hand it a way to hold up writers, the very lockout this design avoids. A
@@ -318,6 +320,29 @@ designing around deliberately rather than merely tolerating as a safety net
   path holds — record, EOF, or whole-file. `seek()` never affects locking.
 - `SS_Lock` locks or releases part of a file directly; `SS_Ticks` sets how
   long a caller waits for someone else's lock before giving up.
+
+> **Correction, 2026-07-26.** This section previously said a write-only path
+> was invisible to the locking mechanism, so two plain appenders never shut
+> each other out. That was wrong, and internally inconsistent with case 2
+> above: the spooler design needs the *write-only* assembler to hold the
+> ghost lock, or the consumer has nothing to sleep against. It came from
+> over-generalizing "writes take no lock" and dropping the EOF exception.
+> Four Microware manuals state that a write at end of file gains EOF Lock
+> regardless of mode, that this is the only case where a write locks any part
+> of a file, that it exists to stop two users extending a file at once, and
+> that a sequential-output creator gains it on creation: 6809 *System
+> Programmers Manual* §6.6.1/§6.6.3/§6.6.5, Tandy *Technical Reference*
+> :3799, Tandy *Level Two Development System* :12732, 68k *v2.4 Technical
+> Reference* :6307. Confirmed as intended behaviour by the mechanism's
+> designer. **os9exec now does this** (2026-07-26): the EOF lock is its own
+> flag on the path, gained by an access landing at the end of the file through
+> any write-capable path and by a create-for-output, kept until an access that
+> is *not* at the end, and dropped at close before the wake. A read-only path
+> still takes nothing and only ever waits — the manual's "reads or writes"
+> means the position, not a licence for a follower to lock the end, which
+> would make the spooler block the assembler. **NitrOS-9 still gates
+> acquisition on update mode** via the `lockmode` patch and has a roadmap work
+> order open to re-cut it.
 
 ### Implementing it — four things that bite
 

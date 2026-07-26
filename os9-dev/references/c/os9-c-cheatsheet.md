@@ -1,5 +1,8 @@
 # OS-9 C Compiler Cheatsheet (68k)
 
+**Every `Live` tag here is `Live` (os9exec).** No 6809 C compiler was
+available to this project — the 1983-manual column below is `Manual`.
+
 ## Setup
 
 ```bash
@@ -47,7 +50,7 @@ the program and calls `main()`. This is the actual OS-9 entry point.
 These are the ones that actually cost time — read this before anything else
 in this file:
 
-- **`int` is 32-bit on 68k** (`Live`, via `sizeof()` on a real 68k
+- **`int` is 32-bit on 68k** (`Live` (os9exec), via `sizeof()` on a real 68k
   toolchain), same as `long` and any pointer. Some documentation
   describes a 16-bit `int` — that's the *6809* compiler's data model, not
   68k's. The same applies to floating point: the 6809 compiler's `float`/
@@ -57,7 +60,7 @@ in this file:
   the data-types reference table below).
 - **`\n` is CR (0x0D), not LF** — matches OS-9's own line convention, but
   will silently produce the wrong bytes if you're thinking in Unix terms.
-  **`Live`** (os9exec 68k): `putc('\n', f)` to a file wrote the
+  **`Live` (os9exec)** (os9exec): `putc('\n', f)` to a file wrote the
   single byte `0x0D` (the file read back `58 0D 59` for `X`,`\n`,`Y`) — the
   compiler maps the escape to CR at compile time; a raw `putc(0x0A, f)` stays
   `0x0A`, so there is no I/O-layer translation, it is purely what `\n` compiles
@@ -78,7 +81,7 @@ in this file:
   `const`/`volatile`, etc.): `kandr-vs-ansi.md`.
 - **Linking against anything beyond the default `CLIB`** (e.g. termcap
   functions `tgetent`/`tgetstr`/`tputs`, which need `termlib.l`) needs an
-  explicit extra-library flag — `Live`: `cc`'s own documented
+  explicit extra-library flag — `Live` (os9exec): `cc`'s own documented
   `-L=<name>` is broken/not forwarded correctly (`l68: error - unknown
   option -L`). Use lowercase `-l=<full-path-to-file.l>` instead (matches
   `l68`'s own flag, which `cc -?` doesn't fully list — run `l68 -?`
@@ -144,26 +147,26 @@ carry over to 68k — `Live` (verified via `sizeof()` on a real 68k
 toolchain): `int`, `long`, and pointers are all 32-bit there, not the
 16-bit `int` the 6809 manual describes.
 
-| Type | 6809 compiler (1983 manual) | 68k (`Live` where noted) |
+| Type | 6809 compiler (1983 manual) | 68k (`Live` (os9exec) where noted) |
 |---|---|---|
 | `char` | 1 byte | 1 byte |
-| `int` | 2 bytes | **4 bytes** (`Live`) |
+| `int` | 2 bytes | **4 bytes** (`Live` (os9exec)) |
 | `unsigned` | 2 bytes | presumably 4 bytes (follows `int`; not independently spot-checked) |
-| `long` | 4 bytes | 4 bytes (`Live`) |
-| `float` | 4 bytes — proprietary sign-magnitude binary format (exponent biased by 128, 3-byte mantissa with implied leading 1), **not IEEE 754** | **4 bytes, IEEE-754 single (`Live`)** — a C `float`=1.0 stored `3F 80 00 00` (big-endian), textbook IEEE single. NOT the 6809 proprietary format |
-| `double` | 8 bytes — same proprietary format, 7-byte mantissa | **8 bytes, IEEE-754 double (`Live`)** — a C `double`=1.0 stored `3F F0 00 00 00 00 00 00` (big-endian), textbook IEEE double |
+| `long` | 4 bytes | 4 bytes (`Live` (os9exec)) |
+| `float` | 4 bytes — proprietary sign-magnitude binary format (exponent biased by 128, 3-byte mantissa with implied leading 1), **not IEEE 754** | **4 bytes, IEEE-754 single (`Live` (os9exec))** — a C `float`=1.0 stored `3F 80 00 00` (big-endian), textbook IEEE single. NOT the 6809 proprietary format |
+| `double` | 8 bytes — same proprietary format, 7-byte mantissa | **8 bytes, IEEE-754 double (`Live` (os9exec))** — a C `double`=1.0 stored `3F F0 00 00 00 00 00 00` (big-endian), textbook IEEE double |
 
 **`float`/`double` *storage* is IEEE-754, but *arithmetic* is single-precision
-on os9exec (`Live`).** A `double` computation loses precision to
+on os9exec (`Live` (os9exec)).** A `double` computation loses precision to
 about single-precision magnitude: `0.1+0.2-0.3` (and the runtime-computed
 `1.0/10.0+2.0/10.0-3.0/10.0`, so it isn't constant-parsing) yielded a 2⁻²²
 residual — `0.1+0.2 != 0.3` is still true (C does a real IEEE compare, unlike
 BASIC09's tolerant `=`), but you get ~7 good digits, not ~16. This is the
 default soft-float math (the `math` trap handler), shared with BASIC09 REAL, and
 it's fixed at compile time — `load math881` at runtime does NOT change an
-already-compiled program (`Live`). **To get full precision, compile for the
+already-compiled program (`Live` (os9exec)). **To get full precision, compile for the
 68881 FPU: `cc -K=2F` (`-K=2` = target 68020, `F` = 68881; uses the `c68020`/
-`r68020` passes).** `Live`: with `-K=2F`, the runtime-computed
+`r68020` passes).** `Live` (os9exec): with `-K=2F`, the runtime-computed
 `1.0/10.0+2.0/10.0-3.0/10.0` gave a residual of **exactly 0** (the 68881's 80-bit
 extended precision — even tighter than 64-bit double), vs 2⁻²² without it. So the
 68881 emulation is accurate; the single-precision default is a `math`-trap
@@ -184,7 +187,7 @@ terminated by a sentinel byte **whose value differs by target** — and
 `"ABCDEFGH"` stored `58 59 00 44 45 46 47 48` — i.e. `"XY"` then a **`00`
 (NUL)** terminator (overwriting the old `C`), so **68k BASIC09 terminates a
 STRING with NUL, not `$FF`.** **A BASIC09 string at its declared maximum
-length still has no terminator byte at all** (`Live`: a `STRING[3]` set to
+length still has no terminator byte at all** (`Live` (os9exec): a `STRING[3]` set to
 `"XYZ"` stored exactly `58 59 5A`) — so a C function reading a BASIC09 STRING
 must check the declared length as well as scanning for the terminator, and
 the terminator to scan for is `$FF` on 6809 but `0x00` on 68k.
@@ -196,7 +199,7 @@ shape row-wise. Concretely: BASIC09's `DIM array(5,3):INTEGER` and C's
 same logical element requires transposed subscripts — BASIC09's
 `array(4,2)` is C's `array[2][4]`, not `array[4][2]`. Passing a
 multi-dimensional array between the two languages without accounting for
-this silently reads/writes the wrong elements. **`Live`** (68k):
+this silently reads/writes the wrong elements. **`Live` (os9exec)** (os9exec):
 a `DIM m(2,3):BYTE` filled `m(i,j)=i*16+j` and `PUT` to a file stored
 `11 21 12 22 13 23` — i.e. `m(1,1),m(2,1),m(1,2),m(2,2),m(1,3),m(2,3)`, the
 first subscript varying fastest, confirming BASIC09's column-major layout.
@@ -212,7 +215,7 @@ scans of this appendix mangle the string "BASIC09" badly).
 **This table is 6809-specific**, not this file's 68k subject: it's sourced
 from the 1983 6809 C Compiler manual (this file's only C-compiler-manual
 source — see `Sources:` below), and its component names don't match the
-`Live`-verified 68k sub-tool chain used throughout the rest of this
+`Live` (os9exec)-verified 68k sub-tool chain used throughout the rest of this
 file (`cpp`→`c68`/`c68020`→`o68`→`r68`/`r68020`→`l68`, driven by `cc`; see
 `Setup` above and `68k/os9-68k-assembly.md`). Kept here for reference since
 `c-link`/`c.link` naming shows up in mixed-architecture archives, but treat
@@ -263,14 +266,14 @@ manual's "Interfacing to BASIC09" appendix, is a Radio-Shack/CoCo 6809
 document (explicit 6809 references, zero 68000 mentions) despite
 sometimes circulating in 68k archive folders. `c-link`, named throughout
 below, is a 6809 tool — it does not exist on 68k SDKs (exhaustively
-searched on a real 68k disk image). **For 68K, use the `Live` method
+searched on a real 68k disk image). **For 68K, use the `Live` (os9exec) method
 in `basic09/basic09-per-target.md`'s "Calling 68000
 machine-language procedures from BASIC09" section instead**: compile
 the C function with ordinary `cc -r -s`, then hand-write a small
 assembly shim (assembled with `r68`, linked with the ordinary `l68` —
 no special tool needed) that translates BASIC09's own calling
 convention into a call to the compiled C function. That section has a
-complete, `Live` worked example.
+complete, `Live` (os9exec) worked example.
 
 The rest of this section is kept for 6809 work and for historical
 context on how the *concept* carries over (the mechanism below and the
@@ -336,6 +339,6 @@ summary, if precision matters.)*
 **Sources:** Official Microware C Compiler manual (1983, 6809,
 Radio-Shack/CoCo-branded) and "The OS-9 Primer" (documents the later
 "Ultra C" 68k compiler and its register conventions). 68k data-type
-sizes: `Live`, confirmed on a real toolchain, not just documentation. The
+sizes: `Live` (os9exec), confirmed on a real toolchain, not just documentation. The
 68K way to call C from BASIC09 (`basic09/basic09-per-target.md`)
-is `Live`, not `Manual`.
+is `Live` (os9exec), not `Manual`.

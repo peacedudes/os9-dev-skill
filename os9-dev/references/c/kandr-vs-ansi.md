@@ -13,7 +13,7 @@ K & R Specification" section and not independently re-confirmed against a
 68k Ultra C toolchain — treat them as "this is what the 6809-vintage
 compiler did," not as a guaranteed 68k fact, unless another row or
 `os9-c-cheatsheet.md` says otherwise. Unmarked rows reflect either
-baseline K&R-era behavior or `Live`-verified facts on a real 68k
+baseline K&R-era behavior or `Live` (os9exec)-verified facts on a real 68k
 toolchain.
 
 | Modern C pattern | Status on this compiler | Fix |

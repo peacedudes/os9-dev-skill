@@ -588,12 +588,12 @@ after each trip.
 **Divide-by-zero outcomes differ by operand type and by target — neither
 goes through the documented "Divide by Zero" path the way you'd expect:**
 
-- **INTEGER ÷ 0** — `Live` on both. **6809** raises the documented
+- **INTEGER ÷ 0** — `Live` (NitrOS-9, os9exec). **6809** raises the documented
   `Error #045 -- Divide by Zero`. **68k** raises `Error #000:105
   (E_ZERDIV) zero divide TRAP 5` — the 68000 hardware zero-divide
   exception (vector 5), dispatched through `F$STrap`, not BASIC09's own
   documented error 45.
-- **REAL ÷ 0** — `Live` on both. **6809** raises `Error #045` here too;
+- **REAL ÷ 0** — `Live` (NitrOS-9, os9exec). **6809** raises `Error #045` here too;
   **68k** raises `Error #000:107 (E_TRAPV)`, and `ON ERROR GOTO` catching
   it sees `ERR` = **107**.
 
@@ -637,7 +637,7 @@ line.** Unlike most BASIC dialects (and unlike `basic09c`, the
 independent native compiler — see `gotchas.md`), a real BASIC09
 interpreter does not support a trailing comment after code on the same
 line; `PRINT x ! note` is a compile error, not a stylistic choice.
-`Live` on both real interpreters: rejected on
+`Live` (NitrOS-9, os9exec) on both real interpreters: rejected on
 68k (`Error #000:029`) and on 6809 (`Error #034 -- Missing Left
 Parenthesis` — different message, same rejection), in both cases with
 the error caret landing right at the `!`. A standalone whole-line `!`

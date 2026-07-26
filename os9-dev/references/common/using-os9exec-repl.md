@@ -51,7 +51,7 @@ or SDK. A host directory of your own files works identically for basic testing.
   its own prompt** (BASIC09's `B:`/`E:`, an editor, a custom login
   prompt): the send times out with zero pane change because the gate
   failed *before* sending. Switch to raw mode. **A program's own raw output
-  can trigger the same desync**, `Live`: a bare CR (no LF) written mid-output
+  can trigger the same desync**, `Live` (os9exec): a bare CR (no LF) written mid-output
   repositions the cursor to column 0 without clearing the line, so a genuine
   fresh prompt sits mid-line behind leftover text and the gate — which wants
   the prompt at line-start — times out even though the shell is fine.
@@ -97,7 +97,7 @@ gtimeout 60 env OS9DISK=<dir>/h0 OS9STOP=1 ./os9exec shell /h1/<proc> </dev/null
 ```
 
 `/h1` here is any host directory under the emulator's start path. Two traps,
-both `Live`, both silent:
+both `Live` (os9exec), both silent:
 
 - **The procedure file must be CR-only.** With LF endings OS-9 sees one
   enormous line: the shell echoes the entire file and runs nothing, reporting
@@ -108,7 +108,7 @@ both `Live`, both silent:
 
 ## Stamping non-super ownership on an RBF image
 
-`Live`. Files are stamped with the creating process's ID, so ownership is set
+`Live` (os9exec). Files are stamped with the creating process's ID, so ownership is set
 by *who creates them*, not by any later command. Inside a build procedure:
 
 ```
@@ -141,7 +141,7 @@ Three routes, in order of preference by size:
    inside an RBF image has no host file to touch). `flip -m` → CR-only
    (OS-9), `flip -u` → LF (Unix), `flip -t` reports current state. Best
    route for large sources; the file must end up CR-only or the compiler
-   reads it as one giant line. **`flip -t` before every `-m`** — `Live`:
+   reads it as one giant line. **`flip -t` before every `-m`** — `Live` (os9exec):
    running `flip -m` on a file that's already CR-only silently collapses it
    to a single line (all line-ending bytes vanish). Recoverable with `flip
    -u` and re-editing, but check state first rather than reflipping blind.
@@ -166,7 +166,7 @@ cc /dd/source.c
   aren't loaded/reachable — `load` them in the startup file rather than
   patching `chx` around it.
 - **Hand-invoking `l68` directly writes its `-o=<name>` output to the
-  execution directory (`chx`), not the current data directory** — `Live`,
+  execution directory (`chx`), not the current data directory** — `Live` (os9exec),
   same pattern as `cc`'s `-F=` flag. Symptom: the linker reports no error
   and no output file appears in the data directory; check `chx` (typically
   `/h0/CMDS`) before assuming the link failed.
@@ -266,7 +266,7 @@ Booting straight into `shell` runs as group 0 (superuser — `procs` shows
 
   **Park `chx` at the shared CMDS.** `PATH` entries resolve relative to
   `chx`, so pointing it at a personal directory breaks ordinary interactive
-  command lookup, not just compiler sub-tool forking — `Live`, `basic #32k`
+  command lookup, not just compiler sub-tool forking — `Live` (os9exec), `basic #32k`
   fails with `Error #000:216 (E_PNNF)` right after such a `chx`. `chx` is a
   per-session identity set once at login, not a scratch variable; to make a
   directory runnable, extend `PATH` instead.
@@ -311,7 +311,7 @@ Two different things behind the same device names:
 
   **Permissions and ownership are only real on an RBF image.** A host
   directory cannot carry OS-9 ownership at all. Attributes do map to Unix mode
-  bits in both directions (`Live`: `attr f -e` → host `+x`; `chmod 400` →
+  bits in both directions (`Live` (os9exec): `attr f -e` → host `+x`; `chmod 400` →
   `-------r`), but Windows cannot represent them and reports read/write/exec
   forced on. Crucially the `e` attribute is *reported, never enforced* — a
   module with no `e` still runs from a host mount, because only the RBF path
@@ -328,7 +328,7 @@ emulator after ~40–60 hops.
 
 ## Launching two concurrent background processes
 
-`Live`: sending a second `key` command (to launch process B) while process
+`Live` (os9exec): sending a second `key` command (to launch process B) while process
 A's backgrounded job is actively streaming output to the same terminal is
 **unreliable** — sends can be silently dropped, land seconds late, or land
 character-interleaved mid-line. Retrying a send that looks like it didn't
@@ -336,7 +336,7 @@ land is risky: it sometimes *did* land, launching a duplicate. **Fix**:
 launch both in a single combined command line in one send (`procA & procB
 &`) while the terminal is idle.
 
-`Live`: an unthrottled polling loop in two concurrent processes can generate
+`Live` (os9exec): an unthrottled polling loop in two concurrent processes can generate
 1000+ retries/second combined and starve a concurrent process of CPU for 60+
 real seconds. Give any tight retry/poll loop a small busy-wait when running
 it alongside another process that needs to make progress.

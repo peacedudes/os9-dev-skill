@@ -16,7 +16,8 @@ bare filename:
 
 - `fork()`/`exec()` → `F$Fork` / `F$Chain`
 - file descriptor → path number
-- pipe syntax is **`!`**, not `|`; `>>` redirects **stderr**, not append
+- pipe syntax is **`!`**, not `|`; `>>` redirects **stderr**, not append —
+  append is **`>+`** (`>-` truncates, plain `>` fails if the file exists)
 - `../..` → `...` (one more dot per level, not more `../`)
 - Ctrl-C backgrounds; **Ctrl-E** is the kill key; ESC on a blank line
   exits the shell

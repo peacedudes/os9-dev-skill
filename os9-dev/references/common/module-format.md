@@ -50,7 +50,7 @@ this universal-header table matches os9exec's own `modhcom` struct
 if any field moves) for all 14 fields plus a `sizeof == 0x030` check — so
 the layout is *continuously enforced*, not verified once. (os9exec breaks
 the `0x20` "reserved" span into `_mident` at `$20` + a 12-byte `_mspare` at
-`$22`.) M$Attr at 0x14 is additionally `Live`: real 68k C-runtime startup
+`$22`.) M$Attr at 0x14 is additionally `Live` (os9exec): real 68k C-runtime startup
 code tests bit 5 of offset 0x14 against the module base.
 
 **Independently confirmed against a second Microware manual:** the
@@ -135,7 +135,7 @@ bits instead); OS-9 Insights states the verification result as `0`, which
 is inconsistent with "complement of XOR" — `$FFFF` is treated as
 authoritative here. This parity is unrelated to the module CRC.
 
-## Reading a real module (`Live`, 68k)
+## Reading a real module — `Live` (os9exec)
 
 The tables above are easier to trust once you have seen them in bytes. This
 is a small hand-written assembly program (the worked example in
@@ -191,7 +191,7 @@ Stack size:      $400        #1024
 Copying this file to `exgood1` and loading it still put `exfio1` in `mdir` —
 worth knowing before hunting for a module under the name you saved it as.
 
-### What each integrity check actually covers (`Live`)
+### What each integrity check actually covers — `Live` (os9exec)
 
 Flipping a single bit in a copy of the module, then re-running `ident`,
 locates the boundary between the two checks precisely:
@@ -221,14 +221,14 @@ Compiler-specific values worth isolating:
   byte** — so a 6809 C program reads `$11`, not `$04`. `Manual` (the *OS-9
   System Programmer's Manual* §4.2.1: "the module type is coded into the
   four most significant bits of byte 6", listing `$10` Prgrm, `$20` Sbrtn,
-  `$40` Data, language in the low nibble) and `Live` via `ident` on real
+  `$40` Data, language in the low nibble) and `Live` (NitrOS-9) via `ident` on real
   modules — `dir` and `copy` (native 6809 object programs) read `$11`,
   `basic09`'s own `BFX` reads `$21` (Sbrtn + object), and a freshly
   `PACK`ed procedure reads `$22` (Sbrtn + BASIC09 I-code) with `At/Rv $81`
   (reentrant, rev 1). `$04` would decode as type nibble 0 — not a valid
   module type at all — with language 4, which
   `6809/syscalls-and-module-format.md` marks reserved and unimplemented.
-  **Scope:** the encoding and the native-object value are `Live`; no 6809
+  **Scope:** the encoding and the native-object value are `Live` (NitrOS-9); no 6809
   C-compiled module was available to `ident`, so `$11` for that compiler's
   own output is inference from a confirmed encoding rather than a direct
   observation. It agrees with `c/os9-clib-reference.md`'s `os9fork()` entry
@@ -244,7 +244,7 @@ Compiler-specific values worth isolating:
   optionally direct-page) / CSECT (offset counter); PSECT carries the
   type/lang/attr/stack/entry info the older MOD directive held, consumed
   by the linker rather than OS-9. **Confirmed a Microware-family
-  convention beyond RMA, `Live`**: the 68k assembler (`r68`) uses the
+  convention beyond RMA, `Live` (os9exec)**: the 68k assembler (`r68`) uses the
   same lowercase `psect` directive with the identical argument shape
   (`psect name,type_lang,attr_rev,edition,stacksize,entrylabel`),
   consumed by `l68` at link time to build the module header.
@@ -363,13 +363,13 @@ platform-specific real-time-clock handler.
 
 ## Linker & object-format facts (68k `l68`, 6809 `c.link`)
 
-- **`l68` error taxonomy (`Live`):** `file 'x.r' is not a
+- **`l68` error taxonomy (`Live` (os9exec)):** `file 'x.r' is not a
   relocatable module` = the object didn't parse (corrupt / not a ROF);
   `no root psect found` = parsed fine, just no entry point. So running
   `l68` on a single object is a cheap integrity check — healthy objects
   say "no root psect found." When exactly one input out of many is
   rejected, rebuild that object before theorizing about linker limits.
-- **ROF header (`Live`):** 0x00 sync longword `$DEADFACE`;
+- **ROF header (`Live` (os9exec)):** 0x00 sync longword `$DEADFACE`;
   0x0C–0x11 creation date (year−1900, month, day, hour, minute, second);
   0x1C code size; 0x38 NUL-terminated module name. Decoding two objects'
   timestamps settles "were these built by different compiler
@@ -393,5 +393,5 @@ Sources: The OS-9 Guru; a 1985 independent OS-9/68000 technical manual;
 OS-9 v2.4 Technical Reference Manual; The OS-9 Primer; OS-9 Insights; OS-9
 C Compiler manual; Using Professional OS-9 v2.4; Technical I/O Manual
 v2.4; Disk File Organization manual. The `l68` error taxonomy and ROF
-header layout are `Live` findings on os9exec's toolchain; M$Attr offset 0x14
-is `Live` against a real compiled 68k program.
+header layout are `Live` (os9exec) findings; M$Attr offset 0x14
+is `Live` (os9exec) against a real compiled 68k program.

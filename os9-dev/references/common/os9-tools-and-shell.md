@@ -51,14 +51,14 @@ error text and an original file that was never touched.
 
 Combine freely: `cmd >out >>err` sends output and errors to separate files.
 
-`Live`, NitrOS-9 **and** 68k os9exec: a failing `del`'s error text went to
+`Live` (NitrOS-9, os9exec): a failing `del`'s error text went to
 `>>` (`del: can't delete '...'`, 40 bytes captured) but *not* to `>` (0
 bytes) — direct confirmation that `>`=stdout, `>>`=stderr. `cmd >>>/nil`
 swallows a stderr banner. `<>>>path` is owner-stated and accepted live —
 note the shell still prints a failed child's exit status on its *own*
 stderr, which is not the child's and looks like a leak.
 
-`;`/`&`/`!` are also `Live` on 68k (`echo A;echo B` both ran; `echo hello !
+`;`/`&`/`!` are also `Live` (os9exec) (`echo A;echo B` both ran; `echo hello !
 tr a-z A-Z` → `HELLO`; `echo A & echo B` both ran).
 
 Wildcards `*` (any string) and `?` (one character) are expanded by the shell
@@ -102,7 +102,7 @@ disturb the invoking shell. Use `profile` when you *want* the changes to
 stick. Relative procedure-file lookups resolve against the data directory.
 
 **Line endings are CR (0x0D), and a procedure file with LF endings fails
-silently** — `Live`. OS-9 does not treat LF as a terminator, so the whole
+silently** — `Live` (os9exec). OS-9 does not treat LF as a terminator, so the whole
 file is *one line*: the shell echoes its entire contents and executes
 nothing, with no error message of any kind. Host-generated procedure files
 must be converted (`tr '\n' '\r'`, or `flip -m` on the guest) before use.
@@ -205,7 +205,6 @@ program runnable.
 Sources: Using Professional OS-9 v2.4 (shell, basic commands, utilities);
 The OS-9 Primer (environment variables, built-ins); The OS-9 Guru §2.1–2.2;
 OS-9 v2.4 Technical Reference Manual; Technical I/O Manual v2.4. The
-`#<size>k` modifier behavior is additionally `Live` on os9exec.
+`#<size>k` modifier behavior is additionally `Live` (os9exec).
 Bare `chd` (to `$HOME`, the environment variable rather than the
-password-file data directory) and bare `chx` (a no-op) are both **`Live`**
-on os9exec.
+password-file data directory) and bare `chx` (a no-op) are both **`Live`** (os9exec).

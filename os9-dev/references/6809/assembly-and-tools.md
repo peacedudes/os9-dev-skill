@@ -215,6 +215,19 @@ anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
   the letter's case.
 - The object lands in the **execution** directory (`/dd/cmds`), not the data
   directory — see the note under "Two assemblers".
+- **Only the first 8 characters of a label are significant.** `asm` accepts a
+  longer label without complaint and then treats any two that share their
+  first 8 characters as the same symbol, so `setupfail` and `setupfail2`
+  collide and the second definition fails with `redefined name` — an error
+  that points at a line whose label looks obviously distinct. `Source`
+  (NitrOS-9 `level1/cmds/asm.asm`, whose own comments read "Arbitrary-length
+  labels allowed. (first 8 chars must be unique)" and "First 8 characters of
+  label MUST be unique", with `max symbol length` set to 8), and `Live`
+  (2026-07-25) — hit while building the 6809 conformance suite.
+  **`lwasm` does not share this limit**, so cross-assembled source that builds
+  clean on the host can fail on the guest. That asymmetry is invisible until
+  something rebuilds with the native assembler: keep labels unique within 8
+  characters in anything you expect an OS-9 system to reassemble.
 
 ## Two assemblers
 

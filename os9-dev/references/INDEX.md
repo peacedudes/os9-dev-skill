@@ -4,7 +4,21 @@ Topic → target → file. Keywords are deliberately dense; scan for yours.
 
 **Directory convention.** `common/` holds what applies to both targets — but
 where a value differs, **68k is the default** and the 6809 delta is called
-out inline or lives under `6809/`. Two files there are 68k-only despite the
+out inline or lives under `6809/`.
+
+**So an unqualified value in `common/` is a promise that it holds on both
+targets.** When writing here, either verify that or mark the scope inline —
+an unmarked 68k-only fact is indistinguishable from a verified shared one,
+and the reader has no way to tell which they are looking at. This is not
+hypothetical: `common/` carried "super-user = group 0" bare in four places,
+which is true on 68k and false on 6809 (flat user ID 0), and it misled a
+session into shipping a guard that classified every ordinary 6809 account as
+privileged. Fixed 2026-07-26; the canonical statement of that particular
+delta now lives once, in `6809/syscalls-and-module-format.md`.
+
+**State a cross-target delta once and link to it.** Restating it in each file
+that touches the topic creates copies that drift apart, and a reader who
+finds one copy cannot tell whether the others still agree. Two files there are 68k-only despite the
 directory, each with a 6809 counterpart; cite them by full path, never by
 bare filename:
 

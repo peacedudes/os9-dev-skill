@@ -9,12 +9,37 @@ of these, inline, next to the claim it qualifies.
 | `Hearsay` | Stated directly by a person, not from any manual or test. **Lowest** confidence. |
 | `Manual` | Derived from and cross-referenced across published manuals. Not run, not checked against code. |
 | `Source` | Checked against real source code (os9exec's C, or NitrOS-9's open kernel source) — not run for this specific claim. |
-| `Live` | Actually run and observed under os9exec or NitrOS-9. **Evidence about a reimplementation, not about OS-9.** |
+| `Live` | Actually run and observed. **Always names where** — `Live (NitrOS-9)`, `Live (os9exec)`, `Live (OS-9/68000)`. See below. |
 | `Absent` | Actively searched for and confirmed **not to exist** — distinct from "nobody's checked yet". One line, a fact stamp. Add a clause only to state what happens instead (e.g. 6809 has no `events` utility because it uses `F$Send`/`F$Icpt`/`F$Sleep` signals rather than 68k's named-event objects) — never describe the syntax the absent thing *would* have had. |
 | `Flag` | Two or more sources disagree; unresolved. |
 
 `Absent` and `Flag` are status flags, not evidence tiers — they sit alongside
 the others rather than replacing them.
+
+## `Live` names the implementation it was run on
+
+"OS-9" is not one system, so "we ran it" is not one claim. A `Live` tag
+therefore carries the implementation in parentheses, and a claim confirmed on
+more than one lists each: `Live (NitrOS-9, os9exec)`.
+
+| Qualifier | What it is |
+|---|---|
+| `OS-9 L1` / `OS-9 L2` | Microware OS-9/6809, Level One / Level Two |
+| `OS-9/68000` | Microware OS-9/68000 (add `+881` where the maths coprocessor matters) |
+| `OS-9000` | Microware OS-9000, itself multi-target — name the target too where it matters |
+| `NitrOS-9` | The open-source 6809/6309 reimplementation |
+| `os9exec` | This project's own 68000 emulator and kernel reimplementation |
+
+The list is open — name any implementation precisely rather than forcing it
+into an existing bucket. A Microware system and a clone are recorded the same
+way: neither is the unmarked default, because that is exactly the distinction
+a reader needs to weigh the claim.
+
+**A claim carrying only clone qualifiers is evidence about a reimplementation,
+not about OS-9.** Where such a claim and a Microware manual disagree, the
+manual is the specification and the runtime is the candidate defect. That is
+unchanged by this notation; naming the runtime makes it checkable rather than
+assumed.
 
 ## Ordering
 

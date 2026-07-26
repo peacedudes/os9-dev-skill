@@ -5,7 +5,7 @@ screen, which is why `gfx-windowing.md` stayed `Manual` for so long. Getting
 graphics work verified needs a second channel: host-side screenshots and
 keystroke injection against XRoar's own window. Split the roles — drive text
 commands over the serial REPL, press keys and capture the screen host-side.
-Everything below is `Live` against a running CoCo3.
+Everything below is `Live` (NitrOS-9) against a running CoCo3.
 
 ## CLEAR is the host backtick
 

@@ -41,9 +41,9 @@ layer underneath it.
   (directory), `s` (non-shareable, single-user-at-a-time), `a` (suppress
   the attribute printout after a change). Minus-prefix any letter to turn
   it off; no permission argument displays current attributes. **68k
-  inverts this** (`Live`, both sides): there `-e` *sets* and `-ne` clears,
+  inverts this** (`Live` (NitrOS-9), both sides): there `-e` *sets* and `-ne` clears,
   so the identical `attr f -e` has the opposite effect per target —
-  `common/utility-usage.md`. `Live`: bare `attr` prints no usage text on
+  `common/utility-usage.md`. `Live` (NitrOS-9): bare `attr` prints no usage text on
   6809, so the spelling cannot be checked from the guest. Only the
   owner (or user 0) may change a file's attributes. Can convert an
   emptied directory back to a plain file; cannot do the reverse — use
@@ -192,6 +192,24 @@ layer underneath it.
   invoked program. Built-in per-invocation parameters include `chd`,
   `chx`, `kill`, `setpr`, `i=<device>` (spawn an immortal process bound to
   a device), and `w` (block until a background child exits).
+  **Append is `>+`** (`>-` truncates, plain `>` fails if the file exists) —
+  see `common/os9-tools-and-shell.md` for the full redirection table.
+- **Shell+ conditionals — `IF`/`THEN`/`ELSE`/`ENDIF`, and they are not
+  baseline.** `Source` (NitrOS-9 `level1/cmds/shellplus.asm`, keyword and
+  conditional tables): Shell+ adds `IF`, `THEN`, `ELSE`, `ENDIF` (spelled
+  `FI` equivalently), `CLRIF`, plus `GOTO`, `ONERR`, `PAUSE`, `INC.`,
+  `DEC.`, `PATH=`, and `L`/`-L`, `V`/`-V`. An unrecognised keyword prints
+  `WHAT?`, so a script relying on these fails loudly rather than silently
+  on a shell that lacks them — but **do not assume they exist** on an
+  arbitrary OS-9/6809 system. Whether a given Microware-shipped shell has
+  them is unconfirmed here; write portable material against the plain
+  separators, or accept a visible failure.
+- **`set x` (abort-on-error) is `Live` on 68k os9exec but was found
+  unreliable on NitrOS-9** as the sole content of a procedure file
+  (2026-07-25, while building the 6809 conformance suite). Treat
+  abort-on-error as target-specific and verify before depending on it;
+  the 68k entry in `common/os9-tools-and-shell.md` stands and is not
+  contradicted by this.
 
 ## Devices, disks, system
 
@@ -266,7 +284,7 @@ layer underneath it.
 - `setime [y m d h m s [am/pm]]` — sets system date/time and starts the
   clock; multitasking depends on the clock actually running (some boot
   configurations start it automatically via a startup-time clock module
-  instead of requiring an explicit `setime`). Year is four digits (`Live`,
+  instead of requiring an explicit `setime`). Year is four digits (`Live` (NitrOS-9),
   interactive prompt displays `yyyy/mm/dd hh:mm:ss` template; prior
   claim of 2-digit year was incorrect). Month/day/hour/minute are 1–2
   digits; seconds are optional. Delimiters: space, colon, semicolon, or
@@ -295,7 +313,7 @@ they generalize to every 6809 board.
   freshly formatted media — on an already-used disk it can destroy the
   existing boot file without being able to replace it, leaving the disk
   unbootable. Typical flow: change any device defaults you want baked in
-  with `xmode` first, then run `cobbler`. `Live`: the Level 1 manuals
+  with `xmode` first, then run `cobbler`. `Live` (NitrOS-9): the Level 1 manuals
   describe `cobbler` as a Level-1-only tool superseded by `os9gen` on
   Level 2, but the Level 2 manual itself documents a `cobbler` command,
   and it's present and working on the Level-2-descended NitrOS-9 system
@@ -332,7 +350,7 @@ they generalize to every 6809 board.
   1–80 columns, `ysize` is 1–24 lines. `fg`/`bg` set foreground/
   background color; `border` is optional and defaults to black **unless**
   `-s=<type>` is given, in which case a border color becomes mandatory.
-  `-s=<type>` picks the screen mode; `Live`, the CoCo3/OS-9 standard
+  `-s=<type>` picks the screen mode; `Live` (NitrOS-9), the CoCo3/OS-9 standard
   type codes are: `1` = 40-column text (2K), `2`
   = 80-column text (4K), `5` = 80-column 2-color graphics (16K), `6` =
   40-column 4-color graphics (16K), `7` = 80-column 4-color graphics
@@ -342,7 +360,7 @@ they generalize to every 6809 board.
   characters show as a placeholder glyph). This resolves what the two
   cross-check quick references had stated slightly differently. `-z`
   reads window parameters from redirected stdin instead of the command
-  line (`Live` name — a cross-check source's `-@` was wrong).
+  line (`Live` (NitrOS-9) name — a cross-check source's `-@` was wrong).
   `-?` prints a help message.
 - `wmode` `Manual` (Farna 2nd-ed only — not in the primary Level 2
   manual) — re-applies `wcreate`-style parameters to an already-created
@@ -450,7 +468,7 @@ footer — so this is not doubly cross-checked).
 | `eof=<h>` | end-of-file char (hex, default 1B / ESC) |
 | `reprint=<h>` | reprint-current-line char (hex) |
 | `dup=<h>` | duplicate-last-line char (hex, default 01) |
-| `psc=<h>` | pause char (hex, default 17 / Ctrl-W — `Live`; the primary manual's OCR rendered this as `pse=`, which is wrong) |
+| `psc=<h>` | pause char (hex, default 17 / Ctrl-W — `Live` (NitrOS-9); the primary manual's OCR rendered this as `pse=`, which is wrong) |
 | `abort=<h>` | terminate char (hex, normally Ctrl-C) |
 | `quit=<h>` | quit char (hex, normally Ctrl-E) |
 | `xon=<h>` / `xoff=<h>` | flow-control chars (hex, default 11 / 13) |
@@ -480,7 +498,7 @@ decimal for counts (`null=`, `pag=`, `tabs=`).
   Level 1 coverage becomes a priority; not folded in here since this
   file's scope is the Level 2 utility set specifically.
 - FORMAT's density option letters (`-sd`/`-dd` vs. bare `S`/`D`) — `Manual,
-  Flag` between the vintage sources, and unresolved even after a `Live`
+  Flag` between the vintage sources, and unresolved even after a `Live` (NitrOS-9)
   check: NitrOS-9's own `format` doesn't use dash-prefixed letters for
   density at all, so this may be purely a vintage-Microware-only detail
   no longer testable on the emulator available here. `wcreate`'s
@@ -504,6 +522,6 @@ plus the 1982 Tandy CoCo quick reference, were treated as 6809
 cross-checks for that gap. A handful of items (`dcheck`'s options,
 `wcreate -s=<type>`, the `tmode`/`xmode` `baud=`/`psc=` parameters,
 `cobbler`'s existence, and NitrOS-9's own `format` syntax) are
-additionally tagged `Live`, confirmed against a real NitrOS-9 session.
+additionally tagged `Live` (NitrOS-9), confirmed against a real NitrOS-9 session.
 NitrOS-9's utilities are a modern rewrite — flag any live divergence you
 find as such, not as a manual error.

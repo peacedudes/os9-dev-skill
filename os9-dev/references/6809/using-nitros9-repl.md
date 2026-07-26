@@ -65,7 +65,7 @@ keystrokes to the XRoar application.
 Same gated-send / raw-key-fallback pattern as the 68k side, but the transport
 is TCP to the DriveWire-exposed channel rather than a PTY.
 
-- **The prompt-gate doesn't recognize a sub-program's own prompt.** `Live`,
+- **The prompt-gate doesn't recognize a sub-program's own prompt.** `Live` (NitrOS-9),
   with three: `debug <module>` drops to `DB:`, `help <topic>` to a `Topic:`
   follow-up, BASIC09's `e <name>` to `E:`. The gated send sits at timeout in
   all three even though the command worked and its output is right there.
@@ -107,7 +107,7 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
 - **An unauthenticated session owns nothing.** Files it leaves are owned by the
   boot identity (user 0), and a later session's write or delete fails `E$FNA`
   (214) unless it is that same identity. Authenticate every connection via
-  inetd's `login`, or run `login USER1` as the first command. `Live`: with
+  inetd's `login`, or run `login USER1` as the first command. `Live` (NitrOS-9): with
   login, `procs` shows User Number 1 and `dir -e` shows new files owned by 1.
   Don't build tests around a fixture's assumed ownership across sessions.
 - **`.login` is 68k-only** (`Live`; on 68k it sets `PATH`/`TERM`/`chx`/`chd` —
@@ -142,19 +142,19 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   unique ports. On APFS `cp -c` clones a 134 MB image in ~5 ms. **Verify with
   `lsof` which image XRoar actually has open** — a survivor process from a
   previous run gets reused and silently writes to whatever disk *it* booted.
-- **"Unresponsive" is usually just slow.** `Live`: a 5000-iteration `SIN`/`COS`
+- **"Unresponsive" is usually just slow.** `Live` (NitrOS-9): a 5000-iteration `SIN`/`COS`
   BASIC09 loop takes **237 seconds** of guest time. A 30-second wait looks
   exactly like a wedged channel, and restarting on that misreading loses the
   workspace. Budget guest compute in minutes and poll for a sentinel the
   program prints rather than sleeping a guessed interval.
-- **Two echo behaviours that look like character loss but aren't.** `Live`:
+- **Two echo behaviours that look like character loss but aren't.** `Live` (NitrOS-9):
   `LOAD <file>` at `B:` echoes the **procedure name it loaded**, not the
   command line — `LOAD burn.b09` shows as `B:burn`. And the DriveWire server
   shows repeating `OP_SERREAD` polls the whole time, *including while the
   guest is busy computing* — polling is not evidence that a process is parked
   at a prompt.
 - **After a long CPU-bound computation, or a burst of rapid sends, the next
-  command can land corrupted or be dropped.** `Live` in two independent
+  command can land corrupted or be dropped.** `Live` (NitrOS-9) in two independent
   sessions; deliberate attempts to reproduce it from either condition alone
   failed, so the trigger is not established. Mitigation costs one command:
   send a cheap probe (`dir`), confirm fresh output, and go straight to restart
@@ -204,7 +204,7 @@ shell prompt reappears normally afterward.
   — `fstat` reports the right size while the content is wrong. `del` then copy
   fresh instead of `-r`.
 - Host-side editing generally: the OS-9 partition starts at byte **323,584**
-  inside a `68IDE.ide` container (`Live` — an RBF LSN0 with volume name
+  inside a `68IDE.ide` container (`Live` (NitrOS-9) — an RBF LSN0 with volume name
   "NitrOS-9 EOU 6809"), which ToolShed cannot read directly. `dd` the
   partition out, run `os9 copy` against the raw partition, `dd` it back with
   `conv=notrunc`. XRoar must be stopped throughout.
@@ -212,7 +212,7 @@ shell prompt reappears normally afterward.
 ## Running multi-process tests
 
 - **A `What?` flood is BASIC09's debugger spinning on EOF** — not the shell,
-  not lost data. `Live`: a program launched as `basic09 <script` that hits an
+  not lost data. `Live` (NitrOS-9): a program launched as `basic09 <script` that hits an
   **uncaught runtime error** breaks into the interactive debugger, whose stdin
   is the redirected script file, now at EOF. It reads past EOF endlessly and
   emits `What?` on every empty read, hanging the job with its output file
@@ -248,7 +248,7 @@ the blast radius is the child rather than your shell.
 
 ## `rma` hangs indefinitely — use `asm`
 
-`Live`, reproduced 6+ times across independent restarts: invoking the
+`Live` (NitrOS-9), reproduced 6+ times across independent restarts: invoking the
 Relocating Macro Assembler (`rma`, or its `rma.6809`/`rma.6309` aliases —
 byte-identical copies of one module) on this disk/XRoar setup never returns.
 Not a syntax error, not source-size- or `USE`-dependent, not an output-flag
@@ -286,7 +286,7 @@ Both of these are easy to get wrong and both have bitten real projects:
   desyncs and swallows the guest's next real message (its SERINIT). An
   EOU-style boot emits ~20 of these during startup.
 
-Guest-side driver architecture (`Source`, `Live`): `scdwv.dr` is the SCF
+Guest-side driver architecture (`Source`, `Live` (NitrOS-9)): `scdwv.dr` is the SCF
 driver (SERINIT carries the port number at open; FASTWRITE = $80 + port for
 output); the SERREAD polling loop lives in the `dwio` subroutine module's VIRQ
 handler at 3/6/40-tick adaptive rates — which is why the DWINIT response gates

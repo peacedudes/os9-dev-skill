@@ -1,12 +1,12 @@
 # OS-9/6809 Assembly, Editor, and Debugger
 
 Assembler directives, MOD/EMOD module-header mechanics, the `SWI2`+code
-dispatch, and the full debugger command set are `Live` against a real
+dispatch, and the full debugger command set are `Live` (NitrOS-9) against a real
 toolchain. The Editor section is `Manual`.
 
 Register set and calling convention: `syscalls-and-module-format.md`.
 
-## A complete worked program (`Live`)
+## A complete worked program (`Live` (NitrOS-9))
 
 Assembled with `asm` and run on NitrOS-9. It creates a file, writes a line,
 closes it, then deliberately opens a file that does not exist. The 68k
@@ -196,7 +196,7 @@ Consequently there is no `OS9` macro either — the raw mechanism is `swi2`
 followed by a one-byte `fcb` call code, which is what the macro expands to
 anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
 
-### Assembler and toolchain traps (all `Live`)
+### Assembler and toolchain traps (all `Live` (NitrOS-9))
 
 - **`asm` writes an object file even when the assembly reports errors.** A
   source with one bad mnemonic still produced a module that `ident` decoded
@@ -220,11 +220,11 @@ anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
 
 - **`asm`** (module name `Asm`, ~7KB) — "Standard NitrOS-9 6809/6309
   Assembler" per its own `help asm`. A smaller, non-relocating assembler,
-  and an older, separate tool from `rma`/RLINK. `Live` end-to-end: assemble
+  and an older, separate tool from `rma`/RLINK. `Live` (NitrOS-9) end-to-end: assemble
   a real MOD/EMOD program, run it, get correct output. Syntax: `Asm filename
   [<opts>] [>list] [#xxK]`; `O=<name>` generates the object file, and a
   leading `-` (`-O=<name>`) means silent overwrite — without it, an
-  existing output file fails the run. **Case is not significant** — `Live`,
+  existing output file fails the run. **Case is not significant** — `Live` (NitrOS-9),
   `o=` and `O=` both produce a valid module; an earlier note here implied
   otherwise. RMA's equivalent is `-o=`.
 - **`rma`** (~20KB; `rma.6809`/`rma.6309` are byte-identical copies of one
@@ -240,7 +240,7 @@ Checking `dir name*` in the data directory after assembling makes every run
 look like a silent failure; check `CMDS/name` instead. `ident CMDS/<name>`
 confirms a real, CRC-good module.
 
-**Undocumented per-line length limit** (`Live`): `asm` has an internal
+**Undocumented per-line length limit** (`Live` (NitrOS-9)): `asm` has an internal
 source-line read limit between 132 (OK) and 135 (broken) characters. An
 over-length line doesn't error on itself — `***** Error: bad instr` fires on
 the *next* physical line, with a stray fragment of the overflowing text
@@ -263,7 +263,7 @@ unmarked; only genuine differences or single-assembler directives are tagged.
 | `FCS /str/` | Same as FCC but sets the sign bit on the last character — OS-9's string-termination convention |
 | `EQU expr` | One-time constant binding; label must not have been used before, operand can't reference not-yet-defined names |
 | `SET expr` | Like EQU but redefinable — for assembler control flags, not true constants |
-| `MOD size,nameoff,typelang,attrrev{,execoff,memsize}` | **`asm` only.** Emits the module header directly: rewinds both address counters to their `ORG 0` start, emits sync bytes `$87`/`$CD`, emits the 4 (or 6) header-field operands in order, computes the header-parity byte. Operand count must be exactly 4 or 6. **Breaks in Motorola-compatible mode** unless no `RMB`/`ORG` appears between `MOD` and `EMOD`. **`size` must be the end-of-module label `+3`, not the bare label**, to cover `EMOD`'s 3-byte CRC trailer — `Live`: a bare `eom equ *` assembles with `00000 error(s)` but produces a module 3 bytes short, `ident` shows `Module header is incorrect!`, and the shell refuses to run it (`Error #235`). Use `modend+3`. RMA has no `MOD`/`EMOD` — it uses `PSECT`/`VSECT` and leaves header generation to RLINK |
+| `MOD size,nameoff,typelang,attrrev{,execoff,memsize}` | **`asm` only.** Emits the module header directly: rewinds both address counters to their `ORG 0` start, emits sync bytes `$87`/`$CD`, emits the 4 (or 6) header-field operands in order, computes the header-parity byte. Operand count must be exactly 4 or 6. **Breaks in Motorola-compatible mode** unless no `RMB`/`ORG` appears between `MOD` and `EMOD`. **`size` must be the end-of-module label `+3`, not the bare label**, to cover `EMOD`'s 3-byte CRC trailer — `Live` (NitrOS-9): a bare `eom equ *` assembles with `00000 error(s)` but produces a module 3 bytes short, `ident` shows `Module header is incorrect!`, and the shell refuses to run it (`Error #235`). Use `modend+3`. RMA has no `MOD`/`EMOD` — it uses `PSECT`/`VSECT` and leaves header generation to RLINK |
 | `EMOD` | **`asm` only.** Closes the module; computes and emits the final 3-byte CRC accumulated over every byte since `MOD` |
 | `ORG expr` | **`asm` only.** No label. Repoints whichever counter is active: data counter in normal mode, program counter in Motorola-compatible mode. OS-9 modules carry no load-record table, so relocating the program counter mid-file only makes sense for Motorola-mode output meant for bare 6809 hardware — under OS-9 it breaks loading. RLINK owns all placement in an RMA build |
 | `RMB n` | Reserves `n` bytes. In `asm`, the label gets the *data* counter's value in normal mode, the *instruction* counter's in Motorola mode. In RMA: legal only inside a `VSECT` or `CSECT` — **illegal directly inside a `PSECT`** |
@@ -342,19 +342,19 @@ trailing `>listing` (also Shell-processed) redirects listing output anywhere.
 | Option | Effect | Default | |
 |---|---|---|---|
 | `C` | Print conditional-assembly source lines in the listing | on | |
-| `Dnum` | Page depth: lines per listing page | `D66` | `Live` |
-| `E` | Print error messages; when off, a suppressed error still shows as an `E` flag in that line's info field and the summary still counts it | on | `Live` |
+| `Dnum` | Page depth: lines per listing page | `D66` | `Live` (NitrOS-9) |
+| `E` | Print error messages; when off, a suppressed error still shows as an `E` flag in that line's info field and the summary still counts it | on | `Live` (NitrOS-9) |
 | `F` | Eject listing pages with a form-feed | off | |
 | `G` | Print every object-code line a directive generates, not just the first | off | attempted; no observable difference on multi-word `FDB`/`FCC` |
-| `L` | Generate the formatted listing at all; off means errors only | off | `Live` |
+| `L` | Generate the formatted listing at all; off means errors only | off | `Live` (NitrOS-9) |
 | `M` | Motorola-compatible mode | off | |
-| `N` | Narrow/non-columnized listing for narrow displays | off | `Live` — drops the fixed-width address/bytes/label columns |
-| `O[=filename]` | Generate an object file — bare `O` names it after the source, a bare name places it under that name in the execution directory, a full pathlist controls device/directory/name | off | `Live` |
-| `S` | Append an alphabetical symbol-table dump, one type-code letter per symbol: `D`=data (`RMB`), `E`=equate, `L`=program label, `S`=set label, `U`=undefined | off | `Live` |
-| `Wnum` | Max listing line width, truncating longer lines; the comment field is fixed at column 50, so a low value chops useful content | `W80` | `Live` |
+| `N` | Narrow/non-columnized listing for narrow displays | off | `Live` (NitrOS-9) — drops the fixed-width address/bytes/label columns |
+| `O[=filename]` | Generate an object file — bare `O` names it after the source, a bare name places it under that name in the execution directory, a full pathlist controls device/directory/name | off | `Live` (NitrOS-9) |
+| `S` | Append an alphabetical symbol-table dump, one type-code letter per symbol: `D`=data (`RMB`), `E`=equate, `L`=program label, `S`=set label, `U`=undefined | off | `Live` (NitrOS-9) |
+| `Wnum` | Max listing line width, truncating longer lines; the comment field is fixed at column 50, so a low value chops useful content | `W80` | `Live` (NitrOS-9) |
 
 **`I` corrupts the module — do not use it on a file passed as a command-line
-argument.** `Live`: every listing line gets an `ASM:` prefix, but the
+argument.** `Live` (NitrOS-9): every listing line gets an `ASM:` prefix, but the
 assembled module header comes out wrong (`87CD3103` instead of the correct
 `87CD001D`, CRC differing too) while assembly still reports `00000 error(s)`.
 Silent corruption reported as success. Neither `I` nor `U` is documented in
@@ -366,7 +366,7 @@ extended-indirect addressing (absolute addresses baked into the instruction)
 get a `W` flag in the listing, since OS-9 programs normally shouldn't use
 absolute addresses — direct-page or PC-relative is preferred. A long branch
 (`LBxx`) whose destination was within short-branch range also gets `W`.
-**The opposite direction is a hard error**: `Live` — a short conditional
+**The opposite direction is a hard error**: `Live` (NitrOS-9) — a short conditional
 branch whose target is out of 8-bit signed range (±127 bytes) fails assembly
 outright (`***** Error: out of range`). This commonly appears after an edit
 pushes an error handler further from its callers; switch to the `L`-prefixed
@@ -379,7 +379,7 @@ PC-relative (PCR) indexed addressing for constant data rather than
 immediate-loading an absolute label address.
 
 **Every label belongs to exactly one of two address spaces, and mixing them
-produces confusing symptoms rather than a clear error** (`Live`):
+produces confusing symptoms rather than a clear error** (`Live` (NitrOS-9)):
 
 1. Anything declared with `FCC`/`FCS`/`RMB`/`FDB` in the assembled module's
    own code/data section is a real address *inside the module*, safe to reach
@@ -599,7 +599,7 @@ happens and what to do instead.
 
 ## Debugger
 
-The full command set below is `Live`.
+The full command set below is `Live` (NitrOS-9).
 
 | Command | Effect |
 |---|---|
@@ -629,7 +629,7 @@ finds nothing, since low direct-page memory isn't meaningful search territory.
 Take a starting address from a `:` register dump's `PC` column.
 
 **`L` and `E` only find modules already in the live module directory.**
-`Live`: neither registers a module merely opened as `debug <file>`'s own
+`Live` (NitrOS-9): neither registers a module merely opened as `debug <file>`'s own
 command-line target, so both fail `Error #221 - Module Not Found` right after
 `debug <file>` even with the module's correct case-sensitive internal name
 from its `fcs` name field. `E`'s own act of loading-for-execution doesn't
@@ -637,11 +637,11 @@ satisfy a *subsequent* `L`/`E` lookup either. Treat both as reliable only for
 independently resident modules.
 
 **A module linked multiple times needs one `unlink` per link, not one total**
-— `Live`: after a sequence of `L`/`E`/shell-run calls, `mdir` kept showing
+— `Live` (NitrOS-9): after a sequence of `L`/`E`/shell-run calls, `mdir` kept showing
 the module resident until four separate `unlink` calls, matching the number
 of linking events.
 
-**`mdir`'s listing isn't exhaustive** — `Live`: immediately after a program
+**`mdir`'s listing isn't exhaustive** — `Live` (NitrOS-9): immediately after a program
 successfully `F$Load`ed a module (valid returned entry point, no error), and
 while that program was itself still running, `mdir` showed neither the loaded
 module nor the running program's own. A successful syscall result is stronger
@@ -656,7 +656,7 @@ breakpoints to stop on every iteration.
 
 **Register display**: `SP CC A B DP X Y U PC`, one line of names, hex values
 below. `CC` bit 7 (E flag) must be set or `G` won't resume correctly — the
-entry-state `CC` genuinely has it set (`Live`). `SP` points at the bottom of
+entry-state `CC` genuinely has it set (`Live` (NitrOS-9)). `SP` points at the bottom of
 the saved register block when a breakpoint fires.
 
 **Expression syntax**: hex is the default (`$` prefix optional), `#` for

@@ -1,7 +1,7 @@
 # OS-9/Internet: Networking and Socket Programming
 
 **`Manual` throughout — nothing in this file has been run.** No claim here is
-reachable at the `Live` tier: the emulator has no network device, and the
+reachable at the `Live` (os9exec) tier: the emulator has no network device, and the
 socket library ships with OS-9/Internet rather than the base SDK, so a program
 calling `socket()` fails at *link* time (full detail in the sources note at the
 end). Treat every signature, return value and error code below as unverified.
@@ -216,7 +216,7 @@ requires re-running `idbgen` and reloading `inetdb` to take effect.
 ---
 
 Sources: OS-9 Internet Software Reference Manual. `Manual` throughout —
-no `Live` tier reachable (no network device support in the emulator).
+no `Live` (os9exec) tier reachable (no network device support in the emulator).
 The socket API isn't in the base SDK `clib` —
 a C program calling `socket()` fails at *link* time (`Symbol 'socket'
 unresolved`, `l68: error`), because OS-9/Internet ships its own socket

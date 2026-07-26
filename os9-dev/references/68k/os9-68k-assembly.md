@@ -7,7 +7,7 @@ end); don't assume 6809 RMA syntax carries over. (The "Relocating Macro
 Assembler" manual found in 68k archives is 6809-only — never a 68k
 source.)
 
-## Toolchain (`Live` end-to-end on os9exec)
+## Toolchain (`Live` (os9exec) end-to-end on os9exec)
 
 - **`cc`** drives `cpp` → `c68` → `o68` → `r68` (assembler) → **`l68`**
   (linker), forking each by bare name via the execution directory (see
@@ -23,14 +23,14 @@ source.)
 - **`debug`** — symbolic debugger; usage and its two real defects:
   `common/using-os9exec-repl.md`.
 - **`r68 -O=<name>.r` and `l68 -o=<name>` both do not reliably overwrite
-  an existing output file of the same name** — `Live`, hit repeatedly
+  an existing output file of the same name** — `Live` (os9exec), hit repeatedly
   across sessions. Re-running either against a stale output can silently
   leave the old bytes in place (or produce a corrupt mix) while reporting
   success, so a rebuild after any source edit *looks* clean but tests the
   old binary. Always `del` the output first, or link to a never-before-
   used name, before trusting a rerun's result.
 
-## A complete worked program (`Live`)
+## A complete worked program (`Live` (os9exec))
 
 Everything else in this file is a contract; this is the idiom. The tables
 below give the right register names, but nothing here showed the `psect`
@@ -193,7 +193,7 @@ What the program demonstrates that the tables alone don't:
   landed in the execution directory, as the toolchain section above warns.
   `dir` showed only the `.a` and `.r`; the linked module ran by bare name.
 
-### The rootless-object error (`Live`)
+### The rootless-object error (`Live` (os9exec))
 
 `l68`'s "no root psect found" is worth causing once, so it's recognizable.
 A `psect` whose type/language and attribute/revision operands are zero
@@ -224,7 +224,7 @@ repeated here. Assembly/module-format-specific additions:
 - By Microware convention `TRAP #13` is CIO and `TRAP #15` is the math
   trap (see `common/module-format.md`'s Math module section).
 - **No file on this SDK's disk defines the I$/F$ call names as assemblable
-  symbols** — `Live`: `dc.w I$Write` assembles clean (`r68` treats an
+  symbols** — `Live` (os9exec): `dc.w I$Write` assembles clean (`r68` treats an
   unresolved name after `dc.w` as an ordinary external symbol and defers
   to the linker with no warning), but `l68` then fails with `Symbol
   'I$Write' unresolved`. A whole-disk search of `/h0/DEFS` (`oskdefs.d`,
@@ -315,7 +315,7 @@ being silently swallowed. (This is exactly the `pwrstat` utility's latent bug:
 `MOVEA.L $4C(A0),A0` with `A0` still holding its `$AAAAAAAx` sentinel.)
 
 Slot assignments for the *informational* registers (which datum is in D2 vs
-D5, etc.) vary between manual passages; **`Live`-resolved** via a debugger
+D5, etc.) vary between manual passages; **`Live` (os9exec)-resolved** via a debugger
 register dump of a forked program: **D2 = priority (`$80` = 128, the default), D3 = # inherited paths
 (`3` = stdin/out/err), D5 = param-area size, D6 = total memory** — exactly the
 order the table above lists. The same dump confirmed the rest Live: **D0 = the
@@ -325,7 +325,7 @@ A0=`AAAAAAA0`, A2=`AAAAAAA2`, A4=`AAAAAAA4`** (the `$DDDDDDDn`/`$AAAAAAAn`
 fill). The defined-vs-undefined split is also `Source` (os9exec's own
 `prepFork` register setup).
 
-**`A5`'s actual content, `Live`**: a NUL-terminated string holding
+**`A5`'s actual content, `Live` (os9exec)**: a NUL-terminated string holding
 exactly the typed command-line tail (e.g. `"hello"` for one argument —
 confirmed via sanitized hex dump: `68 65 6C 6C 6F 00 0D 00 "PORT="...`),
 safe to pass directly as a syscall's pathname pointer with no copying.
@@ -393,18 +393,18 @@ live) before relying on details:
 - Exact `psect`/`vsect`/`csect` directive syntax and parameter order (the
   documented PSECT/VSECT syntax is the **6809** RMA's) — **unverified as a
   manual citation, but resolved in practice**: the worked program above uses
-  the 6-operand `psect` form and is `Live`, and
-  `basic09/basic09-per-target.md` has a second `Live` example of the same
+  the 6-operand `psect` form and is `Live` (os9exec), and
+  `basic09/basic09-per-target.md` has a second `Live` (os9exec) example of the same
   shape for a `Sbrtn` module.
 - `ds.w`/`ds.l` and other data-definition directive syntax specifics —
-  two now resolved, both `Live`: `dc.b 'text'` (single-quoted) fails on
+  two now resolved, both `Live` (os9exec): `dc.b 'text'` (single-quoted) fails on
   `r68` with `*** error - value out of range ***` regardless of string
   length, `dc.b "text"` (double-quoted) assembles clean — use double
   quotes for string data. **`ds.b` is not a valid directive on `r68`**
   (`*** error - bad mnemonic ***`) — reserve space with an explicit
   comma-separated `dc.b 0,0,0,...` instead.
 - **Mutable data in a program needs address-register indirect, not a
-  PC-relative destination** (`Live`): `move.l d0,x(pc)` /
+  PC-relative destination** (`Live` (os9exec)): `move.l d0,x(pc)` /
   `subq.l #1,cnt(pc)` do not work — `(d16,PC)` is a **source-only**
   addressing mode on the 68000. Load the address first, write through it:
   `lea cnt(pc),a1` then `subq.l #1,(a1)`. `os9exec` lets a `Prgrm` module
@@ -412,7 +412,7 @@ live) before relying on details:
   own image), so a scratch counter/flag/saved-ID can sit beside the code
   with no `vsect`.
 - ~~The external-symbol "trailing colon = public" visibility convention~~
-  — resolved: `Live`, confirmed via `l68 -s` and `debug`'s `sc` symbol
+  — resolved: `Live` (os9exec), confirmed via `l68 -s` and `debug`'s `sc` symbol
   listing. Colon-suffixed labels (`start:`, `sumloop:`) are
   debugger-/linker-visible symbols; colon-less labels are not — a build
   with only colon-less labels showed just the three universal symbols
@@ -428,13 +428,13 @@ live) before relying on details:
 - **The `psect` directive syntax gap above, resolved in practice —
   but only for `mod_exec`-shaped module types.**
   `basic09/basic09-per-target.md`'s "Calling 68000 machine-language
-  procedures from BASIC09" section has a complete, `Live`-tested
+  procedures from BASIC09" section has a complete, `Live` (os9exec)-tested
   hand-written 68k assembly example (`psect addone,Type_Lang,Attr_Rev,
   0,0,addone` — the 6-operand shape is `name,typelang,attrrev,edition,
-  stacksize,entry`) with real `r68`/`l68` invocations. `Live`: this same
+  stacksize,entry`) with real `r68`/`l68` invocations. `Live` (os9exec): this same
   shape works unchanged for `Prgrm` and `Drivr`-type modules too (they
   share the `M$Exec`/`M$Excpt`/`M$Data`/`M$Stack` header shape), not just
-  the `Sbrtn` it was demonstrated with. **`Live`, does NOT generalize to
+  the `Sbrtn` it was demonstrated with. **`Live` (os9exec), does NOT generalize to
   `Devic` (device descriptor) modules**: the 6-operand form
   unconditionally reserves the same 12 bytes of header padding before the
   psect body, but a device descriptor's real extended header
@@ -449,7 +449,7 @@ live) before relying on details:
   a BASIC09-callable `Sbrtn`.
 - **A linked module's registered name comes from `l68 -o=<name>`'s
   output-file argument, not from the source's `nam`/`psect` name
-  operand.** `Live`: linking the same object twice under two different
+  operand.** `Live` (os9exec): linking the same object twice under two different
   `-o=` names produced two modules with two different `M$Name` strings
   (confirmed via `mdir`/`dump`), regardless of what the source's `nam`
   directive said. Matters for anyone installing a driver/descriptor under
@@ -464,4 +464,4 @@ live) before relying on details:
 Sources: The OS-9 Guru (68000-specific chapters); OS-9 v2.4 Technical
 Reference Manual (module format, exception vectors, TRAP conventions);
 OS-9 C Compiler manual / The OS-9 Primer (register ABI, embedded
-assembly). Toolchain behavior: `Live` on os9exec.
+assembly). Toolchain behavior: `Live` (os9exec) on os9exec.

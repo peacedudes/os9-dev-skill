@@ -124,7 +124,7 @@ OS-9 allocates memory to loaded modules in 8K blocks regardless of a module's ac
 
 Direct binary patching of a resident module's bytes is done with `MODPATCH`, either interactively or by feeding it a command script (`MODPATCH scriptfile`): `L` links/loads the target module, `C <offset> <hexbytes>` changes bytes at an offset, `V` re-verifies the module's CRC afterward (required, since a hand-edited module's CRC would otherwise no longer match). Two patches specific to boot-time device descriptors: disk drive descriptors default to a conservative 30ms step rate for compatibility — changing byte 14 (decimal) from `$00` to `$03` drops this to 6ms, which most drives handle fine and noticeably speeds up floppy access; and an OS-9 Level 1 module can be made Level-2-compatible by changing byte 14 from `$FF` to `$07`. `EasyEdit` is a friendlier alternative specifically for device descriptors — it prompts for the same parameters (step rate, track count, sides, verify) and writes the change back directly, without needing `MODPATCH`/`DEBUG`/`COBBLER`/`OS9GEN` at all.
 
-### Host-Side Disk Editing (ToolShed) — `Live`
+### Host-Side Disk Editing (ToolShed) — `Live` (NitrOS-9)
 
 All the tools above run *inside* a booted OS-9 session. **ToolShed**
 (`boisy/toolshed` on GitHub, actively maintained, open source) is a modern
@@ -183,7 +183,7 @@ input/output is redirected onto the console, `setime<>>>/1`) that would
 otherwise block an unattended boot indefinitely, no matter how carefully
 timed the injected keystrokes are.
 
-**`setime`'s interactive prompt format** — `Live`: when no real-time clock
+**`setime`'s interactive prompt format** — `Live` (NitrOS-9): when no real-time clock
 module is present, `setime` (with no arguments) prints `>> No Clock module found
 <<` then repeatedly prompts `Time ?` expecting an answer in
 `yyyy/mm/dd hh:mm:ss` format (4-digit year, space between date and time,

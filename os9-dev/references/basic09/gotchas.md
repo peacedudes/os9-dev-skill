@@ -75,7 +75,7 @@ Full grammar and the live error codes: `basic09-language.md`.
 ## Behavior that surprises
 
 - **A comment as the literal first line of a file breaks `LOAD` outright on
-  6809, but not on 68k** (`Live`, both). A host-authored file starting with
+  6809, but not on 68k** (`Live` (NitrOS-9, os9exec)). A host-authored file starting with
   `! ...` above `PROCEDURE` loads and compiles cleanly on 68k, the comment
   silently discarded. The identical file fails on 6809 with `Error #043 --
   Unknown Procedure`, and the failure is not scoped to one procedure —
@@ -117,16 +117,16 @@ Full grammar and the live error codes: `basic09-language.md`.
 - **A literal `;` inside a string constant gains a spurious backslash.**
   `PRINT "text; more"` stores and echoes as `text\; more`, in both `LIST`'s
   display and real runtime output — presumably the tokenizer disambiguating
-  from the statement separator. `Live` (6809); not tested on 68k. Easy to
+  from the statement separator. `Live` (NitrOS-9); not tested on 68k. Easy to
   miss until it shows up in something meant to be exact text.
 - **Real Y2K-class bug in 68k's `DATE$`.** Any year ≥ 2000 prints a corrupt
-  leading year digit (`"<6/07/14"` where `"26/07/14"` was correct). `Live` on
+  leading year digit (`"<6/07/14"` where `"26/07/14"` was correct). `Live` (NitrOS-9) on
   6809 confirms it is **absent** there, so it's the 68k runtime's own
   formatting, not shared logic. Don't trust the 68k year field.
 - **BOOLEAN prints mixed case, contrary to the manual.** `PRINT USING`'s `B`
   format is documented by Microware as printing `"TRUE"`/`"FALSE"`, but every
   runtime tested prints `"True    "`/`"False   "` (correct 8-char field
-  width) — `Live` on 68k os9exec *and* on real Microware BASIC09 6809
+  width) — `Live` (NitrOS-9, os9exec): 68k os9exec *and* real Microware BASIC09 6809
   01.01.00, so it is not an emulator artifact. Whether the manual overstates
   or shipping code always diverged is unresolved.
 

@@ -1,8 +1,7 @@
 # PACK and RunB: Packed BASIC09 Modules
 
 How BASIC09 procedures become standalone OS-9 modules and how they resolve
-at run time. The manuals are thin here; most facts below are `Live`
-on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
+at run time. The manuals are thin here; most facts below are `Live` (os9exec). Module-format background: `common/module-format.md`.
 
 ## PACK
 
@@ -35,7 +34,7 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
   Both outputs contain every packed procedure's code; only the entry
   differs. If the entry point matters, name the list explicitly.
 - **Packing is destructive to the workspace copy — this is why the manual
-  says to always `SAVE` first.** `Live` (68k). `PACK` does not merely write a
+  says to always `SAVE` first.** `Live` (os9exec). `PACK` does not merely write a
   file; it converts the *in-workspace* procedure too. With `aaa` and `bbb` in
   the workspace and `bbb` current, `PACK aaa >target` leaves `DIR` showing:
 
@@ -46,7 +45,7 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
 
   Three separate effects, all on `aaa` alone:
   1. **A leading `-` marks it packed.** The manual documents `*` (current
-     procedure) but gives no legend for `-`; that it means "packed" is `Live`,
+     procedure) but gives no legend for `-`; that it means "packed" is `Live` (os9exec),
      confirmed by it attaching only to the packed procedure and by `LIST aaa`
      afterwards printing **nothing at all** — the manual's "CANNOT be edited or
      debugged", in practice.
@@ -63,7 +62,7 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
   the error and the refusal are correct behaviour, not an os9exec defect.
   Re-pack from a fresh `LOAD` of the saved source instead.
 - **`>pathlist` with a procname list prints a BASIC09 error and still
-  works.** `Live` (68k): `SAVE proc >target` and `PACK proc >target` print
+  works.** `Live` (os9exec): `SAVE proc >target` and `PACK proc >target` print
   `Error #000:043` while writing a correct file. **The codes are BASIC09's
   own, from its manual's Appendix C** — 43 is "Unknown Procedure", 51 is
   "Line with Compiler Error" — not OS-9 kernel codes, and **not** `F$PrsNam`'s
@@ -85,7 +84,7 @@ on OS-9/68k (os9exec). Module-format background: `common/module-format.md`.
   something different and is NOT this bug** — see "Packing is destructive to
   the workspace copy" above; a `#000:051` from `PACK` means you are re-packing
   an already-packed procedure, and it **truncates the target to 0 bytes**
-  before failing. **`Live` (6809): real NitrOS-9 BASIC09
+  before failing. **`Live` (NitrOS-9): real NitrOS-9 BASIC09
   prints nothing at all** for `SAVE proc >rel`, `SAVE proc >/DD/abs/path`
   and `PACK proc >rel` — a different binary on a different architecture, so
   suggestive, not proof about the 68k line. `Absent`: whether the genuine
@@ -99,7 +98,7 @@ A packed+saved procedure is an OS-9 **subroutine module**: type 2
 architecture-specific — don't carry one form to the other.** On 68k the
 header has separate `M$Type`/`M$Lang` bytes and `ident` shows `Ty/La
 $0202`. On 6809 it is a single packed byte `(type << 4) | language`, so
-the same module reads **`Ty/La $22`** (`Live`, with `At/Rv
+the same module reads **`Ty/La $22`** (`Live` (NitrOS-9), with `At/Rv
 $81` — re-entrant, revision 1). See `common/module-format.md` for the
 encoding and what it settles about the 6809 C compiler's own value. It is not a
 program module; something must interpret it.
@@ -149,7 +148,7 @@ program.
 ## Command-line arguments
 
 Arguments after the module name bind positionally to the entry procedure's
-`PARAM` list (`Live`, strings and numerics):
+`PARAM` list (`Live` (os9exec), strings and numerics):
 
 - `runb report hello` + `PARAM n$:STRING` → `n$="hello"`.
 - Numeric conversion works: `runb calc 42` + `PARAM n:INTEGER` → 42.
@@ -166,7 +165,7 @@ This banner + `Error #000:216 (E_PNNF)` has several distinct causes:
 1. **First `LOAD`/`RUN` touching numeric variables → the `math` trap
    module (TRAP #15) isn't reachable.** Fix: `load math` (put it in the
    startup file); the lazy-linking mechanism is in
-   `basic09-per-target.md`. **`Live`**: `load`'s `-s` flag silently fails
+   `basic09-per-target.md`. **`Live`** (os9exec): `load`'s `-s` flag silently fails
    to make `cio`/`math` resident — `load -s cio csl math` in `/h0/startup`
    left only `csl` in `mdir` after a fresh boot, and `load -s math` alone
    fails the same way, while a plain `load math` succeeds every time.

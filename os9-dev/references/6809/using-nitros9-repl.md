@@ -132,7 +132,7 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   not on where the host system happens to keep it.
 
 - **A `--disk0` image served over DriveWire is not a host-side retrieval
-  route.** `Live` (2026-07-25, while building the 6809 conformance suite):
+  route.** `Live` (NitrOS-9), found while building the 6809 conformance suite:
   data the guest writes to the served image was not visible in the backing
   file on the host — checked mid-session and after, with two independent host
   tools, under every condition tried. Read results back **through the guest**

@@ -27,7 +27,7 @@ behavior largely isn't:
 | Area | Tier |
 |---|---|
 | Struct layouts — Process Descriptor, module / executable / device-descriptor headers, path descriptor (`PD_` header + 128-byte SCF options) | `Source`, several with compile-time offset assertions |
-| `file-managers.md` → Record Locking | largely `Live` (68k) |
+| `file-managers.md` → Record Locking | largely `Live` (os9exec) |
 | Behavior os9exec doesn't emulate — driver and file-manager dispatch, the scheduler algorithm, System Global memory, the Module Directory | `Manual` |
 | `6809-level2-mmu.md` | `Manual` only |
 

@@ -214,7 +214,7 @@ open-file context cheaply. `I$Close` decrements `PD_COUNT`; only at 0 is the
 descriptor actually deallocated and removed from the path table.
 os9exec's own path-descriptor header defines a second field, `PD_CNT`, at
 offset `$03`; the manual lists both, marking `$03` obsolete. **Neither
-offset is live-confirmable**: os9exec implements `I$Dup` (`Live`) but
+offset is live-confirmable**: os9exec implements `I$Dup` (`Live` (os9exec)) but
 shares paths through host-native bookkeeping and never touches `PD_CNT`,
 which is dead and unreferenced in its source, so no guest-visible share
 counter exists to observe either offset against. Treat both as

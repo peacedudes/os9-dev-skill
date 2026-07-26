@@ -216,7 +216,7 @@ valid for the memory manager, which is why the group only frees once
 every member's combined link count is zero.
 
 - **Type/language matching is per-*field*, with 0 = wildcard — not a
-  whole-word compare** (`Live`). The requested type/language
+  whole-word compare** (`Live` (os9exec)). The requested type/language
   is a word: high byte = type, low byte = language. The kernel matches the
   two bytes **independently**, and a zero in either field means "any"
   (`MT_ANY` / `ML_ANY`, both 0, in os9exec's `module_from_book.h`). So
@@ -231,7 +231,7 @@ every member's combined link count is zero.
   the application-side view.)
 - **`F$Load` reads its file from the *execution* directory, never the
   *data* directory, and its access mode is a *byte*, `d0.b`, not a word**
-  (both `Live`; same facts, application side, in os9-dev's
+  (both `Live` (os9exec); same facts, application side, in os9-dev's
   `basic09/pack-and-runb.md` and the F$Load row of `68k/syscall-reference.md`).
   The point worth adding for kernel/emulator work specifically: both are
   easy to get wrong when *reimplementing* `F$Load` rather than just calling

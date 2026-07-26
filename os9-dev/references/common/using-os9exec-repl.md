@@ -298,7 +298,7 @@ Two different things behind the same device names:
   image from a blank file on an `OS9Hx` device when RBF-specific behavior
   needs testing.
 
-  **Traversal above the root is confined**, `Live` (2026-07-25), for devices
+  **Traversal above the root is confined**, `Live` (os9exec), for devices
   configured through `OS9DISK`/`OS9Hx` and for ones created by `mount -k=0`
   alike: `list ../outside` and `list ../../../../outside` both give `E_PNNF`
   while a read inside the device works. The one exception is NESTED device
@@ -393,5 +393,4 @@ them and shows symbol-resolved disassembly. At `dbg:`:
   1980s binary, not os9exec.
 
 ---
-Everything above is `Live` against os9exec unless explicitly tagged
-`Manual`.
+Everything above is `Live` (os9exec) unless explicitly tagged `Manual`.

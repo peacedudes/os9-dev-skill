@@ -98,7 +98,7 @@ and F$Send's notes name "the superuser (ID number 0)". Ownership fields
 **68k is the divergence, not 6809.** There a user ID is `group<<8 | user`
 and the superuser is *any* user in group zero — so the 68k test "is the high
 byte zero?" applied on 6809 declares every ID below 256 to be the superuser,
-i.e. essentially every ordinary account. `Live` (2026-07-25): a guard written
+i.e. essentially every ordinary account. `Live` (NitrOS-9): a guard written
 that way SKIPped every account on a NitrOS-9 disk whose password file uses
 flat IDs 0-4. Compare the **whole 16-bit value** against 0 on 6809.
 

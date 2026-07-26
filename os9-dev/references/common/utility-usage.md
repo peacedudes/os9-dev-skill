@@ -26,19 +26,19 @@ for" descriptions: `os9-tools-and-shell.md`.
 - `attr [<opts>] {<path>} {<permissions>}` — permissions given as
   `-r -w -e -pr -pw -pe -s -d` to set, `-n<abbrev>` (e.g. `-npw`) to
   clear; unnamed bits unchanged; none given = display. **6809 inverts
-  this** (`Live`, both sides): there a bare letter sets and a minus-prefix
+  this** (`Live` (NitrOS-9, os9exec), both sides): there a bare letter sets and a minus-prefix
   clears, so `attr f -e` sets execute here and *clears* it on 6809 —
   `6809/utility-usage.md`. `-a` suppress
   attribute printout. Owner = same group ID; only owner/superuser may
   change. Can clear `d` on an emptied directory (never set it — only
   `makdir` creates directories). Bare `attr <path>` prints an 8-character
-  string, `Live`-decoded: positions 1-4 are `d`/`s`/`pe`/`pw`
+  string, `Live` (os9exec)-decoded: positions 1-4 are `d`/`s`/`pe`/`pw`
   (directory, sharable, public-execute, public-write) and 5-8 are
   `pr`/`e`/`w`/`r` (public-read, owner-execute, owner-write, owner-read),
   each either the letter or `-`; e.g. `----r-wr` = no directory/sharable/
   public-exec/public-write bits, public-read granted, owner has write+read
   but not execute. `attr -e` needs more privilege than the bare form —
-  `Live`: it failed `E$FNA`/214 in a session where the plain form
+  `Live` (os9exec): it failed `E$FNA`/214 in a session where the plain form
   succeeded on the same file.
 - `build <path>` — prompts `?` per line, writes each to the file; empty
   line/EOF ends.
@@ -47,7 +47,16 @@ for" descriptions: `os9-tools-and-shell.md`.
   verify result, `-w=<dir>` copy multiple sources *into* a directory
   (`-p` suppresses the per-file listing in that mode), `-b=<size>` use a
   larger transfer buffer (e.g. `-b=20k`; bigger buffers speed up large
-  copies — the manual's own examples lean on this). `Manual` (*Using
+  copies — the manual's own examples lean on this), **`-n` don't duplicate
+  the FD from the source, create a fresh one instead**. `Live` (os9exec):
+  `-n` is what you want when copying *out of a host-native directory into
+  an RBF image as a non-super user*. The default duplicates the source's
+  whole file descriptor, including its owner; a host directory has no real
+  OS-9 owner so os9exec synthesises `0.0`, and reproducing that on the
+  destination is an owner change the caller is not entitled to make — the
+  copy prints `E$PERMIT` while still transferring the data, so it looks
+  half-broken and is easy to wave through as noise. `-n` skips FD
+  replication and the error disappears at its source. `Manual` (*Using
   Professional OS-9* v2.4).
 - `count [<opts>] {<path>}` — `-l` lines, `-w` words, `-c` characters,
   `-b` per-character frequency breakdown.

@@ -28,7 +28,7 @@ signal code (68k passes it in `d1.w`). **6809 signal codes are 8-bit**
 255; there is no 6809 equivalent of the `256+` tier, and this table's
 `5–255` boundary doesn't carry over unchanged either — 6809 sources
 disagreed on paper about where the reserved/user-definable split starts
-within 0–255 (4 vs. 128), but `Live`: a process installed an `F$Icpt`
+within 0–255 (4 vs. 128), but `Live` (NitrOS-9): a process installed an `F$Icpt`
 handler, then `F$Send`'d itself code 50 (deep in the disputed range) and
 code 200 (undisputed range); both delivered identically, the handler
 received the correct code in `B` both times, with no rejection or special
@@ -187,7 +187,7 @@ establish one-directional flow between them.
   and may truncate the existing pipe — pass `FAM_NOCREATE` if you specifically
   need "fail, don't clobber" semantics.
 - **`OPEN` on a not-yet-existing named pipe fails outright — `CREATE` is
-  what actually establishes it.** `Live`: a process `OPEN`ing a named pipe
+  what actually establishes it.** `Live` (os9exec): a process `OPEN`ing a named pipe
   nobody has ever touched crashes uncaught with `Error #000:216 (E_PNNF)`
   the moment it's forked, not a clean error the program can catch. If a
   reader might run before any writer has created the pipe, it must

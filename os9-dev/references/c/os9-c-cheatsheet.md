@@ -143,7 +143,7 @@ module").
 
 The only C compiler manual behind this reference is the **1983 6809**
 manual. Its data-representation claims are 6809-specific and do **not**
-carry over to 68k — `Live` (verified via `sizeof()` on a real 68k
+carry over to 68k — `Live` (os9exec) (verified via `sizeof()` on a real 68k
 toolchain): `int`, `long`, and pointers are all 32-bit there, not the
 16-bit `int` the 6809 manual describes.
 

@@ -222,8 +222,7 @@ anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
   that points at a line whose label looks obviously distinct. `Source`
   (NitrOS-9 `level1/cmds/asm.asm`, whose own comments read "Arbitrary-length
   labels allowed. (first 8 chars must be unique)" and "First 8 characters of
-  label MUST be unique", with `max symbol length` set to 8), and `Live`
-  (2026-07-25) — hit while building the 6809 conformance suite.
+  label MUST be unique", with `max symbol length` set to 8), and `Live` (NitrOS-9) — hit while building the 6809 conformance suite.
   **`lwasm` does not share this limit**, so cross-assembled source that builds
   clean on the host can fail on the guest. That asymmetry is invisible until
   something rebuilds with the native assembler: keep labels unique within 8

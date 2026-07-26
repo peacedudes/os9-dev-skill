@@ -35,12 +35,12 @@ into an existing bucket. A Microware system and a clone are recorded the same
 way: neither is the unmarked default, because that is exactly the distinction
 a reader needs to weigh the claim.
 
-**A bare `Live` with no qualifier means the implementation was not recorded**
-— not that it holds everywhere. The `6809/` and `68k/` trees are fully
-qualified; `common/`, `basic09/` and `c/` are still being converted, and an
-unqualified tag there is a provenance gap to close, not a claim about both.
-Treat it as weaker than a qualified `Live`, and qualify it the next time you
-have cause to run the thing.
+**Every `Live` tag in both skills is qualified.** A bare one is a defect —
+it means the implementation went unrecorded, not that the claim holds
+everywhere. One known exception is left deliberately: `os9-tools-and-shell.md`'s
+`attr` cross-reference, where the underlying work spans a 6809 and a 68k
+finding and picking either would invent provenance. Leaving it bare is the
+honest state; resolve it by re-running, not by guessing.
 
 **A claim carrying only clone qualifiers is evidence about a reimplementation,
 not about OS-9.** Where such a claim and a Microware manual disagree, the

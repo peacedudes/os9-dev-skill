@@ -29,7 +29,7 @@ Unix has one cwd. OS-9 has two:
 when run — running searches `chx`/`PATH`, not `chd`. Like Unix `cd`, `chd`
 with no argument returns to `$HOME` (the `HOME` env var, **not** the
 password-file login data dir); `chx` with no argument does nothing
-(**`Live`** on os9exec — see `os9-tools-and-shell.md` for the
+(**`Live`** (os9exec) — see `os9-tools-and-shell.md` for the
 test). Full resolution rule, `PATH` guidance, and the
 compiler-driver exception: `os9-mental-model.md`'s "Two current
 directories, not one" section; practical gotchas hitting this live:
@@ -69,7 +69,7 @@ absolute addresses inside.
 - Header carries type, language, access permissions, edition, and a
   supervisor-state/reentrant/sticky attribute byte; the kernel rejects a
   fork/link whose requested type doesn't match the module found. Offsets
-  are `Live` against a real compiled program: `module-format.md`.
+  are `Live` (os9exec) against a real compiled program: `module-format.md`.
 
 ### 4. Pipe is `!`, not `|`
 
@@ -85,7 +85,7 @@ modifiers: "`<` Redirects the standard input path, `>` Redirects the
 standard output path, `>>` Redirects the standard error path." OS-9
 additionally has `>+` (append to existing file or create) and `>-`
 (truncate existing file or create) — undocumented in the v2.4 manual but
-both `Live` on 6809 and 68k. Standard `>` (create only, fail if exists)
+both `Live` (NitrOS-9, os9exec). Standard `>` (create only, fail if exists)
 remains the default. Full table: `common/os9-tools-and-shell.md`.
 Details: `os9-tools-and-shell.md`.
 
@@ -95,8 +95,8 @@ Behavior, not just codes, differs:
 
 | Key | Unix | OS-9 |
 |---|---|---|
-| **Ctrl-C** | kills foreground process | Backgrounds it instead (as if `&`), works immediately regardless of process state — `Live` (sends interrupt signal 3; see `using-os9exec-repl.md`) |
-| **Ctrl-E** | — | The actual kill key — terminates the child outright, `Live` (sends abort signal 2, not the uninterceptable signal 0 — see Tier 2's signal table) |
+| **Ctrl-C** | kills foreground process | Backgrounds it instead (as if `&`), works immediately regardless of process state — `Live` (os9exec) — sends interrupt signal 3; see `using-os9exec-repl.md` |
+| **Ctrl-E** | — | The actual kill key — terminates the child outright, `Live` (os9exec) — sends abort signal 2, not the uninterceptable signal 0; see Tier 2's signal table |
 | **Ctrl-A** | move to start of line | Redisplays the previous input line without executing it, cursor at end — back up over it and retype to edit and resubmit; stands in for arrow-key/history recall (symbol `C$Rpet` — "repeat"; see `os9-tools-and-shell.md`) |
 | Flow control | Ctrl-S pause / Ctrl-Q resume | Same (XOFF/XON), **plus** Ctrl-W pauses until any key |
 | EOF / exit shell | Ctrl-D | ESC on a blank line |
@@ -194,7 +194,7 @@ Full mechanism: `os9-systems-dev` skill's `kernel-internals.md`.
 
 No `const`/`volatile`, old-style function definitions only, `<strings.h>`
 not `<string.h>`, no bit-fields, no `//`, no prototypes/call
-type-checking. `int` is 32-bit on 68k (`Live`; 16-bit claims
+type-checking. `int` is 32-bit on 68k (`Live` (os9exec); 16-bit claims
 describe the 6809 compiler). Full list: `c/kandr-vs-ansi.md`.
 
 ### BASIC09: AND/OR/XOR are boolean; LAND/LOR/LXOR are bitwise

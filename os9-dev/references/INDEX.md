@@ -86,7 +86,7 @@ deciding how hard to lean on a file before opening it.
 
 | Area | Mostly |
 |---|---|
-| 68k `common/`, `c/`, and BASIC09 on both targets | `Live` |
-| 6809 assembler/debugger core, ~70 of ~93 documented `F$`/`I$` calls, most `gfx-windowing.md` calling sequences, some `6809/utility-usage.md` items | `Live` |
+| 68k `common/`, `c/`, and BASIC09 on both targets | `Live` (os9exec) |
+| 6809 assembler/debugger core, ~70 of ~93 documented `F$`/`I$` calls, most `gfx-windowing.md` calling sequences, some `6809/utility-usage.md` items | `Live` (NitrOS-9) |
 | Rest of the 6809 syscall catalog and utility set | `Manual` / `Source` |
 | `6809/coco-dragon-hardware.md`, `68k/network-sockets.md` | `Manual` only |

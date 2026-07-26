@@ -163,4 +163,4 @@ Sources: OS-9 v2.4 Technical Reference Manual; Technical I/O Manual v2.4;
 Disk File Organization manual; The OS-9 Guru; The OS-9 Primer; Using
 Professional OS-9 v2.4; OS-9 Insights; a 1985 independent OS-9/68000
 technical manual; OS-9 C Compiler manual. Module-header offsets and the
-M$Attr bit layout are `Live` against a real compiled 68k module.
+M$Attr bit layout are `Live` (os9exec) against a real compiled 68k module.

@@ -142,8 +142,27 @@ Default assignments — every one remappable per-device via `tmode`/`xmode`:
 
 Ctrl-C/Ctrl-E work any time, not just at input prompts. Unix-habit
 inversions (Ctrl-C ≠ kill, ESC ≠ harmless) are tabulated in
-`unix-differences.md`; the arrow-key/ESC hazard and the `tmode eof=04`
-remedy are in `using-os9exec-repl.md`.
+`unix-differences.md`; the arrow-key/ESC hazard is in
+`using-os9exec-repl.md`.
+
+**Tip — switching between OS-9 and Unix all day.** Two `tmode` settings
+remove most of the friction, and both are worth making immediately:
+
+| Want | Set | Why |
+|---|---|---|
+| Ctrl-D ends input, as in Unix | `tmode eof=04` | OS-9's EOF is ESC ($1B) |
+| Backspace erases | `tmode bsp=7F` | modern terminals send DEL ($7F) for the Backspace key; OS-9 expects BS ($08), so out of the box Backspace inserts a literal character instead of erasing |
+
+`Live` (os9exec): before `bsp=7F`, `echo hellox<DEL>` prints `hellox` plus a
+stray $7F; after, the echo shows the BS-space-BS erase and it prints `hello`.
+`bse=`/`bsb` tune the echo side separately — see the parameter table in
+`common/utility-usage.md`.
+
+Put them in the account's `.login`, which is read from its **data** directory,
+to get them every session. Note `tmode` acts on the open **path**, so a change
+outlives the process that made it — it persists for the rest of the session,
+including across `logout`. That is what makes `.login` the right place for it,
+but it also means a script or harness must not assume ESC is still EOF.
 
 ## tmode, xmode, page pause
 

@@ -46,7 +46,6 @@ has bitten a real session.
 | Compiler reads the whole source as one line | source has LF endings; OS-9 needs CR-only | `common/using-os9exec-repl.md` |
 | Program dies immediately with a trap-handler banner | linked against the proprietary `cio`, absent from this disk | `common/using-os9exec-repl.md` |
 | Harness times out with the command visibly working | prompt gate doesn't recognise a sub-program's prompt — use raw keys | both REPL files |
-| ESC stops ending the shell after a `login`/`logout` round trip | that account's `.login` ran `tmode eof=04`; the change is on the **path**, so it outlives the login shell — EOF is Ctrl-D now | `common/using-os9exec-repl.md` |
 | Session hangs or dies on a syscall that looked ordinary | `F$SSvc`/`F$IOQu`/`F$NProc` (6809), `F$SysDbg`/`F$RTE` (68k) | both REPL files |
 
 Error *codes* (number → meaning) are a different lookup: `common/error-codes.md`.

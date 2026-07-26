@@ -298,11 +298,16 @@ Two different things behind the same device names:
   image from a blank file on an `OS9Hx` device when RBF-specific behavior
   needs testing.
 
-  **Traversal above the root depends on how the device was made.** `Live`
-  (2026-07-25, same binary and session): from a device created by
-  `mount -k=0 hb`, `list ../outside` reads a file above the root and `dir ..`
-  lists the host parent; the same spellings against a device configured through
-  `OS9DISK`/`OS9Hx` are refused with `E_PNNF`. Don't generalise either result.
+  **Traversal above the root is confined**, `Live` (2026-07-25), for devices
+  configured through `OS9DISK`/`OS9Hx` and for ones created by `mount -k=0`
+  alike: `list ../outside` and `list ../../../../outside` both give `E_PNNF`
+  while a read inside the device works. The one exception is NESTED device
+  roots — if one device's host root sits inside another's, `..` walks from the
+  inner device into the outer one (the clamp matches the first configured root
+  the path is a prefix of, which is the enclosing one). It still cannot leave
+  the set of configured devices. When testing confinement, make sure the
+  directory holding your device is not itself a device root, or you will
+  measure this instead.
 
   **Permissions and ownership are only real on an RBF image.** A host
   directory cannot carry OS-9 ownership at all. Attributes do map to Unix mode

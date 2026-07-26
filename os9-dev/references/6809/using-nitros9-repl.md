@@ -207,6 +207,16 @@ shell prompt reappears normally afterward.
   Escape meant as `tee`'s EOF hits the **shell**, which also treats it as EOF
   and exits — killing the session shell. Confirm `tee >file` actually opened
   first: a gated send blocks on a real `tee`, so a fast return means it failed.
+- **A `tee` that succeeds can still lose a line's CR under load.** `Live`
+  (2026-07-25, while building the 6809 conformance suite): typing content
+  through raw keys at speed occasionally dropped a trailing CR, silently
+  joining two lines in the written file. Nothing reports it — `tee` closes
+  cleanly and the file looks plausible — and the damage only surfaces much
+  later as a compile or parse error at a line the source doesn't seem to
+  contain. This is a harness pacing artifact, not an OS-9 behaviour. **Verify
+  content after writing it** (`list` the file back, or compare a byte count)
+  rather than trusting a clean-looking `tee`, and prefer the host-side
+  injection route below for anything longer than a few lines.
 - **Injecting files too large to type**: ToolShed can extract the RBF
   filesystem straight out of the `.ide` container and inject files host-side,
   with XRoar stopped. **ToolShed bug**: `os9 copy -r` (rewrite-in-place)

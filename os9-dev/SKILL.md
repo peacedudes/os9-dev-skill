@@ -1,6 +1,6 @@
 ---
 name: os9-dev
-description: Use when writing, porting, or debugging programs for Microware OS-9 (6809 or 68000) or OS-9000; setting up or troubleshooting the os9exec emulator, its toolchain, or an OS-9 SDK; compiling/running/testing BASIC09, C, or 68k assembly programs via os9exec or its REPL; or translating between Linux/Unix concepts and OS-9 equivalents (modules, file managers, path descriptors, forks/exec).
+description: Use when writing, porting, or debugging programs for Microware OS-9 (6809 or 68000) or OS-9000; setting up or troubleshooting the os9exec emulator, its toolchain, or an OS-9 SDK; compiling/running/testing BASIC09, C, or 68k assembly programs via os9exec or its REPL; the OS-9 shell and its utilities (redirection, pipes, attr/dir/procs/deldir, procedure files, environment); OS-9 module format (header layout, type/language and attribute bytes, CRC and header parity, ident/fixmod); OS-9 error codes and error paths; or translating between Linux/Unix concepts and OS-9 equivalents (modules, path descriptors, forks/exec).
 ---
 
 # OS-9 Development Skill

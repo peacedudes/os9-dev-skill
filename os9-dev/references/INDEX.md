@@ -12,6 +12,30 @@ bare filename:
 - `common/using-os9exec-repl.md` (os9exec is the 68k emulator) ↔
   `6809/using-nitros9-repl.md`
 
+## Symptom → cause (when you have a failure, not a topic)
+
+The rest of this index is organised by topic. This table is the other door:
+you have a symptom and no idea which topic it belongs to. Every cause here
+has bitten a real session.
+
+| Symptom | Likely cause | Where |
+|---|---|---|
+| Assembles clean, won't run / `ident` shows nothing sane | assembler wrote an object *despite* errors — check the error count | `6809/assembly-and-tools.md` |
+| Rebuild behaves exactly like the old binary | `r68 -O=`/`l68 -o=` didn't overwrite; you ran the stale file | `68k/os9-68k-assembly.md` |
+| Build reports success, no output file where you looked | output goes to the **execution** directory, not the data directory | both assembly files |
+| Assembly "silently succeeded" but nothing works | you redirected the assembler's stdout — errors went with it | `6809/assembly-and-tools.md` |
+| Module runs but its data area is wrong / corrupt scratch | `mod` data size written with `*` (program counter) instead of `.` | `6809/assembly-and-tools.md` |
+| `mdir` shows a different name than the file you linked | the module name comes from `l68 -o=`, not the source | `68k/os9-68k-assembly.md` |
+| Link fails on `I$`/`F$` symbol names | call names aren't defined anywhere — declare them yourself | `68k/os9-68k-assembly.md` |
+| "Can't find" a command that is plainly present | fork lookups use `chx`, not `PATH` | `common/using-os9exec-repl.md` |
+| Redirect produced error text, or clobbered the file | `>>` is **stderr**; append is `>+`; plain `>` fails if the file exists | `common/os9-tools-and-shell.md` |
+| Compiler reads the whole source as one line | source has LF endings; OS-9 needs CR-only | `common/using-os9exec-repl.md` |
+| Program dies immediately with a trap-handler banner | linked against the proprietary `cio`, absent from this disk | `common/using-os9exec-repl.md` |
+| Harness times out with the command visibly working | prompt gate doesn't recognise a sub-program's prompt — use raw keys | both REPL files |
+| Session hangs or dies on a syscall that looked ordinary | `F$SSvc`/`F$IOQu`/`F$NProc` (6809), `F$SysDbg`/`F$RTE` (68k) | both REPL files |
+
+Error *codes* (number → meaning) are a different lookup: `common/error-codes.md`.
+
 ## Quick rosetta (inline — check before loading a file)
 
 - `fork()`/`exec()` → `F$Fork` / `F$Chain`

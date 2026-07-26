@@ -429,6 +429,15 @@ def check_cross_references(files, known_basenames):
     return findings
 
 
+def collect_doc_texts(roots):
+    """Return (display path, text) for every markdown file under `roots`."""
+    texts = []
+    for path in collect_markdown(roots) + _index_adjacent_files(roots):
+        with open(path, encoding="utf-8") as handle:
+            texts.append((os.path.relpath(path), handle.read()))
+    return texts
+
+
 def check_qualified_references(files, known_paths):
     """Flag a `dir/file.md` pointer whose directory doesn't match where the file lives.
 
@@ -466,6 +475,85 @@ def check_qualified_references(files, known_paths):
                     )
                 )
     return findings
+
+
+DUPLICATE_MIN_WORDS = 25
+# 5-word shingles: long enough that unrelated prose scores ~0, short enough that a
+# single substituted word doesn't invalidate a whole sentence's worth of shingles.
+DUPLICATE_SHINGLE = 5
+DUPLICATE_THRESHOLD = 0.5
+_MARKUP = re.compile(r"[`*_>#\[\]()]")
+
+
+def extract_paragraphs(text):
+    """Yield (line number, normalised words) for prose paragraphs worth comparing.
+
+    Fenced code blocks, table rows, and headings are skipped: a worked example
+    reproduced beside its output, and table rows sharing a column vocabulary, are
+    both *expected* to repeat and would drown any real finding.
+    """
+    paragraphs, buffer, start, fenced = [], [], 0, False
+    def flush():
+        if buffer:
+            words = _MARKUP.sub(" ", " ".join(buffer)).lower().split()
+            if len(words) >= DUPLICATE_MIN_WORDS:
+                paragraphs.append((start, words))
+        buffer.clear()
+
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        if line.lstrip().startswith("```"):
+            flush()
+            fenced = not fenced
+            continue
+        if fenced or not line.strip() or line.lstrip().startswith(("|", "#")):
+            flush()
+            continue
+        if not buffer:
+            start = lineno
+        buffer.append(line.strip())
+    flush()
+    return paragraphs
+
+
+def _shingles(words):
+    if len(words) <= DUPLICATE_SHINGLE:
+        return {tuple(words)}
+    return {tuple(words[i : i + DUPLICATE_SHINGLE]) for i in range(len(words) - DUPLICATE_SHINGLE + 1)}
+
+
+def find_duplicate_paragraphs(files, threshold=DUPLICATE_THRESHOLD):
+    """Report prose paragraphs that recur near-verbatim in two *different* files.
+
+    Advisory only -- never a finding, so it cannot fail a commit. Some repetition
+    across these skills is deliberate (a trap restated where its reader will meet
+    it is this project's stated editorial goal), so every hit is a judgement call
+    for a human, not a defect. Similarity is Jaccard overlap of word shingles,
+    which tolerates the small edits that make two copies drift apart.
+    """
+    entries = []
+    for filename, text in files:
+        for lineno, words in extract_paragraphs(text):
+            entries.append((filename, lineno, _shingles(words), " ".join(words)))
+    reports = []
+    for i, (file_a, line_a, sh_a, text_a) in enumerate(entries):
+        for file_b, line_b, sh_b, _ in entries[i + 1 :]:
+            if file_a == file_b:
+                continue
+            union = sh_a | sh_b
+            if not union:
+                continue
+            score = len(sh_a & sh_b) / len(union)
+            if score >= threshold:
+                excerpt = text_a[:60] + ("..." if len(text_a) > 60 else "")
+                reports.append(
+                    Finding(
+                        "duplicate",
+                        None,
+                        f"{int(score * 100)}% overlap between `{file_a}` and `{file_b}`: \"{excerpt}\"",
+                        [(file_a, line_a), (file_b, line_b)],
+                    )
+                )
+    return reports
 
 
 def skill_of(path):
@@ -772,7 +860,8 @@ def main(argv=None):
     """
     argv = list(sys.argv[1:] if argv is None else argv)
     show_inventory = "--no-inventory" not in argv
-    argv = [a for a in argv if a != "--no-inventory"]
+    show_duplicates = "--duplicates" in argv
+    argv = [a for a in argv if a not in ("--no-inventory", "--duplicates")]
     memory_dir = None
     if "--memory-dir" in argv:
         i = argv.index("--memory-dir")
@@ -798,6 +887,15 @@ def main(argv=None):
             print(_format(finding))
     else:
         print("Doc-consistency: no presence/hygiene findings.")
+
+    if show_duplicates:
+        duplicates = find_duplicate_paragraphs(collect_doc_texts(roots))
+        if duplicates:
+            print(f"\nNear-verbatim paragraphs ({len(duplicates)} -- advisory, some repetition is deliberate):")
+            for item in duplicates:
+                print(_format(item))
+        else:
+            print("\nNear-verbatim paragraphs: none above threshold.")
 
     if inventory and show_inventory:
         print(f"\n`Flag` divergence inventory ({len(inventory)} unresolved -- for tracking):")

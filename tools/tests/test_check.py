@@ -605,6 +605,51 @@ class TestQualifiedReferences(unittest.TestCase):
         self.assertEqual(chk.check_qualified_references(files, self.KNOWN), [])
 
 
+LONG_A = (
+    "The OS-9 shell treats a leading space in the line editor as an instruction to "
+    "insert the line, and without it the text is parsed as an editor command that "
+    "usually fails with a What? message, which is easy to misread as a syntax error "
+    "in the program itself rather than in the editor."
+)
+LONG_B = LONG_A.replace("usually fails", "normally fails").replace("easy to", "simple to")
+LONG_OTHER = (
+    "Module CRC accumulation covers the whole module including the header, while the "
+    "header parity word protects only the universal header, so a corrupted stack size "
+    "passes the parity check and is caught solely by the CRC when the loader runs it."
+)
+
+
+class TestDuplicateParagraphs(unittest.TestCase):
+    def test_flags_near_verbatim_paragraph_across_two_files(self):
+        files = [("a/one.md", LONG_A + "\n"), ("b/two.md", LONG_B + "\n")]
+        dupes = chk.find_duplicate_paragraphs(files)
+        self.assertEqual(len(dupes), 1)
+        self.assertIn("one.md", dupes[0].message)
+        self.assertIn("two.md", dupes[0].message)
+
+    def test_silent_for_dissimilar_paragraphs(self):
+        files = [("a/one.md", LONG_A + "\n"), ("b/two.md", LONG_OTHER + "\n")]
+        self.assertEqual(chk.find_duplicate_paragraphs(files), [])
+
+    def test_silent_within_a_single_file(self):
+        # Repeating yourself inside one file is a different (editorial) problem.
+        files = [("a/one.md", LONG_A + "\n\n" + LONG_B + "\n")]
+        self.assertEqual(chk.find_duplicate_paragraphs(files), [])
+
+    def test_silent_for_short_paragraphs(self):
+        # Short repeated lines ("See also: X") are idiomatic, not duplication.
+        files = [("a/one.md", "See the sibling skill.\n"), ("b/two.md", "See the sibling skill.\n")]
+        self.assertEqual(chk.find_duplicate_paragraphs(files), [])
+
+    def test_ignores_fenced_code_and_table_rows(self):
+        # A worked example intentionally reproduced alongside its output, and table
+        # rows sharing a column vocabulary, are both expected to repeat.
+        block = "```\n" + LONG_A + "\n```\n"
+        rows = "\n".join("| " + LONG_A + " |" for _ in range(2)) + "\n"
+        files = [("a/one.md", block), ("b/two.md", block), ("c/three.md", rows)]
+        self.assertEqual(chk.find_duplicate_paragraphs(files), [])
+
+
 # --------------------------------------------------------------------------
 # DIVERGENCES.md two-way link integrity
 #

@@ -341,6 +341,18 @@ launch both in a single combined command line in one send (`procA & procB
 real seconds. Give any tight retry/poll loop a small busy-wait when running
 it alongside another process that needs to make progress.
 
+## Two syscalls that end a scripted session
+
+Both look ordinary in the call table and are not:
+
+- **`F$SysDbg`** drops os9exec into its own *interactive* meta-debugger. A
+  scripted harness has nobody to answer its prompt, so the session hangs.
+- **`F$RTE`** kills the caller unless it is genuinely inside an intercept
+  routine — and `F$Icpt` alone does not put you there.
+
+Neither has been exercised live for that reason. Call them only from a forked
+child, or where losing the session is acceptable.
+
 ## Stopping a runaway program
 
 - **Ctrl-C**: shell keeps the prompt, child continues in background.

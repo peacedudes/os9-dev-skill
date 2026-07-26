@@ -217,6 +217,22 @@ shell prompt reappears normally afterward.
   `SHELL`: `Error #237 (RAM Full)` on a CoCo3 is easy to reach. Stagger the
   launches or shrink the footprint.
 
+## Syscalls that end the session, despite benign-looking names
+
+Most dangerous calls announce themselves (`F$Boot` reboots; `F$IRQ` installs a
+real hardware vector). These three do not, and each costs a restart:
+
+- **`F$AProc` / `F$NProc`** — scheduler-internal. `F$NProc` does not *return*;
+  it dispatches the next process, so execution never comes back to your code.
+- **`F$IOQu`** — queues the caller on an I/O event with no timeout. Nothing
+  wakes it if the event never arrives, and the shell never reprompts.
+- **`F$SSvc`** — patches the *live* system-call dispatch table. A wrong entry
+  corrupts the running kernel rather than failing the call.
+
+Register details for all of them: `6809/syscalls-and-module-format.md`. Test
+these only where losing the session is acceptable, or from a forked child so
+the blast radius is the child rather than your shell.
+
 ## `rma` hangs indefinitely — use `asm`
 
 `Live`, reproduced 6+ times across independent restarts: invoking the

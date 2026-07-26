@@ -118,6 +118,19 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   is the per-user startup hook**: normally `SHELL`, but point it at a procedure
   file and that runs on every login. `.` in either directory field means
   inherit. `login` also prints `SYS/MOTD`.
+- **No `.login` means no `PATH`, so `chx` elsewhere strips you of every
+  utility.** `Live` (2026-07-25). Fork lookups resolve against the execution
+  directory (`common/using-os9exec-repl.md`, "Fork lookups use chx, not
+  PATH"), and on 6809 nothing sets `PATH` for a logged-in account. So the
+  moment you `chx` to your own directory — running programs off a
+  DriveWire-mounted image, say — `procs`, `runb` and the rest become
+  unreachable, and the failure reads as "my disk is broken" rather than "my
+  search path moved". Two fixes: `load procs`/`load runb` **before** the
+  `chx`, since a resident module is found in the module directory ahead of
+  any directory search; or `setenv PATH` yourself. The `load` route is the
+  one to use in anything you ship — it depends on the module being present,
+  not on where the host system happens to keep it.
+
 - **The `.ide` disk image persists across restarts** — it's a real file edited
   in place, not a pristine snapshot. Source files survive a restart, but so do
   stale outputs from a failed attempt, which make a fresh run look like it

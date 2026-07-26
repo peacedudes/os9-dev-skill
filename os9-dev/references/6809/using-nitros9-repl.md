@@ -207,6 +207,13 @@ shell prompt reappears normally afterward.
   Escape meant as `tee`'s EOF hits the **shell**, which also treats it as EOF
   and exits — killing the session shell. Confirm `tee >file` actually opened
   first: a gated send blocks on a real `tee`, so a fast return means it failed.
+- **A large `dir` listing over the channel can kill the session.** `Live`
+  (2026-07-25), reproducible: a directory listing big enough to fill the
+  channel crashed the guest session outright. This is an *output* hazard and
+  is distinct from the input-burst one above — sending nothing at all is no
+  protection. When you need a listing of something large, narrow it (list a
+  subdirectory, or `dir` without `-e`) or read it host-side with ToolShed
+  against the image instead of asking the guest to stream it.
 - **A `tee` that succeeds can still lose a line's CR under load.** `Live`
   (2026-07-25, while building the 6809 conformance suite): typing content
   through raw keys at speed occasionally dropped a trailing CR, silently

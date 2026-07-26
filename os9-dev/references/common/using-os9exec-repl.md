@@ -120,6 +120,13 @@ makdir /h7/CMDS
 `dir -e` confirms it — `0.0` for anything created before the `login`, `1.7`
 after. Two consequences worth knowing before shipping an image:
 
+- **Copy into the image with `copy -n`.** The default duplicates the source
+  file's whole FD including its owner; a host-native directory has no real
+  OS-9 owner, so os9exec synthesises `0.0` and reproducing that is an owner
+  change a non-super caller may not make. The copy then prints `E$PERMIT`
+  *and still transfers the data*, which reads as harmless noise — the kind
+  of error that trains you to ignore a real one later. `-n` creates a fresh
+  FD and the error stops happening.
 - **A file created by a non-super account has no public read by default**
   (`------wr`). On any machine where the operator is neither that owner nor
   in group 0, the disk is unreadable. Set public bits explicitly.

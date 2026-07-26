@@ -10,6 +10,21 @@ specification; each item is a question for Microware to settle.
   BASIC09 manuals (Rev H, and Tandy 1983) specify uppercase; real Microware
   6809 BASIC09 v01.01.00 prints mixed case. (Checked via `PRINT USING "B"`.)
 
+## Internal contradictions within a manual
+
+- **`F$Load`'s "POSSIBLE ERRORS" list is incomplete.** The v2.4 Technical
+  Reference gives only `E$MemFul` and `E$BMID`, yet the same entry's prose
+  says an error "can indicate an actual I/O error, a module with a bad parity
+  or CRC, or that the system memory is full" — and `F$VModul`, which performs
+  exactly that check and is named in `F$Load`'s SEE ALSO, lists `E$BMCRC` and
+  `E$BMHP`. The list also omits `E$MNF`/`E$PNNF`, which `F$Load` must be able
+  to return for a missing file. So the manual does not state which code a
+  caller sees for a corrupt module.
+- **The 68k *OS-9 BASIC User Manual* prints `2,147,483,648`** (ch. 9, p. 9-2)
+  — positive, and a value a signed 32-bit INTEGER cannot hold — where its own
+  "wraps around" wording implies the negative result. The 6809-era manual
+  (p. 7-2) uses the same sentence template without the defect.
+
 ## Gaps in the manuals themselves
 
 - **Shell redirections `>+` and `>-` are undocumented.** Both are real,
@@ -20,3 +35,12 @@ specification; each item is a question for Microware to settle.
   per-call error lists. A single-edition typo.
 - **6809 syscall codes `$1F`, `$20`, `$23`–`$26`** are neither documented nor
   confirmed reserved anywhere in the manuals.
+- **`M$Attr` bits 0–4 are undocumented** in any surveyed manual; only bits 5
+  (supervisor state), 6 (sticky) and 7 (sharable) are described.
+- **Signal-queue depth on intercept entry is undocumented.** On entry to an
+  intercept routine `d0` holds the number of currently-queued signals,
+  including the one just delivered — useful enough that a handler can drain
+  the queue in one invocation, but stated in no manual we hold.
+- **`asm`'s source-line length limit is undocumented** — a real limit between
+  132 and 135 characters, whose only symptom is a misleading `bad instr` error
+  reported against the *following* line.

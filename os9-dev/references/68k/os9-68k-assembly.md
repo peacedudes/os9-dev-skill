@@ -7,6 +7,31 @@ end); don't assume 6809 RMA syntax carries over. (The "Relocating Macro
 Assembler" manual found in 68k archives is 6809-only — never a 68k
 source.)
 
+## Before you assemble anything
+
+Five facts that decide whether your first build works. All are detailed
+below; they are collected here because each bites *before* you have output
+worth debugging.
+
+1. **`I$`/`F$` call names are not symbols** — nothing on the SDK disk defines
+   them. `dc.w I$Write` assembles clean and then fails at link. Define them
+   as numeric constants in your own source.
+2. **`r68 -O=` and `l68 -o=` do not reliably overwrite** an existing output.
+   A rebuild after an edit silently tests the *old* binary. `del` first, or
+   link to a name you have never used.
+3. **`l68 -o=<name>` sets the module's real internal name**, overriding the
+   source's own `psect` name — so `mdir` shows the `-o=` name, not the one
+   you wrote.
+4. **The linker writes to the execution directory**, not your data directory.
+   No error, no output where you looked.
+5. **A PC-relative *destination* does not exist on the 68000** — `(d16,PC)`
+   is source-only. Writing to your own storage needs `lea` then a write
+   through the address register.
+
+Two directive traps in the same class: `dc.b "text"` needs double quotes
+(single quotes fail regardless of length), and `ds.b` is not a valid
+directive — reserve space with an explicit `dc.b 0,0,0,…`.
+
 ## Toolchain (`Live` (os9exec), end-to-end)
 
 - **`cc`** drives `cpp` → `c68` → `o68` → `r68` (assembler) → **`l68`**

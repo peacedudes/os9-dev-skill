@@ -6,6 +6,30 @@ toolchain. The Editor section is `Manual`.
 
 Register set and calling convention: `syscalls-and-module-format.md`.
 
+## Before you assemble anything
+
+Six facts that decide whether your first build works. All are detailed
+below; they are collected here because each one bites *before* you have
+any output to debug.
+
+1. **You cannot `use /dd/defs/os9defs.a` with `asm`** — it is RMA source and
+   produces a cascade of `bad instr`. Define the constants you need yourself.
+2. **There is no `OS9` macro either** — the raw form is `swi2` followed by a
+   one-byte `fcb` call code.
+3. **Use `-O=<name>`, not `O=<name>`** — the leading dash overwrites; without
+   it an existing output file fails the run. Case is not significant.
+4. **The object lands in the execution directory (`/dd/cmds`)**, not your data
+   directory. `dir` where you are makes every successful run look failed.
+5. **Never redirect `asm`'s standard output.** Errors go there, so a broken
+   assembly looks silent and successful.
+6. **Check the error count, not whether an output file appeared** — `asm`
+   writes an object even when the assembly failed, and it will `ident`
+   cleanly and then fail at run time on something unrelated.
+
+One more bites *after* a clean build: **`*` is the program counter, `.` is
+the data counter.** Using `*` for the `mod` directive's data-size operand
+assembles cleanly and yields a module with a zero-sized data area.
+
 ## A complete worked program (`Live` (NitrOS-9))
 
 Assembled with `asm` and run on NitrOS-9. It creates a file, writes a line,

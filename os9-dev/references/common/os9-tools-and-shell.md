@@ -189,7 +189,8 @@ language, attributes, CRC check), `fixmod` (recompute a patched module's CRC
 and header parity), `mdir` (list the module directory; `-e` for details),
 `mfree` (free memory report), `dump` (works on modules too).
 
-**Processes:** `procs` (process list with group.user, priority, state),
+**Processes:** `procs` (process list with owner ID, priority, state — shown
+as `group.user` on 68k, a flat user number on 6809),
 `kill`, `setpr`, `sleep`, `w`/`wait`, `ex`.
 
 **Disks and system:** `format` (three phases: surface scan, identification

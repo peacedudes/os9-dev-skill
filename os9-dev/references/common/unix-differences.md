@@ -216,10 +216,10 @@ functions for bit manipulation.
 | `open`/`close` | `I$Open` / `I$Close` | |
 | `read` / `write` | `I$Read`/`I$ReadLn`, `I$Write`/`I$WritLn` | Ln variants do line editing/formatting |
 | `lseek` | `I$Seek` | |
-| PID | PID | plus a group.user ID pair, inherited |
+| PID | PID | plus an owner ID, inherited — a `group.user` pair on 68k, one flat integer on 6809 |
 | `wait`/`waitpid` | `F$Wait` | |
 | `exit` | `F$Exit` | |
-| `getpid`/`getuid` | `F$ID` | returns PID, group.user, priority |
+| `getpid`/`getuid` | `F$ID` | returns PID, owner ID, priority (68k `group.user`; 6809 flat) |
 | `kill(pid,sig)` | `F$Send` | |
 | `signal`/`sigaction` | `F$Icpt` | contract differs, see Tier 2 |
 | `sleep` | `F$Sleep` | counts ticks; 0 = sleep until signaled |
@@ -235,7 +235,7 @@ functions for bit manipulation.
 | `dlopen` | `F$Load` by name | |
 | pipe / named pipe | `/pipe` unnamed / `/pipe/<name>` named | default buffer 90 bytes; see `ipc.md` |
 | UID/GID | owner ID / group ID in process descriptor | |
-| `sudo`/root | super-user = group 0 | |
+| `sudo`/root | super-user = group 0 (**68k**; on 6809 it is flat user ID 0 — `6809/syscalls-and-module-format.md`) | |
 | process states | Active / Waiting / Sleeping | |
 | `nice`/`setpriority` | priority + `setpr` | aging twist, see Tier 2 |
 | `errno` | `errno` | not cleared on success — check the call's return value first |

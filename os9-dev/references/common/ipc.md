@@ -73,7 +73,8 @@ mask → do work → sleep (auto-unmasks) → service queued signals → repeat
 3. Use single-instruction atomic ops: `move`, `addq`, `subq`, `bset`, `bclr`, `tas`. 68k additionally has `cas` (atomic compare-and-swap, singly-linked) and `cas2` (doubly-linked).
 
 **Send restrictions:** most signals can be sent to any process, but Kill is
-restricted to same user/group — only the super-user (group 0) can Kill
+restricted to same user/group — only the super-user (group 0 on 68k; flat
+user ID 0 on 6809 — `6809/syscalls-and-module-format.md`) can Kill
 across groups. Sending to PID 0 broadcasts to every process sharing the
 sender's user/group, excluding the sender itself; `kill 0` at the shell uses
 exactly this convention.

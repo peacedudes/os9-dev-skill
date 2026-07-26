@@ -107,6 +107,22 @@ right for their own target, and the trap is carrying one target's model
 across. For os9exec (68k) read the 68k manuals — 6809 is an earlier
 evolutionary stage, not a fuller description of the same design.
 
+**Consequence when a 68k tool builds a disk a 6809 will read** (`Live`,
+2026-07-25): the on-disk owner field is two bytes on both targets, so the
+bytes travel fine — but the two targets *interpret* them differently.
+os9exec stamping account `1.7` writes `$0107`; the same file on 6809 is
+owned by flat user **263**. Neither reading is zero, so a non-privileged
+owner stays non-privileged and public permission bits still govern, which
+is usually all that matters. Two things do bite:
+
+- **A host-side check written against the 68k model misjudges the 6809
+  one.** ToolShed's `dir -e` splits the flat value into two dot-separated
+  bytes for display, so an ordinary 6809 ID below 256 shows as `0.N` and
+  looks like a group-zero superuser. Assert the owner field is **non-zero**
+  rather than testing a "group" byte that only one target has.
+- **Ownership is not portable as a name, only as a number.** Do not expect
+  an account on the receiving system to match; design for the public bits.
+
 ### Mixed range ($1E-$27)
 
 Registers here come from the OS-9 Technical Reference (Tandy)'s per-call

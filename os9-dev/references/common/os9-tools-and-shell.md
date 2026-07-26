@@ -30,8 +30,36 @@ argument text before the program sees it; quote them to pass literally.
 
 | Modifier | Effect |
 |---|---|
-| `<path` `>path` `>>path` | Redirect stdin / stdout / **stderr**. `>>` is NOT append — it redirects the standard error path. Output modifiers: `>path` fails if file exists (create only); `>+path` appends to existing or creates; `>-path` truncates existing or creates. Combine freely: `cmd >out >>err`, or stacked into one target: `>>>path` = stdout AND stderr (`Live`: `cmd >>>/nil` swallows a stderr banner; proven-ran via side effect), `<>>>path` = all three (owner-stated; accepted live — note the shell still prints a failed child's exit status on its OWN stderr, which is NOT the child's and looks like a leak). `Live`: tested on NitrOS-9, **and 68k os9exec** — a failing `del`'s error went to `>>` (`del: can't delete '...'`, 40 bytes captured) but NOT to `>` (0 bytes), directly confirming `>`=stdout, `>>`=stderr. `;`/`&`/`!` also `Live` on 68k (`echo A;echo B` both ran; `echo hello ! tr a-z A-Z`→`HELLO`; `echo A & echo B` both ran). |
 | `#n` or `#nK` | Raise the process's memory allocation (both forms are kilobytes on 68k). Ignored if smaller than the module-header default; applies to that one command only. C programs use the extra purely as stack. Classic use: `basic09 #32k` when a program blows the default workspace |
+
+### Redirection — `>>` is stderr, and append is `>+`
+
+**To append to a file, use `>+`.** `>>` does *not* append on OS-9; it
+redirects the standard error path. This is the single most common Unix
+reflex to get wrong here, and it fails quietly — you get a log full of
+error text and an original file that was never touched.
+
+| Form | Redirects | Notes |
+|---|---|---|
+| `<path` | stdin | |
+| `>path` | stdout | **Create only — fails if the file already exists** |
+| `>+path` | stdout | **Append** to an existing file, or create it. The Unix `>>` |
+| `>-path` | stdout | Truncate an existing file, or create it. The Unix `>` |
+| `>>path` | **stderr** | *Not* append |
+| `>>>path` | stdout **and** stderr | Both into one target |
+| `<>>>path` | stdin, stdout, stderr | All three |
+
+Combine freely: `cmd >out >>err` sends output and errors to separate files.
+
+`Live`, NitrOS-9 **and** 68k os9exec: a failing `del`'s error text went to
+`>>` (`del: can't delete '...'`, 40 bytes captured) but *not* to `>` (0
+bytes) — direct confirmation that `>`=stdout, `>>`=stderr. `cmd >>>/nil`
+swallows a stderr banner. `<>>>path` is owner-stated and accepted live —
+note the shell still prints a failed child's exit status on its *own*
+stderr, which is not the child's and looks like a leak.
+
+`;`/`&`/`!` are also `Live` on 68k (`echo A;echo B` both ran; `echo hello !
+tr a-z A-Z` → `HELLO`; `echo A & echo B` both ran).
 
 Wildcards `*` (any string) and `?` (one character) are expanded by the shell
 itself via `F$CmpNam`; the program receives matched names only.

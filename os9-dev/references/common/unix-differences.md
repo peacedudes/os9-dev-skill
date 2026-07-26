@@ -75,15 +75,18 @@ absolute addresses inside.
 
 `cmd1 ! cmd2`. `|` isn't a shell metacharacter at all — code or muscle
 memory using it fails silently, not with an error. Chains: `a ! b ! c`.
-Redirection differs too: `>` is stdout, but `>>` redirects **stderr** —
-it is not append. **`Manual`-confirmed** — *Using Professional OS-9* v2.4
-lists exactly three modifiers: "`<` Redirects the standard input path,
-`>` Redirects the standard output path, `>>` Redirects the standard error
-path." The Unix reflex that `>>` means append is the trap. OS-9 additionally
-has output-redirection modifiers `>+` (append to existing file or create) and
-`>-` (truncate existing file or create) — undocumented in the v2.4 manual but
+Redirection differs too: `>` is stdout, but `>>` redirects **stderr** — it
+is not append. **To append, use `>+`.** The Unix reflex that `>>` means
+append is the trap, and it fails quietly: you get a file of error text and
+an untouched original.
+
+**`Manual`-confirmed** — *Using Professional OS-9* v2.4 lists exactly three
+modifiers: "`<` Redirects the standard input path, `>` Redirects the
+standard output path, `>>` Redirects the standard error path." OS-9
+additionally has `>+` (append to existing file or create) and `>-`
+(truncate existing file or create) — undocumented in the v2.4 manual but
 both `Live` on 6809 and 68k. Standard `>` (create only, fail if exists)
-remains the default.
+remains the default. Full table: `common/os9-tools-and-shell.md`.
 Details: `os9-tools-and-shell.md`.
 
 ### 5. Control keys are inverted or unfamiliar

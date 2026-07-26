@@ -7,10 +7,10 @@ covers only what differs: numeric widths and precision, the platform-specific
 facts with no counterpart on the other side, and the 68k-only mechanism for
 calling machine-language procedures from BASIC09.
 
-**Verification:** 6809 INTEGER overflow and hex-constant sign are `Live`
+**Verification:** 6809 INTEGER overflow and hex-constant sign are `Live` (NitrOS-9)
 (Microware BASIC09 "6809 VERSION 01.01.00" under NitrOS-9; harness:
 `6809/using-nitros9-repl.md`); 6809 REAL width/range/precision are `Manual`,
-not independently measured. 68k items are `Live` on os9exec unless marked
+not independently measured. 68k items are `Live` (os9exec) unless marked
 otherwise.
 
 ## Data types by target
@@ -30,7 +30,7 @@ at all when a string fills its declared maximum. Details and the byte dump:
 ## INTEGER: 16-bit → 32-bit
 
 **Overflow is ordinary two's-complement wrap at each width, silent, no
-error** — `Live` on real 6809 (`32767+1` → `-32768`), real 68k
+error** — `Live` (NitrOS-9, os9exec, basic09c) on real 6809 (`32767+1` → `-32768`), real 68k
 (`2147483647+1` → `-2147483648`), and `basic09c` alike. This is the **#1
 silent-bug source when porting**: the wrap *mechanism* is identical, so code
 relying on the *width* still has to change even though nothing looks broken.
@@ -43,7 +43,7 @@ and gets it right.
 
 **Hex constants carry the width, and the sign meaning flips with it.**
 `$` prefix on both. On 6809 the literal is 16-bit, so **`$8000`-`$FFFF` read
-as negative** (`Live`: `PRINT $FFFF` prints `-1`). On 68k the same literal
+as negative** (`Live` (NitrOS-9): `PRINT $FFFF` prints `-1`). On 68k the same literal
 lives in `$0`-`$FFFFFFFF` with no sign-flip zone. Never compare a hex literal
 across a 6809/68k boundary without an explicit cast.
 
@@ -58,7 +58,7 @@ states the range directly as ~±1×10³⁸, ~9 decimal digits. A tighter-looking
 "2.94e-39 to 1.70e38" figure is calculated from the bit layout rather than
 manual-stated — prefer what the manual actually says.
 
-**68k** REAL is a genuine IEEE-754 double (`Manual`, storage format `Live`):
+**68k** REAL is a genuine IEEE-754 double (`Manual`, storage format `Live` (os9exec)):
 sign in bit 7 of the first byte, an 11-bit exponent (bits 0-6 of byte 1 +
 bits 4-7 of byte 2) biased by 1024, and a 52-bit mantissa with an implied
 leading one. `PUT`ting `1.0` to a file wrote exactly `3F F0 00 00 00 00 00
@@ -99,7 +99,7 @@ across targets — use tolerance comparisons on REAL, never `=`.
 
 ### Toolchain
 
-`Live`: 68k `basic` identifies itself as "Microware Basic V2.1", and `RunB`,
+`Live` (os9exec): 68k `basic` identifies itself as "Microware Basic V2.1", and `RunB`,
 the standalone runtime-only interpreter, exists and works on a real `PACK`ed
 module. A packed module is a *subroutine* module and cannot be run by name
 from the shell — invoke it as `runb <name>`. It resolves through the module
@@ -118,7 +118,7 @@ the 6809-era *BASIC09 Reference Manual* (Rev H). That is a 68k-manual-only
   returning to BASIC once it completes. Distinct from `$`, which both manuals
   document identically as an interactive System-Mode-only gateway; SHELL
   looks like a genuine 68k addition exposing that gateway to program code.
-  **It does exist on 6809 and really forks** (`Live`) — at a cost of roughly
+  **It does exist on 6809 and really forks** (`Live` (NitrOS-9)) — at a cost of roughly
   a quarter-call per second on a 2 MHz 6809; see `6809/using-nitros9-repl.md`.
 - **CHAIN** — loads and runs another BASIC program in place of the current
   one. It does not return, unlike `RUN`.
@@ -129,7 +129,7 @@ the 6809-era *BASIC09 Reference Manual* (Rev H). That is a 68k-manual-only
   numeric, so anything ambiguous (numeric strings, paths) must be quoted to
   force string interpretation. A missing parameter errors only if the code
   actually uses it; extra parameters are ignored.
-  **The mechanism exists on 6809 too (`Live`), but numeric `PARAM`s are
+  **The mechanism exists on 6809 too (`Live` (NitrOS-9)), but numeric `PARAM`s are
   broken there.** A `PACK`ed module invoked bare (`progname 42`) correctly
   detects a *missing* argument (`Error #056 -- Parameter Error`), proving the
   shell-to-`PARAM` plumbing is present — but a *supplied* numeric argument is
@@ -181,7 +181,7 @@ entry-point label.
 "SysCall" example is copyrighted Microware source. The examples below are
 original.
 
-`Live` — a minimal by-reference subroutine, assembled with `r68`, linked with
+`Live` (os9exec) — a minimal by-reference subroutine, assembled with `r68`, linked with
 `l68`, called from a real BASIC09 procedure:
 
 ```asm
@@ -215,7 +215,7 @@ crash: `D1` genuinely holds the first parameter's address, the write through
 it genuinely propagates back to BASIC09's variable, and `RUN`/`JSR`/`RTS`
 round-trip.
 
-`Live` — a second example covering what the first can't: stack offsets for
+`Live` (os9exec) — a second example covering what the first can't: stack offsets for
 parameters after the first, and a by-value argument.
 
 ```asm
@@ -254,7 +254,7 @@ through `muls.w` for this range.
 
 ### Calling a C function from BASIC09 (68k)
 
-`Live`. BASIC09's convention (`D1` = address of first parameter) is *not*
+`Live` (os9exec). BASIC09's convention (`D1` = address of first parameter) is *not*
 Ultra C's compiled entry-point convention (`68k/os9-68k-assembly.md`), so a
 small assembly shim bridges the two. A minimal K&R C function:
 

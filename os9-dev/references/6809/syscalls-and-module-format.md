@@ -68,7 +68,7 @@ register-for-register for `F$Fork`, `F$Wait`, `F$ID`, `F$Link`, `F$Load`,
 | F$Send | $08 | A=dest PID (0=all same group), B=signal code | Signal 0=Kill, 1=Wakeup, 2=Abort, 3=Interrupt, rest user-defined (see Signals below). `Live` (NitrOS-9) |
 | F$Icpt | $09 | X=intercept routine, U=routine's storage | Handler gets U=storage, B=signal code; exits via RTI. `Live` (NitrOS-9) |
 | F$Sleep | $0A | X=ticks (0=indefinite) | Returns X=remaining ticks; woken early by signal. `Live` (NitrOS-9), `Flag`: `X=50` returned `remaining=23` with no signal sent, so the returned remainder does not simply mean "woken early" — treat `F$Sleep` timing precision as unverified |
-| F$ID | $0C | — | Returns A=PID (1-255), Y=user ID (0-65535). `Live` (NitrOS-9) — A confirmed; Y not independently re-confirmed |
+| F$ID | $0C | — | Returns A=PID (1-255), Y=user ID (0-65535). `Live` (NitrOS-9) — A confirmed; Y not independently re-confirmed. **The 6809 user ID is one flat integer, NOT 68k's packed `group.user`** — see the cross-target warning below |
 | F$SPrior | $0D | A=PID, B=priority (0=lowest, 255=highest) | Same-user rule; superuser can set any. `Live` (NitrOS-9) |
 | F$SSWI | $0E | A=vector (1=SWI, 2=SWI2, 3=SWI3), X=routine | Per-process vector, not global. `Live` (NitrOS-9) for the install call; **whether the handler then runs on a bare `SWI` is unconfirmed** — a test using `F$Icpt`'s plain-`RTI` exit convention never saw its marker set, and `F$SSWI`'s raw hardware-vector mechanism may have a different, undocumented entry/exit convention |
 | F$PErr | $0F | B=error code | Writes to the standard error path. A stock system prints a bare `ERROR #<decimal>`, but **the reporting routine is vectored and replaceable by design** — freely on Level 1; on Level 2 only system-wide, and Microware shipped no Level 2 replacement. So NitrOS-9's fuller `Error #216 - Path Name Not Found` line is that documented extensibility in use, **not** undocumented richness. `Manual` + `Live` (NitrOS-9) |
@@ -86,6 +86,26 @@ register-for-register for `F$Fork`, `F$Wait`, `F$ID`, `F$Link`, `F$Load`,
 | F$CpyMem | $1B | D=DAT ptr, X=offset, Y=count, U=dest | Reads another process's memory via its DAT image (Level 2). `Source, Flag`: NitrOS-9's `fcpymem.asm` never reads X — the copy is driven by D, Y and U alone, a 3-register call. That file's *own* header comment still states the 4-register shape, so it is stale relative to its own code. Whether NitrOS-9 dropped the offset parameter or the manual was never accurate is undetermined; the manual's shape is kept here with this note. `Live` (NitrOS-9) for a trivial self-referential copy |
 | F$SUser | $1C | Y=user ID | Sets caller's user ID. `Live` (NitrOS-9) |
 | F$UnLoad | $1D | A=type, X=name | Unlink by name instead of address. `Live` (NitrOS-9) — FAILED `E$MNF` (221) immediately after the same name was successfully `F$Load`ed by the same process. Possibly `A=type` is not literally the type/lang byte `F$Load` returns in `A`. Unresolved |
+
+### Cross-target trap: the 6809 user ID has no group field
+
+**On 6809 the user ID is a single flat integer, 0-65535, and the superuser is
+ID 0 outright.** The System Programmers Manual says both: F$ID (11.1.9,
+p.81) describes "the user ID which is a integer in the range 0 to 65535",
+and F$Send's notes name "the superuser (ID number 0)". Ownership fields
+(`FD.OWN`, `DD.OWN`) are 2-byte user numbers, not packed pairs.
+
+**68k is the divergence, not 6809.** There a user ID is `group<<8 | user`
+and the superuser is *any* user in group zero — so the 68k test "is the high
+byte zero?" applied on 6809 declares every ID below 256 to be the superuser,
+i.e. essentially every ordinary account. `Live` (2026-07-25): a guard written
+that way SKIPped every account on a NitrOS-9 disk whose password file uses
+flat IDs 0-4. Compare the **whole 16-bit value** against 0 on 6809.
+
+This is the same shape as the `attr` set/clear inversion: both entries are
+right for their own target, and the trap is carrying one target's model
+across. For os9exec (68k) read the 68k manuals — 6809 is an earlier
+evolutionary stage, not a fuller description of the same design.
 
 ### Mixed range ($1E-$27)
 

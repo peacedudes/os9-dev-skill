@@ -183,6 +183,29 @@ but never bind across clause punctuation (`,;:()`), so a later clause's
    This is the one check that must see `SKILL.md`/`SOURCES.md`, so `run()`
    reads them into the doc set — they are still never scanned as claim sources.
 
+6. **Stale directory-qualified pointers** (`check_qualified_references`). Where
+   check 4 asks "does this file exist at all" and is scoped to `INDEX.md`, this
+   asks "is the path right" and runs over **every** payload file. A reference
+   is judged only when its basename is one we own, so prose naming another
+   repo's document (`dogfood-report-*.md`, `ROADMAP.md`) is skipped rather than
+   false-positived — which is what confined check 4 to `INDEX.md` in the first
+   place. Bare basenames are check 4's job and are ignored here. Catches the
+   pointer left behind when a file moves between reference directories: the
+   target still exists, so check 4 stays silent, but the reader is sent to the
+   wrong place.
+
+**Near-verbatim paragraphs** (`find_duplicate_paragraphs`) is *not* a check —
+it is an opt-in report behind `--duplicates`, and never affects exit status.
+Repetition across these skills is often deliberate (restating a trap where its
+reader will meet it is this project's stated editorial goal), so every hit is a
+judgement call for a human. Jaccard overlap of 5-word shingles over prose
+paragraphs of ≥25 words, threshold 0.5, cross-file only; fenced code, table
+rows and headings are skipped because a worked example beside its output, and
+table rows sharing a column vocabulary, are expected to repeat. At the time of
+writing the corpus scores **zero hits even at 0.25** across 710 comparable
+paragraphs — verified as a real result, not a blind detector, by planting an
+edited copy of a real 867-word paragraph and confirming it scores 97%.
+
 Meta-docs (`CONFIDENCE-TAGS.md`, `VERIFICATION-BACKLOG.md`, `INDEX.md`,
 `SOURCES.md`) are excluded from checks 1–3 (used only for their tag set) but
 `INDEX.md` is exactly what check 4 scans — they quote calls as examples but

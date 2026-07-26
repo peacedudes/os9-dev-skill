@@ -110,7 +110,7 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   inetd's `login`, or run `login USER1` as the first command. `Live` (NitrOS-9): with
   login, `procs` shows User Number 1 and `dir -e` shows new files owned by 1.
   Don't build tests around a fixture's assumed ownership across sessions.
-- **`.login` is 68k-only** (`Live`; on 68k it sets `PATH`/`TERM`/`chx`/`chd` —
+- **`.login` is 68k-only** (`Live` (os9exec); on 68k it sets `PATH`/`TERM`/`chx`/`chd` —
   `common/using-os9exec-repl.md`). Nothing on 6809 reads one: not `login`, not
   any shell on the disk. Per-user setup is the `SYS/password` fields instead —
   `name,password,uid,priority,execdir,datadir,program`. `datadir` is the
@@ -119,7 +119,7 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   file and that runs on every login. `.` in either directory field means
   inherit. `login` also prints `SYS/MOTD`.
 - **No `.login` means no `PATH`, so `chx` elsewhere strips you of every
-  utility.** `Live` (2026-07-25). Fork lookups resolve against the execution
+  utility.** `Live` (NitrOS-9). Fork lookups resolve against the execution
   directory (`common/using-os9exec-repl.md`, "Fork lookups use chx, not
   PATH"), and on 6809 nothing sets `PATH` for a logged-in account. So the
   moment you `chx` to your own directory — running programs off a
@@ -130,6 +130,16 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   any directory search; or `setenv PATH` yourself. The `load` route is the
   one to use in anything you ship — it depends on the module being present,
   not on where the host system happens to keep it.
+
+- **A `--disk0` image served over DriveWire is not a host-side retrieval
+  route.** `Live` (2026-07-25, while building the 6809 conformance suite):
+  data the guest writes to the served image was not visible in the backing
+  file on the host — checked mid-session and after, with two independent host
+  tools, under every condition tried. Read results back **through the guest**
+  (`list` the file over the channel) rather than by reading the image file.
+  Caveat on the strength of this: `drivewire-cli` itself was not instrumented,
+  so a flush path that was never triggered is not ruled out — treat it as
+  "do not depend on write-back", not as a proven never.
 
 - **The `.ide` disk image persists across restarts** — it's a real file edited
   in place, not a pristine snapshot. Source files survive a restart, but so do

@@ -152,7 +152,7 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   `6` = 320×192 4-color graphics / 40-column (16K), `7` = 640×192
   4-color graphics / 80-column (32K), `8` = 320×192 16-color graphics /
   40-column (32K). GFX2's own use of the codes hasn't itself been
-  independently confirmed `Live` (only `wcreate`'s has). Two additional special
+  independently confirmed `Live` (NitrOS-9) — only `wcreate`'s has. Two additional special
   values exist only for `DWSET`'s `format` (not `wcreate`'s `-s=<type>`,
   which always creates a new window and has no "current screen" concept):
   `$00` = the calling process's current screen (inherit its format rather

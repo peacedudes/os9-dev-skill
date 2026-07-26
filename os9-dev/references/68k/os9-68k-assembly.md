@@ -7,7 +7,7 @@ end); don't assume 6809 RMA syntax carries over. (The "Relocating Macro
 Assembler" manual found in 68k archives is 6809-only — never a 68k
 source.)
 
-## Toolchain (`Live` (os9exec) end-to-end on os9exec)
+## Toolchain (`Live` (os9exec), end-to-end)
 
 - **`cc`** drives `cpp` → `c68` → `o68` → `r68` (assembler) → **`l68`**
   (linker), forking each by bare name via the execution directory (see
@@ -464,4 +464,4 @@ live) before relying on details:
 Sources: The OS-9 Guru (68000-specific chapters); OS-9 v2.4 Technical
 Reference Manual (module format, exception vectors, TRAP conventions);
 OS-9 C Compiler manual / The OS-9 Primer (register ABI, embedded
-assembly). Toolchain behavior: `Live` (os9exec) on os9exec.
+assembly). Toolchain behavior: `Live` (os9exec).

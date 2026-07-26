@@ -204,7 +204,7 @@ layer underneath it.
   arbitrary OS-9/6809 system. Whether a given Microware-shipped shell has
   them is unconfirmed here; write portable material against the plain
   separators, or accept a visible failure.
-- **`set x` (abort-on-error) is `Live` on 68k os9exec but was found
+- **`set x` (abort-on-error) is `Live` (os9exec) but was found
   unreliable on NitrOS-9** as the sole content of a procedure file
   (2026-07-25, while building the 6809 conformance suite). Treat
   abort-on-error as target-specific and verify before depending on it;
@@ -473,7 +473,7 @@ footer — so this is not doubly cross-checked).
 | `quit=<h>` | quit char (hex, normally Ctrl-E) |
 | `xon=<h>` / `xoff=<h>` | flow-control chars (hex, default 11 / 13) |
 | `tabs=<n>` / `tabc=<h>` | tab stop spacing (default 4) / tab char (hex, default 09) |
-| `baud=<h>` | baud-rate/word-length/stop-bit byte, `Live` (the primary manual's own table was OCR-corrupted; the cross-check sources' version was close but not quite right either — this supersedes both): bits 0–3 baud code — `0`=110, `1`=300, `2`=600, `3`=1200, `4`=2400, `5`=4800, `6`=9600, `7`=19200 (ACIAPAK driver only), `8`=32000 (SIO driver only); bit 4 reserved; bits 5–6 word length (`00`=8-bit, `01`=7-bit); bit 7 stop bits (`0`=1, `1`=2). Live examples: `baud=22` (hex) = 1 stop bit, 7-bit words, 600 baud; `baud=86` = 2 stop bits, 8-bit words, 9600 baud |
+| `baud=<h>` | baud-rate/word-length/stop-bit byte, `Live` (NitrOS-9) — the primary manual's own table was OCR-corrupted; the cross-check sources' version was close but not quite right either — this supersedes both): bits 0–3 baud code — `0`=110, `1`=300, `2`=600, `3`=1200, `4`=2400, `5`=4800, `6`=9600, `7`=19200 (ACIAPAK driver only), `8`=32000 (SIO driver only); bit 4 reserved; bits 5–6 word length (`00`=8-bit, `01`=7-bit); bit 7 stop bits (`0`=1, `1`=2). Live examples: `baud=22` (hex) = 1 stop bit, 7-bit words, 600 baud; `baud=86` = 2 stop bits, 8-bit words, 9600 baud |
 | `type=<h>` | ACIA init byte (hex, default 00): bits 5–7 select parity (000 none, 101 MARK, 111 SPACE, 011 even, 001 odd — even/odd only on ACIA-pak/Mod-pak hardware), bit 4 toggles auto-answer modem support. Device-specific meanings: on TERM-VDG, bit 0 enables true lowercase; on TERM-WIN, `type=80` marks it as a window device. |
 | `par`, `cs`, `stop` | parity / character size / stop bits — **display-only via `tmode`**, must go through the `deiniz`→`xmode`→`iniz` cycle to actually change |
 | `normal` | reset every parameter above to its default |
@@ -503,7 +503,7 @@ decimal for counts (`null=`, `pag=`, `tabs=`).
   density at all, so this may be purely a vintage-Microware-only detail
   no longer testable on the emulator available here. `wcreate`'s
   `-s=<type>` numbering and `dcheck`'s option letters, by contrast, are
-  now `Live` (see above) and no longer open.
+  now `Live` (NitrOS-9) — see above — and no longer open.
 
 ---
 Sources: OS-9 Level 2 Operating System Manual (System Command

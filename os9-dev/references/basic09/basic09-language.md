@@ -11,9 +11,11 @@ a delta file, not a second copy of this one.
 **Verification status:** baseline is `Manual` — claims are cross-referenced
 across the BASIC09 Reference Manual (Rev H) and the OS-9 BASIC User Manual
 (Rev G, 1991), which document the language identically apart from the
-numeric deltas. Items marked `Live` were confirmed on OS-9/68k (os9exec);
-several were additionally confirmed on real 6809 NitrOS-9 where noted
-(see `gotchas.md` for the 6809-confirmed list).
+numeric deltas. Every `Live` tag names the implementation it ran on:
+`Live` (os9exec) for OS-9/68k, `Live` (NitrOS-9) for real 6809, and both
+where a claim was confirmed twice. Most here are os9exec — see
+`gotchas.md` for the 6809-confirmed list, and `CONFIDENCE-TAGS.md` for
+what the qualifiers mean.
 
 ## Getting Started
 
@@ -37,7 +39,7 @@ characters only (no underscores, dollar signs, or periods); names are
 case-insensitive. Maximum length unspecified in source manuals. Each
 procedure has its own private namespace: line numbers and variables
 declared in one procedure never collide with another's, even if reused
-verbatim (`Live`: a helper procedure with its own `PARAM b: BYTE` and its
+verbatim (`Live` (os9exec): a helper procedure with its own `PARAM b: BYTE` and its
 own print statement cannot affect a caller's counters). Procedures talk to
 each other only through parameters,
 invoked with `RUN`.
@@ -78,9 +80,9 @@ so by-value-forcing tricks (`x+0`) aren't needed here. This source is
 architecture-neutral and doesn't stress either platform's numeric ranges.
 The `PRINT USING` line uses the real directive-letter format (see below)
 and its literal-string-plus-`R`-format combination is independently
-`Live` (68k) (`"'Average: ',R6.2"` with `avg=82.567` produces
+`Live` (os9exec) (`"'Average: ',R6.2"` with `avg=82.567` produces
 `Average:  82.57`) — the individual constructs used elsewhere in this
-procedure are each independently `Live` too, but the procedure
+procedure are each independently `Live` (os9exec) too, but the procedure
 as a complete, unmodified whole hasn't been run start-to-finish.
 
 ## Data Types
@@ -90,7 +92,7 @@ as a complete, unmodified whole hasn't been run start-to-finish.
 | BYTE | 0-255, unsigned. Truncates silently on overflow. **Cannot be passed as a procedure parameter** — see Pitfalls. |
 | INTEGER | Signed. Faster than REAL (see Control Structures below). Width/range/overflow behavior is architecture-specific — see the per-architecture file. |
 | REAL | Width/range/precision is architecture-specific — see the per-architecture file. |
-| STRING | Declared via `STRING[len]` (max length, default 32 if omitted). Fixed buffer, silently truncates past max. **Terminator is target-specific:** `0x00` (NUL) on **68k** (`Live` — byte-dump: `STRING[8]="XY"` after `"ABCDEFGH"` → `58 59 00 44...`), `$FF` on **6809**. A string filling its declared max length has **no** terminator byte at all (`Live` on 68k: `STRING[3]="XYZ"` → exactly `58 59 5A`). |
+| STRING | Declared via `STRING[len]` (max length, default 32 if omitted). Fixed buffer, silently truncates past max. **Terminator is target-specific:** `0x00` (NUL) on **68k** (`Live` (os9exec) — byte-dump: `STRING[8]="XY"` after `"ABCDEFGH"` → `58 59 00 44...`), `$FF` on **6809**. A string filling its declared max length has **no** terminator byte at all (`Live` (os9exec): `STRING[3]="XYZ"` → exactly `58 59 5A`). |
 | BOOLEAN | TRUE / FALSE. Not usable in numeric expressions — storing anything else into a BOOLEAN fails at runtime instead of being silently coerced. |
 
 Undeclared numeric variables default to REAL; a name ending in `$` and
@@ -101,7 +103,7 @@ coercion. A constant containing a decimal point or `E` exponent (e.g.
 `1.95E+12`) is always REAL, even if its value would fit in INTEGER.
 
 **A BOOLEAN operand in a numeric expression is a COMPILE-TIME error, not
-a runtime one.** `Live`: `n = flag + 1` with `flag: BOOLEAN` fails
+a runtime one.** `Live` (os9exec): `n = flag + 1` with `flag: BOOLEAN` fails
 at `LOAD` with `Error #000:067 (E_ILLARG)` — the program never even
 starts running. This is a stricter check than the destination-assignment
 case in the table row above (which the manual frames as a runtime
@@ -110,7 +112,7 @@ at compile time.
 
 **Division truncates based on the OPERAND types, not the destination
 variable's type — assigning to a REAL destination does NOT retroactively
-force real division.** `Live` (68k): `r = i / 3` with `i: INTEGER`
+force real division.** `Live` (os9exec): `r = i / 3` with `i: INTEGER`
 (both operands INTEGER) computes INTEGER division first (truncating,
 e.g. `100000/3` → `33333`) and only *then* widens that already-truncated
 result into the REAL destination `r` — the fraction is gone, `r` prints
@@ -130,7 +132,7 @@ DIM a, b, c: INTEGER; x, y: REAL        ! Comma = shared type, semicolon = new g
 
 Array indexing base is controlled per-procedure by the statement `BASE 0`
 (0-based) or `BASE 1` (1-based, default) — **note the space; `BASE0`/
-`BASE1` with no space is a syntax error** (`Live`: `Error #000:027`),
+`BASE1` with no space is a syntax error** (`Live` (os9exec): `Error #000:027`),
 not an alternate spelling. This affects array subscripts only. STRING
 character positions are NOT affected: a string's first character is
 always position 1, regardless of the current BASE setting.
@@ -139,7 +141,7 @@ always position 1, regardless of the current BASE setting.
 only shifts where indexing starts, it does not add an extra slot.**
 `DIM arr(2): BYTE` allocates exactly 2 elements: under `BASE 1` (default)
 those are `arr(1)` and `arr(2)`; under `BASE 0` they are `arr(0)` and
-`arr(1)` — `arr(2)` is out of bounds under `BASE 0` (`Live`:
+`arr(1)` — `arr(2)` is out of bounds under `BASE 0` (`Live` (os9exec):
 `Error #000:055`). Don't assume `BASE 0` gives you the same top index plus
 one extra slot at 0; it doesn't.
 
@@ -154,7 +156,7 @@ The BASIC09 Reference Manual's formal grammar (Rev H, p. 54-55) is
 unambiguous — `TYPE type_decl {; type_decl}`, one statement with
 semicolon-separated fields and no closing keyword — and `ENDTYPE` appears
 nowhere in that grammar, anywhere else in either primary manual, or in any
-of their worked examples, which cover both flat and nested records. `Live`
+of their worked examples, which cover both flat and nested records. `Live` (os9exec)
 (loaded via `LOAD`, so no editor is involved): every line of a `TYPE point` /
 `x: INTEGER` / `y: INTEGER` / `ENDTYPE` block is rejected individually
 (`Error #000:027` on each). The one-liner is the only form, and it supports
@@ -171,14 +173,14 @@ p.y = 20
 TYPE inner = a:INTEGER; b:INTEGER
 TYPE outer = n:inner; arr(3):INTEGER
 DIM o: outer
-o.n.a = 5              ! nested TYPE field, `Live`
-o.arr(1) = 100         ! array field, `Live`
+o.n.a = 5              ! nested TYPE field, `Live` (os9exec)
+o.arr(1) = 100         ! array field, `Live` (os9exec)
 ```
 
 Fields may nest (a field's type can itself be a previously-defined TYPE,
-`Live`) and are accessed by dot notation, including through
+`Live` (os9exec)) and are accessed by dot notation, including through
 nesting: `variable.field`, `variable.field1.field2`. Array fields
-(`Live`) use the same `(size)` syntax as a plain array
+(`Live` (os9exec)) use the same `(size)` syntax as a plain array
 declaration. The manual frames records as *more* efficient than an array
 of similar values, not less — field offsets resolve at compile time
 instead of being computed at runtime.
@@ -220,11 +222,11 @@ ENDLOOP
 
 **EXITIF always closes with ENDEXIT** — both the BASIC09 Reference Manual
 (Rev H) and the OS-9 BASIC User Manual (Rev G) show `EXITIF expr THEN
-stmts ENDEXIT` consistently. `Live`: `EXITIF`/`ENDEXIT` inside a
+stmts ENDEXIT` consistently. `Live` (os9exec): `EXITIF`/`ENDEXIT` inside a
 `LOOP`/`ENDLOOP` correctly exits the loop.
 
 **`WHILE` requires `DO`** — a bare `WHILE expr` (no `DO`) is a live syntax
-error (`Error #000:031`); only the `DO` form compiles and runs (`Live`).
+error (`Error #000:031`); only the `DO` form compiles and runs (`Live` (os9exec)).
 
 An INTEGER-typed FOR loop counter compiles to direct machine instructions
 and runs quickly; a REAL-typed counter invokes library routines at
@@ -236,7 +238,7 @@ expression (`value*2.` rather than `value*2`) silently forces the whole
 expression to REAL, so watch for this in anything performance-sensitive.
 
 Legacy line-number `GOTO`/`GOSUB` (targets 1-32767) and `ON expr GOTO/GOSUB
-line1,line2,...` are both supported and `Live`, working correctly
+line1,line2,...` are both supported and `Live` (os9exec), working correctly
 — `GOTO`/`GOSUB` require **explicit line numbers typed in the source**
 (classic numbered-BASIC style, e.g. `10 PRINT x`, `20 GOTO 10`), targeting
 one of those explicit numbers. GOSUB pushes a return frame distinct from a
@@ -259,7 +261,7 @@ ENDIF                                                 ! Type 2
 ```
 
 **Type 1** is a bare line number after `THEN` — no `GOTO` keyword at
-all — and has no `ENDIF`: `IF i<5 THEN 10` (`Live`: compiles and
+all — and has no `ENDIF`: `IF i<5 THEN 10` (`Live` (os9exec): compiles and
 runs correctly, jumps to line 10 when true, falls through otherwise).
 **Type 2** takes any statement(s) as its body, including `GOTO`/`GOSUB`,
 but `ENDIF` is written as a mandatory part of the syntax (unlike the
@@ -269,11 +271,11 @@ IF i<5 THEN
   GOTO 10
 ENDIF
 ```
-(`Live`).
+(`Live` (os9exec)).
 
 **`IF i<5 THEN GOTO 10` — a single line, `GOTO` keyword present, no
 `ENDIF` — is neither form.** It's an invalid hybrid: Type 1 forbids the
-`GOTO` keyword, Type 2 requires `ENDIF`. `Live`: it correctly fails to
+`GOTO` keyword, Type 2 requires `ENDIF`. `Live` (os9exec): it correctly fails to
 compile (`Error #000:069`), including as the sole statement of an otherwise
 empty procedure — so it is not a compiler bug, not direction-dependent, and
 not about interaction with other constructs. It is easy to misdiagnose as a
@@ -313,13 +315,13 @@ assignment to a parameter overwrites the caller's original value.
 Constants and expressions cannot be passed by reference; they always
 arrive by value (read-only). To force by-value semantics for a variable,
 wrap it in a trivial expression: `x+0` for numerics or `s$+""` for
-strings. `Live` (68k), both directions: a plain `INTEGER` or
+strings. `Live` (os9exec), both directions: a plain `INTEGER` or
 `STRING` variable passed to `RUN` is mutated by the callee's assignment
 to its `PARAM` (caller sees the change); the same call with `x+0`/`s$+""`
 leaves the caller's variable untouched.
 
 **Recursion works, including multiple simultaneous live activations of
-the same procedure.** `Live` (68k) with two cases: a
+the same procedure.** `Live` (os9exec) with two cases: a
 single-recursive factorial (`RUN fact(n-1, sub)`, unwind-as-you-go) and
 a doubly-recursive Fibonacci (`RUN fib(n-1,a)` then `RUN fib(n-2,b)` in
 the same frame — a meaningfully harder case since it needs multiple
@@ -334,7 +336,7 @@ Microware here; the emulator behaviour below is faithful, not a quirk.
 **This fails silently, not loudly:** `PARAM b: BYTE` is accepted
 with zero error at both edit time and run time, but the passed argument
 is simply discarded — the parameter never gets bound and reads as its
-default/uninitialized value (`Live`, 68k). Don't expect a compile or
+default/uninitialized value (`Live` (os9exec), 68k). Don't expect a compile or
 runtime error to catch this mistake; it won't.
 
 ## I/O
@@ -370,7 +372,7 @@ code and auto-resets to 0 once read; `POS` reports the current print
 column.
 
 **`EOF()` behaves like C's `feof()` — a sticky flag set only by an actual
-failed read, not a live position check.** `Live`: reading a 2-line
+failed read, not a live position check.** `Live` (os9exec): reading a 2-line
 sequential file, `EOF(#path)` is still `FALSE` immediately after the last
 successful `READ`; only a further `READ` attempt — which raises
 `Error #000:211 (E$EOF)` — makes it `TRUE`. **Not a position-tracking bug**:
@@ -434,7 +436,7 @@ read/written mid-record. `PUT`/`GET` also work on whole arrays in one call
 — storing or loading N records in a single bulk operation instead of
 looping. Structured `TYPE` records combine naturally with this: dimension
 an array of a `TYPE`, and `PUT`/`GET` moves whole records (or the whole
-array) at once. `Live` (68k): pre-allocate several
+array) at once. `Live` (os9exec): pre-allocate several
 empty `TYPE` records, `SEEK` to
 a computed `SIZE()`-based offset, `PUT` a record there, `SEEK` back and
 `GET` it — round-trips correctly, and a neighboring untouched record is
@@ -471,7 +473,7 @@ the example above is original, not the manual's own.)
 A generic-BASIC-style `"###.##"` format string was **never real BASIC09
 syntax** — it fails at run time (`Error #000:063`) and is a
 plausible-looking fabrication to guard against. The real syntax, confirmed
-against the manual's grammar (`Manual`); `Live` (68k) end to end:
+against the manual's grammar (`Manual`); `Live` (os9exec) end to end:
 
 | Directive | Meaning | Syntax |
 |---|---|---|
@@ -484,7 +486,7 @@ against the manual's grammar (`Manual`); `Live` (68k) end to end:
 
 Justify `j`: `<` left, `>` right, `^` center. **The `^` resolves an OCR
 ambiguity**: the manual's own text rendered this symbol as a garbled
-"°" (degree sign), illegible as transcribed. `Live` (68k) to
+"°" (degree sign), illegible as transcribed. `Live` (os9exec) to
 settle it: `'%'` is a runtime syntax error (`Error #000:063`); `'^'`
 compiles and genuinely centers — confirmed by exact byte capture, not
 eyeballing: `"HI"` in an 8-wide `S8^` field produces `"   HI   "` (3
@@ -495,7 +497,7 @@ item specs and don't consume an entry from the output list. Repeat groups:
 fmt, list` — the `#path` comes right after `PRINT`, before `USING`, not
 after it (`PRINT USING #path, ...` is a syntax error, `Error #000:018`).
 
-`Live`, field-width-exact (captured via a file round-trip and
+`Live` (os9exec), field-width-exact (captured via a file round-trip and
 `LEN()`, not by eyeballing terminal spacing): `PRINT #path USING "R8.2",
 12.349` produces an exactly-8-character field, correctly rounded to
 `12.35`. `PRINT #path USING "I4", 10`, `"S8", "HELLO"`, `"H4", 100`
@@ -503,7 +505,7 @@ after it (`PRINT USING #path, ...` is a syntax error, `Error #000:018`).
 
 **BOOLEAN prints mixed-case, contra the manual.** Both the Rev H (Microware)
 and Tandy 1983 BASIC09 manuals state BOOLEAN values print as `"TRUE"`/`"FALSE"`
-(uppercase). `Live`: `PRINT #path USING "B8", TRUE` produces `"True    "` on
+(uppercase). `Live` (os9exec): `PRINT #path USING "B8", TRUE` produces `"True    "` on
 68k os9exec *and* on real Microware BASIC09 6809 01.01.00 under NitrOS-9 —
 mixed case, correct 8-char field width, on both architectures. So it is not an
 os9exec artifact; whether the manual overstates or shipping code always
@@ -517,7 +519,7 @@ PRINT [ #path ] USING format-string, print-list   ! e.g. PRINT USING "R8.2", pri
 **The separator between the format string and the value list is a
 comma, not a colon** — the colon form (`PRINT USING "R8.2": price`) is a
 compile-time syntax error (`Error #000:029`). The comma form is confirmed both by
-the manuals' own formal grammar (`Manual`) and `Live` end to end
+the manuals' own formal grammar (`Manual`) and `Live` (os9exec) end to end
 (see the directive-letter table and worked examples above — this is now
 fully resolved, not just the separator).
 
@@ -541,24 +543,24 @@ are Boolean-only **infix operators** (`a AND b`, operands and result
 TRUE/FALSE). LAND/LOR/LXOR/LNOT are **function calls, not operators** —
 `LAND(a,b)`/`LOR(a,b)`/`LXOR(a,b)`/`LNOT(a)` — operating on integer values
 bit-by-bit. **Writing `6 LAND 3` as if it were infix is a syntax error**
-(`Live`: `Error #000:011`) — use `LAND(6,3)`. The `*NOT` member
+(`Live` (os9exec): `Error #000:011`) — use `LAND(6,3)`. The `*NOT` member
 of each family takes one operand, the rest take two. The names invite
 confusion precisely because they look like variants of each other rather
 than a different call shape entirely.
 
 | Function | Effect |
 |---|---|
-| `FIX(realnum)` | Rounds a REAL to the nearest INTEGER — despite the name, NOT truncation. `Live`: `FIX(3.9)=4`, `FIX(3.1)=3`, `FIX(-3.9)=-4` (the negative case is the deciding one: truncation-toward-zero would give `-3`; only round-to-nearest gives `-4`). |
+| `FIX(realnum)` | Rounds a REAL to the nearest INTEGER — despite the name, NOT truncation. `Live` (os9exec): `FIX(3.9)=4`, `FIX(3.1)=3`, `FIX(-3.9)=-4` (the negative case is the deciding one: truncation-toward-zero would give `-3`; only round-to-nearest gives `-4`). |
 | `FLOAT(intnum)` | Converts INTEGER to REAL (adds `.0`) |
-| `SUBSTR(search$, source$)` | Position of first occurrence of `search$` in `source$`, or 0; position numbering always starts at 1, unaffected by BASE mode (`Live`) |
+| `SUBSTR(search$, source$)` | Position of first occurrence of `search$` in `source$`, or 0; position numbering always starts at 1, unaffected by BASE mode (`Live` (os9exec)) |
 | `SIZE(variable)` | Byte size of a variable/structure — common in pointer/record arithmetic, e.g. `SEEK #file, SIZE(record)*(index-1)`. Value is architecture-specific — see the per-architecture file. |
 | `ADDR(var)` | Absolute memory address of a variable — not portable across targets, see `gotchas.md` |
-| `SIN`/`COS`/`TAN`/`ASN`/`ACS`/`ATN`/`LOG`/`LOG10`/`EXP`/`SQR`/`SQRT`/`PI` | Transcendental, REAL result; angles in degrees or radians via `DEG`/`RAD`. Precision is architecture-specific — see the per-architecture file. Per the BASIC09 Reference Manual, all of these are derived internally via a CORDIC algorithm written specifically for BASIC09, rather than a lookup table or a standard math-library routine. `SQR` and `SQRT` are the same function — `Live` (6809): source typed as `SQR(x+1.)` is stored and `LIST`ed back as `SQRT(x+1.)`, confirming `SQR` is just an accepted abbreviation, not a distinct function. |
+| `SIN`/`COS`/`TAN`/`ASN`/`ACS`/`ATN`/`LOG`/`LOG10`/`EXP`/`SQR`/`SQRT`/`PI` | Transcendental, REAL result; angles in degrees or radians via `DEG`/`RAD`. Precision is architecture-specific — see the per-architecture file. Per the BASIC09 Reference Manual, all of these are derived internally via a CORDIC algorithm written specifically for BASIC09, rather than a lookup table or a standard math-library routine. `SQR` and `SQRT` are the same function — `Live` (NitrOS-9): source typed as `SQR(x+1.)` is stored and `LIST`ed back as `SQRT(x+1.)`, confirming `SQR` is just an accepted abbreviation, not a distinct function. |
 | `ABS`/`SGN`/`SQ`/`MOD` | Basic numeric functions |
-| `RND(0)` / `RND(n>0)` / `RND(n<0)` | Random 0-1 / random 0-n / reseed with `ABS(n)` as the new seed. **`RND(n>0)` returns a REAL in `[0,n)`, NOT necessarily an integer** — `Live`: `RND(5)` returned `1.75959429`, a fractional value. Don't assume `RND(n)` gives a random integer 0..n-1 the way it does in some other BASICs; use `FIX(RND(n))` for that. **Reseeding is fully deterministic** (`Live`): calling `RND(-42)` then three `RND(0)` calls, twice in a row, produces the exact same 3-value sequence both times — useful for reproducible test data. |
+| `RND(0)` / `RND(n>0)` / `RND(n<0)` | Random 0-1 / random 0-n / reseed with `ABS(n)` as the new seed. **`RND(n>0)` returns a REAL in `[0,n)`, NOT necessarily an integer** — `Live` (os9exec): `RND(5)` returned `1.75959429`, a fractional value. Don't assume `RND(n)` gives a random integer 0..n-1 the way it does in some other BASICs; use `FIX(RND(n))` for that. **Reseeding is fully deterministic** (`Live` (os9exec)): calling `RND(-42)` then three `RND(0)` calls, twice in a row, produces the exact same 3-value sequence both times — useful for reproducible test data. |
 | `LEN`/`MID$`/`LEFT$`/`RIGHT$`/`STR$`/`VAL`/`CHR$`/`ASC` | String functions |
-| `DATE$` | Current date/time as `"YY/MM/DD HH:MM:SS"`. **Y2K-class bug on 68k** (`Live`): for years ≥ 2000 the year's tens digit is corrupt (`"<6/07/14"` where `"26/07/14"` was correct — first byte reads ASCII 60 `'<'`, a +10 offset from the un-reduced year value). `Absent` on real 6809 NitrOS-9 — the bug is specific to the 68k BASIC09 runtime's own formatting. Don't trust the 68k year field past 1999. Details: `gotchas.md` |
-| `TRIM$(str$)` | Removes **trailing** spaces only — leading/embedded spaces are untouched, matching both manuals' description of the function. `Live`: `TRIM$("  hi  ")` = `"  hi"` (2 leading spaces survive). |
+| `DATE$` | Current date/time as `"YY/MM/DD HH:MM:SS"`. **Y2K-class bug on 68k** (`Live` (os9exec)): for years ≥ 2000 the year's tens digit is corrupt (`"<6/07/14"` where `"26/07/14"` was correct — first byte reads ASCII 60 `'<'`, a +10 offset from the un-reduced year value). `Absent` on real 6809 NitrOS-9 — the bug is specific to the 68k BASIC09 runtime's own formatting. Don't trust the 68k year field past 1999. Details: `gotchas.md` |
+| `TRIM$(str$)` | Removes **trailing** spaces only — leading/embedded spaces are untouched, matching both manuals' description of the function. `Live` (os9exec): `TRIM$("  hi  ")` = `"  hi"` (2 leading spaces survive). |
 | `PEEK(address)` / `POKE address, value` | Direct memory access — not portable across targets, see `gotchas.md` |
 | `LAND(a,b)`/`LOR(a,b)`/`LXOR(a,b)`/`LNOT(a)` | **Function calls, not infix operators** — see above |
 
@@ -571,7 +573,7 @@ ERROR expr                             ! Generate error with code
 ```
 
 `ON ERROR GOTO` needs an explicit, typed-in line number as its target —
-same requirement as `GOTO`/`GOSUB` (see above). `Live`: a
+same requirement as `GOTO`/`GOSUB` (see above). `Live` (os9exec): a
 subscript-out-of-range error correctly transferred control to the trap
 target and `ERR` correctly held the triggering error code.
 

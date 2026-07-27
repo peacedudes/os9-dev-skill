@@ -346,9 +346,12 @@ designing around deliberately rather than merely tolerating as a safety net
 
 **os9exec scope, if you are testing against it:** record locking is
 implemented in **RBF only** (`file_rbf.c`). Its host-directory file manager
-(`fileaccess.c` — what `/dd`, `h0` and `OS9Hx` normally are) has none of it,
-and `SS_Lock` there returns *success* while doing nothing. The two are
-separate file managers with no shared code. This is a deliberate decision
+(`fileaccess.c` — what `/dd`, `h0` and `OS9Hx` normally are) has none of it.
+An explicit `SS_Lock` on a host *file* does fail honestly with `E$UnkSvc`
+(the default SetStat table applies); only a host *directory* ignores it and
+reports success. What is missing is the **automatic** locking, and that
+absence is silent — nobody asked, so nobody is told. The two are separate
+file managers with no shared code. This is a deliberate decision
 (2026-07-27), not a gap to be filled: a host directory has no counterpart on
 real OS-9, so there is nothing to be faithful to, and a lock could only ever
 be half-true since host tools can change the file behind the emulator. **Test

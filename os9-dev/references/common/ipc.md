@@ -244,14 +244,39 @@ never explained well.
   processes exit — useful for a slow producer/consumer pair (e.g. a
   spooler) that wants that.
 
-One easy trap: only **update-mode** opens ever lock or wait on anything —
-read-only and write-only paths are both invisible to the mechanism. This
-is deliberate, not an oversight: a write-only appender takes *no* lock,
-specifically so two independent processes can log to the same file and
-interleave freely. If either opened for update instead, its first write
-would EOF-lock the file and the other process's next write would block
-until the first one closed — exactly the mutual exclusion this design
-avoids between plain appenders.
+The mode rule is two rules, and conflating them is an easy trap:
+
+- **A read locks only on an update-mode path.** Reading a path opened
+  read-only or execute-only locks nothing, because such a path cannot
+  update the record it read. A read-only path only ever *encounters* a
+  lock and waits on it.
+- **A write locks nothing — except at end of file, in any write mode.**
+  A write landing at the current EOF always gains the EOF lock; that is
+  the sole case where a write locks any part of a file. It is *not*
+  gated on update mode: a plain write-only sequential-output creator
+  gains the EOF lock as soon as it creates the file, which is exactly
+  what makes the spooler case work — the write-only producer holds the
+  ghost, and the read-only consumer sleeps against it.
+
+So two plain appenders to one file do **not** interleave freely; the EOF
+lock is documented as being there precisely to stop two processes
+extending a file at the same time.
+
+> Earlier versions of this file said the opposite — that write-only
+> paths were invisible to the mechanism, so two appenders could
+> interleave. That over-generalized "writes take no lock" by dropping
+> the EOF exception, and it is inconsistent with the spooler design
+> described just above. Corrected 2026-07-26 against four Microware
+> manuals: 6809 *System Programmers Manual* §6.6.1/§6.6.3/§6.6.5, Tandy
+> *Technical Reference* :3799, Tandy *Level Two Development System*
+> :12732, 68k *v2.4 Technical Reference* :6307, and confirmed as
+> intended by the mechanism's designer. Both reimplementations now
+> behave as described: os9exec takes the EOF lock through any
+> write-capable path as of 2026-07-26, and NitrOS-9 always did — stock
+> RBF takes it for write-only producers and creators alike and wakes
+> waiters on every write, measured live 2026-07-27. If you read
+> anywhere that NitrOS-9 gates this on update mode, that describes a
+> patch that was withdrawn, not the shipping module.
 
 Explicit control exists too (`SS_Lock` to lock/release a range by hand,
 `SS_Ticks` to bound how long to wait for a conflicting lock) but is rarely

@@ -340,9 +340,14 @@ designing around deliberately rather than merely tolerating as a safety net
 > is *not* at the end, and dropped at close before the wake. A read-only path
 > still takes nothing and only ever waits — the manual's "reads or writes"
 > means the position, not a licence for a follower to lock the end, which
-> would make the spooler block the assembler. **NitrOS-9 still gates
-> acquisition on update mode** via the `lockmode` patch and has a roadmap work
-> order open to re-cut it.
+> would make the spooler block the assembler. **NitrOS-9 needed no fix here**:
+> stock 6809 RBF takes the EOF lock for a write-only producer and for a
+> write-only creator, and wakes waiters on every write — measured live
+> 2026-07-27 on a conformance suite written from the manuals. An update-mode
+> gate was patched in and then withdrawn, never sent upstream; the mode gate
+> the stock module *does* have is on the read auto-lock, which is correct.
+> NitrOS-9's real remaining RBF defect is a lost update after a parked writer
+> wakes, which is about retrying the conflict walk, not about mode.
 
 **os9exec scope, if you are testing against it:** record locking is
 implemented in **RBF only** (`file_rbf.c`). Its host-directory file manager

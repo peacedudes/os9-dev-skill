@@ -74,6 +74,14 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   pacing. Never point it at the golden master: XRoar edits the image in place.
   A human session is then just `connect` (Ctrl-] detaches and logs out).
   `connect` does not answer the `User name?:` prompt — a human types it.
+- **`tools/coco` is the human front door.** Bare `coco` is idempotent: it
+  connects if a guest is up and boots one first if not, so it can be run any
+  time without checking state. Any arguments are forwarded to
+  `nitros9repl.sh`, so `coco send 'dir'`, `coco stop`, `coco server` all work.
+  It also retires the scripted `chan` session (Escape) before connecting —
+  `start` leaves a client parked on its own channel, and displacing that client
+  rather than logging it out is exactly what strands a login and burns a `/N`
+  device per launch.
 
 - **The prompt-gate doesn't recognize a sub-program's own prompt.** `Live` (NitrOS-9),
   with three: `debug <module>` drops to `DB:`, `help <topic>` to a `Topic:`

@@ -114,7 +114,8 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   is a *guest-side* setting, so rewriting one host-side both hides the real key
   and silently overrides whatever the user set. An allowlist bridge that
   passed only six control bytes killed **Ctrl-A (`dup` — recall last line, and
-  OS-9's entire command history: there are no arrow keys)**, Tab, Ctrl-W
+  OS-9's whole command-history mechanism: the line editor has no cursor
+  movement, so there is nothing for an arrow key to drive)**, Tab, Ctrl-W
   (`psc`) and Ctrl-D (`reprint`), and remapped Ctrl-D to Esc, so the one key
   that redisplays a line instead logged you out. Pass everything through and
   leave remapping to `tmode`.
@@ -125,11 +126,61 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   guest-side fix can only ever honour one of the two — translating DEL→BS in
   the bridge is what keeps *both* the Backspace key and Ctrl-H erasing.
 - **Distinguish a bare Esc from an arrow key by timeout, not by blocking it.**
-  Arrow/function keys arrive as `ESC [ …` / `ESC O …`, so a bridge that
-  forwards Esc immediately spends it as an EOF and drops `[A` into the line.
-  Swallow the whole sequence; emit Esc only after ~50 ms proves nothing
-  follows. Flush a pending Esc on stream EOF too — EOF is *readable*, so it
-  beats the timeout and would otherwise swallow the key as the terminal closes.
+  A modern terminal's arrow/function keys arrive as `ESC [ …` / `ESC O …`, so a
+  bridge that forwards Esc immediately spends it as an EOF and drops `[A` into
+  the line. Consume the whole sequence (translating it — see the CoCo table
+  below); emit Esc only after ~50 ms proves nothing follows. Flush a pending
+  Esc on stream EOF too — EOF is *readable*, so it beats the timeout and would
+  otherwise swallow the key as the terminal closes.
+- **The CoCo HAS arrow keys and F1/F2, and sends them as plain bytes** — never
+  as escape sequences. So a host terminal's `ESC [ …` is an encoding artifact
+  to be *translated back*, not swallowed. Full keyboard table, agreed
+  byte-for-byte by three independent sources — NitrOS-9 `vtio.asm` (the driver
+  this guest runs), the OS-9 Quick Reference 1982, and the Farna 2nd-edition
+  quick reference:
+
+  | Key | normal | shift | ctrl |
+  |---|---|---|---|
+  | UP ARROW | `$0C` | `$1C` | `$13` |
+  | DOWN ARROW | `$0A` | `$1A` | `$12` |
+  | LEFT ARROW | `$08` | `$18` | `$10` |
+  | RIGHT ARROW | `$09` | `$19` | `$11` |
+  | BREAK | `$05` | `$03` | `$1B` |
+  | ENTER | `$0D` | `$0D` | `$0D` |
+  | F1 | `$B1` | `$B3` | `$B5` |
+  | F2 | `$B2` | `$B4` | `$B6` |
+  | CLEAR | `$82` NextWin | `$83` PrevWin | `$84` KbdMouse toggle |
+
+  **LEFT ARROW *is* Ctrl-H and SHIFT-LEFT *is* Ctrl-X** — OS-9's `bsp=08` /
+  `del=18` defaults were chosen to match the keycaps, which is the whole reason
+  those defaults look arbitrary otherwise. Cross-confirmed in Microware's own
+  BASIC09 Reference Manual Rev G CoCo control-character table, which also gives
+  `<BREAK>`=Ctrl-E, `<SHIFT><BREAK>`=Ctrl-C, `CONTROL <BREAK>`=Escape/EOF,
+  Ctrl-A=redisplay previous line, Ctrl-0=shift lock. Never write "the CoCo has
+  no arrow keys": it has four, and OS-9 config utilities navigate with them
+  (`CTRL-CLEAR` toggles a "keyboard mouse" driven by the arrows plus F1/F2 as
+  fire buttons). The accurate narrower statement is that OS-9's *line editor*
+  has no cursor movement or arrow-driven history — Ctrl-A is the history.
+  `Live` (NitrOS-9, 2026-07-29): all of these survive a DriveWire `/N` channel
+  intact, F1/F2's high-bit `$B1`–`$B6` included, so the channel is 8-bit clean.
+  Only the codes SCF acts on *do* anything by themselves (left arrow erases,
+  shift-left kills the line); the rest arrive as data, which is what a guest
+  program expecting CoCo keys wants. They do **not** drive windows or the
+  keyboard mouse over `/N` — that is console-driver behaviour, and `/N` is not
+  the console.
+- **Do not confuse that with the display-output table.** The Level 2 manual's
+  CoCo2-compatibility list (`$06` cursor right, `$08` cursor left, `$09` cursor
+  up, `$0A` cursor down, `$0C` clear screen) is what the driver does with bytes
+  it *receives*. The numbers overlap the keyboard table but do not match it —
+  `$09` is cursor-up on output and RIGHT ARROW on input.
+- **The first delete-line of a freshly-connected session is swallowed.** `Live`
+  (NitrOS-9, 2026-07-29), reproduced across fresh boots in both orders: the
+  first `$18` after connecting produces no echo and does not clear the line;
+  every subsequent one works and echoes BS-space-BS per character. Independent
+  of how the byte was produced — a literal Ctrl-X and a translated Shift-Left
+  behave identically — so it is a session/SCF quirk, not a bridge bug. Budget
+  one throwaway Ctrl-X after connecting, and do not diagnose a key-mapping
+  change on the strength of its first delete-line.
 - **`WHAT?` from the shell after typing punctuation is not lost characters.**
   `Live` (NitrOS-9): `~!@#$%^&*()_+\`` round-trips through the channel
   byte-perfect (confirmed by `tee`+`dump` *and* by the guest's own echo), and

@@ -130,7 +130,7 @@ Default assignments — every one remappable per-device via `tmode`/`xmode`:
 
 | Key | Function |
 |---|---|
-| Ctrl-A | Recall previous input line, unexecuted, cursor at end — backspace and retype to edit, Return to submit. (This is the history mechanism; there are no arrow keys) |
+| Ctrl-A | Recall previous input line, unexecuted, cursor at end — backspace and retype to edit, Return to submit. (This is the whole history mechanism: the line editor has no cursor movement, so there is nothing for an arrow key to drive. Do **not** read that as "the terminal has no arrow keys" — a CoCo has four, and its LEFT ARROW *is* Ctrl-H; see `6809/using-nitros9-repl.md`) |
 | Ctrl-D | Redisplay the line being typed (hardcopy-terminal aid) |
 | Ctrl-H / Backspace | Erase previous character |
 | Ctrl-X | Discard the whole line being typed |

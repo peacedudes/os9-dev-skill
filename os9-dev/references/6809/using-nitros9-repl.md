@@ -65,6 +65,16 @@ keystrokes to the XRoar application.
 Same gated-send / raw-key-fallback pattern as the 68k side, but the transport
 is TCP to the DriveWire-exposed channel rather than a PTY.
 
+- **Zero-config launch:** `tools/nitros9repl.sh start` with no environment
+  boots a private scratch clone it creates itself
+  (`~/.cache/nitros9repl/eou-clone`, APFS `cp -c` of the golden master, reused
+  across runs and reboots — delete the directory to reset the disk), at full
+  speed. `NITROS9REPL_DISKDIR` boots a specific directory instead (test
+  harnesses do); `-ratelimit` in `NITROS9REPL_EXTRA_XROAR` restores real-time
+  pacing. Never point it at the golden master: XRoar edits the image in place.
+  A human session is then just `connect` (Ctrl-] detaches and logs out).
+  `connect` does not answer the `User name?:` prompt — a human types it.
+
 - **The prompt-gate doesn't recognize a sub-program's own prompt.** `Live` (NitrOS-9),
   with three: `debug <module>` drops to `DB:`, `help <topic>` to a `Topic:`
   follow-up, BASIC09's `e <name>` to `E:`. The gated send sits at timeout in
@@ -89,6 +99,43 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
 - **Each connection is a separate session**: disconnecting ends that shell,
   reconnecting forks a new one (new pid, cwd back at the root), nothing is
   replayed. Don't rely on a session surviving a dropped client.
+- **End every session by logging out (Escape), never by just closing the
+  socket.** `Live` (NitrOS-9, 2026-07-28): the guest is never told its client
+  vanished, so the abandoned login parks on its `/N` channel *forever* — still
+  dead 45s later; only a reboot clears it — and each leak costs one of the few
+  channels until inetd answers every new connection with `tcp kill`. Symptom:
+  TCP connects fine, **no banner ever arrives**. A session ended with Escape
+  (SCF EOF → shell exits) is retired properly and the channel recycles
+  immediately — proven by consecutive join/logout cycles reusing one channel.
+  `tools/nitros9repl.sh connect` sends the Escapes itself on Ctrl-] detach.
+- **A terminal bridge must not remap the codes SCF already owns.** `Live`
+  (NitrOS-9, 2026-07-29). `tmode` on an inetd channel reports `bsp=08 del=18
+  eor=0D eof=1B reprint=04 dup=01 psc=17 abort=03 quit=05` — every control key
+  is a *guest-side* setting, so rewriting one host-side both hides the real key
+  and silently overrides whatever the user set. An allowlist bridge that
+  passed only six control bytes killed **Ctrl-A (`dup` — recall last line, and
+  OS-9's entire command history: there are no arrow keys)**, Tab, Ctrl-W
+  (`psc`) and Ctrl-D (`reprint`), and remapped Ctrl-D to Esc, so the one key
+  that redisplays a line instead logged you out. Pass everything through and
+  leave remapping to `tmode`.
+- **The Backspace key is the one code a bridge legitimately translates.** It
+  sends DEL (`$7F`); SCF wants BS (`$08`). Verified by `tee`+`dump`: at the
+  default `bsp=08`, Ctrl-H erases and DEL lands in the line as a literal `7F`;
+  after `tmode bsp=7F` that inverts exactly. `bsp` is a single byte, so the
+  guest-side fix can only ever honour one of the two — translating DEL→BS in
+  the bridge is what keeps *both* the Backspace key and Ctrl-H erasing.
+- **Distinguish a bare Esc from an arrow key by timeout, not by blocking it.**
+  Arrow/function keys arrive as `ESC [ …` / `ESC O …`, so a bridge that
+  forwards Esc immediately spends it as an EOF and drops `[A` into the line.
+  Swallow the whole sequence; emit Esc only after ~50 ms proves nothing
+  follows. Flush a pending Esc on stream EOF too — EOF is *readable*, so it
+  beats the timeout and would otherwise swallow the key as the terminal closes.
+- **`WHAT?` from the shell after typing punctuation is not lost characters.**
+  `Live` (NitrOS-9): `~!@#$%^&*()_+\`` round-trips through the channel
+  byte-perfect (confirmed by `tee`+`dump` *and* by the guest's own echo), and
+  the shell still rejects the line — `!` is its pipe, `&` backgrounds, `#` is
+  the memory modifier, `*` globs. Check the transport with `dump` before
+  suspecting the harness of eating keys.
 - **The listen port does not exist until the guest has booted far enough to
   run inetd**, so a client started with the emulator is refused; retry.
 - **A channel with nothing joined to it parses guest output as `tcp`/`dw`
@@ -182,6 +229,21 @@ host file to touch. Two routes:
 **BASIC09's own editor**, usually least work for a short program: raw-key `e
 <name>` Enter drops into `E:` (leading space means insert, `q` returns to
 `B:`) — same editor and behavior as 68k.
+
+> **Currently broken on the EOU disk** (`Live` (NitrOS-9), 2026-07-28): `E`, a
+> bare `E` and `LOAD` all fail `Error #248 - Media Full`, and `DIR` inside
+> BASIC09 reports `0 free` however much memory the process is given
+> (`#20k`/`#32k` raise what `mem` reports and what `procs` shows, and change
+> nothing — **`#20k` does NOT work around it**). The message is misleading
+> twice over: the BASIC09 Reference Manual Rev G reports workspace exhaustion
+> as **#13** or **#32**, never 248; and 248 (`E$Full`) is raised only by RBF,
+> yet the failing command does **no disk I/O at all** — proven by putting the
+> data directory on a DriveWire-served disk and watching the protocol log.
+> Eliminated by control: XRoar version (1.10/1.11/1.12.1 all fail), disk
+> image lineage, `basic09` module bytes, host RAM, terminal path, user
+> identity, and `inetd`. Root cause open. While this holds, PACK is
+> unavailable too, so cross-assemble/inject host-side and drive packed code
+> with `runb`.
 
 **An OS-9-native heredoc**, better once per-line sends become the bottleneck:
 

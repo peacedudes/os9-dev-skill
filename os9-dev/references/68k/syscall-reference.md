@@ -224,7 +224,8 @@ of that line after the number (continuation lines begin with a space); with
 `Manual`.
 
 **os9exec ignores `d0.w` entirely** and always prints its own built-in
-`Error #nnn:nnn (E$NAME) description` line — so it emits a description where
+`Error #nnn:nnn (E_NAME) description` line — note the `E_` spelling it prints,
+against the `E$` the DEFS declare — so it emits a description where
 spec emits a bare number, and silently ignores a supplied message file.
 `Source, Flag`. It also writes straight to the emulator console rather than
 through `I$Write`, bypassing per-process I/O redirection — the same channel a

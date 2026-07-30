@@ -561,6 +561,48 @@ def check_enumeration_drift(enumerations):
     return findings
 
 
+_ERROR_SYMBOL = re.compile(r"\bE[$_]([A-Za-z][A-Za-z0-9]*)\b")
+_ERROR_TABLE = "error-codes.md"
+# `E$NAME` and friends are format metavariables in prose about the printed
+# shape of an error line, not claims that such an error exists.
+_ERROR_METAVARS = {"name", "nnn", "xxx"}
+
+
+def check_error_symbols(files):
+    """Flag an `E$Foo`/`E_Foo` symbol that `error-codes.md` never defines.
+
+    An invented error name is the most quotable kind of fabrication: it looks
+    like a fact, a reader will grep for it, and nothing in the corpus will
+    contradict it. `error-codes.md` is the single authority, so any symbol named
+    anywhere else has to appear there. Matching is case-insensitive and blind to
+    the sigil, because the runtime prints `E_PNNF` where the DEFS declare
+    `E$PNNF` and both spellings are legitimately quoted.
+    """
+    table = next(
+        (t for f, t in files if os.path.basename(f) == _ERROR_TABLE), None
+    )
+    if table is None:
+        return []
+    known = {m.lower() for m in _ERROR_SYMBOL.findall(table)} | _ERROR_METAVARS
+    findings = []
+    for filename, text in files:
+        if os.path.basename(filename) == _ERROR_TABLE:
+            continue
+        for lineno, line in enumerate(text.splitlines(), start=1):
+            for symbol in _ERROR_SYMBOL.findall(line):
+                if symbol.lower() in known:
+                    continue
+                findings.append(
+                    Finding(
+                        "error-symbol", None,
+                        f"`E${symbol}` is not defined in {_ERROR_TABLE}; either it is "
+                        "misspelled or the error does not exist",
+                        [(filename, lineno)],
+                    )
+                )
+    return findings
+
+
 _FLAG_ABOUT = re.compile(r"tagged\s+`?Flag`?", re.I)
 
 
@@ -1110,6 +1152,7 @@ def run(roots, register_text=None):
         inventory.extend(scan_open_flags(text, display, known))
     findings = check_presence_contradiction(mentions) + check_shared_facts(facts) + findings
     findings += check_enumeration_drift(enumerations)
+    findings += check_error_symbols(doc_texts)
     findings += check_cross_references(doc_texts, known_basenames)
     findings += check_qualified_references(
         doc_texts, {os.path.relpath(p) for p in files + adjacent}

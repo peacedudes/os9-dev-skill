@@ -980,5 +980,35 @@ class TestOrphanedMemoryLinks(unittest.TestCase):
         self.assertEqual(chk.check_orphaned_memory_links(files), [])
 
 
+TABLE = "| 000:216 | E$PNNF | Path Name Not Found | missing path |\n"
+
+
+class TestErrorSymbols(unittest.TestCase):
+    def _check(self, others):
+        return chk.check_error_symbols([("error-codes.md", TABLE)] + others)
+
+    def test_flags_a_symbol_the_table_never_defines(self):
+        findings = self._check([("a.md", "Fails with `E$NOSUCH` on entry.\n")])
+        self.assertEqual(len(findings), 1)
+        self.assertIn("E$NOSUCH", findings[0].message)
+        self.assertEqual(findings[0].locations, [("a.md", 1)])
+
+    def test_a_defined_symbol_is_clean(self):
+        self.assertEqual(self._check([("a.md", "Fails with `E$PNNF`.\n")]), [])
+
+    def test_the_printed_underscore_spelling_resolves_to_the_table(self):
+        """The runtime prints `E_PNNF` where the DEFS declare `E$PNNF`."""
+        self.assertEqual(self._check([("a.md", "Printed as `E_PNNF`.\n")]), [])
+
+    def test_format_metavariables_are_not_error_claims(self):
+        self.assertEqual(self._check([("a.md", "prints `(E_NAME) description`\n")]), [])
+
+    def test_the_table_does_not_audit_itself(self):
+        self.assertEqual(chk.check_error_symbols([("error-codes.md", TABLE)]), [])
+
+    def test_no_table_means_no_authority_to_judge_against(self):
+        self.assertEqual(chk.check_error_symbols([("a.md", "`E$NOSUCH`\n")]), [])
+
+
 if __name__ == "__main__":
     unittest.main()

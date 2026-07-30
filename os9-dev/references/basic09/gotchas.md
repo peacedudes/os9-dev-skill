@@ -120,8 +120,8 @@ Full grammar and the live error codes: `basic09-language.md`.
   from the statement separator. `Live` (NitrOS-9); not tested on 68k. Easy to
   miss until it shows up in something meant to be exact text.
 - **Real Y2K-class bug in 68k's `DATE$`.** Any year ≥ 2000 prints a corrupt
-  leading year digit (`"<6/07/14"` where `"26/07/14"` was correct). `Live` (NitrOS-9) on
-  6809 confirms it is **absent** there, so it's the 68k runtime's own
+  leading year digit (`"<6/07/14"` where `"26/07/14"` was correct) — `Live`
+  (os9exec); `Absent` on real 6809 NitrOS-9, so it's the 68k runtime's own
   formatting, not shared logic. Don't trust the 68k year field.
 - **BOOLEAN prints mixed case, contrary to the manual.** `PRINT USING`'s `B`
   format is documented by Microware as printing `"TRUE"`/`"FALSE"`, but every

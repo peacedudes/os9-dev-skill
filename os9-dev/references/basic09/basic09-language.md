@@ -75,8 +75,8 @@ END
 Enter via `e grades` at the `B:` prompt, type the lines, then run with
 `RUN grades(5)` (5 = how many scores to prompt for). `count` arrives by
 reference (the default) — a plain variable name in the PARAM/RUN slot;
-note that `total` and `avg` are never reassigned outside this procedure,
-so by-value-forcing tricks (`x+0`) aren't needed here. This source is
+`total` and `avg` are never reassigned outside this procedure, so
+by-value-forcing tricks (`x+0`) aren't needed here. This source is
 architecture-neutral and doesn't stress either platform's numeric ranges.
 The `PRINT USING` line uses the real directive-letter format (see below)
 and its literal-string-plus-`R`-format combination is independently

@@ -45,7 +45,7 @@ regardless of handler state.
 **Delivery is queued, not dropped:** a signal sent to a process that already
 has one pending is *not* discarded — signals queue and deliver in send
 order. Queued delivery costs roughly **10x** more than unqueued delivery, so
-a hot path that signals heavily should be aware it's paying for the queue.
+a hot path that signals heavily pays that multiple on every queued signal.
 The kernel also exposes an undocumented convenience here: on entry to an
 intercept routine, **d0 holds the number of currently-queued signals**
 (including the one just delivered) — a value of 1 means nothing else is
@@ -100,7 +100,7 @@ Two distinct flavors, not two configurations of the same thing:
 | System-state | Runs a subroutine at kernel priority | Cannot sleep, wait, or fork; stack is biased into the system process descriptor (~1K of free space there) |
 
 **Auto-cleanup gotcha:** the kernel auto-deletes a process's pending alarms
-when that process exits — convenient in general, but wrong for a
+when that process exits — usually what you want, but wrong for a
 *persistent* system-state alarm meant to outlive the process that set it
 (e.g. a disk-motor shutdown timer). Workaround: make the `F$Alarm` call as
 the **system process** itself, not the process that wants the timer.

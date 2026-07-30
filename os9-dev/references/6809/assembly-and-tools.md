@@ -243,7 +243,7 @@ anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
   longer label without complaint and then treats any two that share their
   first 8 characters as the same symbol, so `setupfail` and `setupfail2`
   collide and the second definition fails with `redefined name` — an error
-  that points at a line whose label looks obviously distinct. `Source`
+  that points at a line whose label is distinct past character 8. `Source`
   (NitrOS-9 `level1/cmds/asm.asm`, whose own comments read "Arbitrary-length
   labels allowed. (first 8 chars must be unique)" and "First 8 characters of
   label MUST be unique", with `max symbol length` set to 8), and `Live` (NitrOS-9) — hit while building the 6809 conformance suite.

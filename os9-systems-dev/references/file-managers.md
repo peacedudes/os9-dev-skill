@@ -161,6 +161,12 @@ job, not RBF's.
 Organization". That manual carries one field this table omits: a 2-byte
 `DD_RES` reserved slot at `$13`, between `DD_SPT` and `DD_BT`.
 
+Every other field below abuts its neighbour exactly, with one exception worth
+knowing if you are hand-authoring an LSN 0: **`$5F` is unaccounted for** —
+`DD_OPT` ends at `$5E` and `DD_SYNC` starts at `$60`. Whether that byte is a
+second reserved slot or a transcription gap is not settled here; treat it as
+reserved and write zero.
+
 | Field | Offset | Size | Contents |
 |---|---|---|---|
 | `DD_TOT` | $00 | 3 | Total sectors on media |
@@ -442,7 +448,8 @@ device is a disk (RBF), a terminal (SCF), a tape (SBF), or a pipe (PIPEMAN) —
 the *file manager* is what differs per device class, not the
 application-facing system call. PIPEMAN needs no physical device at all: a
 pipe's path descriptor uses a null driver backed by a plain FIFO memory
-buffer (default 90 bytes). When writing a new file manager, the 13-entry
+buffer — 90 bytes by default per the manuals, though os9exec ships 4096 (see
+the `os9-dev` skill's `common/ipc.md`). When writing a new file manager, the 13-entry
 table above is the complete contract the kernel expects; how "Seek" or "Read"
 map onto your protocol is entirely up to the implementation.
 

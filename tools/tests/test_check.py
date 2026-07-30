@@ -283,6 +283,62 @@ class TestBlanketTags(unittest.TestCase):
 
 
 # --------------------------------------------------------------------------
+# replicated enumerations (code -> size drift across files)
+# --------------------------------------------------------------------------
+# Two files' copies of the screen-type table. The real defect: type 1 as 16K in
+# one file and 2K in two others, the 16K impossible beside 80-column text at 4K.
+TABLE_A = (
+    "| `1` | 40-column text | 2K |\n"
+    "| `2` | 80-column text | 4K |\n"
+    "| `5` | 640x192 | 16K |\n"
+    "| `6` | 320x192 | 16K |\n"
+)
+TABLE_B_OK = "types: `1` = 40-col text (2K), `2` = 80-col text (4K), `5` = 640x192 (16K), `6` = 320x192 (16K)\n"
+TABLE_B_BAD = "types: `1` = 40-col text (16K), `2` = 80-col text (4K), `5` = 640x192 (16K), `6` = 320x192 (16K)\n"
+
+
+class TestEnumerationDrift(unittest.TestCase):
+    def _enums(self, pairs):
+        out = []
+        for name, text in pairs:
+            out.extend(chk.extract_enumerations(text, name))
+        return out
+
+    def test_flags_the_historical_screen_type_conflict(self):
+        findings = chk.check_enumeration_drift(
+            self._enums([("a.md", TABLE_A), ("b.md", TABLE_B_BAD)])
+        )
+        self.assertEqual(len(findings), 1)
+        self.assertIn("code 1", findings[0].message)
+        self.assertEqual({loc[0] for loc in findings[0].locations}, {"a.md", "b.md"})
+
+    def test_agreeing_copies_are_clean(self):
+        self.assertEqual(
+            chk.check_enumeration_drift(self._enums([("a.md", TABLE_A), ("b.md", TABLE_B_OK)])), []
+        )
+
+    def test_same_file_is_never_compared_with_itself(self):
+        self.assertEqual(
+            chk.check_enumeration_drift(self._enums([("a.md", TABLE_A + TABLE_B_BAD)])), []
+        )
+
+    def test_too_few_shared_codes_is_not_the_same_table(self):
+        """A bare integer is a weak key, so two sizes must overlap on several."""
+        small = "| `1` | something | 16K |\n| `9` | other | 8K |\n| `4` | more | 1K |\n"
+        self.assertEqual(
+            chk.check_enumeration_drift(self._enums([("a.md", TABLE_A), ("b.md", small)])), []
+        )
+
+    def test_enumeration_needs_a_size_to_be_extracted(self):
+        sizeless = "| `1` | alpha |\n| `2` | beta |\n| `5` | gamma |\n"
+        self.assertEqual(chk.extract_enumerations(sizeless, "a.md"), [])
+
+    def test_codes_above_255_are_not_codes(self):
+        big = "| `1000` | x | 2K |\n| `1001` | y | 4K |\n| `1002` | z | 8K |\n"
+        self.assertEqual(chk.extract_enumerations(big, "a.md"), [])
+
+
+# --------------------------------------------------------------------------
 # dump blocks vs their decode tables
 # --------------------------------------------------------------------------
 DUMP = "```\n00000000 87CD 012E 000D 1181 0700 1400 C945 7846  .M..IExF\n```\n"

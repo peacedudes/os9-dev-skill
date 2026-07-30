@@ -14,6 +14,7 @@ you can observe an *absence* ("`Live` -- FAILS, unimplemented"). So presence is
 read from specific wording, not from the tag alone.
 """
 
+import itertools
 import os
 import re
 import sys
@@ -476,6 +477,87 @@ def check_dump_claims(text, filename, known_tags):
                     [(filename, lineno)],
                 )
             )
+    return findings
+
+
+# --- replicated enumerations ------------------------------------------------
+# `check_shared_facts` keys on `SYMBOL $HEX`, which leaves the corpus's other
+# drift shape uncovered: a small CODE mapped to a size, restated in several
+# files. Screen types drifted that way (window type 1 documented as 2K in two
+# files and 16K in a third, the 16K arithmetically impossible beside its own
+# 80-column neighbour at 4K); baud codes did too.
+#
+# Keying on the code alone is hopeless -- a bare integer matches column counts,
+# "OS-9/68K", and any table cell against any other; a first attempt was ~100%
+# false positives. So match STRUCTURE before comparing values: collect each
+# file's code->size enumerations, treat two enumerations in different files as
+# the same table only when they share several size-bearing codes, and only then
+# compare. The shared-key gate is what makes a loose code pattern safe.
+_ENUM_ROW = re.compile(r"^\s*\|\s*`?(?P<code>\d{1,3})`?\s*\|(?P<payload>.*)$")
+_ENUM_PROSE = re.compile(r"`?\b(?P<code>\d{1,3})`?\s*(?:=\s*|\()(?P<payload>[^,;)\n]{3,60}[^)\n]{0,40})")
+_ENUM_SIZE = re.compile(r"(?P<n>\d{1,5})\s*K(?:B)?\b", re.I)
+_ENUM_GAP = 3          # lines; a wider gap starts a new enumeration
+_ENUM_MIN_KEYS = 3     # an enumeration smaller than this is not a table
+_ENUM_MIN_SHARED = 3   # shared size-bearing codes needed to call it the same table
+
+
+def _enum_bindings(lines):
+    """(lineno, code, payload) for each code->payload binding, table row or prose."""
+    out = []
+    for lineno, line in enumerate(lines, start=1):
+        row = _ENUM_ROW.match(line)
+        if row:
+            out.append((lineno, int(row.group("code")), row.group("payload")))
+            continue
+        for m in _ENUM_PROSE.finditer(line):
+            out.append((lineno, int(m.group("code")), m.group("payload")))
+    return [b for b in out if b[1] <= 255]
+
+
+def extract_enumerations(text, filename):
+    """Return (filename, lineno, codes, code->sizes) per size-bearing enumeration."""
+    groups, current = [], []
+    for binding in _enum_bindings(text.splitlines()):
+        if current and binding[0] - current[-1][0] > _ENUM_GAP:
+            groups.append(current)
+            current = []
+        current.append(binding)
+    if current:
+        groups.append(current)
+
+    found = []
+    for group in groups:
+        codes = {code for _, code, _ in group}
+        if len(codes) < _ENUM_MIN_KEYS:
+            continue
+        sizes = {}
+        for _, code, payload in group:
+            for m in _ENUM_SIZE.finditer(payload):
+                sizes.setdefault(code, set()).add(m.group("n") + "K")
+        if any(sizes.values()):
+            found.append((filename, group[0][0], codes, sizes))
+    return found
+
+
+def check_enumeration_drift(enumerations):
+    """Flag one code given two different sizes by two files' copies of one table."""
+    findings = []
+    for (f1, l1, k1, s1), (f2, l2, k2, s2) in itertools.combinations(enumerations, 2):
+        if f1 == f2:
+            continue
+        shared = {c for c in (k1 & k2) if s1.get(c) and s2.get(c)}
+        if len(shared) < _ENUM_MIN_SHARED:
+            continue
+        for code in sorted(shared):
+            if s1[code] != s2[code]:
+                findings.append(
+                    Finding(
+                        "enum-drift", None,
+                        f"code {code} is {'/'.join(sorted(s1[code]))} in one copy of this "
+                        f"table and {'/'.join(sorted(s2[code]))} in another",
+                        [(f1, l1), (f2, l2)],
+                    )
+                )
     return findings
 
 
@@ -1004,6 +1086,7 @@ def run(roots, register_text=None):
     adjacent = _index_adjacent_files(roots)
     known_basenames = {os.path.basename(p) for p in files + adjacent}
     mentions, facts, findings, inventory, doc_texts = [], [], [], [], []
+    enumerations = []
     # SKILL.md/SOURCES.md are read for boundary and cross-reference purposes but
     # never scanned as claim sources -- they are entry points and manifests, and
     # the boundary check is precisely the one that has to see them (the first
@@ -1023,8 +1106,10 @@ def run(roots, register_text=None):
         findings.extend(check_tags_in_code(text, display, known))
         findings.extend(check_blanket_tags(text, display, known))
         findings.extend(check_dump_claims(text, display, known))
+        enumerations.extend(extract_enumerations(text, display))
         inventory.extend(scan_open_flags(text, display, known))
     findings = check_presence_contradiction(mentions) + check_shared_facts(facts) + findings
+    findings += check_enumeration_drift(enumerations)
     findings += check_cross_references(doc_texts, known_basenames)
     findings += check_qualified_references(
         doc_texts, {os.path.relpath(p) for p in files + adjacent}

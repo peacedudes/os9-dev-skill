@@ -141,18 +141,26 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   cross-referenced against a `Live` (NitrOS-9) table: this manual's own Table 9.6
   (memory-requirement listing) matches `wcreate`'s `-s=<type>` table in
   `utility-usage.md` (`Live` (NitrOS-9) there) exactly on byte counts and
-  resolution/color combinations: `1` = 40-column text (2K), `2` =
-  80-column text (4K), `5` = 640×192 2-color graphics / 80-column (16K),
-  **`Live` (NitrOS-9) — column counts confirmed** by what `wcreate`
+  resolution/color combinations:
+
+  | Code | Screen | Columns | Memory |
+  |---|---|---|---|
+  | `1` | 40-column text | 40 | 2K |
+  | `2` | 80-column text | 80 | 4K |
+  | `5` | 640×192, 2 colours | 80 | 16K |
+  | `6` | 320×192, 4 colours | 40 | 16K |
+  | `7` | 640×192, 4 colours | 80 | 32K |
+  | `8` | 320×192, 16 colours | 40 | 32K |
+
+  **Column counts confirmed** — `Live` (NitrOS-9), from what `wcreate`
   accepts: `-s=6` and `-s=8` take 40 columns but reject 80 with
   `Error #189 Illegal Coordinates`, while `-s=7` takes 80. Type 5's screen
   also measured **640 pixels wide** directly (a 40-column window covered
   exactly its left half). Practical consequence: a `-s=8 0 0 80 24` request
-  is 80 columns on a 40-column screen — error 189 there is correct and means
-  bad geometry, not memory exhaustion.
-  `6` = 320×192 4-color graphics / 40-column (16K), `7` = 640×192
-  4-color graphics / 80-column (32K), `8` = 320×192 16-color graphics /
-  40-column (32K). GFX2's own use of the codes hasn't itself been
+  asks for 80 columns on a 40-column screen — error 189 there is correct and
+  means bad geometry, not memory exhaustion.
+
+  GFX2's own use of the codes hasn't itself been
   independently confirmed `Live` (NitrOS-9) — only `wcreate`'s has. Two additional special
   values exist only for `DWSET`'s `format` (not `wcreate`'s `-s=<type>`,
   which always creates a new window and has no "current screen" concept):

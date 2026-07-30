@@ -245,6 +245,13 @@ Multiple sources compile and link together: `cc prog1.c prog2.c prog3.c`
 
 ## Reference: Compiler Flags
 
+**Letters are from the 1983 6809 manual; the punctuation observed on 68k is
+`=`.** The `Live` (os9exec) invocations elsewhere in this skill use
+`-f=<path>` and `-l=<path>` — lowercase, with an equals sign — so treat the
+bare `-F<name>`/`-M<n>` forms below as the manual's notation, not a
+verified 68k spelling. Confirm the exact form with `cc -?` (and `l68 -?`)
+before scripting one.
+
 | Flag | Effect |
 |---|---|
 | `-A` | Skip assembler step; output remains as assembly code (.a files) |

@@ -58,6 +58,10 @@ Plain joystick (non-window systems): X/Y each 0-63, fire button `$FF`=pressed / 
 
 ## Sound
 
+**`Hearsay` throughout this section** — no manual documents CoCo/Dragon sound;
+every address and bit layout below comes from retrocomputing web sources (see
+the Sources footer). Weakest material in this file.
+
 6-bit DAC on the same PIA chip pair as keyboard/joystick/cassette I/O, at `$FF20-$FF23` (`Manual, Flag` on naming it "PIA0" vs "PIA1"; the address range is unambiguous). `$FF20` bits 7-2 = DAC output value (0-63); `$FF23` bit 3 enables audio through an analog mux shared with cassette-input and cartridge `FSND` — only one of the three can be routed to the output at a time. A separate on/off-only bit (`PB1`) drives square-wave beeps without touching the DAC/mux. Same hardware on CoCo 3 and Dragon, no dedicated sound chip; CoCo 3's GIME adds programmable timers at `$FF92-$FF95` for more precisely-timed DAC updates. An optional "Speech/Sound Pak" cartridge (TMS7040, AY-3-8913, SP0256-AL2) existed as separate add-on hardware — register layout not covered by any source consulted here.
 
 **No OS-9 sound driver/file-manager class exists** — unlike SCF/RBF, there's no audio-specific I/O category. A program hits `$FF20`/`$FF23` directly, same as BASIC, but must not disable interrupts to do it (safe for a single-tasking BASIC program, not for an OS-9 process sharing the CPU). `SOUNDRV2` (archived as `SOUNDRV2.LZH`) is a known freeware utility built around exactly this multitasking-safe direct-I/O approach — confirms the convention exists; its source wasn't read, so no specific register sequence beyond the above is attested from it.
@@ -219,12 +223,20 @@ timed the injected keystrokes are.
 module is present, `setime` (with no arguments) prints `>> No Clock module found
 <<` then repeatedly prompts `Time ?` expecting an answer in
 `yyyy/mm/dd hh:mm:ss` format (4-digit year, space between date and time,
-no comma). This is much less strict than the 68k side's own `setime`,
-which is described elsewhere in this skill as picky about its accepted
-formats — worth a live test to confirm whether an `a`/`p` AM/PM suffix or
-24-hour military time is also accepted here, since neither has been
-verified yet.
+no comma). Whether an `a`/`p` AM/PM suffix or 24-hour military time is also
+accepted here is unverified. The non-interactive argument form is more
+forgiving — it takes space, colon, semicolon or slash delimiters, freely
+mixed (`6809/utility-usage.md`).
 
 ---
 
-**Sources:** Radio Shack/Tandy Color Computer OS-9 Level I manual (1983), OS-9 Operating System Users Guide (CoCo/Dragon 64), OS-9 Technical Reference (Tandy), OS-9 Quick Reference for the Tandy Color Computer (FARNA Systems, 1992). **Sound section additionally sourced from web research** (no primary-manual sound documentation was available): CoCopedia hardware/audio pages, 6809.org.uk's Dragon hardware reference, Chris Lomont's "Color Computer 1/2/3 Hardware Programming," cococommunity.net's GIME chip reference, and community references to the `SOUNDRV2` OS-9 utility archive — hardware facts (addresses, bit layouts) rather than manual prose; `Manual`, cross-referenced across multiple independent hobbyist/retrocomputing sources.
+**Sources:** Radio Shack/Tandy Color Computer OS-9 Level I manual (1983), OS-9 Operating System Users Guide (CoCo/Dragon 64), OS-9 Technical Reference (Tandy), OS-9 Quick Reference for the Tandy Color Computer (FARNA Systems, 1992). **The Sound section rests on no manual at all.** No primary-manual sound
+documentation was available, so it is drawn from retrocomputing web sources:
+CoCopedia's hardware/audio pages, 6809.org.uk's Dragon hardware reference,
+Chris Lomont's "Color Computer 1/2/3 Hardware Programming," cococommunity.net's
+GIME chip reference, and community references to the `SOUNDRV2` OS-9 utility
+archive. These are hardware facts (addresses, bit layouts) cross-referenced
+across several independent sources, but by this skill's own legend that is
+**`Hearsay`**, not `Manual` — neither manual-derived nor run. Treat the whole
+section as the weakest material in this file and confirm against hardware
+before depending on it.

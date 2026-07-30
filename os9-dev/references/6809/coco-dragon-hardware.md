@@ -110,8 +110,8 @@ A full CoCo 3 + OS-9 Level 2 + windowing setup needs at least 512K of RAM. Error
 ## Keyboard Quirks
 
 - CoCo 1/2 have no separate Ctrl key — **CLEAR acts as Ctrl**.
-- **Ctrl+0** toggles shift-lock state (CoCo-specific; not part of the general control-key table in `unix-differences.md`).
-- Otherwise the general OS-9 shell control-key behavior applies unmodified (Ctrl-E abort, Ctrl-C interrupt-to-background, etc.) — see `unix-differences.md` Tier 1.
+- **Ctrl+0** toggles shift-lock state — CoCo-specific, absent from the general control-key table.
+- Every other shell control key behaves unmodified (Ctrl-E abort, Ctrl-C interrupt-to-background, …) — `unix-differences.md` Tier 1.
 
 ## OS9Boot Module Differences
 

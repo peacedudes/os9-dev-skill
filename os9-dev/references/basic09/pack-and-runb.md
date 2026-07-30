@@ -165,7 +165,7 @@ This banner + `Error #000:216 (E_PNNF)` has several distinct causes:
 1. **First `LOAD`/`RUN` touching numeric variables → the `math` trap
    module (TRAP #15) isn't reachable.** Fix: `load math` (put it in the
    startup file); the lazy-linking mechanism is in
-   `basic09-per-target.md`. **`Live`** (os9exec): `load`'s `-s` flag silently fails
+   `basic09-per-target.md`. `Live` (os9exec): `load`'s `-s` flag silently fails
    to make `cio`/`math` resident — `load -s cio csl math` in `/h0/startup`
    left only `csl` in `mdir` after a fresh boot, and `load -s math` alone
    fails the same way, while a plain `load math` succeeds every time.

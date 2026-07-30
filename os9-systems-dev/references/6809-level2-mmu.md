@@ -1,6 +1,6 @@
 # OS-9/6809 Level 2 Memory Management (DAT/MMU)
 
-**`Manual`** — MMU/DAT register internals sit below what a shell session
+`Manual` — MMU/DAT register internals sit below what a shell session
 can observe, and the boot-ROM material below what any emulator exercises,
 so `Live` verification isn't reachable here. Cross-referenced across the
 Level 2 Operating System Manual and the Level 2 System Designer's Guide,

@@ -172,7 +172,7 @@ establish one-directional flow between them.
 
 **Blocking and deadlock:**
 - Writing to a **full named pipe** blocks until space frees (unless the
-  writer is interrupted by a signal). **`Live`** (os9exec): a C writer to a
+  writer is interrupted by a signal). `Live` (os9exec): a C writer to a
   named pipe with no reader blocks once the ~4KB buffer fills; the block is
   interruptible by Ctrl-C/Ctrl-E (see `common/using-os9exec-repl.md`).
 - For an **unnamed pipe**, a writer that fills the buffer with no reader

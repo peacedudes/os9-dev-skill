@@ -365,6 +365,12 @@ child, or where losing the session is acceptable.
 - **Ctrl-C**: shell keeps the prompt, child continues in background.
 - **Ctrl-E**: kills the child, immediately, regardless of what the process
   is doing — compute loop, blocked read, or blocked write.
+- **Neither key aims at a process you choose.** Both are delivered to the
+  device's *last writer* (`Source`, os9exec: `lastwritten_pid`), so with two
+  processes interleaving output the signal can land on a bystander — the one
+  that happened to write most recently, not the runaway. `kill <pid>` after
+  `procs` is the aimed alternative, and the only safe one while output from
+  more than one process is in flight.
 - `kill <pid>` after `procs`.
 - **ESC on a blank line** exits the shell; a harness restart is the
   reliable reset when state is unknown. EOF is a per-path setting a site
@@ -380,6 +386,15 @@ errors and unimplemented syscalls *before* the process dies; `k <pid>`
 kills; `q` quits the emulator. Tracing without stopping: `idbg -o 1`
 (trace to terminal) or `-o /file`, `-d 2` (syscall tracing; `-dh` lists
 mask bits), `-j <pid>`/`-w <pid>` include/exclude a process, `-d 0` off.
+
+**`-d 2`'s `<<<` return lines can name the wrong call.** The entry (`>>>`)
+and return (`<<<`) lines are printed from a single per-process current-call
+field, read again at return time rather than saved at entry (`Source`,
+os9exec: `cp->func`, `debug_return`). Anything that dispatches a nested call
+in between overwrites it, so the outer call's return is attributed to the
+inner one. Trust `>>>` lines for what was called; pair a return with its
+entry by position, not by the name on it, and do not conclude a call
+returned a value it never returned.
 
 ## Symbolic debugging (the OS-9 `debug` command)
 

@@ -50,6 +50,8 @@ has bitten a real session.
 | Fix has no effect although the rebuild succeeded | besides a stale output file (above): the crashed module is **still resident** and shadows the new one | `basic09/basic09-per-target.md` |
 | `Error #001 — Unconditional Abort` printed after output that was correct | `F$Exit` called with `B` never cleared — cosmetic, not a real failure | `6809/syscalls-and-module-format.md` |
 | Breakpoint or examine lands at the wrong address | `sc`'s listing double-applies an offset — never take an address from it | `common/using-os9exec-repl.md` |
+| `-d 2` trace shows a `<<<` return under the wrong call name | a nested call overwrote the per-process current-call field — pair returns to entries by position | `common/using-os9exec-repl.md` |
+| Ctrl-C/Ctrl-E killed the wrong process | both go to the device's last writer, not a process you name — use `kill <pid>` | `common/using-os9exec-repl.md` |
 | Separate writes run together / output garbled | `I$WritLn` writes **to the first CR** — a buffer without one runs past its end | `common/memory-and-io.md` |
 | BASIC09 `E`, bare `E` or `LOAD` fails `#248 - Media Full`, `0 free` workspace at any `#nk` | a stray second CR in the boot autotype reached the guest — restart it | `6809/using-nitros9-repl.md` |
 | TCP connects but no banner ever arrives | an earlier session closed without logging out; its login still owns the channel | `6809/using-nitros9-repl.md` |

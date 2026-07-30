@@ -220,6 +220,17 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   inetd's `login`, or run `login USER1` as the first command. `Live` (NitrOS-9): with
   login, `procs` shows User Number 1 and `dir -e` shows new files owned by 1.
   Don't build tests around a fixture's assumed ownership across sessions.
+- **To become the super user, answer `User name?:` with an empty line.**
+  `Live` (NitrOS-9, EOU disk). The stock `SYS/password` first record has an
+  *empty* name field and uid 0 — `,,0,128,/DD/CMDS,.,SHELL` — so a bare Enter
+  at the prompt authenticates as user 0, the 6809 super user (a flat uid of 0,
+  not a 0.0 pair — `6809/syscalls-and-module-format.md`). `login` from an
+  already-logged-in shell works the same way and stacks a second shell; leave
+  it with `ex` rather than Escape. Being uid 0 does **not** get you past every
+  refusal, and a refusal that *names* permission is not proof you need uid 0 —
+  `deldir` prints `Error #214 - No Permission` for a single-user subdirectory
+  that no amount of privilege fixes (`6809/utility-usage.md`). Establish which
+  identity you actually hold before reading anything into a 214.
 - **`.login` is 68k-only** (`Live` (os9exec); on 68k it sets `PATH`/`TERM`/`chx`/`chd` —
   `common/using-os9exec-repl.md`). Nothing on 6809 reads one: not `login`, not
   any shell on the disk. Per-user setup is the `SYS/password` fields instead —

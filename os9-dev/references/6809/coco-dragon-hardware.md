@@ -160,6 +160,38 @@ path — `load scdwv.dr` works if `CMDS` is on the exec-directory search
 list; `load CMDS/scdwv.dr` fails (error 216, `EOS_PNNF`) since that's not
 how these utilities expect their argument.
 
+**`dir -e` can silently under-report; plain `dir` is the complete list —
+`Live`, and it cost a session a wrong inventory.** On a disk carrying damaged
+file-descriptor sectors (`os9 dcheck` counts them), the extended listing walks
+each entry's FD and quietly stops short: one directory listed 56 entries under
+`dir -e` and 68 under plain `dir`, and the two sets were *different* — the 12
+`-e` never showed were not a tail it truncated, they were files it skipped
+past. Nothing in the output says it gave up. So build any name list from plain
+`dir` and use `-e` only to decorate names you already have; and if the two
+disagree, run `dcheck` before trusting anything else on that disk.
+
+**`deldir` cannot delete an *empty* directory — `Live`.** It fails with
+ToolShed's own error 192 (not an OS-9 code) on any directory with no deletable
+entries, including one you just emptied. The cause is visible in
+`librbfdelete.c`: the directory is opened `FAM_READ`, and only the per-entry
+loop body reopens it `FAM_WRITE` — so on an empty directory the final
+`_os9_ss_fd` that clears the directory attribute runs against a read-only path,
+never clears it, and the delete of a still-`d` file fails. Workaround: copy any
+one-byte file in, then `deldir -q`, which deletes the dummy and the directory
+together. `-q` is required non-interactively at all times — without it `deldir`
+prompts, and a prompt reading EOF fails the delete. `attr` is no help here: it
+has no flag for the directory bit.
+
+**A failed `deldir` still writes to the image.** It deletes entries as it goes
+and only reports the error it hit at the end, so an image that saw a failed
+`deldir` is in an undefined state — discard it and re-extract, never keep
+working on it.
+
+**`del` succeeds on entries `copy` and `fstat` refuse with 214.** Damaged or
+permission-less directory entries can be unreadable yet still deletable, which
+is what you want during a cleanup — don't conclude an entry is stuck just
+because you cannot read it.
+
 **Container vs. raw-RBF caveat**: `os9` expects a raw RBF filesystem
 starting at byte 0 (a standard `.dsk` floppy image is this). Some
 distributed images — e.g. XRoar's own `.ide` hard-disk container format —

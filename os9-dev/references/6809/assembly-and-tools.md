@@ -171,7 +171,7 @@ languages, and the C library passes them through as `errno`.
 ```
 dump /dd/cmds/exfilei
 
-00000000 87CD 012E 000D 1181 0700 1400 0045 7846  .M...........ExF
+00000000 87CD 012E 000D 1181 0700 1400 C945 7846  .M..........IExF
 00000010 696C 65C9 308D 007C 8602 C603 103F 8325  ileI0..|..F..?.%
 ```
 
@@ -186,8 +186,10 @@ dump /dd/cmds/exfilei
 | `0014` @ `$09` | exec offset | entry 20 bytes in |
 | `00C9` @ `$0B` | data size | 201 — the `rmb` block, see below |
 
-Note `fcs /ExFileI/` at `$0D`: the final byte is `C9`, `'I'` with bit 7 set.
-That high bit *is* the terminator — `fcs` is not a NUL-terminated string.
+Note `fcs /ExFileI/` starting at `$0D`: its final byte, at `$13`, is `C9` —
+`'I'` with bit 7 set. That high bit *is* the terminator; `fcs` is not
+NUL-terminated. (The `C9` at `$0C` is unrelated — that one is the low byte
+of the data size.)
 
 ### `*` is the program counter, `.` is the data counter
 
@@ -196,7 +198,22 @@ That high bit *is* the terminator — `fcs` is not a NUL-terminated string.
 assembles cleanly and produces a module that `ident` calls good — with a
 **data size of `$0000`**. Writing `size equ .` gives the intended `$00C9`.
 Both were confirmed by `ident` on modules built the two ways, from otherwise
-identical source.
+identical source (`Live` (NitrOS-9)).
+
+**Nothing in the build output tells the two apart — and one line actively
+misleads.** `asm` prints `$00C9 00201 data bytes allocated` for *both*
+builds, because that summary reports the `rmb` allocation, not what reached
+the `mod` directive's operand. Both give `00000 error(s)`, both `ident` with
+a Good CRC (different CRCs — `$585AA8` vs `$0224AB`), and both run
+identically, printing the same PASS lines. The two modules differ in exactly
+**one byte**: `$0C`, the low byte of the data size. So:
+
+- **Only `ident`'s `Data Size:` line, or the byte at `$0C`, is evidence.**
+  Do not read the assembler's "data bytes allocated" figure as confirmation
+  that the module declares that size.
+- A module built the wrong way still creates files and writes to them, so a
+  smoke test passes. What fails is anything that actually needs the static
+  storage the header failed to request.
 
 This is the quietest failure in this file. A program with a zero-sized data
 area may still appear to work — this one did, storing a path number through

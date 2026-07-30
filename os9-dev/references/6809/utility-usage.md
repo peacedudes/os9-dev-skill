@@ -60,9 +60,31 @@ layer underneath it.
   a plain file first, or use `deldir`.
 - `deldir <path>` — recursively deletes a directory and everything under
   it. Prompts `l` (list contents via `dir` first), `d` (delete), `q`
-  (cancel). Processes nested directories bottom-up; aborts on the first
-  missing write permission. Internally invokes `dir` and `attr`, so both
-  must be reachable from the current execution directory.
+  (cancel) — **once per directory**, so a nested tree asks more than once
+  and a harness must answer each. Processes nested directories bottom-up;
+  aborts on the first missing write permission. Internally invokes `dir` and
+  `attr`, so both must be reachable from the current execution directory.
+  Recursion re-confirmed `Live` (NitrOS-9 V3.3.0): a directory holding both
+  a file and a subdirectory-with-a-file is removed whole, and an empty
+  subdirectory is no obstacle either.
+
+  **It fails on any directory carrying the single-user (`s`) attribute, and
+  says something else — `Live` (NitrOS-9 V3.3.0).** Two different messages
+  depending on where the `s` sits:
+
+  - `s` on the **target itself** → `Error #253 - Non-sharable file busy`.
+    Accurate: `deldir` holds the directory open while invoking `dir`/`attr`
+    on it, and a non-sharable file admits only one open path at a time.
+  - `s` on a **subdirectory** → `ERROR; the directory is not empty` followed
+    by `Error #214 - No Permission`. Both lines are wrong. The directory can
+    be provably empty and you can be user 0, and it still prints these.
+
+  Fix either case with `attr <dir> -s` first (6809 spelling: bare letter
+  sets, `-` clears), then re-run `deldir` — verified by clearing `s` on a
+  directory that had just failed and watching the identical command succeed.
+  Worth knowing because the misleading pair sends you hunting a permission
+  or emptiness problem that does not exist; check the `s` bit in `dir -e`
+  (`dsewrewr`, not `d-ewrewr`) before believing either message.
 - `dir [e] [x] [<path>]` — `e` = extended listing (size, sector address,
   owner, permissions, last-modified date/time), `x` = list the execution
   directory instead of the data directory. No path defaults to the

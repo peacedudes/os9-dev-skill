@@ -44,6 +44,11 @@ for original source, and none of it is ours to reproduce.
 Read `references/INDEX.md` first. If the task also has an application
 side (e.g. testing a new driver from a C program), read `os9-dev` too.
 
+**Answer specifics from the references, not from recall** — entry-point
+registers, struct offsets, scheduler constants and boot order are exactly the
+details that general knowledge of OS-9 gets wrong. **If you cannot open them,
+say which claim you could not check** instead of supplying it from memory.
+
 ## Verification
 
 **Neither emulator is OS-9.** `os9exec` and NitrOS-9 are reverse-engineered

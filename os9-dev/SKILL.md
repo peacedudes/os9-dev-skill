@@ -42,9 +42,16 @@ here as much as to the current line.
 
 ## Deeper information
 
-Read `references/INDEX.md` first when a question goes beyond the model
-above — it routes to the right reference file. Prefer these curated
-references over raw manual text.
+**Answer specifics from the references, not from recall.** The core model
+above is deliberately too small to settle a concrete question, and widely
+repeated claims about OS-9 are often wrong — that is what this skill exists to
+correct. Anything past the model (a syscall's registers, a utility's option
+letters, an error number, a debugger command, a module byte, per-target
+differences) comes from `references/INDEX.md`, which routes to the right file.
+Prefer these curated references over raw manual text. **If you cannot open
+them, say which claim you could not check** rather than filling the gap from
+memory — a confident wrong answer about this system is the failure mode these
+files were built to prevent.
 
 ## Verification
 

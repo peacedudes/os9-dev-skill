@@ -64,6 +64,18 @@ tr a-z A-Z` → `HELLO`; `echo A & echo B` both ran).
 Wildcards `*` (any string) and `?` (one character) are expanded by the shell
 itself via `F$CmpNam`; the program receives matched names only.
 
+**A pattern matching nothing aborts the command.** The shell prints `Wildcard
+match failed for command '<name>'` and the program never runs at all, where a
+Unix shell would hand the unmatched pattern through as a literal argument —
+`Live` (os9exec), from both `list nosuchprefix*` and `echo ?`.
+
+**The shell performs no variable substitution.** `$FOO` reaches the program as
+those four characters even after `setenv FOO barvalue` — `Live` (os9exec).
+Those two rules combine to make the borrowed Unix idiom `echo $?` fail with a
+*wildcard* error, which points nowhere near the real cause: there is no
+exit-status variable to expand, and the `?` is then read as a one-character
+wildcard that matches no file.
+
 ## Built-in commands
 
 | Built-in | Effect |

@@ -80,7 +80,9 @@ at run time. The manuals are thin here; most facts below are `Live` (os9exec). M
   | `PACK >target` (no procname) | clean `Ready` | valid module |
   | `PACK* <path>` (documented all-form, no `>`) | clean `Ready` | valid module |
 
-  Verify the file rather than trusting the message. **Error 51 here means
+  **`PACK` prints it exactly twice, however many procedures the list names** —
+  two errors is not two failed procedures, and the count carries no
+  information. Verify the file rather than trusting the message. **Error 51 here means
   something different and is NOT this bug** — see "Packing is destructive to
   the workspace copy" above; a `#000:051` from `PACK` means you are re-packing
   an already-packed procedure, and it **truncates the target to 0 bytes**
@@ -90,6 +92,22 @@ at run time. The manuals are thin here; most facts below are `Live` (os9exec). M
   suggestive, not proof about the 68k line. `Absent`: whether the genuine
   68k binary on real hardware prints it is untestable here. (`> pathlist`
   with a space *after* the `>` is a separate thing — unrecognized syntax.)
+
+## `Error #000:043` means four different things
+
+BASIC09 code 43 is "Unknown Procedure", and it is raised for causes that have
+nothing to do with each other. Two of them mean *nothing is wrong*. Identify
+which before drawing a conclusion:
+
+| Where it appears | What it means | What to do |
+|---|---|---|
+| After `SAVE proc >path` or `PACK proc >path` | **Spurious.** The file was written correctly | Check the file; ignore the message |
+| After `runb <path>` or running a packed module by pathname | **Real.** `runb` takes a bare module name, never a path | Invoke by bare name from a CHX where it resolves |
+| On `LOAD` of a 6809 source file | **Real.** The file starts with a `!` comment above `PROCEDURE`, and nothing in it loads | Put `PROCEDURE` on line 1 — `basic09/gotchas.md` |
+| From `RUN <name>` | **Real**, its documented meaning — no such procedure | Check the name and the search order below |
+
+The first two both arise while packing and running the same module minutes
+apart, which is what makes them easy to confuse.
 
 ## What a packed module is
 

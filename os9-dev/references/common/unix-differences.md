@@ -232,7 +232,7 @@ functions for bit manipulation.
 | ELF/executable | OS-9 module | see Tier 1 #3, `module-format.md` |
 | shared library | reentrant module / trap handler | e.g. math via `trap #15` |
 | `dlopen` | `F$Load` by name | |
-| pipe / named pipe | `/pipe` unnamed / `/pipe/<name>` named | default buffer 90 bytes; see `ipc.md` |
+| pipe / named pipe | `/pipe` unnamed / `/pipe/<name>` named | default buffer 90 bytes per the manuals, but **os9exec uses 4096** — see `ipc.md` |
 | UID/GID | owner ID / group ID in process descriptor | |
 | `sudo`/root | super-user = group 0 (**68k**; on 6809 it is flat user ID 0 — `6809/syscalls-and-module-format.md`) | |
 | process states | Active / Waiting / Sleeping | |

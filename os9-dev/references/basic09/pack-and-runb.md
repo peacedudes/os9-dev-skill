@@ -150,7 +150,7 @@ program module; something must interpret it.
 edit/debug). Per the manual, code under RunB can trap Ctrl-C/Ctrl-Q via
 `ON ERROR GOTO`, which interactive `basic` cannot.
 
-## How a packed module is found (three distinct contexts)
+## Invoking a packed module — bare name only, three contexts
 
 1. **`RUN <name>` typed inside interactive `basic`:** workspace first,
    then current *data* directory, then *execution* directory, then OS-9

@@ -21,6 +21,7 @@ expensive ones because nothing is wrong with your code.
 | Record locking measures nothing; concurrent read-modify-write silently loses updates | you tested on a host directory — locking is RBF-only, so use a `mount -k` image | file-managers.md |
 | Observed scheduling doesn't match the documented priority-aging algorithm | os9exec doesn't implement it; it runs a simpler round-robin | kernel-internals.md |
 | Two different offsets both claim to be the path open count | `PD_CNT` `$03` and `PD_COUNT` are two genuine distinct fields, not a contradiction | file-managers.md |
+| A new terminal device is dead to keypresses — `tsmon` never wakes, nothing errors | the armed `SS_SSig` signal isn't delivered to the *arming process's own* path, only the device's main one | device-drivers.md |
 
 Module format, syscall catalog, and error codes are shared with
 application-level work and live in the sibling `os9-dev` skill

@@ -216,6 +216,37 @@ drained below its low-water mark, send `V_XON` to the remote end.
 A driver must **not** disable the input interrupt — it's expected to stay
 enabled for the life of the attachment.
 
+### Signal-on-data-ready (`SS_SSig`) — what a terminal monitor arms
+
+A process that wants to be told when input arrives, without holding a blocking
+read, arms **`I$SetStt` `SS_SSig` (`$1A`)** with the signal number to send.
+`SS_SEvent` (`$3E`) is the event-based counterpart. This is the mechanism a
+login monitor uses: it arms the signal, sleeps, and **never reads the device
+itself** — so if the path never delivers, the terminal is simply dead to
+keypresses with nothing reporting an error.
+
+Four properties a driver or emulator has to honour (`Source`, os9exec:
+`filestuff.c`'s `SS_SSig` case and `utilstuff.c`'s input path):
+
+- **The signal number arrives in `d2`**, and is recorded per *path*, together
+  with the arming process's PID.
+- **Arming checks readiness immediately.** If data is already waiting, the
+  signal fires on the `SetStt` call itself rather than waiting for the next
+  byte — "tell me when there is input, including right now".
+- **It is one-shot.** The pending signal is cleared as it fires; a monitor
+  re-arms after each wake.
+- **Deliver to every path bound to that terminal, not just the device's main
+  one.** The arming process opens the device itself, so its path is a
+  *different* path from the one the terminal normally reads through. Matching
+  only the main path leaves the armed process asleep forever.
+
+**NitrOS-9's own `tsmon` does not use this** (`Source`, `level1/cmds/tsmon.asm`):
+it installs an `F$Icpt`, closes stdin/stdout/stderr and `I$Dup`s the opened
+device onto them, then blocks on an ordinary `I$ReadLn` before forking the
+login program. So the armed-signal shape above is one valid implementation of a
+terminal monitor, not the only one — don't infer from a monitor's behaviour
+which mechanism it used.
+
 ## SBF (Streaming Block, e.g. Tape) Driver Specifics
 
 Adds buffered vs. unbuffered transfer modes and tape-specific `SetStat`

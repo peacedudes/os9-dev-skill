@@ -203,7 +203,11 @@ for" descriptions: `os9-tools-and-shell.md`.
 - `date [<opts>]` — `-j` Julian, `-m` 24-hour time.
 - `tsmon [<opts>] {/<dev>}` — watch terminals for logins; `-p` print an
   online prompt, `-l=<prog>`/`-r=<prog>` alternate login/shell program,
-  `-d` statistics on ^\.
+  `-d` statistics on ^\. A monitor typically arms `I$SetStt` `SS_SSig`
+  (signal-on-data-ready) and then sleeps without reading the device at all —
+  which is why a newly brought-up terminal can sit dead to keypresses with no
+  error anywhere. Protocol and the four properties a driver must honour:
+  `os9-systems-dev` skill's `device-drivers.md`.
 - `kermit <flags> [<dev>] [<file>…]` — file transfer. Flags are one bundled
   argument with no `-`, and two of them decide whether the command does what
   you meant (`Live` (os9exec); presence varies by disk):

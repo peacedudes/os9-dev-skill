@@ -202,6 +202,87 @@ class TestTagHygiene(unittest.TestCase):
 
 
 # --------------------------------------------------------------------------
+# tag form
+# --------------------------------------------------------------------------
+class TestTagForm(unittest.TestCase):
+    def test_flags_bold_wrapped_tag(self):
+        findings = chk.check_tag_form("The result is **`Live`** here.\n", "a.md", KNOWN)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("bold", findings[0].message)
+
+    def test_flags_repeated_qualifier(self):
+        findings = chk.check_tag_form("confirmed `Live` (os9exec)** (os9exec)\n", "b.md", KNOWN)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("repeated", findings[0].message)
+
+    def test_flags_comma_before_implementation(self):
+        findings = chk.check_tag_form("works (`Live`, os9exec; varies)\n", "c.md", KNOWN)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("parentheses", findings[0].message)
+
+    def test_plain_qualified_tag_is_clean(self):
+        self.assertEqual(
+            chk.check_tag_form("confirmed `Live` (os9exec) on disk\n", "d.md", KNOWN), []
+        )
+
+    def test_the_conventions_own_file_is_exempt(self):
+        self.assertEqual(
+            chk.check_tag_form("**`Live`** shown as an example\n", "CONFIDENCE-TAGS.md", KNOWN), []
+        )
+
+
+# --------------------------------------------------------------------------
+# tags inside code fences
+# --------------------------------------------------------------------------
+class TestTagsInCode(unittest.TestCase):
+    def test_flags_tag_inside_a_fence(self):
+        text = "```basic\nx = 5   ! `Live` (os9exec)\n```\n"
+        findings = chk.check_tags_in_code(text, "a.md", KNOWN)
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0].locations, [("a.md", 2)])
+
+    def test_tag_in_prose_beside_a_fence_is_clean(self):
+        text = "```\nplain code\n```\nprose `Live` (os9exec)\n"
+        self.assertEqual(chk.check_tags_in_code(text, "b.md", KNOWN), [])
+
+    def test_fence_state_reopens(self):
+        text = "```\na\n```\nprose\n```\nb `Manual`\n```\n"
+        self.assertEqual(len(chk.check_tags_in_code(text, "c.md", KNOWN)), 1)
+
+
+# --------------------------------------------------------------------------
+# blanket tags: a floor is fine, a ceiling is not
+# --------------------------------------------------------------------------
+class TestBlanketTags(unittest.TestCase):
+    def test_flags_blanket_live_with_no_exception(self):
+        findings = chk.check_blanket_tags("Everything below is `Live` (NitrOS-9).\n", "a.md", KNOWN)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("floor, never a ceiling", findings[0].message)
+
+    def test_flags_source_throughout(self):
+        self.assertEqual(
+            len(chk.check_blanket_tags("`Source` throughout this file.\n", "b.md", KNOWN)), 1
+        )
+
+    def test_stated_exception_is_clean(self):
+        text = "Everything below is `Live` except `C`, which is `Manual`.\n"
+        self.assertEqual(chk.check_blanket_tags(text, "c.md", KNOWN), [])
+
+    def test_exception_may_wrap_to_the_next_line(self):
+        text = "Everything below is `Live` (NitrOS-9),\nexcept the opcode table.\n"
+        self.assertEqual(chk.check_blanket_tags(text, "d.md", KNOWN), [])
+
+    def test_blanket_manual_is_a_floor_and_allowed(self):
+        text = "`Manual` throughout -- nothing in this file has been run.\n"
+        self.assertEqual(chk.check_blanket_tags(text, "e.md", KNOWN), [])
+
+    def test_blanket_hearsay_is_also_a_floor(self):
+        self.assertEqual(
+            chk.check_blanket_tags("Everything here is `Hearsay`.\n", "f.md", KNOWN), []
+        )
+
+
+# --------------------------------------------------------------------------
 # session dates
 # --------------------------------------------------------------------------
 class TestNoSessionDates(unittest.TestCase):

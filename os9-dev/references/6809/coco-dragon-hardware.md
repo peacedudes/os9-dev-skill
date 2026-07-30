@@ -237,6 +237,6 @@ Chris Lomont's "Color Computer 1/2/3 Hardware Programming," cococommunity.net's
 GIME chip reference, and community references to the `SOUNDRV2` OS-9 utility
 archive. These are hardware facts (addresses, bit layouts) cross-referenced
 across several independent sources, but by this skill's own legend that is
-**`Hearsay`**, not `Manual` — neither manual-derived nor run. Treat the whole
+`Hearsay`, not `Manual` — neither manual-derived nor run. Treat the whole
 section as the weakest material in this file and confirm against hardware
 before depending on it.

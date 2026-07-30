@@ -302,6 +302,128 @@ def check_no_session_dates(text, filename, known_tags):
     return findings
 
 
+# --- tag form ---------------------------------------------------------------
+# `CONFIDENCE-TAGS.md` fixes one written form: an inline `` `Tag` ``, and for
+# `Live` a parenthesised implementation after it. Three malformations turned up
+# in one editorial pass and each is mechanical: a tag wrapped in bold (renders
+# differently and reads as emphasis, not notation), a qualifier repeated, and a
+# comma where the parentheses belong.
+_TAG_BOLD = re.compile(r"\*\*`(?P<tag>Live|Manual|Source|Hearsay|Absent|Flag)`\*\*")
+_TAG_DOUBLED_QUAL = re.compile(r"\((?P<q>[A-Za-z0-9 ,+/-]+)\)\*{0,2} \((?P=q)\)")
+_TAG_COMMA_QUAL = re.compile(r"`Live`,\s*(?:os9exec|NitrOS-9|OS-9)")
+
+
+def check_tag_form(text, filename, known_tags):
+    """Malformed confidence tags: bold-wrapped, doubled qualifier, comma qualifier."""
+    del known_tags
+    if os.path.basename(filename) == CONFIDENCE_TAGS_FILE:
+        return []  # the convention's own file quotes these forms to define them
+    findings = []
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        for m in _TAG_BOLD.finditer(line):
+            findings.append(
+                Finding(
+                    "tag-form", None,
+                    f"`{m.group('tag')}` is wrapped in bold -- a tag is notation, write it plain",
+                    [(filename, lineno)],
+                )
+            )
+        for m in _TAG_DOUBLED_QUAL.finditer(line):
+            findings.append(
+                Finding(
+                    "tag-form", None,
+                    f"qualifier `({m.group('q')})` is repeated -- name the implementation once",
+                    [(filename, lineno)],
+                )
+            )
+        if _TAG_COMMA_QUAL.search(line):
+            findings.append(
+                Finding(
+                    "tag-form", None,
+                    "`Live`, <impl> -- the implementation goes in parentheses: `Live` (impl)",
+                    [(filename, lineno)],
+                )
+            )
+    return findings
+
+
+_TAG_TOKEN = re.compile(r"`(?:Live|Manual|Source|Hearsay|Absent|Flag)`")
+
+
+def check_tags_in_code(text, filename, known_tags):
+    """A confidence tag inside a fenced code block.
+
+    A tag asserts something about a claim; inside a fence it instead asserts
+    that the surrounding *code* was run, which is a claim the fence cannot
+    carry -- and the one real instance sat in a trailing comment that the
+    language does not even accept, so the lines it vouched for could not have
+    compiled. Tags belong in prose beside the block.
+    """
+    del known_tags
+    if os.path.basename(filename) == CONFIDENCE_TAGS_FILE:
+        return []
+    findings = []
+    in_fence = False
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence and _TAG_TOKEN.search(line):
+            findings.append(
+                Finding(
+                    "tag-in-code", None,
+                    "confidence tag inside a code fence -- move it to prose beside the block",
+                    [(filename, lineno)],
+                )
+            )
+    return findings
+
+
+# --- blanket tags -----------------------------------------------------------
+# A blanket tag may set a FLOOR, never a CEILING. "`Manual` throughout" cannot
+# hide anything: it understates at worst. "Everything below is `Live`" is a
+# claim about every row the author never enumerated -- and both instances found
+# in one pass were covering a row nobody could have run (a destructive debugger
+# command, and an opcode table read out of source). So a blanket naming a
+# verified tier must say what it excludes.
+_BLANKET = re.compile(
+    r"(?:everything|every\s+(?:command|claim|entry|row|fact|item)|all\s+(?:claims|entries|rows))"
+    r"[^.\n]{0,80}?`(?P<tag>Live|Source)`"
+    r"|`(?P<tag2>Live|Source)`\s+throughout",
+    re.I,
+)
+_BLANKET_EXCEPTION = re.compile(
+    r"\b(except|unless|other than|apart from|aside from|save for|but the)\b", re.I
+)
+
+
+def check_blanket_tags(text, filename, known_tags):
+    """A span-wide `Live`/`Source` claim with no stated exception."""
+    del known_tags
+    if os.path.basename(filename) == CONFIDENCE_TAGS_FILE:
+        return []
+    findings = []
+    lines = text.splitlines()
+    for lineno, line in enumerate(lines, start=1):
+        m = _BLANKET.search(line)
+        if not m:
+            continue
+        # the exception clause routinely wraps onto the next line or two
+        window = " ".join(lines[lineno - 1 : lineno + 2])
+        if _BLANKET_EXCEPTION.search(window):
+            continue
+        tag = m.group("tag") or m.group("tag2")
+        findings.append(
+            Finding(
+                "blanket-tag", None,
+                f"blanket `{tag}` over a span with no stated exception -- a blanket tag may "
+                "set a floor, never a ceiling; name what it excludes or tag rows inline",
+                [(filename, lineno)],
+            )
+        )
+    return findings
+
+
 _FLAG_ABOUT = re.compile(r"tagged\s+`?Flag`?", re.I)
 
 
@@ -842,6 +964,9 @@ def run(roots, register_text=None):
         facts.extend(extract_shared_facts(text, display))
         findings.extend(check_tag_hygiene(text, display, known))
         findings.extend(check_no_session_dates(text, display, known))
+        findings.extend(check_tag_form(text, display, known))
+        findings.extend(check_tags_in_code(text, display, known))
+        findings.extend(check_blanket_tags(text, display, known))
         inventory.extend(scan_open_flags(text, display, known))
     findings = check_presence_contradiction(mentions) + check_shared_facts(facts) + findings
     findings += check_cross_references(doc_texts, known_basenames)

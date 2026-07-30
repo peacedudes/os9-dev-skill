@@ -269,12 +269,17 @@ anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
   leading `-` (`-O=<name>`) means silent overwrite — without it, an
   existing output file fails the run. Case is not significant (`Live`
   (NitrOS-9)). RMA's equivalent is `-o=`.
-- **`rma`** (~20KB; `rma.6809`/`rma.6309` are byte-identical copies of one
-  module, not a real 6309 build) — the Relocating Macro Assembler the
-  PSECT/VSECT/RLINK section below describes. **Hangs indefinitely** on the
-  EOU-disk + XRoar setup, so the RLINK/PSECT/VSECT multi-file path is
-  currently unverifiable. Details and an lwasm-based workaround:
-  `using-nitros9-repl.md`.
+- **`rma`** (20,143 bytes, module name `rma`, identifying itself in listings as
+  `Microware OS-9 RMA - V1.1`) — the Relocating Macro Assembler the
+  PSECT/VSECT/RLINK section below describes. **`Live` (NitrOS-9): works,
+  including a full `rma` → `rlink` → run multi-file build** (superseding an
+  earlier "hangs indefinitely" claim here, which was four separate silent
+  failure modes — chiefly that **`rma` writes no object file without `-o=`**,
+  and that a label must carry a **trailing colon** to be exported to RLINK).
+  Full recipe and traps: `using-nitros9-repl.md`; working sources in the
+  os9exec repo at `test/6809-live-verification/rma-rlink-build/`.
+  `rma_orig`/`rma.6809` are byte-identical copies; **`rma.6309` is not** — it
+  is a different module, name `r63`, 23,591 bytes.
 
 **`asm`'s `O=<name>` output goes to the execution directory (`CMDS`), not
 the current data directory** — the same behavior as BASIC09's `PACK`.
@@ -750,5 +755,7 @@ Debugger Manual (a generic Microware manual despite shipping with Dragon
 systems — no Dragon-specific hardware content); OS-9 Relocating Macro
 Assembler Manual (RMA options, input/listing format, expression evaluation,
 macro facility, PSECT/VSECT/CSECT semantics, data-area access, RLINK options,
-and the RMA-vs-Microware-Interactive-Assembler differences appendix — all
-`Manual` only, since `rma` hangs on the live-test setup).
+and the RMA-vs-Microware-Interactive-Assembler differences appendix — mostly
+`Manual`; the PSECT operands, the external-reference and trailing-colon export
+mechanisms, `-o=`, and `rlink`'s mainline/subordinate argument order are now
+`Live` (NitrOS-9) via a working two-file build).

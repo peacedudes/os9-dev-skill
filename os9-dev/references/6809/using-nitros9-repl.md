@@ -403,24 +403,60 @@ Register details for all of them: `6809/syscalls-and-module-format.md`. Test
 these only where losing the session is acceptable, or from a forked child so
 the blast radius is the child rather than your shell.
 
-## `rma` hangs indefinitely — use `asm`
+## `rma` + `rlink` work — the "indefinite hang" was four silent traps
 
-`Live` (NitrOS-9), reproduced 6+ times across independent restarts: invoking the
-Relocating Macro Assembler (`rma`, or its `rma.6809`/`rma.6309` aliases —
-byte-identical copies of one module) on this disk/XRoar setup never returns.
-Not a syntax error, not source-size- or `USE`-dependent, not an output-flag
-issue, and not host-side plumbing — the TCP connection stays established
-throughout and XRoar shows sustained CPU, so the emulated CPU is genuinely
-doing something; the guest shell simply never produces a new prompt. A pure
-guest-side hang.
+**`rma` does not hang** (`Live` (NitrOS-9)) — four silent traps account for
+every apparent hang, and each is listed below. A full
+multi-file build runs end to end, and the working sources are in the os9exec
+repo at `test/6809-live-verification/rma-rlink-build/`:
 
-**Use `asm`** — a separate, smaller, non-relocating assembler on the same disk
-— for ordinary single-file MOD/EMOD assembly. This blocks the
-RLINK/PSECT/VSECT multi-file build path, which requires `rma`. Modern NitrOS-9
-no longer builds with the vintage `rma`/`rlink` binaries at all; its own build
-rules use **lwasm**, a maintained open-source 6809/6309 cross-assembler, as
-RMA's drop-in replacement. Cross-assembling with lwasm on the host and
-injecting the result sidesteps the guest binary entirely.
+```
+rma main.a -o=main.r        (mainline PSECT, calls an undefined `helper`)
+rma sub.a  -o=sub.r         (non-mainline PSECT, defines `helper:`)
+rlink main.r sub.r -o=prog
+attr prog e pe pr
+prog                     ->  RMA-RLINK-OK
+```
+
+The old report was not fabricated — every one of its symptoms is reproducible
+— but each is a silent failure, not a hang. Four independent traps, any of
+which leaves you staring at a prompt with nothing to show:
+
+1. **`rma` writes no object file unless you pass `-o=`.** It runs, prints
+   nothing, exits cleanly, produces nothing. `-l` will even show a clean
+   listing with object bytes on every line and *still* write no ROF. This is
+   the big one.
+2. **Output goes to the execution directory (`chx`), not `chd`.** With `chx` on
+   `/dd/CMDS`, where an ordinary user cannot write, a run leaves nothing
+   anywhere and says nothing.
+3. **`/dd/CMDS/rma` has no public read** (`--e--ewr`, owner 0.0). An ordinary
+   user can execute it by bare name but cannot load it by pathlist —
+   `/dd/CMDS/rma <file>` prints **nothing at all**, though `copy` on the same
+   file admits `Error #214`. Copy the binaries somewhere you own, or be user 0.
+4. **A label is local unless it carries a trailing colon.** `helper` exports
+   nothing, `helper:` does. Without it both files assemble without complaint
+   and `rlink` says `linker fatal: unresolved references` — an accurate
+   diagnostic, and the first evidence the toolchain was fine all along.
+
+Timing, for reference: the disk's own 54,507-byte `/dd/DEFS/os9defs.a`
+assembles in about 6 s at full emulator speed. ~10 invocations at 272K and at
+1808K (`-ram 2048`), as an ordinary user and as user 0, all returned promptly.
+
+**This `rma` calls itself `asm` in its own diagnostics** — `rma` with no
+argument prints `asm: no input file`. Listings identify it correctly as
+`Microware OS-9 RMA - V1.1`, and it carries macro-assembler strings (`nested
+MACRO definitions`, `ENDM without MACRO`) that plain `asm` does not. Seeing
+`asm:` from `rma` does not mean you ran the wrong tool.
+
+**The aliases are not all aliases.** `rma`, `rma_orig` and `rma.6809` are
+byte-identical (module `rma`, 20,143 bytes, CRC `$F83DD9`). `rma.6309` is a
+*different* module — name `r63`, 23,591 bytes, CRC `$E86F73`. All of them plus
+`rlink` verify **Good**.
+
+`asm` remains a fine choice for ordinary single-file `MOD`/`EMOD` assembly, and
+is simpler. Modern NitrOS-9 builds with **lwasm** rather than the vintage
+`rma`/`rlink` pair, so cross-assembling on the host stays a valid route — but
+it is now a preference, not a workaround for a broken guest toolchain.
 
 Related shell facts found alongside: `rma <file> #8k` gives an immediate
 `WHAT?` from the shell before `rma` starts, though `dir #32k` accepts the same

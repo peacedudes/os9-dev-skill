@@ -135,7 +135,7 @@ Default assignments — every one remappable per-device via `tmode`/`xmode`:
 | Ctrl-H / Backspace | Erase previous character |
 | Ctrl-X | Discard the whole line being typed |
 | Ctrl-W | Pause output; any key resumes (distinct from page pause below) |
-| Ctrl-S / Ctrl-Q | XOFF/XON flow control, same as Unix |
+| Ctrl-S / Ctrl-Q | XOFF/XON flow control, same as Unix. **SCF consumes both — a reading program never sees them**, so a stray `$13` in a byte stream pauses output with nothing in the data and no error to show for it (`xon=`/`xoff=` remap them per path) |
 | ESC (or Ctrl-[) | End-of-file on terminal input; on a blank shell line, exits the shell |
 | Ctrl-C | Interrupt signal (code 3). A program with no intercept handler dies; the shell moves the foreground program to the background |
 | Ctrl-E | Abort signal (code 2) — the "actually kill it" key |

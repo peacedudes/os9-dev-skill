@@ -119,7 +119,10 @@ all `Live` (os9exec), the first two silent:
   without bound until the timeout kills it. The damage is worse than a hang,
   because a stray `y` in a consumed line answers *yes* and the overwrite
   happens anyway. Give `copy` an explicit `-r` (`-f` for a write-protected
-  destination) so it never asks.
+  destination) so it never asks. Abort-on-error does *not* rescue this case:
+  in a procedure file the prompt is reached before the failure can end the run,
+  so the error is reported, the overwrite still happens, and the lines that
+  answered it are gone.
 
 - **The first failure ends the run, and nothing announces that it did.** The
   shell's `-x` (abort on error) is on by default, so a procedure file stops at

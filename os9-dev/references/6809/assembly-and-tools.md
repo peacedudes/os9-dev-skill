@@ -194,26 +194,17 @@ of the data size.)
 ### `*` is the program counter, `.` is the data counter
 
 `asm` in its normal mode keeps **two separate location counters**, and the
-`mod` directive's last operand wants the data one. Writing `size equ *`
-assembles cleanly and produces a module that `ident` calls good — with a
-**data size of `$0000`**. Writing `size equ .` gives the intended `$00C9`.
-Both were confirmed by `ident` on modules built the two ways, from otherwise
-identical source (`Live` (NitrOS-9)).
+`mod` directive's last operand wants the data one. `size equ *` assembles
+cleanly and yields a module `ident` calls good with a **data size of
+`$0000`**; `size equ .` gives the intended `$00C9`. `Live` (NitrOS-9).
 
-**Nothing in the build output tells the two apart — and one line actively
-misleads.** `asm` prints `$00C9 00201 data bytes allocated` for *both*
-builds, because that summary reports the `rmb` allocation, not what reached
-the `mod` directive's operand. Both give `00000 error(s)`, both `ident` with
-a Good CRC (different CRCs — `$585AA8` vs `$0224AB`), and both run
-identically, printing the same PASS lines. The two modules differ in exactly
-**one byte**: `$0C`, the low byte of the data size. So:
+**The build output cannot tell you which you got.** `asm`'s
+`data bytes allocated` figure counts the `rmb` block, not what reached the
+`mod` operand, so it reads the same either way — and the CRC is valid either
+way. Check `ident`'s `Data Size:`, or the byte at `$0C`.
 
-- **Only `ident`'s `Data Size:` line, or the byte at `$0C`, is evidence.**
-  Do not read the assembler's "data bytes allocated" figure as confirmation
-  that the module declares that size.
-- A module built the wrong way still creates files and writes to them, so a
-  smoke test passes. What fails is anything that actually needs the static
-  storage the header failed to request.
+The wrong build still assembles, loads and runs; it fails only where the code
+needs the static storage its header never asked for.
 
 This is the quietest failure in this file. A program with a zero-sized data
 area may still appear to work — this one did, storing a path number through

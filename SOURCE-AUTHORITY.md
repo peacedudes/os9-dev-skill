@@ -127,13 +127,11 @@ authority a divergence is scored against.
 
 ## Where the weight still sits
 
-Every authoritative Microware source listed above is now drawn on somewhere:
-the Primer across ten files, the Disk File Organization manual throughout
-`os9-systems-dev`'s RBF material, the Internet Software Reference Manual as
-the sole source of `68k/network-sockets.md`, and the Training & Education
-seminar manuals in the memory, IPC and kernel material.
+This corpus is what could be found, not Microware's documentation set. Read
+nothing here as complete coverage of OS-9: where a fact is absent or thin, the
+manual carrying it may simply never have been in reach.
 
-The third-party Guru and FARNA references are nonetheless still cited more
+The third-party Guru and FARNA references are cited more
 often than any single Microware manual. That reflects how the corpus was
 assembled — the third-party books are better indexed and far easier to search
 than OCR'd manual scans — rather than a judgment about authority, which the

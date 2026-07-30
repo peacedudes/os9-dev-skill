@@ -40,7 +40,7 @@ independent of any manual.
 Known-bad source note: the "OS-9 Relocating Macro Assembler" manual
 circulating in 68k archives is actually a **6809** manual (it documents 6809
 registers and addressing) — never use it for a 68k-specific claim. Its 6809
-content is fully mined into `6809/assembly-and-tools.md`.
+content is drawn on in `6809/assembly-and-tools.md`.
 
 Provenance note on the Microware 6809 Level 1 source archive held alongside
 this corpus: it is actual Microware source code, not a manual, and is held to

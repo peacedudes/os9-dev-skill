@@ -269,12 +269,12 @@ The last two are reachable if the call is fenced rather than avoided:
   restore, re-confirm. A wedged terminal then costs only a REPL restart.
 - **`F$Chain`** — confine the blast radius to a child. The parent forks a
   child; the child prints a marker, chains to a module that fails, then prints
-  a second marker; the parent `F$Wait`s. The second marker says whether
-  control returned to the caller at all, and the wait status says what the
-  parent sees. Do not assume it returns: on a failed chain, both 6809 and
-  os9exec have produced a raw uncontrolled error instead of handing control
-  back, so a caller that plans to recover from a bad chain needs to verify
-  that it can.
+  a second marker; the parent `F$Wait`s — the wait status is what the parent
+  actually sees. **Don't design for recovery: a failed chain cannot return.**
+  The caller's image is torn down before the new name is resolved, so there is
+  no process left to hand an error to, and the bare kernel error you see is
+  not the program's. That is faithful behaviour on both targets, not a defect
+  — see the `F$Chain` row above.
 
 ## Signals
 

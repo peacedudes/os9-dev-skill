@@ -274,6 +274,34 @@ def check_tag_hygiene(text, filename, known_tags):
     return findings
 
 
+# A calendar date anywhere in a reference file. `CONFIDENCE-TAGS.md` defines the
+# whole notation and gives dates no role in it, so one here is always either a
+# session stamp or the residue of a narrated correction -- both of which the
+# standing rule keeps out of user-facing files. Caught mechanically because the
+# editorial rule alone did not hold: dates drifted into 17 places across 7 files,
+# including two standing in for the implementation inside a `Live` tag, which the
+# tag spec calls a defect outright.
+_SESSION_DATE = re.compile(r"\b(?:19|20)\d{2}-\d{2}-\d{2}\b")
+
+
+def check_no_session_dates(text, filename, known_tags):
+    """Calendar dates in a reference file -- session stamps, not reader content."""
+    del known_tags
+    findings = []
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        for match in _SESSION_DATE.finditer(line):
+            findings.append(
+                Finding(
+                    "session-date",
+                    None,
+                    f"`{match.group(0)}` -- a reference file carries no dates; "
+                    "state the fact, and put session state in `maintainer/`",
+                    [(filename, lineno)],
+                )
+            )
+    return findings
+
+
 _FLAG_ABOUT = re.compile(r"tagged\s+`?Flag`?", re.I)
 
 
@@ -813,6 +841,7 @@ def run(roots, register_text=None):
         mentions.extend(find_mentions(text, display, known))
         facts.extend(extract_shared_facts(text, display))
         findings.extend(check_tag_hygiene(text, display, known))
+        findings.extend(check_no_session_dates(text, display, known))
         inventory.extend(scan_open_flags(text, display, known))
     findings = check_presence_contradiction(mentions) + check_shared_facts(facts) + findings
     findings += check_cross_references(doc_texts, known_basenames)

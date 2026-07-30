@@ -202,6 +202,42 @@ class TestTagHygiene(unittest.TestCase):
 
 
 # --------------------------------------------------------------------------
+# session dates
+# --------------------------------------------------------------------------
+class TestNoSessionDates(unittest.TestCase):
+    def test_flags_a_bare_session_stamp(self):
+        findings = chk.check_no_session_dates("Corrected 2026-07-26 against four.\n", "a.md", KNOWN)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("2026-07-26", findings[0].message)
+        self.assertEqual(findings[0].locations, [("a.md", 1)])
+
+    def test_flags_a_date_inside_a_live_tag(self):
+        findings = chk.check_no_session_dates("`Live` (NitrOS-9, 2026-07-29): it works.\n", "b.md", KNOWN)
+        self.assertEqual(len(findings), 1)
+
+    def test_flags_every_date_on_a_line(self):
+        findings = chk.check_no_session_dates("From 2026-07-25 to 2026-07-27.\n", "c.md", KNOWN)
+        self.assertEqual(len(findings), 2)
+
+    def test_reports_the_line_it_found(self):
+        findings = chk.check_no_session_dates("clean\nclean\nstamped 1999-01-02\n", "d.md", KNOWN)
+        self.assertEqual(findings[0].locations, [("d.md", 3)])
+
+    def test_a_qualified_live_tag_is_clean(self):
+        self.assertEqual(chk.check_no_session_dates("`Live` (NitrOS-9): it works.\n", "e.md", KNOWN), [])
+
+    def test_a_version_or_offset_number_is_not_a_date(self):
+        self.assertEqual(
+            chk.check_no_session_dates("v2.4 at offset $0107, code 00208.\n", "f.md", KNOWN), []
+        )
+
+    def test_a_manual_year_alone_is_not_a_date(self):
+        self.assertEqual(
+            chk.check_no_session_dates("an independent 1985-era manual.\n", "g.md", KNOWN), []
+        )
+
+
+# --------------------------------------------------------------------------
 # flag inventory
 # --------------------------------------------------------------------------
 class TestOpenFlags(unittest.TestCase):

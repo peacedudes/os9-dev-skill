@@ -242,6 +242,37 @@ CoCo work rarely needs: `SS.DevNm` ($E, return device name — IOMAN) and
 added `SS.Lock`/`SS.Ticks` (setstat) in Rev F1. CoCo adds `SS.Mouse` ($89 as a
 GetStat sub-function) — see `coco-dragon-hardware.md`.
 
+## Calls that can end the session that makes them
+
+These are safe to *document* and hazardous to *call*, so they resist scripted
+testing. The risk is the reason — a call whose risk you can design around is
+fair game, and two of them are shown below.
+
+| Call | Risk |
+|---|---|
+| `F$Boot` | Reboots. Ends the session outright |
+| `F$AProc`, `F$NProc` | Scheduler-internal — queue a process or switch to the next one; may never return to the caller |
+| `F$DelPrc` | Terminates a process by ID; trivially self-terminating |
+| `F$GCMDir` | Explicitly kernel-only in its own description |
+| `F$IOQu` | Untimed wait on an I/O queue — hangs with nothing to time it out |
+| `F$IRQ`, `F$IODel` | Manipulate real hardware interrupt vectors/device tables |
+| `F$SSvc` | Patches the live syscall dispatch table |
+| `I$SetStt` | Can disrupt the very channel the test is driven over |
+| `F$Chain` | Looked unsafe on failure — see below |
+
+The last two are reachable if the call is fenced rather than avoided:
+
+- **`I$SetStt`** — `I$GetStt` first to save the setting, set, confirm,
+  restore, re-confirm. A wedged terminal then costs only a REPL restart.
+- **`F$Chain`** — confine the blast radius to a child. The parent forks a
+  child; the child prints a marker, chains to a module that fails, then prints
+  a second marker; the parent `F$Wait`s. The second marker says whether
+  control returned to the caller at all, and the wait status says what the
+  parent sees. Do not assume it returns: on a failed chain, both 6809 and
+  os9exec have produced a raw uncontrolled error instead of handing control
+  back, so a caller that plans to recover from a bad chain needs to verify
+  that it can.
+
 ## Signals
 
 Same design as 68k (numbered codes, tiny non-reentrant handlers, `F$Sleep`

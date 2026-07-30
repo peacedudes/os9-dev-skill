@@ -108,7 +108,7 @@ Error *codes* (number → meaning) are a different lookup: `common/error-codes.m
 | Question about… | Read |
 |---|---|
 | Driving live NitrOS-9 as an agent (nitros9repl.sh), stock-inetd `tcp listen`/`join` bridge, per-connection login and session ownership, no `.login` on 6809, DriveWire facts, SCF Escape=EOF, echo/auto-LF gotchas | 6809/using-nitros9-repl.md |
-| Registers, SWI2 syscall convention, F$/I$ code catalog, 6809 module header bytes | 6809/syscalls-and-module-format.md |
+| Registers, SWI2 syscall convention, F$/I$ code catalog, which calls need supervision before you automate them, 6809 module header bytes | 6809/syscalls-and-module-format.md |
 | Per-command syntax/options for the Level 2 utility set (attr…xmode, tmode/xmode parameter table, CoCo/Dragon-only commands called out separately), Level1-vs-Level2 divergences found while cross-checking | 6809/utility-usage.md |
 | Assembler directives (asm/RMA), editor, debugger command set, RLINK | 6809/assembly-and-tools.md |
 | BASIC09 `RUN GFX(...)`/`RUN GFX2(...)` graphics/windowing subroutine calls: per-function syntax, window/device-window lifecycle (DWSET/DWEND/OWSET/SELECT), Get/Put buffers, palette/color, cursor/text control | 6809/gfx-windowing.md |

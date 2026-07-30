@@ -47,6 +47,16 @@ has bitten a real session.
 | Program dies immediately with a trap-handler banner | linked against the proprietary `cio`, absent from this disk | `common/using-os9exec-repl.md` |
 | Harness times out with the command visibly working | prompt gate doesn't recognise a sub-program's prompt — use raw keys | both REPL files |
 | Session hangs or dies on a syscall that looked ordinary | `F$SSvc`/`F$IOQu`/`F$NProc` (6809), `F$SysDbg`/`F$RTE` (68k) | both REPL files |
+| Fix has no effect although the rebuild succeeded | besides a stale output file (above): the crashed module is **still resident** and shadows the new one | `basic09/basic09-per-target.md` |
+| `Error #001 — Unconditional Abort` printed after output that was correct | `F$Exit` called with `B` never cleared — cosmetic, not a real failure | `6809/syscalls-and-module-format.md` |
+| Breakpoint or examine lands at the wrong address | `sc`'s listing double-applies an offset — never take an address from it | `common/using-os9exec-repl.md` |
+| Separate writes run together / output garbled | `I$WritLn` writes **to the first CR** — a buffer without one runs past its end | `common/memory-and-io.md` |
+| BASIC09 `E`, bare `E` or `LOAD` fails `#248 - Media Full`, `0 free` workspace at any `#nk` | a stray second CR in the boot autotype reached the guest — restart it | `6809/using-nitros9-repl.md` |
+| TCP connects but no banner ever arrives | an earlier session closed without logging out; its login still owns the channel | `6809/using-nitros9-repl.md` |
+| Session died while listing a directory | channel-filling output kills it — narrow the listing or read the image host-side | `6809/using-nitros9-repl.md` |
+| Session ended while sending ordinary content | Escape (`$1B`) is SCF's EOF — the shell exited normally on it | `6809/using-nitros9-repl.md` |
+| File written through the harness fails to parse at a line that looks fine | `tee` dropped a trailing CR under load, joining two lines silently | `6809/using-nitros9-repl.md` |
+| Transfer traffic appears on your own terminal; the device argument did nothing | `kermit` needs `l` to aim at a device, and ignores it silently without | `common/utility-usage.md` |
 
 Error *codes* (number → meaning) are a different lookup: `common/error-codes.md`.
 

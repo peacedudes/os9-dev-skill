@@ -147,10 +147,10 @@ preloaded with `LOAD`. Once loaded it stays resident until removed with
   |---|---|---|---|
   | `1` | 40-column text | 40 | 2K |
   | `2` | 80-column text | 80 | 4K |
-  | `5` | 640×192, 2 colours | 80 | 16K |
-  | `6` | 320×192, 4 colours | 40 | 16K |
-  | `7` | 640×192, 4 colours | 80 | 32K |
-  | `8` | 320×192, 16 colours | 40 | 32K |
+  | `5` | 640×192, 2 colors | 80 | 16K |
+  | `6` | 320×192, 4 colors | 40 | 16K |
+  | `7` | 640×192, 4 colors | 80 | 32K |
+  | `8` | 320×192, 16 colors | 40 | 32K |
 
   **Column counts confirmed** — `Live` (NitrOS-9), from what `wcreate`
   accepts: `-s=6` and `-s=8` take 40 columns but reject 80 with

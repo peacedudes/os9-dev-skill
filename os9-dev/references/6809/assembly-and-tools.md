@@ -659,7 +659,7 @@ The full command set below is `Live` (NitrOS-9).
 | `K` / `K expr` | Clear all breakpoints / clear one |
 | `G` / `G expr` | Resume execution / resume at a specific address |
 | `M expr1 expr2` | Hex+ASCII memory dump between two addresses |
-| `C expr1 expr2` | Walking-bit RAM test + clear between two addresses — destructive, RAM only |
+| `C expr1 expr2` | Walking-bit RAM test + clear between two addresses — **destructive**, RAM only. Aim it at scratch memory you have confirmed the range of; it clears what it tests |
 | `S expr1 expr2` | Search memory from Dot for a 1- or 2-byte pattern |
 | `E text` | Load a program for execution (like Chain, but keeps the debugger resident as a coroutine); shows the initial register dump; `G` starts it |
 | `L text` | Link to a module by name; sets Dot to its first byte |

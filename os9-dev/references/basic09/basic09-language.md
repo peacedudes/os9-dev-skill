@@ -544,7 +544,7 @@ interactive `PRINT` command.
 ## Operators & Functions
 
 Precedence, highest to lowest: `NOT` / unary negate; `^`/`**`
-(right-to-left); `*`, `/`, `MOD`; `+`, `-`; comparisons; `AND`; `OR`;
+(right-to-left); `*`, `/`, `MOD` (call shape `Flag` — see below); `+`, `-`; comparisons; `AND`; `OR`;
 `XOR`. Equal-precedence operators evaluate left-to-right except
 exponentiation. **A negative base is not accepted for exponentiation
 in BASIC09** (BASIC09 Reference Manual, Rev H) — the specific runtime
@@ -560,6 +560,13 @@ of each family takes one operand, the rest take two. The names invite
 confusion precisely because they look like variants of each other rather
 than a different call shape entirely.
 
+**`MOD` — infix operator or function? Unresolved (`Manual, Flag`).** It
+appears in the precedence list above at `*`/`/` level, which implies
+`a MOD b`, and also among the numeric functions below, which implies
+`MOD(a,b)`; the two have not been reconciled against a primary source.
+Confirm the form on your target before relying on either — as with `LAND`,
+the wrong shape is a syntax error, not a wrong answer.
+
 | Function | Effect |
 |---|---|
 | `FIX(realnum)` | Rounds a REAL to the nearest INTEGER — despite the name, NOT truncation. `Live` (os9exec): `FIX(3.9)=4`, `FIX(3.1)=3`, `FIX(-3.9)=-4` (the negative case is the deciding one: truncation-toward-zero would give `-3`; only round-to-nearest gives `-4`). |
@@ -568,7 +575,8 @@ than a different call shape entirely.
 | `SIZE(variable)` | Byte size of a variable/structure — common in pointer/record arithmetic, e.g. `SEEK #file, SIZE(record)*(index-1)`. Value is architecture-specific — see the per-architecture file. |
 | `ADDR(var)` | Absolute memory address of a variable — not portable across targets, see `gotchas.md` |
 | `SIN`/`COS`/`TAN`/`ASN`/`ACS`/`ATN`/`LOG`/`LOG10`/`EXP`/`SQR`/`SQRT`/`PI` | Transcendental, REAL result; angles in degrees or radians via `DEG`/`RAD`. Precision is architecture-specific — see the per-architecture file. Per the BASIC09 Reference Manual, all of these are derived internally via a CORDIC algorithm written specifically for BASIC09, rather than a lookup table or a standard math-library routine. `SQR` and `SQRT` are the same function — `Live` (NitrOS-9): source typed as `SQR(x+1.)` is stored and `LIST`ed back as `SQRT(x+1.)`, confirming `SQR` is just an accepted abbreviation, not a distinct function. |
-| `ABS`/`SGN`/`SQ`/`MOD` | Basic numeric functions |
+| `ABS`/`SGN`/`SQ` | Basic numeric functions |
+| `MOD` | Remainder. **Call shape unresolved** — `Manual, Flag`, see the operator note above |
 | `RND(0)` / `RND(n>0)` / `RND(n<0)` | Random 0-1 / random 0-n / reseed with `ABS(n)` as the new seed. **`RND(n>0)` returns a REAL in `[0,n)`, NOT necessarily an integer** — `Live` (os9exec): `RND(5)` returned `1.75959429`, a fractional value. Don't assume `RND(n)` gives a random integer 0..n-1 the way it does in some other BASICs; use `FIX(RND(n))` for that. **Reseeding is fully deterministic** (`Live` (os9exec)): calling `RND(-42)` then three `RND(0)` calls, twice in a row, produces the exact same 3-value sequence both times — useful for reproducible test data. |
 | `LEN`/`MID$`/`LEFT$`/`RIGHT$`/`STR$`/`VAL`/`CHR$`/`ASC` | String functions |
 | `DATE$` | Current date/time as `"YY/MM/DD HH:MM:SS"`. **Y2K-class bug on 68k** (`Live` (os9exec)): for years ≥ 2000 the year's tens digit is corrupt (`"<6/07/14"` where `"26/07/14"` was correct — first byte reads ASCII 60 `'<'`, a +10 offset from the un-reduced year value). `Absent` on real 6809 NitrOS-9 — the bug is specific to the 68k BASIC09 runtime's own formatting. Don't trust the 68k year field past 1999. Details: `gotchas.md` |

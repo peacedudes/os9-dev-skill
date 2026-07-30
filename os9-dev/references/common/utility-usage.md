@@ -43,7 +43,10 @@ for" descriptions: `os9-tools-and-shell.md`.
 - `build <path>` — prompts `?` per line, writes each to the file; empty
   line/EOF ends.
 - `copy [<opts>] <path1> [<path2>]` — `-a` abort on first error, `-f`
-  overwrite write-protected destinations, `-r` overwrite existing, `-v`
+  overwrite write-protected destinations, `-r` overwrite existing (**without
+  it an existing destination is not a failure but an interactive `Overwrite
+  (yes/no/all/quit)?` prompt after `Error #000:218`, which is a wedge in any
+  unattended run** — `Live` (os9exec), see `using-os9exec-repl.md`), `-v`
   verify result, `-w=<dir>` copy multiple sources *into* a directory
   (`-p` suppresses the per-file listing in that mode), `-b=<size>` use a
   larger transfer buffer (e.g. `-b=20k`; bigger buffers speed up large

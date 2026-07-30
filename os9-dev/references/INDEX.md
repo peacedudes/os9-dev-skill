@@ -46,6 +46,7 @@ has bitten a real session.
 | "Can't find" a command that is plainly present | fork lookups use `chx`, not `PATH` | `common/using-os9exec-repl.md` |
 | Redirect produced error text, or clobbered the file | `>>` is **stderr**; append is `>+`; plain `>` fails if the file exists | `common/os9-tools-and-shell.md` |
 | `Wildcard match failed` — the command never ran | a `*`/`?` pattern matched no file, which aborts the command instead of passing through; `?` in a borrowed `$?` idiom does this too | `common/os9-tools-and-shell.md` |
+| A batch run stalled, or later procedure lines never executed | a utility hit an interactive prompt (classically `copy` without `-r`) and read your remaining lines as its answers | `common/using-os9exec-repl.md` |
 | Compiler reads the whole source as one line | source has LF endings; OS-9 needs CR-only | `common/using-os9exec-repl.md` |
 | Program dies immediately with a trap-handler banner | linked against the proprietary `cio`, absent from this disk | `common/using-os9exec-repl.md` |
 | Harness times out with the command visibly working | prompt gate doesn't recognise a sub-program's prompt — use raw keys | both REPL files |

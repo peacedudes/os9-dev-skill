@@ -103,8 +103,8 @@ to boot (`shell /h0/startup`):
 gtimeout 60 env OS9DISK=<dir>/h0 OS9STOP=1 ./os9exec shell /h1/<proc> </dev/null 2>&1
 ```
 
-`/h1` here is any host directory under the emulator's start path. Two traps,
-both `Live` (os9exec), both silent:
+`/h1` here is any host directory under the emulator's start path. Three traps,
+all `Live` (os9exec), the first two silent:
 
 - **The procedure file must be CR-only.** With LF endings OS-9 sees one
   enormous line: the shell echoes the entire file and runs nothing, reporting
@@ -112,6 +112,14 @@ both `Live` (os9exec), both silent:
 - Piping the same commands into an interactive `shell` instead **hangs** —
   and is separately forbidden above. The procedure file is the supported
   route; a pipe is not.
+- **A utility that prompts devours the rest of the file.** `copy` onto an
+  existing destination reports `Error #000:218` and then asks `Overwrite
+  (yes/no/all/quit)?`. The following procedure lines are read as answers to
+  that prompt instead of being run, and once the file is exhausted it re-prompts
+  without bound until the timeout kills it. The damage is worse than a hang,
+  because a stray `y` in a consumed line answers *yes* and the overwrite
+  happens anyway. Give `copy` an explicit `-r` (`-f` for a write-protected
+  destination) so it never asks.
 
 ## Stamping non-super ownership on an RBF image
 

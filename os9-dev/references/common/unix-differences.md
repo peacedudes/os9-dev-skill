@@ -175,6 +175,17 @@ that does `fopen(dir, "r")` to walk a directory simply doesn't work here.
 `../..` → `...`; `../../..` → `....` — one more dot per level, not another
 `../`. `..` (one level) is unchanged. Verified for both `dir` and `chd`.
 
+### A filename stops addressing at 27 characters
+
+`Live` (os9exec): 27 characters reach a file and 28 do not. `build` accepted a
+28-character name without complaint and the host file appeared under its full
+name, but `dir` listed only the 27-character prefix and opening the full name
+failed `E_PNNF`. The prefix does open it, and is the only handle left. So two
+names agreeing for 27 characters are one file as far as OS-9 can tell — which
+is how host files with long names collide when they are dropped into the tree,
+silently and without either name being wrong. Only the boundary this runtime
+enforces was measured; the specified maximum is unconfirmed, `Flag`.
+
 ### Priority + aging scheduler
 
 Preemptive, priority-driven, default 2-tick (20ms) timeslice. Aging is a

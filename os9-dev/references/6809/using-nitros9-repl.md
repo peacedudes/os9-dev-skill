@@ -43,9 +43,13 @@ Launch shape:
 ```
 xroar -rompath <romdir> -machine coco3 -tv-input rgb -machine-cart ide \
   -cart-rom <idecart>.rom -load-hd0 <disk>.ide \
-  -cart-becker -becker-port <port> -type 'DOS 0\r\r' \
+  -cart-becker -becker-port <port> -type 'DOS 0\r' \
   [-ui null -ao null | -ui <real-backend>]
 ```
+
+Exactly **one** `\r` in `-type`: a second one outlives DECB, lands in the
+booting NitrOS-9, and silently breaks every later `basic09` fork — see the
+`#248 - Media Full` note in the BASIC09 section below.
 
 `-ui null -ao null` is headless — fine for text-only work; a real `-ui`
 backend is mandatory for graphics or screenshots. **XRoar takes the last
@@ -289,20 +293,13 @@ host file to touch. Two routes:
 <name>` Enter drops into `E:` (leading space means insert, `q` returns to
 `B:`) — same editor and behavior as 68k.
 
-> **Currently broken on the EOU disk** (`Live` (NitrOS-9), 2026-07-28): `E`, a
-> bare `E` and `LOAD` all fail `Error #248 - Media Full`, and `DIR` inside
-> BASIC09 reports `0 free` however much memory the process is given
-> (`#20k`/`#32k` raise what `mem` reports and what `procs` shows, and change
-> nothing — **`#20k` does NOT work around it**). The message is misleading
-> twice over: the BASIC09 Reference Manual Rev G reports workspace exhaustion
-> as **#13** or **#32**, never 248; and 248 (`E$Full`) is raised only by RBF,
-> yet the failing command does **no disk I/O at all** — proven by putting the
-> data directory on a DriveWire-served disk and watching the protocol log.
-> Eliminated by control: XRoar version (1.10/1.11/1.12.1 all fail), disk
-> image lineage, `basic09` module bytes, host RAM, terminal path, user
-> identity, and `inetd`. Root cause open. While this holds, PACK is
-> unavailable too, so cross-assemble/inject host-side and drive packed code
-> with `runb`.
+> **`Error #248 - Media Full` from `E`, bare `E` or `LOAD` means a stray CR
+> reached the booting guest, not that anything is full** (`Live` (NitrOS-9)).
+> A second `\r` after `DOS` in the XRoar autotype leaves every later
+> `basic09` fork with `0 free` workspace, at any `#nk` size, on the CoCo
+> console and `/N` alike — while `MEM`, `mdir`, `procs`, `asm` and `runb` all
+> look normal. Type exactly one `\r`. PACK is unavailable while this holds,
+> so a guest booted the wrong way needs a restart, not a workaround.
 
 **An OS-9-native heredoc**, better once per-line sends become the bottleneck:
 

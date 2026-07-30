@@ -22,12 +22,13 @@ claim, and `BELL`'s optional-`path` question.
 a 320-pixel-wide screen is accepted silently; `PALETTE` accepts register 99
 and color 200. Bad coordinates fail silently, never diagnosably.
 
-**The X coordinate range claims below are suspect** (`Flag`). Y behaves as
-documented; X does not — a box spanning the nominal `(0,0)`-`(639,191)` space
-on a 320x192 window filled the full height but only about half the width, and
-a radius-64 circle came out markedly wider than tall in the wrong direction.
-Either drawing clips at the device window's pixel width or X is scaled;
-mechanism unestablished.
+**Read every `0-639` below as "the range of a 640-wide screen type", not as a
+universal.** X and Y are not symmetric: Y behaves exactly as documented, while
+X depends on the screen type and on `SCALESW`. The mechanism is established
+and measured — see "Coordinates are screen-relative" under *Concepts shared
+across GFX2 functions* for the scaling rule and for what changes when
+`SCALESW` is off. On a 320-wide screen type the meaningful range is 0-319, and
+nothing rejects a larger value.
 
 ## GFX (Level 1 low-resolution VDG graphics)
 

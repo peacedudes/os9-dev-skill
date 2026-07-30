@@ -103,10 +103,10 @@ allocated bound), and `000:011` (e.g. from writing
 ## Error code table
 
 Codes below are grouped by numeric range, matching how the source manuals
-present them. Three rows carry a dagger/double-dagger/section mark
-(†/‡/§) — see **Known cross-manual discrepancies** further down; those
-notes are not optional footnotes, they record a genuine disagreement
-between two manual editions that was deliberately not resolved.
+present them. Rows marked †, ‡ or § point to **Known cross-manual
+discrepancies** further down; those notes are not optional footnotes, they
+record a genuine disagreement between two manual editions that was
+deliberately not resolved.
 
 ### 000:001 – 000:067 — Process, terminal, and math-trap errors
 
@@ -273,8 +273,8 @@ so the appendix has a typo (corrected in the table above). This confirms the
 list is Microware-sourced end to end — any word-level overlap with third-party quick
 references is just the shared standard codes, not a dependency on them.
 
-Two edition-level disagreements remain, and rather than silently pick a winner,
-both readings are recorded here:
+Three edition-level disagreements remain, and rather than silently pick a
+winner, both readings are recorded for each:
 
 - **† Uninitialized user TRAP range.** The v2.4 manual gives
   **000:133–000:147** (`E$Trap`) for uninitialized user TRAP #1–#15. The 1985

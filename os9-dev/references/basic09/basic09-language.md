@@ -17,6 +17,12 @@ where a claim was confirmed twice. Most here are os9exec — see
 `gotchas.md` for the 6809-confirmed list, and `CONFIDENCE-TAGS.md` for
 what the qualifiers mean.
 
+**Notation:** the *syntax templates* below annotate their forms with a
+trailing `! text` for readability. **That form is not legal BASIC09** — a
+comment must be the first non-blank token on its line (see Comments, and
+`gotchas.md`). Complete examples in this file obey the real rule; the
+templates are notation, not code to paste.
+
 ## Getting Started
 
 BASIC09 operates through three interactive prompts, each a distinct mode:
@@ -92,7 +98,7 @@ as a complete, unmodified whole hasn't been run start-to-finish.
 | BYTE | 0-255, unsigned. Truncates silently on overflow. **Cannot be passed as a procedure parameter** — see Pitfalls. |
 | INTEGER | Signed. Faster than REAL (see Control Structures below). Width/range/overflow behavior is architecture-specific — see the per-architecture file. |
 | REAL | Width/range/precision is architecture-specific — see the per-architecture file. |
-| STRING | Declared via `STRING[len]` (max length, default 32 if omitted). Fixed buffer, silently truncates past max. **Terminator is target-specific:** `0x00` (NUL) on **68k** (`Live` (os9exec) — byte-dump: `STRING[8]="XY"` after `"ABCDEFGH"` → `58 59 00 44...`), `$FF` on **6809**. A string filling its declared max length has **no** terminator byte at all (`Live` (os9exec): `STRING[3]="XYZ"` → exactly `58 59 5A`). |
+| STRING | Declared via `STRING[len]` (max length, default 32 if omitted). Fixed buffer, silently truncates past max. **Terminator is target-specific:** `0x00` (NUL) on **68k** (`Live` (os9exec) — byte-dump: `STRING[8]="XY"` after `"ABCDEFGH"` → `58 59 00 44...`), `$FF` on **6809** (`Manual` — not dumped). A string filling its declared max length has **no** terminator byte at all (`Live` (os9exec): `STRING[3]="XYZ"` → exactly `58 59 5A`). |
 | BOOLEAN | TRUE / FALSE. Not usable in numeric expressions — storing anything else into a BOOLEAN fails at runtime instead of being silently coerced. |
 
 Undeclared numeric variables default to REAL; a name ending in `$` and
@@ -173,12 +179,13 @@ p.y = 20
 TYPE inner = a:INTEGER; b:INTEGER
 TYPE outer = n:inner; arr(3):INTEGER
 DIM o: outer
-o.n.a = 5              ! nested TYPE field, `Live` (os9exec)
-o.arr(1) = 100         ! array field, `Live` (os9exec)
+o.n.a = 5
+o.arr(1) = 100
 ```
 
-Fields may nest (a field's type can itself be a previously-defined TYPE,
-`Live` (os9exec)) and are accessed by dot notation, including through
+Nested-TYPE fields (`o.n.a`) and array fields (`o.arr(1)`) are both
+`Live` (os9exec). Fields may nest (a field's type can itself be a
+previously-defined TYPE) and are accessed by dot notation, including through
 nesting: `variable.field`, `variable.field1.field2`. Array fields
 (`Live` (os9exec)) use the same `(size)` syntax as a plain array
 declaration. The manual frames records as *more* efficient than an array
@@ -419,9 +426,12 @@ replacement clobbers whatever data follows it in the file.
 ```basic
 PROCEDURE addentry
   DIM lp: BYTE
-  OPEN #lp, "notes": UPDATE      (* open existing file for read+write
-  READ #lp, entry                (* advance past record 1
-  READ #lp, entry                (* advance past record 2 — now positioned at EOF
+  DIM entry: STRING[80]
+  ! open the existing file for read+write
+  OPEN #lp, "notes": UPDATE
+  ! read through every existing record to reach EOF — two here
+  READ #lp, entry
+  READ #lp, entry
   WRITE #lp, "checked equipment"
   WRITE #lp, "logged off shift"
   CLOSE #lp
@@ -452,12 +462,14 @@ PROCEDURE stockfile
   CREATE #sp, "stock"
   blank.tag = "": blank.onhand = 0
   blank.reorder = 0: blank.price = 0
+  ! pre-allocate 50 empty slots
   FOR n = 1 TO 50
-    PUT #sp, blank          (* pre-allocate 50 empty slots
-    NEXT n
+    PUT #sp, blank
+  NEXT n
   ...
-  SEEK #sp, (slot - 1) * SIZE(blank)     (* jump straight to record `slot`
-  PUT #sp, blank                         (* one call writes the whole record
+  ! jump straight to record `slot`; one PUT writes the whole record
+  SEEK #sp, (slot - 1) * SIZE(blank)
+  PUT #sp, blank
 END
 ```
 

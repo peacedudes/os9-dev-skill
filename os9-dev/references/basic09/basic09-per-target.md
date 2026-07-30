@@ -23,9 +23,10 @@ otherwise.
 | STRING | `STRING[len]`, default max 32; extends to 2880 chars | `STRING[len]`, default max 32 |
 | BOOLEAN | 1 byte, TRUE / FALSE | same |
 
-The STRING *terminator* differs as well — `$FF` on 6809, NUL on 68k, and none
-at all when a string fills its declared maximum. Details and the byte dump:
-`basic09-language.md`'s Data Types section.
+The STRING *terminator* differs as well — `$FF` on 6809 (`Manual`), NUL on 68k
+(`Live` (os9exec), byte dump in `basic09-language.md`'s Data Types section),
+and none at all on either when a string fills its declared maximum. Only the
+68k value has been dumped; the 6809 one rests on the manuals.
 
 ## INTEGER: 16-bit → 32-bit
 

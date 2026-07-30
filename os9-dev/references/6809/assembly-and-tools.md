@@ -242,9 +242,8 @@ anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
   open <name>` — while `-O=<name>` overwrites silently. Use the leading dash
   for any rebuild.
 - **Case does not matter**: `o=` and `O=` both work and both produce a valid
-  module (confirmed by `ident` on each). Despite the emphasis under "Two
-  assemblers" below, the distinction that matters is the leading `-`, not
-  the letter's case.
+  module (confirmed by `ident` on each). The distinction that matters is the
+  leading `-`, not the letter's case.
 - The object lands in the **execution** directory (`/dd/cmds`), not the data
   directory — see the note under "Two assemblers".
 - **Only the first 8 characters of a label are significant.** `asm` accepts a
@@ -268,9 +267,8 @@ anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
   a real MOD/EMOD program, run it, get correct output. Syntax: `Asm filename
   [<opts>] [>list] [#xxK]`; `O=<name>` generates the object file, and a
   leading `-` (`-O=<name>`) means silent overwrite — without it, an
-  existing output file fails the run. **Case is not significant** — `Live` (NitrOS-9),
-  `o=` and `O=` both produce a valid module; an earlier note here implied
-  otherwise. RMA's equivalent is `-o=`.
+  existing output file fails the run. Case is not significant (`Live`
+  (NitrOS-9)). RMA's equivalent is `-o=`.
 - **`rma`** (~20KB; `rma.6809`/`rma.6309` are byte-identical copies of one
   module, not a real 6309 build) — the Relocating Macro Assembler the
   PSECT/VSECT/RLINK section below describes. **Hangs indefinitely** on the
@@ -307,7 +305,7 @@ unmarked; only genuine differences or single-assembler directives are tagged.
 | `FCS /str/` | Same as FCC but sets the sign bit on the last character — OS-9's string-termination convention |
 | `EQU expr` | One-time constant binding; label must not have been used before, operand can't reference not-yet-defined names |
 | `SET expr` | Like EQU but redefinable — for assembler control flags, not true constants |
-| `MOD size,nameoff,typelang,attrrev{,execoff,memsize}` | **`asm` only.** Emits the module header directly: rewinds both address counters to their `ORG 0` start, emits sync bytes `$87`/`$CD`, emits the 4 (or 6) header-field operands in order, computes the header-parity byte. Operand count must be exactly 4 or 6. **Breaks in Motorola-compatible mode** unless no `RMB`/`ORG` appears between `MOD` and `EMOD`. **`size` must be the end-of-module label `+3`, not the bare label**, to cover `EMOD`'s 3-byte CRC trailer — `Live` (NitrOS-9): a bare `eom equ *` assembles with `00000 error(s)` but produces a module 3 bytes short, `ident` shows `Module header is incorrect!`, and the shell refuses to run it (`Error #235`). Use `modend+3`. RMA has no `MOD`/`EMOD` — it uses `PSECT`/`VSECT` and leaves header generation to RLINK |
+| `MOD size,nameoff,typelang,attrrev{,execoff,memsize}` | **`asm` only.** Emits the module header directly: rewinds both address counters to their `ORG 0` start, emits sync bytes `$87`/`$CD`, emits the 4 (or 6) header-field operands in order, computes the header-parity byte. Operand count must be exactly 4 or 6. **Breaks in Motorola-compatible mode** unless no `RMB`/`ORG` appears between `MOD` and `EMOD`. **`size` must cover `EMOD`'s 3-byte CRC trailer, and where you define the end label decides whether you add it.** The worked example above puts `eom equ *` *after* `emod`, so the counter has already passed the trailer and the bare `eom` is correct. A label defined *before* `emod` has not, and needs `+3` — `Live` (NitrOS-9): a bare label there assembles with `00000 error(s)` but produces a module 3 bytes short, `ident` shows `Module header is incorrect!`, and the shell refuses to run it (`Error #235`). `Flag`: both halves were observed separately and the placement rule reconciling them has not been confirmed in a single run — check your own module's size field against `ident` rather than assuming either form. RMA has no `MOD`/`EMOD` — it uses `PSECT`/`VSECT` and leaves header generation to RLINK |
 | `EMOD` | **`asm` only.** Closes the module; computes and emits the final 3-byte CRC accumulated over every byte since `MOD` |
 | `ORG expr` | **`asm` only.** No label. Repoints whichever counter is active: data counter in normal mode, program counter in Motorola-compatible mode. OS-9 modules carry no load-record table, so relocating the program counter mid-file only makes sense for Motorola-mode output meant for bare 6809 hardware — under OS-9 it breaks loading. RLINK owns all placement in an RMA build |
 | `RMB n` | Reserves `n` bytes. In `asm`, the label gets the *data* counter's value in normal mode, the *instruction* counter's in Motorola mode. In RMA: legal only inside a `VSECT` or `CSECT` — **illegal directly inside a `PSECT`** |

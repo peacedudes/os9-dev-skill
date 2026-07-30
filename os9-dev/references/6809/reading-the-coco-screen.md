@@ -1,8 +1,8 @@
 # Seeing the CoCo Screen (6809, XRoar)
 
 A DriveWire text channel drives a NitrOS-9 shell but can never observe a
-screen, which is why `gfx-windowing.md` stayed `Manual` for so long. Getting
-graphics work verified needs a second channel: host-side screenshots and
+screen. Verifying graphics work therefore needs a second channel:
+host-side screenshots and
 keystroke injection against XRoar's own window. Split the roles — drive text
 commands over the serial REPL, press keys and capture the screen host-side.
 Everything below is `Live` (NitrOS-9) against a running CoCo3.
@@ -24,12 +24,15 @@ is a cursor" as "there is a shell".
 
 ## Creating a graphics window
 
-`wcreate /w7 -s=5 0 0 40 24 0 1 1` — type 5 is 320x192 4-color — succeeds.
+`wcreate /w7 -s=5 0 0 40 24 0 1 1` succeeds — type 5 is a 640×192 2-color,
+80-column screen, so a 40-column window occupies its left half (screen-type
+table: `gfx-windowing.md`).
 
 - `/w1` is already taken by EOU: error 184 "Window already defined".
-- Type 8 (640x192) with an 80x24 geometry fails with **error 189 "Illegal
-  Coordinates"** — a geometry error, not the memory or screen-table
-  exhaustion it first looks like.
+- Type 8 with an 80x24 geometry fails with **error 189 "Illegal
+  Coordinates"** — type 8 is a 320×192 **40-column** screen, so 80 columns
+  does not fit. A geometry error, not the memory or screen-table exhaustion
+  it first looks like.
 - A shell started on such a window with `shell i=/w7&` **did not survive** —
   it died on its own with the same error 189, leaving the window present but
   with no process on it. Symptom: the screen shows what looks like a prompt

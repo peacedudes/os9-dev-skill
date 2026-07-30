@@ -204,9 +204,8 @@ layer underneath it.
   arbitrary OS-9/6809 system. Whether a given Microware-shipped shell has
   them is unconfirmed here; write portable material against the plain
   separators, or accept a visible failure.
-- **`set x` (abort-on-error) is `Live` (os9exec) but was found
-  unreliable on NitrOS-9** as the sole content of a procedure file
-  (2026-07-25, while building the 6809 conformance suite). Treat
+- **`set x` (abort-on-error) is `Live` (os9exec) but unreliable on
+  NitrOS-9** as the sole content of a procedure file. Treat
   abort-on-error as target-specific and verify before depending on it;
   the 68k entry in `common/os9-tools-and-shell.md` stands and is not
   contradicted by this.

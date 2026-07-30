@@ -107,8 +107,8 @@ right for their own target, and the trap is carrying one target's model
 across. For os9exec (68k) read the 68k manuals — 6809 is an earlier
 evolutionary stage, not a fuller description of the same design.
 
-**Consequence when a 68k tool builds a disk a 6809 will read** (`Live`,
-2026-07-25): the on-disk owner field is two bytes on both targets, so the
+**Consequence when a 68k tool builds a disk a 6809 will read** (`Live`
+(os9exec, NitrOS-9)): the on-disk owner field is two bytes on both targets, so the
 bytes travel fine — but the two targets *interpret* them differently.
 os9exec stamping account `1.7` writes `$0107`; the same file on 6809 is
 owned by flat user **263**. Neither reading is zero, so a non-privileged

@@ -101,8 +101,8 @@ shell to execute it, so built-ins inside it (`chd`, `setenv`, …) cannot
 disturb the invoking shell. Use `profile` when you *want* the changes to
 stick. Relative procedure-file lookups resolve against the data directory.
 
-**A procedure file does not need the execute attribute.** `Live` (os9exec,
-2026-07-25): one with `----r-wr` — read and write, no execute bit at all —
+**A procedure file does not need the execute attribute.** `Live` (os9exec):
+one with `----r-wr` — read and write, no execute bit at all —
 ran correctly when invoked by name. The shell falls back to reading a
 non-module as command text, and that path does not consult the execute bit
 the way forking a real module does. So don't "fix" a working procedure file

@@ -112,7 +112,7 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   reconnecting forks a new one (new pid, cwd back at the root), nothing is
   replayed. Don't rely on a session surviving a dropped client.
 - **End every session by logging out (Escape), never by just closing the
-  socket.** `Live` (NitrOS-9, 2026-07-28): the guest is never told its client
+  socket.** `Live` (NitrOS-9): the guest is never told its client
   vanished, so the abandoned login parks on its `/N` channel *forever* — still
   dead 45s later; only a reboot clears it — and each leak costs one of the few
   channels until inetd answers every new connection with `tcp kill`. Symptom:
@@ -121,7 +121,7 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   immediately — proven by consecutive join/logout cycles reusing one channel.
   `tools/nitros9repl.sh connect` sends the Escapes itself on Ctrl-] detach.
 - **A terminal bridge must not remap the codes SCF already owns.** `Live`
-  (NitrOS-9, 2026-07-29). `tmode` on an inetd channel reports `bsp=08 del=18
+  (NitrOS-9). `tmode` on an inetd channel reports `bsp=08 del=18
   eor=0D eof=1B reprint=04 dup=01 psc=17 abort=03 quit=05` — every control key
   is a *guest-side* setting, so rewriting one host-side both hides the real key
   and silently overrides whatever the user set. An allowlist bridge that
@@ -173,7 +173,7 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   (`CTRL-CLEAR` toggles a "keyboard mouse" driven by the arrows plus F1/F2 as
   fire buttons). The accurate narrower statement is that OS-9's *line editor*
   has no cursor movement or arrow-driven history — Ctrl-A is the history.
-  `Live` (NitrOS-9, 2026-07-29): all of these survive a DriveWire `/N` channel
+  `Live` (NitrOS-9): all of these survive a DriveWire `/N` channel
   intact, F1/F2's high-bit `$B1`–`$B6` included, so the channel is 8-bit clean.
   Only the codes SCF acts on *do* anything by themselves (left arrow erases,
   shift-left kills the line); the rest arrive as data, which is what a guest
@@ -186,7 +186,7 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   it *receives*. The numbers overlap the keyboard table but do not match it —
   `$09` is cursor-up on output and RIGHT ARROW on input.
 - **The first delete-line of a freshly-connected session is swallowed.** `Live`
-  (NitrOS-9, 2026-07-29), reproduced across fresh boots in both orders: the
+  (NitrOS-9), reproduced across fresh boots in both orders: the
   first `$18` after connecting produces no echo and does not clear the line;
   every subsequent one works and echoes BS-space-BS per character. Independent
   of how the byte was produced — a literal Ctrl-X and a translated Shift-Left
@@ -326,15 +326,15 @@ shell prompt reappears normally afterward.
   and exits — killing the session shell. Confirm `tee >file` actually opened
   first: a gated send blocks on a real `tee`, so a fast return means it failed.
 - **A large `dir` listing over the channel can kill the session.** `Live`
-  (2026-07-25), reproducible: a directory listing big enough to fill the
+  (NitrOS-9), reproducible: a directory listing big enough to fill the
   channel crashed the guest session outright. This is an *output* hazard and
   is distinct from the input-burst one above — sending nothing at all is no
   protection. When you need a listing of something large, narrow it (list a
   subdirectory, or `dir` without `-e`) or read it host-side with ToolShed
   against the image instead of asking the guest to stream it.
 - **A `tee` that succeeds can still lose a line's CR under load.** `Live`
-  (2026-07-25, while building the 6809 conformance suite): typing content
-  through raw keys at speed occasionally dropped a trailing CR, silently
+  (NitrOS-9): typing content through raw keys at speed
+  occasionally dropped a trailing CR, silently
   joining two lines in the written file. Nothing reports it — `tee` closes
   cleanly and the file looks plausible — and the damage only surfaces much
   later as a compile or parse error at a line the source doesn't seem to

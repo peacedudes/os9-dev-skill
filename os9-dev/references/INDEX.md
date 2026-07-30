@@ -11,10 +11,10 @@ targets.** When writing here, either verify that or mark the scope inline —
 an unmarked 68k-only fact is indistinguishable from a verified shared one,
 and the reader has no way to tell which they are looking at. This is not
 hypothetical: `common/` carried "super-user = group 0" bare in four places,
-which is true on 68k and false on 6809 (flat user ID 0), and it misled a
-session into shipping a guard that classified every ordinary 6809 account as
-privileged. Fixed 2026-07-26; the canonical statement of that particular
-delta now lives once, in `6809/syscalls-and-module-format.md`.
+which is true on 68k and false on 6809 (flat user ID 0) — a privilege guard
+written from the bare claim classifies every ordinary 6809 account as
+privileged. The canonical statement of that particular delta lives once, in
+`6809/syscalls-and-module-format.md`.
 
 **State a cross-target delta once and link to it.** Restating it in each file
 that touches the topic creates copies that drift apart, and a reader who

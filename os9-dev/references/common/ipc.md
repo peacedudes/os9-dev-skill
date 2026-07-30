@@ -262,21 +262,12 @@ So two plain appenders to one file do **not** interleave freely; the EOF
 lock is documented as being there precisely to stop two processes
 extending a file at the same time.
 
-> Earlier versions of this file said the opposite — that write-only
-> paths were invisible to the mechanism, so two appenders could
-> interleave. That over-generalized "writes take no lock" by dropping
-> the EOF exception, and it is inconsistent with the spooler design
-> described just above. Corrected 2026-07-26 against four Microware
-> manuals: 6809 *System Programmers Manual* §6.6.1/§6.6.3/§6.6.5, Tandy
-> *Technical Reference* :3799, Tandy *Level Two Development System*
-> :12732, 68k *v2.4 Technical Reference* :6307, and confirmed as
-> intended by the mechanism's designer. Both reimplementations now
-> behave as described: os9exec takes the EOF lock through any
-> write-capable path as of 2026-07-26, and NitrOS-9 always did — stock
-> RBF takes it for write-only producers and creators alike and wakes
-> waiters on every write, measured live 2026-07-27. If you read
-> anywhere that NitrOS-9 gates this on update mode, that describes a
-> patch that was withdrawn, not the shipping module.
+> Both reimplementations match this: `Live` (os9exec, NitrOS-9). Stock RBF
+> takes the EOF lock for write-only producers and creators alike and wakes
+> waiters on every write. **If you read anywhere that NitrOS-9 gates this on
+> update mode, that describes a patch that was withdrawn, not the shipping
+> module** — a plausible-sounding claim to inherit, since it is what the
+> "writes take no lock" half of the rule implies on its own.
 
 Explicit control exists too (`SS_Lock` to lock/release a range by hand,
 `SS_Ticks` to bound how long to wait for a conflicting lock) but is rarely
@@ -293,4 +284,7 @@ Microware C generates reentrant code by default, with one exception: **system-st
 Sources: OS-9 Insights (edition 3), cross-checked against the OS-9 v2.4
 Technical Reference Manual's IPC chapter for exact signal-code values and
 alarm semantics; `_os_ev_waitr`/`_os_ev_setr` and `FAM_NOCREATE` from
-Microware Training & Education seminar manuals.
+Microware Training & Education seminar manuals. The record-locking mode
+rules are cross-referenced across four: the 6809 *System Programmers Manual*
+§6.6.1/§6.6.3/§6.6.5, Tandy's *Technical Reference* and *Level Two
+Development System*, and the 68k *v2.4 Technical Reference*.

@@ -326,33 +326,30 @@ designing around deliberately rather than merely tolerating as a safety net
 - `SS_Lock` locks or releases part of a file directly; `SS_Ticks` sets how
   long a caller waits for someone else's lock before giving up.
 
-> **Correction, 2026-07-26.** This section previously said a write-only path
-> was invisible to the locking mechanism, so two plain appenders never shut
-> each other out. That was wrong, and internally inconsistent with case 2
-> above: the spooler design needs the *write-only* assembler to hold the
-> ghost lock, or the consumer has nothing to sleep against. It came from
-> over-generalizing "writes take no lock" and dropping the EOF exception.
-> Four Microware manuals state that a write at end of file gains EOF Lock
-> regardless of mode, that this is the only case where a write locks any part
-> of a file, that it exists to stop two users extending a file at once, and
-> that a sequential-output creator gains it on creation: 6809 *System
-> Programmers Manual* §6.6.1/§6.6.3/§6.6.5, Tandy *Technical Reference*
-> :3799, Tandy *Level Two Development System* :12732, 68k *v2.4 Technical
-> Reference* :6307. Confirmed as intended behaviour by the mechanism's
-> designer. **os9exec now does this** (2026-07-26): the EOF lock is its own
-> flag on the path, gained by an access landing at the end of the file through
-> any write-capable path and by a create-for-output, kept until an access that
-> is *not* at the end, and dropped at close before the wake. A read-only path
-> still takes nothing and only ever waits — the manual's "reads or writes"
-> means the position, not a licence for a follower to lock the end, which
-> would make the spooler block the assembler. **NitrOS-9 needed no fix here**:
-> stock 6809 RBF takes the EOF lock for a write-only producer and for a
-> write-only creator, and wakes waiters on every write — measured live
-> 2026-07-27 on a conformance suite written from the manuals. An update-mode
-> gate was patched in and then withdrawn, never sent upstream; the mode gate
-> the stock module *does* have is on the read auto-lock, which is correct.
-> NitrOS-9's real remaining RBF defect is a lost update after a parked writer
-> wakes, which is about retrying the conflict walk, not about mode.
+**The EOF lock is not gated on mode, and getting that wrong breaks the
+spooler.** A write landing at end of file gains it in *any* write mode — it is
+the only case where a write locks part of a file, and a sequential-output
+creator gains it on creation. Case 2 above depends on this: the *write-only*
+assembler must hold the ghost lock, or the consumer has nothing to sleep
+against.
+
+How the two reimplementations do it, if you are modelling one:
+
+- **os9exec** — the EOF lock is its own flag on the path, gained by an access
+  landing at the end of the file through any write-capable path and by a
+  create-for-output, kept until an access that is *not* at the end, dropped at
+  close before the wake. `Live` (os9exec).
+- **NitrOS-9** — stock 6809 RBF takes it for a write-only producer and a
+  write-only creator alike, and wakes waiters on every write. `Live`
+  (NitrOS-9). An update-mode gate was patched in and withdrawn, never sent
+  upstream, so a claim that NitrOS-9 gates this on update mode describes the
+  patch; the mode gate the stock module *does* have is on the read auto-lock,
+  which is correct. Its real remaining RBF defect is a lost update after a
+  parked writer wakes — a matter of retrying the conflict walk, not of mode.
+
+Either way a read-only path takes nothing and only ever waits: the manuals'
+"reads or writes" names the position, not a licence for a follower to lock the
+end, which would have the spooler block the assembler.
 
 **os9exec scope, if you are testing against it:** record locking is
 implemented in **RBF only** (`file_rbf.c`). Its host-directory file manager
@@ -361,8 +358,8 @@ An explicit `SS_Lock` on a host *file* does fail honestly with `E$UnkSvc`
 (the default SetStat table applies); only a host *directory* ignores it and
 reports success. What is missing is the **automatic** locking, and that
 absence is silent — nobody asked, so nobody is told. The two are separate
-file managers with no shared code. This is a deliberate decision
-(2026-07-27), not a gap to be filled: a host directory has no counterpart on
+file managers with no shared code. This is a deliberate decision,
+not a gap to be filled: a host directory has no counterpart on
 real OS-9, so there is nothing to be faithful to, and a lock could only ever
 be half-true since host tools can change the file behind the emulator. **Test
 locking on a `mount -k` RBF image; on a host directory you will measure
@@ -458,5 +455,8 @@ locking, raw I/O, file security) — cross-checked against The OS-9 Guru and
 the v2.4 Technical Reference Manual for pipes. The File Descriptor Sector
 table's `FD_LNK` row is confirmed against both the Disk File Organization
 manual's own field table (Figure 7-2) and an independent 1985-era OS-9/68000
-technical manual. See `device-drivers.md` for the driver side of the same
+technical manual. The mode rules for the EOF lock are cross-referenced across
+four: the 6809 *System Programmers Manual* §6.6.1/§6.6.3/§6.6.5, Tandy's
+*Technical Reference* and *Level Two Development System*, and the 68k *v2.4
+Technical Reference*. See `device-drivers.md` for the driver side of the same
 layered model.

@@ -16,13 +16,17 @@ They are siblings and cross-reference each other; install both.
 
 ## Install
 
+Unpack anywhere, then point Claude Code at the two skill directories:
+
 ```sh
-git clone <this repo> ~/Developer/os9/os9-dev-skill
-ln -s ~/Developer/os9/os9-dev-skill/os9-dev         ~/.claude/skills/os9-dev
-ln -s ~/Developer/os9/os9-dev-skill/os9-systems-dev ~/.claude/skills/os9-systems-dev
+unzip os9-dev-skills.zip -d ~/Developer/os9      # any location will do
+ln -s ~/Developer/os9/os9-dev-skills/os9-dev         ~/.claude/skills/os9-dev
+ln -s ~/Developer/os9/os9-dev-skills/os9-systems-dev ~/.claude/skills/os9-systems-dev
 ```
 
-Nothing to build.
+Nothing to build, and no dependencies. Copying the two directories in place of
+symlinking works equally well. Other agents can simply read the files — start
+from `AGENTS.md`.
 
 ## Scope
 

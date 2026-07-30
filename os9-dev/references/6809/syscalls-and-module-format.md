@@ -26,9 +26,12 @@ macro: `OS9 I$Read` expands to `SWI2` + the code byte.
   set on the last character — the same sign-bit terminator 68k module names
   use, applied more broadly here.
 - Standard I/O paths: 0=stdin, 1=stdout, 2=stderr (same as 68k).
-- At process entry (Fork/Chain/debugger `E`): `Y` = top of data memory,
-  `U`/`X` = bottom (direct page/data area boundaries depending on source),
-  `D` = parameter area size, `PC` = module entry point, `CC` flags F=0, I=0.
+- At process entry (Fork/Chain/debugger `E`): `U` = bottom of the data area,
+  `Y` = its top, `X` = the parameter area (which sits above `Y`, so `X` is
+  *not* a data-area boundary — see the next bullet for what it actually
+  points at), `D` = parameter area size, `PC` = module entry point, `CC`
+  flags F=0, I=0. The same `U`/`Y` convention is documented from the
+  assembler's side in `assembly-and-tools.md`'s data-area register section.
 - **Command-line parameter area at entry** (`Live` (NitrOS-9)): on a shell fork
   (`progname ARGS`), entry `X` points directly at the argument text with **no
   leading byte** — the raw command tail, multiple arguments space-separated

@@ -371,7 +371,6 @@ child, or where losing the session is acceptable.
   that happened to write most recently, not the runaway. `kill <pid>` after
   `procs` is the aimed alternative, and the only safe one while output from
   more than one process is in flight.
-- `kill <pid>` after `procs`.
 - **ESC on a blank line** exits the shell; a harness restart is the
   reliable reset when state is unknown. EOF is a per-path setting a site
   may have retuned (see the dual-environment tip in
@@ -419,4 +418,6 @@ them and shows symbol-resolved disassembly. At `dbg:`:
   1980s binary, not os9exec.
 
 ---
-Everything above is `Live` (os9exec) unless explicitly tagged `Manual`.
+Everything above is `Live` (os9exec) unless tagged otherwise inline —
+a few emulator-internal details are `Source` (read from os9exec's own C
+rather than observed), and any `Manual` claim says so.

@@ -200,10 +200,15 @@ a small text file from console input, `?` prompt per line, EOF ends),
 listing), `dsave` (emit a procedure file that copies a directory tree),
 `dump` (hex/ASCII file dump), `edt` (line editor), `list` (print text file),
 `makdir`, `merge` (concatenate files to stdout), `pd` (print working
-directory), `pr` (paginated printing), `rename`, `touch`, `tr` (character
+directory — 6809 spells it `pwd`, with `pxd` for the execution directory),
+`pr` (paginated printing), `rename`, `touch`, `tr` (character
 translate), `cmp` (binary compare: offset, hex values, ASCII per mismatch; `-b` buffer
 size, `-s` silent summary),
 `cfp` (apply a command template across many files), `grep`, `qsort`.
+
+**`pd` and `cfp` have no syntax entry in either `utility-usage.md`** — the
+sources behind those files don't cover them. Use `-?` or `help <name>` on a
+live system rather than hunting for a table row that isn't there.
 
 **Modules and memory:** `load` (make a file's modules memory-resident),
 `link`/`unlink` (adjust a resident module's link count), `save` (write a

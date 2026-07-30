@@ -424,6 +424,61 @@ def check_blanket_tags(text, filename, known_tags):
     return findings
 
 
+# --- dump blocks vs the tables that decode them -----------------------------
+# A hex dump is the strongest artifact in this corpus -- "every number below came
+# from the running system" -- and each is followed by a table claiming which bytes
+# sit at which offset. That pairing is decidable, and it is worth checking: one
+# shipped dump was faithful to the WRONG BUILD, disagreeing with its own decode
+# table in a single field, and settling it by hand took a live rebuild on real
+# 6809 hardware. Arithmetic catches it for free on every commit.
+# The final hex word may end the line -- a dump quoted without its ASCII column
+# has no trailing space, and requiring one silently dropped that word (and so
+# read the bytes it held as unknown rather than checking them).
+_DUMP_LINE = re.compile(
+    r"^\s*(?P<off>[0-9A-Fa-f]{8})\s+(?P<body>(?:[0-9A-Fa-f]{4}(?:[ \t]+|$)){2,8})"
+)
+# `| `00C9` @ `$0B` |` -- the decode-table row shape, allowing a multi-word
+# value (`0000 01c6`) since the 68k table groups bytes that way.
+_DUMP_CLAIM = re.compile(
+    r"\|\s*`(?P<hex>[0-9A-Fa-f]{2}(?:[0-9A-Fa-f\s]*[0-9A-Fa-f]{2})?)`"
+    r"\s*@\s*`\$(?P<off>[0-9A-Fa-f]{1,4})`"
+)
+
+
+def check_dump_claims(text, filename, known_tags):
+    """Every `` `BYTES` @ `$OFF` `` table row must match the dump block above it."""
+    del known_tags
+    memory, findings, in_fence = {}, [], False
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            m = _DUMP_LINE.match(line)
+            if m:
+                base = int(m.group("off"), 16)
+                for index, word in enumerate(m.group("body").split()):
+                    memory[base + index * 2] = word[:2].upper()
+                    memory[base + index * 2 + 1] = word[2:].upper()
+            continue
+        m = _DUMP_CLAIM.search(line)
+        if not (m and memory):
+            continue
+        want = re.sub(r"\s+", "", m.group("hex")).upper()
+        offset = int(m.group("off"), 16)
+        got = "".join(memory.get(offset + k, "??") for k in range(len(want) // 2))
+        if got != want:
+            findings.append(
+                Finding(
+                    "dump-claim", None,
+                    f"decode table claims `{want}` at ${offset:02X}, but the dump above "
+                    f"holds `{got}` -- one of the two is from a different build",
+                    [(filename, lineno)],
+                )
+            )
+    return findings
+
+
 _FLAG_ABOUT = re.compile(r"tagged\s+`?Flag`?", re.I)
 
 
@@ -967,6 +1022,7 @@ def run(roots, register_text=None):
         findings.extend(check_tag_form(text, display, known))
         findings.extend(check_tags_in_code(text, display, known))
         findings.extend(check_blanket_tags(text, display, known))
+        findings.extend(check_dump_claims(text, display, known))
         inventory.extend(scan_open_flags(text, display, known))
     findings = check_presence_contradiction(mentions) + check_shared_facts(facts) + findings
     findings += check_cross_references(doc_texts, known_basenames)

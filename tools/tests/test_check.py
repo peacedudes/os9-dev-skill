@@ -283,6 +283,45 @@ class TestBlanketTags(unittest.TestCase):
 
 
 # --------------------------------------------------------------------------
+# dump blocks vs their decode tables
+# --------------------------------------------------------------------------
+DUMP = "```\n00000000 87CD 012E 000D 1181 0700 1400 C945 7846  .M..IExF\n```\n"
+
+
+class TestDumpClaims(unittest.TestCase):
+    def test_matching_claim_is_clean(self):
+        text = DUMP + "| `00C9` @ `$0B` | data size | 201 |\n"
+        self.assertEqual(chk.check_dump_claims(text, "a.md", KNOWN), [])
+
+    def test_flags_the_wrong_build_case(self):
+        """The exact defect that shipped: dump faithful to a different build."""
+        wrong = "```\n00000000 87CD 012E 000D 1181 0700 1400 0045 7846  .M...ExF\n```\n"
+        findings = chk.check_dump_claims(wrong + "| `00C9` @ `$0B` | data size | 201 |\n", "b.md", KNOWN)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("0000", findings[0].message)
+
+    def test_single_byte_claim(self):
+        text = DUMP + "| `11` @ `$06` | type/language | Prgrm + Objct |\n"
+        self.assertEqual(chk.check_dump_claims(text, "c.md", KNOWN), [])
+
+    def test_multi_word_claim_is_joined(self):
+        text = "```\n00000000  4afc 0001 0000 01c6\n```\n| `0000 01c6` @ `$04` | `M$Size` | 454 |\n"
+        self.assertEqual(chk.check_dump_claims(text, "d.md", KNOWN), [])
+
+    def test_claim_with_no_dump_is_ignored(self):
+        self.assertEqual(
+            chk.check_dump_claims("| `00C9` @ `$0B` | data size | 201 |\n", "e.md", KNOWN), []
+        )
+
+    def test_offset_past_the_dump_is_not_a_false_alarm(self):
+        """An offset the dump never covered reads as unknown, not as a mismatch."""
+        text = DUMP + "| `FFFF` @ `$400` | somewhere else | — |\n"
+        findings = chk.check_dump_claims(text, "f.md", KNOWN)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("??", findings[0].message)
+
+
+# --------------------------------------------------------------------------
 # session dates
 # --------------------------------------------------------------------------
 class TestNoSessionDates(unittest.TestCase):

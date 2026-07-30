@@ -503,29 +503,19 @@ footer — so this is not doubly cross-checked).
 Values are hex for character codes and the `baud`/`type` bitfields,
 decimal for counts (`null=`, `pag=`, `tabs=`).
 
-## Open gaps from this extraction pass
+## Not covered here
 
-- `ex` and `list` now carry their real Level 2 manual entries (lines 7459
-  and 8119 of the primary source). `wmode` remains `Manual` (Farna
-  2nd-edition only — see `## Devices, disks, system` and
-  `## Level 1 vs Level 2`).
-- `tape`, `tapegen`, `diskcache`, `devs`, `irqs`, `events`, and `code` are
-  `Absent` — see `## Devices, disks, system`. A source-mislabeling
-  discovery came out of that search (see `Sources:` footer) — worth
-  keeping in mind for any future 6809 mining pass that reaches for the
-  Farna "1st edition" file.
-- Several Level 1-only utilities with no Level 2 equivalent surfaced
-  during cross-checking (`binex`/`exbin`, `dump`, `login`/`tsmon`,
-  `printerr`, `save`, `sleep`, `tee`, `verify`) — worth their own pass if
-  Level 1 coverage becomes a priority; not folded in here since this
-  file's scope is the Level 2 utility set specifically.
-- FORMAT's density option letters (`-sd`/`-dd` vs. bare `S`/`D`) — `Manual,
-  Flag` between the vintage sources, and unresolved even after a `Live` (NitrOS-9)
-  check: NitrOS-9's own `format` doesn't use dash-prefixed letters for
-  density at all, so this may be purely a vintage-Microware-only detail
-  no longer testable on the emulator available here. `wcreate`'s
-  `-s=<type>` numbering and `dcheck`'s option letters, by contrast, are
-  now `Live` (NitrOS-9) — see above — and no longer open.
+- **Utilities the Level 1 manuals document but the Level 2 manual's command
+  chapter omits**: `binex`/`exbin`, `dump`, `login`/`tsmon`, `printerr`,
+  `save`, `sleep`, `tee`, `verify`. That omission is a gap in *that manual*,
+  **not** evidence they are Level-1-only — `dump`, `tee`, `login`, `save` and
+  `verify` are each used against NitrOS-9 elsewhere in this skill. Their
+  syntax is simply out of this file's Level 2 scope.
+- **`format`'s density letters** (`-sd`/`-dd` vs. bare `S`/`D`) remain
+  `Manual, Flag`: the vintage sources disagree, and NitrOS-9's own `format`
+  uses no dash-prefixed density letters at all, so this may be a
+  vintage-Microware-only detail that cannot be settled on the emulator
+  available here. See the `format` entry above.
 
 ---
 Sources: OS-9 Level 2 Operating System Manual (System Command
@@ -536,10 +526,9 @@ source and to surface Level 1/Level 2 differences. All text here is
 paraphrased, not quoted. **Caveat on one cross-check source:** the file
 catalogued in this corpus as the Farna "1st edition" CoCo quick reference
 is mislabeled — its own title page identifies it as documentation for
-Professional OS-9/68000, not CoCo/6809 (found while chasing the
-`devs`/`irqs`/`events`/`tape`/`code` gap: its entries for those commands
-describe the 68k versions already in `common/utility-usage.md`, not an
-independent 6809 source). Only the genuinely CoCo-specific 2nd edition,
+Professional OS-9/68000, not CoCo/6809, and its command entries describe the
+68k versions already covered in `common/utility-usage.md`. It is not an
+independent 6809 source. Only the genuinely CoCo-specific 2nd edition,
 plus the 1982 Tandy CoCo quick reference, were treated as 6809
 cross-checks for that gap. A handful of items (`dcheck`'s options,
 `wcreate -s=<type>`, the `tmode`/`xmode` `baud=`/`psc=` parameters,

@@ -250,7 +250,7 @@ chain) and may destroy only d0, d1, a0, a2, a3, a6.
   ordinary device use; OS-9 masks interrupts to protect critical sections
   at the CPU level (via the status register), not merely with a software
   flag.
-- **Interrupt latency** increases whenever signals are masked, a
+- **Interrupt latency** increases whenever signals are masked, an
   interrupt-masking system call is active, or the kernel is inside a
   critical section — a driver author budgeting worst-case response time
   needs to account for this, not just the ISR's own instruction count.

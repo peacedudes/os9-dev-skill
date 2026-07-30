@@ -252,8 +252,9 @@ Two independent checks protect a module, checked at different times:
   byte before the CRC field), computed once when first entered into the directory
   (ROM coldstart scan or RAM load) and **not re-verified on subsequent use** —
   an in-memory module can theoretically drift from its on-disk state without
-  detection. The linker pads the module body with a zero byte before the CRC
-  field to keep total length even (all 68000 instructions require even addresses).
+  detection. Where the body's length would leave the total odd, the linker pads
+  it with a single zero byte before the CRC field (68000 instructions require
+  even addresses).
 
 ### Boot-Time Module Discovery
 

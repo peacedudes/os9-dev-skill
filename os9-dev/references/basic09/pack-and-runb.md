@@ -5,6 +5,16 @@ at run time. The manuals are thin here; most facts below are `Live` (os9exec). M
 
 ## PACK
 
+**PACK is the last step of a build, not an editing operation** (`Hearsay` —
+design intent; the manuals give the mechanics without the reason). It
+compresses a finished procedure to minimal I-code for RunB — a stripped
+BASIC09 with no editor or debugger — so that both the module and its
+interpreter can live in ROM. Read the rest of this section against that: the
+packed form is one-way because nothing downstream ever reads it back, and the
+workspace copy is consumed because the copy you keep is the one you `SAVE`d.
+Losing source to `PACK` is not a trap you fell into, it is having skipped the
+step the workflow assumes.
+
 - `PACK` converts a workspace procedure to a non-listable, non-editable
   form. **It is one-way** — the packed form can't be `LIST`ed, edited, or
   reloaded into the workspace. Always `SAVE` source first.

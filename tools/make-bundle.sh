@@ -7,12 +7,28 @@
 # an untracked scratch file cannot ride along. maintainer/ is gitignored and
 # therefore excluded by construction rather than by a rule that could rot.
 #
-# Usage: tools/make-bundle.sh [output.zip]
+# Two editions ship from the same corpus; only the wrapper documents differ.
+#   (default)     for Microware review -- README installs it as a Claude skill
+#   --variant sol for any other agent -- adds START-HERE.md and drops the
+#                 Claude-specific install steps, since a reader who cannot use
+#                 the skill runtime should not be told to symlink into it.
+# Variant wrappers live in packaging/<name>/ and overlay the bundle root.
+# packaging/ itself never ships in either edition.
+#
+# Usage: tools/make-bundle.sh [--variant sol] [output.zip]
 
 set -eu
 
 root=$(cd "$(dirname "$0")/.." && pwd)
-out=${1:-"$root/../os9-dev-skills.zip"}
+variant=
+if [ "${1:-}" = "--variant" ]; then
+    variant=$2
+    shift 2
+    [ -d "$root/packaging/$variant" ] || { echo "no such variant: $variant" >&2; exit 1; }
+fi
+default_out="$root/../os9-dev-skills.zip"
+[ -n "$variant" ] && default_out="$root/../os9-dev-skills-for-agents.zip"
+out=${1:-$default_out}
 name=os9-dev-skills
 
 cd "$root"
@@ -33,7 +49,11 @@ mkdir "$staging/$name"
 
 # Committed files only, then drop what the reader has no use for.
 git archive HEAD | tar -x -C "$staging/$name"
-rm -rf "$staging/$name/tools" "$staging/$name/.gitignore"
+rm -rf "$staging/$name/tools" "$staging/$name/.gitignore" "$staging/$name/packaging"
+
+if [ -n "$variant" ]; then
+    cp "$root/packaging/$variant/"* "$staging/$name/"
+fi
 
 # A bundle that leaked maintainer notes would be worse than no bundle.
 if find "$staging/$name" -name 'maintainer' -o -name '*.pyc' | grep -q .; then

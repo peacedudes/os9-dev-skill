@@ -96,10 +96,16 @@ same fence.
 
 ## The Scheduler Algorithm
 
-OS-9 implements priority-plus-age scheduling through a single
+**This section is OS-9/68000.** OS-9/6809 schedules differently — it really
+does age each queued process individually, via a per-descriptor `P$Age` field
+(`Source`, NitrOS-9 `faproc.asm`; see the `F$AProc` row in the `os9-dev`
+skill's `6809/syscalls-and-module-format.md`). The two are not versions of one
+description, so neither account should be used to "correct" the other.
+
+On 68k, OS-9 implements priority-plus-age scheduling through a single
 **system-wide** counter — **not** a value ticked up on each waiting
-process individually (a commonly-repeated misreading; the primary source's
-mechanism is the system-wide counter). The
+process individually (a misreading that is easy to arrive at, not least
+because it *is* how 6809 works). The
 System Globals field `D_ActAge` ("system age") is a 32-bit value,
 initialized to `$7FFF0000`, and the kernel **decrements it by one** at the
 start of every `F$AProc` call — i.e., every time *any* process is inserted

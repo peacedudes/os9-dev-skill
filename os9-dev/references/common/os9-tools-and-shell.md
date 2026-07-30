@@ -113,6 +113,13 @@ shell to execute it, so built-ins inside it (`chd`, `setenv`, …) cannot
 disturb the invoking shell. Use `profile` when you *want* the changes to
 stick. Relative procedure-file lookups resolve against the data directory.
 
+**So keeping one in the execution directory is the classic mistake**, `Live`
+(os9exec): a procedure file in `CMDS`, invoked by bare name, failed with
+`shell: can't execute "PPX" - Error #000:214 (E_FNA)`. Note that this quotes
+the name you typed, while the data-file case below quotes a word from *inside*
+the file and reports `E_PNNF` — both say "can't execute", and the error code
+plus whose word is quoted are the only things telling them apart.
+
 **A procedure file does not need the execute attribute.** `Live` (os9exec):
 one with `----r-wr` — read and write, no execute bit at all —
 ran correctly when invoked by name. The shell falls back to reading a

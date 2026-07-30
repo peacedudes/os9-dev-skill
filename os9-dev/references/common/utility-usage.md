@@ -206,7 +206,7 @@ for" descriptions: `os9-tools-and-shell.md`.
   `-d` statistics on ^\.
 - `kermit <flags> [<dev>] [<file>…]` — file transfer. Flags are one bundled
   argument with no `-`, and two of them decide whether the command does what
-  you meant (`Live`, os9exec; presence varies by disk):
+  you meant (`Live` (os9exec); presence varies by disk):
   - **`l` (line) is required to aim at a device.** `kermit s /t1 file` sends
     over the *console* and silently ignores `/t1`; `kermit sl /t1 file` uses
     the named device. Neither errors — the giveaway is transfer traffic

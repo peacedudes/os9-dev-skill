@@ -18,9 +18,11 @@ privileged. The canonical statement of that particular delta lives once, in
 
 **State a cross-target delta once and link to it.** Restating it in each file
 that touches the topic creates copies that drift apart, and a reader who
-finds one copy cannot tell whether the others still agree. Two files there are 68k-only despite the
-directory, each with a 6809 counterpart; cite them by full path, never by
-bare filename:
+finds one copy cannot tell whether the others still agree.
+
+**`common/` is where a delta gets stated, but not everything in it is
+shared.** Two files there are 68k-only despite the directory, each with a
+6809 counterpart; cite them by full path, never by bare filename:
 
 - `common/utility-usage.md` (v2.4 68k utility set) ↔ `6809/utility-usage.md`
 - `common/using-os9exec-repl.md` (os9exec is the 68k emulator) ↔

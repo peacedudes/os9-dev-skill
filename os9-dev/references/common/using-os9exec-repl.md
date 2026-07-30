@@ -73,6 +73,13 @@ is binary and replaces real output with `Binary file matches`, silently
 fabricating batch results (a failing program's error text vanishes and it
 "passes"). Always `grep -a`; distrust suspiciously clean output in batch runs.
 
+**Set `tmode pag=0` before reading any listing.** With page pause on, output
+longer than one screen stops and waits for a key; the harness's next send
+answers the pause instead of running, and the tail of the listing is lost. A
+directory or `mdir` entry that exists then reads as absent — the same class of
+silent truncation as the `grep` case, and just as easy to build a wrong
+conclusion on.
+
 ## Batch-testing binaries
 
 Each candidate can be its own boot program in a fresh instance — no shell

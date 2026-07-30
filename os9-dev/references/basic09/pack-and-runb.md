@@ -43,6 +43,11 @@ step the workflow assumes.
 
   Both outputs contain every packed procedure's code; only the entry
   differs. If the entry point matters, name the list explicitly.
+
+  **With a list, the entry point and `*` end up on different procedures.**
+  `PACK a,b >target` gives the module entry `a` (first-listed) but leaves `*`
+  on `b` (last-listed). So a following `PACK*` does *not* reproduce the entry
+  point the list form just used — it picks `b`. `Live` (os9exec).
 - **Packing is destructive to the workspace copy — this is why the manual
   says to always `SAVE` first.** `Live` (os9exec). `PACK` does not merely write a
   file; it converts the *in-workspace* procedure too. With `aaa` and `bbb` in
@@ -63,6 +68,16 @@ step the workflow assumes.
      for the `PACK*` entry-point rule in the table above: a preceding `PACK`
      has already changed which procedure "current" means.
   3. **It grows slightly** (92 -> 96 here; another run 96 -> 100).
+
+  **Read that `DIR` raw, and set `tmode pag=0` first.** Both markers above are
+  easy to destroy while trying to observe them, silently, and both failure
+  modes have produced wrong conclusions about what `PACK` did:
+  - A filter matching leading-space-then-name (`^ +[a-z]+` and similar) drops
+    every `-` and `*` entry — precisely the marked ones you are looking for,
+    so a packed procedure reads as unmarked or missing.
+  - With page pause on, a listing longer than one screen stops and waits; the
+    trailing entries are then swallowed by whatever the harness sends next,
+    so a procedure that is present reads as absent.
 
   Consequence: **a second `PACK` of the same procedure in one session fails**
   with BASIC09 error `#000:051` ("Line with Compiler Error") — there is no

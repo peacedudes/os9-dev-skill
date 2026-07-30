@@ -95,7 +95,7 @@ os9-dev/
   SOURCES.md            which manuals stand behind which file
   references/
     CONFIDENCE-TAGS.md  the tag system above
-    INDEX.md            topic -> file
+    INDEX.md            topic -> file, and symptom -> cause
     common/ 68k/ 6809/ basic09/ c/
 os9-systems-dev/
   SKILL.md  SOURCES.md  references/

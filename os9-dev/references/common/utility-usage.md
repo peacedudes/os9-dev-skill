@@ -269,8 +269,16 @@ The byte in the device descriptor is a **code**, and the two architectures
 encode it differently. Reading one target's table for the other gives wrong
 answers:
 
-On **68k** the whole byte is a flat index into this rate table — `Source`
-(os9exec):
+On **6809** the byte packs rate *and* word length *and* stop bits — that
+encoding is `Manual`, from the Level 2 documentation, and is given in full in
+`6809/utility-usage.md`'s `baud=` row.
+
+For **68k** no manual held here gives the code-to-rate mapping. The table
+below is **os9exec's**, read out of its own source, and is offered only
+because it is the sole mapping available — it is evidence about the emulator,
+not a statement of what OS-9/68000 specifies. Treat it as a starting point to
+confirm against a real system, and do not assume a Microware descriptor built
+elsewhere uses these indexes. `Source` (os9exec):
 
 | Code | bps | Code | bps | Code | bps |
 |---|---|---|---|---|---|
@@ -283,9 +291,8 @@ On **68k** the whole byte is a flat index into this rate table — `Source`
 | 6 | 600 | 14 | 9600 | | |
 | 7 | 1200 | 15 | 19200 | | |
 
-On **6809** the same byte packs rate *and* word length *and* stop bits, over a
-shorter and differently-numbered rate list — see `6809/utility-usage.md`'s
-`baud=` row. The 68k indexes above do not apply there.
+The 6809 encoding is a different scheme over a shorter, differently-numbered
+rate list, so neither target's numbering can be read for the other.
 
 ---
 Sources: Using Professional OS-9 v2.4, "The OS-9 Utilities" chapter

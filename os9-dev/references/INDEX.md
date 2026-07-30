@@ -102,6 +102,7 @@ Error *codes* (number → meaning) are a different lookup: `common/error-codes.m
 | Syntax, types, PROCEDUREs, I/O, operators, functions, error handling, debug mode | all | basic09/basic09-language.md |
 | Numeric widths/ranges/precision per target, INTEGER overflow, hex-constant sign flip, REAL formats and the single-precision-`math` trap, 68k-only commands (SHELL/CHAIN/command-line PARAM), Graphics Interface Module, **calling 68k assembly or C from BASIC09** (worked `psect`/`r68`/`l68` examples) | both | basic09/basic09-per-target.md |
 | Digest of every trap, one line each with a pointer: porting hazards, fabricated syntax, surprising behavior | all | basic09/gotchas.md |
+| **"BASIC09 ran out of workspace"** — the fix is the shell's `#<size>k` modifier (`basic09 #32k`), not anything inside the language | all | common/os9-tools-and-shell.md |
 | PACK, RunB, packed-module resolution (F$Link/CHX), PARAM argument binding, "Can't install trap handler" triage | all | basic09/pack-and-runb.md |
 
 ## C
@@ -127,11 +128,11 @@ Error *codes* (number → meaning) are a different lookup: `common/error-codes.m
 |---|---|
 | Driving live NitrOS-9 as an agent (nitros9repl.sh), stock-inetd `tcp listen`/`join` bridge, per-connection login and session ownership, no `.login` on 6809, DriveWire facts, SCF Escape=EOF, echo/auto-LF gotchas | 6809/using-nitros9-repl.md |
 | Registers, SWI2 syscall convention, F$/I$ code catalog, which calls need supervision before you automate them, 6809 module header bytes | 6809/syscalls-and-module-format.md |
-| Per-command syntax/options for the Level 2 utility set (attr…xmode, tmode/xmode parameter table, CoCo/Dragon-only commands called out separately), Level1-vs-Level2 divergences found while cross-checking | 6809/utility-usage.md |
+| Per-command syntax/options for the Level 2 utility set (attr…xmode, tmode/xmode parameter table, CoCo/Dragon-only commands called out separately), **making a bootable disk — `os9gen`/`cobbler`/`config` — plus `modpatch`**, Level1-vs-Level2 divergences found while cross-checking | 6809/utility-usage.md |
 | Assembler directives (asm/RMA), editor, debugger command set, RLINK | 6809/assembly-and-tools.md |
 | BASIC09 `RUN GFX(...)`/`RUN GFX2(...)` graphics/windowing subroutine calls: per-function syntax, window/device-window lifecycle (DWSET/DWEND/OWSET/SELECT), Get/Put buffers, palette/color, cursor/text control | 6809/gfx-windowing.md |
 | **Seeing** the CoCo screen (screenshots via cocoscreen.sh), injecting keystrokes, CLEAR=backtick screen cycling, windint `$1B` escape-code table, creating graphics windows with wcreate, why XRoar's `-gdb` is a dead end | 6809/reading-the-coco-screen.md |
-| CoCo/Dragon hardware (VDG, graphics, mouse, ACIA, drives, monitors), boot/disk patching (MODPATCH/COBBLER/OS9GEN), ToolShed host-side disk editing | 6809/coco-dragon-hardware.md |
+| CoCo/Dragon hardware (VDG, graphics, mouse, ACIA, drives, monitors), the Boot List Order Bug, ToolShed host-side disk editing and its own traps | 6809/coco-dragon-hardware.md |
 | Level 1 vs Level 2, MMU/DAT internals, GMX III | sibling skill: os9-systems-dev `6809-level2-mmu.md` |
 
 ## Confidence

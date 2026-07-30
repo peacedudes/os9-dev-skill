@@ -88,9 +88,11 @@ dry. Each trip to the kernel requests in units of a configurable minimum
 block size (4K by default); a larger minimum trades some wasted space for
 fewer, less-fragmenting system calls.
 
-A hard constraint sits underneath all of this: **a process may have at most
-32 memory segments open at once** (both `malloc()`'s own system requests and
-any direct `_srqmem()` calls count against this limit). Programs with large
+A hard constraint sits underneath all of this: **a process may hold at most
+32 memory areas at once** — and that ceiling counts the process's initial
+static storage and stack, not just what it asks for later, so fewer than 32
+are actually available. Both `malloc()`'s own system requests and any direct
+`_srqmem()` calls come out of the remainder. Programs with large
 or fragmented memory needs should request bigger chunks up front rather than
 many small ones, precisely because of this ceiling.
 
@@ -213,13 +215,13 @@ on the *existing* descriptor, letting multiple processes share one
 open-file context cheaply. `I$Close` decrements `PD_COUNT`; only at 0 is the
 descriptor actually deallocated and removed from the path table.
 os9exec's own path-descriptor header defines a second field, `PD_CNT`, at
-offset `$03`; the manual lists both, marking `$03` obsolete. **Neither
-offset is live-confirmable**: os9exec implements `I$Dup` (`Live` (os9exec)) but
-shares paths through host-native bookkeeping and never touches `PD_CNT`,
-which is dead and unreferenced in its source, so no guest-visible share
-counter exists to observe either offset against. Treat both as
-`Manual`-only until checked against a primary source. Full note:
-`os9-systems-dev` skill's `file-managers.md`.
+offset `$03`. These are **two genuine fields at two offsets, not a
+contradiction** — the manual lists both and marks `$03` obsolete. What cannot
+be observed is either offset in action: os9exec implements `I$Dup` (`Live`
+(os9exec)) but shares paths through host-native bookkeeping and never touches
+`PD_CNT`, which is dead and unreferenced in its source, so no guest-visible
+share counter exists to watch. Full note: `os9-systems-dev` skill's
+`file-managers.md`.
 
 ### Multi-port and multi-class drivers
 

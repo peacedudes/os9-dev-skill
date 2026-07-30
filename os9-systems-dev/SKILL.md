@@ -1,6 +1,6 @@
 ---
 name: os9-systems-dev
-description: Use when writing an OS-9/68000 device driver or file manager, working with OS-9 kernel internal structures (System Globals, Process Descriptor), the scheduler algorithm, exception/IRQ vector handling, disk allocation/boot mechanics, 6809 Level 2 MMU/DAT register internals, or extending the os9exec emulator's own kernel-interface layer. Not for writing ordinary application programs — see the sibling os9-dev skill for that.
+description: Use when writing — or when explaining how anything works inside — an OS-9/68000 device driver or file manager; OS-9 kernel internal structures (System Globals, Process Descriptor, module directory); the scheduler algorithm and how it picks the next process; exception/IRQ vector handling; how an OS-9 disk boots and what loads in what order (bootstrap, OS9Boot, kernel and module load order); how disk space is allocated; 6809 Level 2 MMU/DAT register internals and per-process address mapping; or extending the os9exec emulator's own kernel-interface layer. Covers understanding these mechanisms, not only authoring them — a bare "how does an OS-9 disk boot" or "where does the kernel keep a process's signal state" belongs here. Not for writing ordinary application programs — see the sibling os9-dev skill for that.
 ---
 
 # OS-9 Systems Development Skill

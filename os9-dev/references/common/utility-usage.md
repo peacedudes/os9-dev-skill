@@ -204,6 +204,16 @@ for" descriptions: `os9-tools-and-shell.md`.
 - `tsmon [<opts>] {/<dev>}` — watch terminals for logins; `-p` print an
   online prompt, `-l=<prog>`/`-r=<prog>` alternate login/shell program,
   `-d` statistics on ^\.
+- `kermit <flags> [<dev>] [<file>…]` — file transfer. Flags are one bundled
+  argument with no `-`, and two of them decide whether the command does what
+  you meant (`Live`, os9exec; presence varies by disk):
+  - **`l` (line) is required to aim at a device.** `kermit s /t1 file` sends
+    over the *console* and silently ignores `/t1`; `kermit sl /t1 file` uses
+    the named device. Neither errors — the giveaway is transfer traffic
+    appearing on your own terminal.
+  - **For binary use `i` (image), never `8` (8-bit quoting).** `8` is for
+    links that are not 8-bit clean and corrupts data over a path that
+    already is. `kermit sil /t1 mymodule` moves a module intact.
 - `break` — halt into the ROM debugger (superuser, console).
 - `make [<opts>] [<target>…] [<macros>]` — `-f=<path>`/`-f-` makefile
   (stdin), `-n` show without executing, `-t` touch dates only, `-u`
@@ -242,9 +252,40 @@ default; `=0` disables the feature.
 | `xon=<h>`, `xoff=<h>` | flow control chars (11, 13) |
 | `bell=<h>` | alert char (07) |
 | `normal` | reset everything above to defaults |
-| `type`, `par`, `cs`, `stop`, `baud` | serial hardware settings — **display-only in tmode**; change via the descriptor (`xmode`/`moded` + `iniz`) |
+| `type`, `par`, `cs`, `stop` | serial hardware settings — **display-only in tmode**; change via the descriptor (`xmode`/`moded` + `iniz`) |
+| `baud=<n>` | writes the open path's baud option byte, but not the hardware rate — see below |
 
 Values are hex for character codes, decimal for counts.
+
+### `baud=` — the argument is a rate, the stored byte is a code
+
+"Display-only" is right about the **hardware**: making a device actually run
+at a new rate takes `deiniz` → `xmode` → `iniz`. But `tmode baud=<n>` does
+write the open path's own baud option byte, and a later `tmode` on that same
+still-open path reads the new value back — `Live` (os9exec). The argument
+there is **raw bits per second**, not the code index below.
+
+The byte in the device descriptor is a **code**, and the two architectures
+encode it differently. Reading one target's table for the other gives wrong
+answers:
+
+On **68k** the whole byte is a flat index into this rate table — `Source`
+(os9exec):
+
+| Code | bps | Code | bps | Code | bps |
+|---|---|---|---|---|---|
+| 0 | 50 | 8 | 1800 | 16 | 38400 |
+| 1 | 75 | 9 | 2000 | 17–20 | unassigned |
+| 2 | 110 | 10 | 2400 | 21 | 57600 |
+| 3 | 134 | 11 | 3600 | 22 | 115200 |
+| 4 | 150 | 12 | 4800 | | |
+| 5 | 300 | 13 | 7200 | | |
+| 6 | 600 | 14 | 9600 | | |
+| 7 | 1200 | 15 | 19200 | | |
+
+On **6809** the same byte packs rate *and* word length *and* stop bits, over a
+shorter and differently-numbered rate list — see `6809/utility-usage.md`'s
+`baud=` row. The 68k indexes above do not apply there.
 
 ---
 Sources: Using Professional OS-9 v2.4, "The OS-9 Utilities" chapter

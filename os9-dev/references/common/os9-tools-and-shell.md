@@ -172,6 +172,10 @@ but it also means a script or harness must not assume ESC is still EOF.
   across path open/close until reboot; not permanent (that takes editing
   the descriptor file or a new boot). Serial hardware settings
   (`baud`/`par`/`cs`/`stop`/`type`) need `deiniz` → `xmode` → `iniz`.
+  `tmode baud=<n>` is a partial exception — it does write the open path's
+  own baud byte without changing the hardware rate, and its argument is a
+  literal bits-per-second value rather than the descriptor's code; see
+  `common/utility-usage.md`'s `baud=` note.
   Settable: control-key assignments, echo, backspace behavior, page
   pause, EOF character, etc. — full parameter table in
   `common/utility-usage.md`.

@@ -119,7 +119,12 @@ SCF field offsets, `Manual` (Technical I/O Manual §3), matching os9exec's
 manual lists the same fields as absolute path-descriptor offsets — each
 manual value is `$80` plus the value here: `PD_DTP` byte 0, `PD_EOR` `$0B`,
 `PD_INT` `$10` (keyboard interrupt char), `PD_QUT` `$11` (keyboard abort),
-`PD_PAR` `$14` (parity/stop-bits/bits-per-char), `PD_BAU` `$15` (baud rate).
+`PD_PAR` `$14` (parity/stop-bits/bits-per-char), `PD_BAU` `$15` (baud
+**code**, not a literal rate — one byte cannot hold one). The encoding is not
+shared across targets: on 68k the byte is a flat index into a rate table, on
+6809 it packs rate, word length and stop bits together, so neither target's
+numbering can be read for the other. Both tables are in the `os9-dev` skill's
+`common/utility-usage.md`, under the `baud=` note.
 
 Device-descriptor offsets, `Source`: `M$Port` (hardware interface port
 address) `$30`, `M$Mode` `$37`, `M$FMgr` (offset to file manager name string)

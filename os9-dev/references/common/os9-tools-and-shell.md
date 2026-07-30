@@ -122,6 +122,13 @@ by granting it `e`; do set `pr` (and `pe` only if a module) when someone
 else must run it. Not separately confirmed on 6809, though the mechanism is
 kernel-level rather than port-specific.
 
+**That fallback has no guard, so any readable text file is a script.** `Live`
+(os9exec): naming a file of ordinary prose executed its first word and reported
+`shell: can't execute "this" - Error #000:216`, quoting a word from *inside* the
+file rather than the file that was run. A mistyped path landing on a data file
+therefore runs it, and the message points at the content instead of the
+mistake — where Unix would refuse the file outright.
+
 **Line endings are CR (0x0D), and a procedure file with LF endings fails
 silently** — `Live` (os9exec). OS-9 does not treat LF as a terminator, so the whole
 file is *one line*: the shell echoes its entire contents and executes

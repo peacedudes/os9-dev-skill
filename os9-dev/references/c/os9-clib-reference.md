@@ -143,7 +143,7 @@ What to take from it:
 | `setbuf(FILE *fp, char *buffer)` | Call after `fopen()`, before any I/O. Pass `NULL` to disable buffering. `stderr` is always unbuffered by default. |
 | `write(int path, char *buf, int count)` / `read(int path, char *buf, int count)` | Raw path-based I/O (OS-9 `I$Write`/`I$Read` directly, no `FILE *` or buffering) — the primitive underneath the numbered stdin/stdout/stderr paths (0/1/2). **Do not mix these with `printf`/`fprintf`/other stdio calls on the same path without an explicit `fflush()` in between.** `Live` (os9exec): interleaving a raw `write()` with a buffered `fprintf()` on the same fd doesn't just reorder or drop output — the two calls' bytes physically overlay each other in the shared stdio buffer, corrupting both (e.g. `"raw write with fflush first\n"` came out as `"after writeith fflush first"` when a `printf` followed without a flush). `write()`/`read()` used alone, with no stdio calls sharing the same path, work correctly. |
 
-**`Live` (os9exec)** (os9exec) — the core File I/O behaviors above check
+**`Live` (os9exec)** — the core File I/O behaviors above check
 out: `fwrite("ABCDE",1,5)` returned `5` and `fread(...,1,5)` read back `ABCDE`
 (both return the item count); all three `fseek` place codes work — `0`/start
 (→`CD` at offset 2), `1`/current (a `+3` from offset 2 then read gave `56`), and
@@ -163,7 +163,7 @@ type-based selection is demonstrated by the raw disk read.
 |---|---|
 | `strcat`/`strncat`/`strcmp`/`strncmp`/`strcpy`/`strncpy`/`strlen` | `strncpy` pads the remainder with nulls if the source is shorter than n. |
 | `strhcpy` | Copies a sign-bit-**terminated** *source* (the OS-9 name/string convention: the final char has bit 7 set to mark the end) into a NUL-terminated C string — it copies through the terminator char with the high bit cleared, then NUL-terminates. **`Live` (os9exec) — dangerous gotcha, NOT in any manual:** `strhcpy` stops **only** at a high-bit byte, **not at NUL**. Handing it a plain NUL-terminated C string makes it read *past* the NUL into adjacent memory and **overflow the destination** — `strhcpy(buf,"AB")` copied `41 42 00 44 4F 4E 45 20` (`AB\0DONE ...`, straight into the next string literals) and with a small `buf[8]` corrupted the stack and bus-errored (`Error #000:102`) deterministically. **Only ever pass a genuinely sign-bit-terminated source**; to convert a C string, set bit 7 on its last char first. |
-| `index(s, ch)` / `rindex(s, ch)` | OS-9/BSD names instead of ANSI's `strchr`/`strrchr`. **`Live` (os9exec)** (os9exec): `index("hello",'l')`→`"llo"`, `rindex(...)`→`"lo"` both link and work; `strchr` fails to link (`Symbol 'strchr' unresolved`, `l68: error - unresolved references`) — the ANSI names genuinely aren't in `clib.l`. |
+| `index(s, ch)` / `rindex(s, ch)` | OS-9/BSD names instead of ANSI's `strchr`/`strrchr`. **`Live` (os9exec)**: `index("hello",'l')`→`"llo"`, `rindex(...)`→`"lo"` both link and work; `strchr` fails to link (`Symbol 'strchr' unresolved`, `l68: error - unresolved references`) — the ANSI names genuinely aren't in `clib.l`. |
 
 **No bounds checking** — caller must ensure buffers are large enough. No `strstr()`.
 
@@ -241,7 +241,7 @@ transition, which minute-resolution local dates can't disambiguate anyway.
 | `ibrk(int increase)` | Request memory from the program's initial pool (distinct from `sbrk`). |
 | `freemem(void)` | Pointer to the base of free memory. |
 
-**`Live` (os9exec)** (os9exec): `calloc(16,1)` returned a block whose
+**`Live` (os9exec)**: `calloc(16,1)` returned a block whose
 16 bytes were all zero (zero-init confirmed), and `sbrk(1000000000)` (a ~1 GB
 ask) returned `-1` (refused, as documented). `malloc`/`free`/`calloc`/`sbrk`
 all link.

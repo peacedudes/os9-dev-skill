@@ -60,7 +60,7 @@ in this file:
   the data-types reference table below).
 - **`\n` is CR (0x0D), not LF** — matches OS-9's own line convention, but
   will silently produce the wrong bytes if you're thinking in Unix terms.
-  **`Live` (os9exec)** (os9exec): `putc('\n', f)` to a file wrote the
+  **`Live` (os9exec)**: `putc('\n', f)` to a file wrote the
   single byte `0x0D` (the file read back `58 0D 59` for `X`,`\n`,`Y`) — the
   compiler maps the escape to CR at compile time; a raw `putc(0x0A, f)` stays
   `0x0A`, so there is no I/O-layer translation, it is purely what `\n` compiles
@@ -199,7 +199,7 @@ shape row-wise. Concretely: BASIC09's `DIM array(5,3):INTEGER` and C's
 same logical element requires transposed subscripts — BASIC09's
 `array(4,2)` is C's `array[2][4]`, not `array[4][2]`. Passing a
 multi-dimensional array between the two languages without accounting for
-this silently reads/writes the wrong elements. **`Live` (os9exec)** (os9exec):
+this silently reads/writes the wrong elements. **`Live` (os9exec)**:
 a `DIM m(2,3):BYTE` filled `m(i,j)=i*16+j` and `PUT` to a file stored
 `11 21 12 22 13 23` — i.e. `m(1,1),m(2,1),m(1,2),m(2,2),m(1,3),m(2,3)`, the
 first subscript varying fastest, confirming BASIC09's column-major layout.

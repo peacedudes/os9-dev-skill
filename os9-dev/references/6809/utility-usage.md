@@ -179,7 +179,8 @@ layer underneath it.
   I/O won't die until that I/O completes — if `procs` still shows it
   after `kill`, it's probably waiting on terminal input, not stuck.
 - `setpr <procID> <priority>` — shell built-in. Priority is decimal 1
-  (lowest) to 255 (highest); same same-user-ID-or-superuser rule as `kill`.
+  (lowest) to 255 (highest); the same-user-ID-or-superuser restriction as
+  `kill` applies.
 - `procs [e]` — snapshot of running processes (state changes fast, so
   it's a point-in-time view). Default shows only the caller's own
   processes; `e` shows every user's. Columns: user ID, process ID,
@@ -305,9 +306,9 @@ layer underneath it.
 - `setime [y m d h m s [am/pm]]` — sets system date/time and starts the
   clock; multitasking depends on the clock actually running (some boot
   configurations start it automatically via a startup-time clock module
-  instead of requiring an explicit `setime`). Year is four digits (`Live` (NitrOS-9),
-  interactive prompt displays `yyyy/mm/dd hh:mm:ss` template; prior
-  claim of 2-digit year was incorrect). Month/day/hour/minute are 1–2
+  instead of requiring an explicit `setime`). Year is four digits — `Live`
+  (NitrOS-9): the interactive prompt displays a `yyyy/mm/dd hh:mm:ss`
+  template. Month/day/hour/minute are 1–2
   digits; seconds are optional. Delimiters: space, colon, semicolon, or
   slash, freely mixed. If the clock is never set, file "last modified"
   timestamps can't be trusted.

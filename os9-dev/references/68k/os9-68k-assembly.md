@@ -58,12 +58,11 @@ directive — reserve space with an explicit `dc.b 0,0,0,…`.
 ## A complete worked program (`Live` (os9exec))
 
 Everything else in this file is a contract; this is the idiom. The tables
-below give the right register names, but nothing here showed the `psect`
-preamble, the `trap #0` sequence, or the error convention as code — so
-assembly written from the tables alone names the right registers and still
-won't assemble. This program is the smallest one that exercises all three.
-It creates a file, writes a line, closes it, then deliberately opens a file
-that does not exist.
+below give the right register names but not the `psect` preamble, the
+`trap #0` sequence, or the error convention — code written from the tables
+alone names the right registers and still won't assemble. This is the
+smallest program that exercises all three: it creates a file, writes a line,
+closes it, then deliberately opens a file that does not exist.
 
 ```
 Prgrm     set 1
@@ -409,11 +408,11 @@ hand-written assembly program, the programmer's own root psect plays that
 role. `l68`'s "no root psect found" error is exactly what happens when no
 linked object supplies one.
 
-## Known gaps (not covered by this rebuild's source set)
+## Directive syntax: what is settled, and what is still open
 
-No surveyed source is a real 68k assembler manual, so the following are
-**unverified for 68k** — confirm against a genuine 68k RMA manual (or
-live) before relying on details:
+No surveyed source is a real 68k assembler manual, so **nothing below rests
+on a 68k directive reference.** Several of these were settled live anyway, and
+each says so; treat only the ones marked open as unverified.
 
 - Exact `psect`/`vsect`/`csect` directive syntax and parameter order (the
   documented PSECT/VSECT syntax is the **6809** RMA's) — **unverified as a
@@ -436,8 +435,8 @@ live) before relying on details:
   write into its own `dc`-defined storage this way (each process gets its
   own image), so a scratch counter/flag/saved-ID can sit beside the code
   with no `vsect`.
-- ~~The external-symbol "trailing colon = public" visibility convention~~
-  — resolved: `Live` (os9exec), confirmed via `l68 -s` and `debug`'s `sc` symbol
+- **A trailing colon makes a label externally visible** — `Live` (os9exec),
+  confirmed via `l68 -s` and `debug`'s `sc` symbol
   listing. Colon-suffixed labels (`start:`, `sumloop:`) are
   debugger-/linker-visible symbols; colon-less labels are not — a build
   with only colon-less labels showed just the three universal symbols

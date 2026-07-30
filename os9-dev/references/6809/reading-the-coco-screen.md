@@ -5,7 +5,9 @@ screen. Verifying graphics work therefore needs a second channel:
 host-side screenshots and
 keystroke injection against XRoar's own window. Split the roles — drive text
 commands over the serial REPL, press keys and capture the screen host-side.
-Everything below is `Live` (NitrOS-9) against a running CoCo3.
+Everything below is `Live` (NitrOS-9) against a running CoCo3, **except the
+windint opcode table**, which is `Source` — read out of NitrOS-9's own
+`windefs.as`, not exercised opcode by opcode.
 
 ## CLEAR is the host backtick
 
@@ -81,7 +83,9 @@ table: `gfx-windowing.md`).
 Graphics primitives are `$1B`-prefixed codes written to a window path, easiest
 from a shell via `display`. Take the opcodes from `source/lib/alib/windefs.as`
 in the NitrOS-9 tree (secondary cross-check only — see the note on NitrOS-9
-source provenance).
+source provenance). **The table below is `Source`, not `Live`** — the opcodes
+were read from that file; only the ones appearing in the worked examples here
+have actually been sent to a window.
 
 Guessing costs real time: `$1b22` is `WOWSet` (overlay window set), **not**
 SELECT, which is `$1b21`. A SELECT experiment built on the wrong opcode

@@ -35,7 +35,7 @@ independent of any manual.
 | 6809/using-nitros9-repl.md | `Live` (NitrOS-9 EOU under XRoar via DriveWire) |
 | 6809/gfx-windowing.md | OS-9 Level 2 Operating System Manual (GFX/GFX2 chapter, Ch. 9) primary; BASIC09 Reference Manual (Tandy), which reprints the same appendix, as an independent second OCR pass for function names and syntax; GFX2 calling sequences largely `Live` (NitrOS-9 under XRoar) |
 | 6809/utility-usage.md | OS-9 Level 2 Operating System Manual (System Command Descriptions) primary; OS-9 Users Manual 1983 and Gimix OS-9 Users Manual 1983 (both Level 1) plus the Farna Quick References as cross-checks for OCR ambiguity and Level 1/Level 2 differences; a handful of entries `Live` on NitrOS-9 |
-| 6809/reading-the-coco-screen.md | `Live` throughout (NitrOS-9 EOU under XRoar, driven over DriveWire with host-side screen capture); NitrOS-9's `windefs.as` as a `Source` cross-check for windint opcodes only |
+| 6809/reading-the-coco-screen.md | `Live` (NitrOS-9 EOU under XRoar, driven over DriveWire with host-side screen capture) except the windint opcode table, which is `Source` from NitrOS-9's own `windefs.as` |
 
 Known-bad source note: the "OS-9 Relocating Macro Assembler" manual
 circulating in 68k archives is actually a **6809** manual (it documents 6809

@@ -67,7 +67,7 @@ Technical Reference (`$2E M$Parity`) and the fixed 48-byte header size. Trust
 | Code | Symbol | Meaning |
 |---|---|---|
 | 0 | — | wildcard |
-| 1 | Prgm | program |
+| 1 | Prgrm | program |
 | 2 | Sbrtn | subroutine module |
 | 3 | Multi | multi-module |
 | 4 | Data | data module |
@@ -75,12 +75,12 @@ Technical Reference (`$2E M$Parity`) and the fixed 48-byte header size. Trust
 | 6–10 | — | reserved |
 | 11 | TrapLib | user trap library |
 | 12 | Systm | system component |
-| 13 | Flmgr | file manager |
+| 13 | FlMgr | file manager |
 | 14 | Drivr | device driver |
 | 15 | Devic | device descriptor |
 | 16–255 | — | user-definable |
 
-The kernel validates type against use: forking a non-Prgm module returns
+The kernel validates type against use: forking a non-`Prgrm` module returns
 `E_NEMOD`.
 
 ### Language codes (M$Lang)

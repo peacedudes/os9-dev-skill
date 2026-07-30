@@ -64,7 +64,12 @@ for" descriptions: `os9-tools-and-shell.md`.
 - `count [<opts>] {<path>}` — `-l` lines, `-w` words, `-c` characters,
   `-b` per-character frequency breakdown.
 - `del [<opts>] {<path>}` — `-f` delete write-protected, `-p` prompt per
-  file, `-e` zero the freed disk space (secure erase).
+  file, `-e` zero the freed disk space (secure erase). **An empty directory
+  deletes like a file**, `Live` (os9exec): `del <dir>` removed one whose `d`
+  bit was still set, with no error and no need for `deldir` or a prior
+  `attr -nd`. A non-empty one is refused with `E_DNE`/238, so what protects a
+  directory here is being non-empty, not being a directory — a `del` aimed at
+  a name you believed was a file will take the directory with it.
 - `deldir [<opts>] {<path>}` — recursive; `-f` ignore write protection,
   `-q` no confirmation prompts.
 - `dir [<opts>] {<path>}` — `-e` extended (owner, dates, size, perms),

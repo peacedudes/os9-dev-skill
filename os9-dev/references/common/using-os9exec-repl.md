@@ -121,6 +121,12 @@ all `Live` (os9exec), the first two silent:
   happens anyway. Give `copy` an explicit `-r` (`-f` for a write-protected
   destination) so it never asks.
 
+**No two utilities spell "don't ask" the same way**, so the flag cannot be
+guessed: `copy -r`, `deldir -q`, `frestore -s`, `format -r`, `fsave -p`. `del`
+is the one that inverts the default — it never asks unless `-p` opts in. Look
+the flag up in `utility-usage.md` (which carries each one's own tag) before
+putting any of these in a procedure file.
+
 ## Stamping non-super ownership on an RBF image
 
 `Live` (os9exec). Files are stamped with the creating process's ID, so ownership is set

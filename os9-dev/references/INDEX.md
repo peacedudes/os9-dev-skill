@@ -59,7 +59,8 @@ has bitten a real session.
 | Ctrl-C/Ctrl-E killed the wrong process | both go to the device's last writer, not a process you name — use `kill <pid>` | `common/using-os9exec-repl.md` |
 | Separate writes run together / output garbled | `I$WritLn` writes **to the first CR** — a buffer without one runs past its end | `common/memory-and-io.md` |
 | BASIC09 `E`, bare `E` or `LOAD` fails `#248 - Media Full`, `0 free` workspace at any `#nk` | a stray second CR in the boot autotype reached the guest — restart it | `6809/using-nitros9-repl.md` |
-| TCP connects but no banner ever arrives | an earlier session closed without logging out; its login still owns the channel | `6809/using-nitros9-repl.md` |
+| TCP connects but no banner ever arrives | an earlier session closed without logging out; or channels exhausted after a few connect/detach cycles even with clean logouts | `6809/using-nitros9-repl.md` |
+| Nothing listening at all, guest looks dead | the DriveWire *server* crashed — check host crash reports before diagnosing the guest | `6809/using-nitros9-repl.md` |
 | Session died while listing a directory | channel-filling output kills it — narrow the listing or read the image host-side | `6809/using-nitros9-repl.md` |
 | Session ended while sending ordinary content | Escape (`$1B`) is SCF's EOF — the shell exited normally on it | `6809/using-nitros9-repl.md` |
 | File written through the harness fails to parse at a line that looks fine | `tee` dropped a trailing CR under load, joining two lines silently | `6809/using-nitros9-repl.md` |

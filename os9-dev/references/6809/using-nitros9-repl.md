@@ -38,6 +38,20 @@ Prerequisites, each obtained separately: XRoar; a **CoCo3 ROM image**
 disk image (NitrOS-9 itself is open source, but bundled third-party software
 may not be); a DriveWire server.
 
+**Which DriveWire build you run is part of the harness, not an implementation
+detail.** `Live` (NitrOS-9): the DW4 server this project drives — DrPitre's
+Swift `drivewire-cli` — delivered its TCP-server callbacks on a private
+dispatch queue while the host object was mutated on the main queue, and
+segfaulted under live guest traffic. Symptom is a *host* one and reads as a
+dead guest: the server answers `SUCCESS` to `tcp listen`, then its window
+vanishes and every later connection attempt finds nothing listening — look in
+the host's crash reports, not at OS-9. A one-line queue confinement fixes it,
+carried locally and offered upstream; a rebuild from upstream `main` silently
+restores the crash, and a harness that locates its binary by "newest build"
+will pick up that regression without saying so. So: pin the build, and when a
+guest goes quiet, establish that the *server* is still alive before
+diagnosing anything guest-side.
+
 Launch shape:
 
 ```
@@ -120,6 +134,22 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   (SCF EOF → shell exits) is retired properly and the channel recycles
   immediately — proven by consecutive join/logout cycles reusing one channel.
   `tools/nitros9repl.sh connect` sends the Escapes itself on Ctrl-] detach.
+- **Logging out is necessary but has not proved sufficient: channels still
+  run out after a few interactive connect/detach cycles.** `Live`
+  (NitrOS-9), measured: across repeated attach-then-detach cycles the session
+  channel climbed `N2` → `N4` and by roughly the third launch no banner
+  arrived at all, even though each detach ran the two-Escape logout
+  epilogue. So the clean-logout recycling above is real for scripted
+  join/logout, and does **not** reliably survive an interactive client's
+  teardown — a pty master closing can SIGHUP the client mid-logout and
+  reproduce exactly this, which is why the true per-cycle budget is unknown
+  rather than "three". Recovery is a guest restart; nothing softer clears
+  it, and the mechanism is unexplained — treat it as a live limitation to
+  budget for, not a bug to chase. Two consequences: **restart rather than
+  retrying** when
+  a connection produces silence, and do not add a "can it still hand out a
+  session?" health probe — the only way to ask is to open a session, which
+  spends a channel, so probing helps cause the failure it checks for.
 - **A terminal bridge must not remap the codes SCF already owns.** `Live`
   (NitrOS-9). `tmode` on an inetd channel reports `bsp=08 del=18
   eor=0D eof=1B reprint=04 dup=01 psc=17 abort=03 quit=05` — every control key

@@ -3,7 +3,8 @@
 Sibling skill to `os9-dev`, holding the device-driver/file-manager/
 kernel-internals content that application programmers don't need. Same
 provenance rules as `os9-dev/SOURCES.md`: curated, condensed reference
-material in its own words; no raw manual text reproduced; no verbatim
+material in its own words; no manual text reproduced at length (short
+attributed quotations only, where the wording is the evidence); no verbatim
 worked code examples; no proprietary Microware source code anywhere in
 the chain.
 

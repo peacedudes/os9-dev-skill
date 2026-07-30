@@ -77,9 +77,12 @@ All source material is public-domain or freely-published Microware/Tandy
 documentation, or historical-preservation archives. **No proprietary Microware
 source code was used anywhere in this chain.** Facts are stated as facts — a
 register contract, an error number, a struct offset — but the prose around
-them is written here rather than borrowed: no raw manual text reproduced, no
-worked code example kept verbatim, no file mirroring a source's chapter
-structure.
+them is written here rather than borrowed: no manual text reproduced at
+length, no worked code example kept verbatim, no file mirroring a source's
+chapter structure. Short quotations do appear — a clause or a sentence, each
+attributed to chapter and page — where the manual's exact wording *is* the
+evidence: what it specifies on a disputed point, or one of its own errors
+preserved so the citation can be checked.
 
 What was deliberately *not* used is recorded too, in `SOURCES.md`, with the
 reasoning. An archive of genuine Microware 6809 source sits in the wider

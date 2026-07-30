@@ -46,7 +46,7 @@ has bitten a real session.
 | "Can't find" a command that is plainly present | fork lookups use `chx`, not `PATH` | `common/using-os9exec-repl.md` |
 | Redirect produced error text, or clobbered the file | `>>` is **stderr**; append is `>+`; plain `>` fails if the file exists | `common/os9-tools-and-shell.md` |
 | `Wildcard match failed` — the command never ran | a `*`/`?` pattern matched no file, which aborts the command instead of passing through; `?` in a borrowed `$?` idiom does this too | `common/os9-tools-and-shell.md` |
-| A batch run stalled, or later procedure lines never executed | a utility hit an interactive prompt (classically `copy` without `-r`) and read your remaining lines as its answers | `common/using-os9exec-repl.md` |
+| A batch run stalled, or later procedure lines never executed | either an earlier command failed (`-x` abort-on-error is the default, and the skipping is announced by nothing) or a utility hit an interactive prompt — classically `copy` without `-r` — and read your remaining lines as its answers | `common/using-os9exec-repl.md` |
 | `can't execute "<a word you never typed>"` | you named a data file, and the shell is running its contents as commands — the quoted word came from inside the file | `common/os9-tools-and-shell.md` |
 | A file you just created won't open, or `dir` shows a shorter name than you gave | names address only their first 27 characters, so a longer one is reachable by its prefix alone — and two long names sharing that prefix are one file | `common/unix-differences.md` |
 | Compiler reads the whole source as one line | source has LF endings; OS-9 needs CR-only | `common/using-os9exec-repl.md` |

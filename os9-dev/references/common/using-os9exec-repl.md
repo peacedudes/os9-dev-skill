@@ -103,7 +103,7 @@ to boot (`shell /h0/startup`):
 gtimeout 60 env OS9DISK=<dir>/h0 OS9STOP=1 ./os9exec shell /h1/<proc> </dev/null 2>&1
 ```
 
-`/h1` here is any host directory under the emulator's start path. Three traps,
+`/h1` here is any host directory under the emulator's start path. Four traps,
 all `Live` (os9exec), the first two silent:
 
 - **The procedure file must be CR-only.** With LF endings OS-9 sees one
@@ -120,6 +120,14 @@ all `Live` (os9exec), the first two silent:
   because a stray `y` in a consumed line answers *yes* and the overwrite
   happens anyway. Give `copy` an explicit `-r` (`-f` for a write-protected
   destination) so it never asks.
+
+- **The first failure ends the run, and nothing announces that it did.** The
+  shell's `-x` (abort on error) is on by default, so a procedure file stops at
+  its first failing command: that command's own error prints, the remaining
+  lines never execute, and the run then exits looking exactly like a completed
+  one. A four-line file whose second command failed produced line one's output,
+  the error, and nothing further. Pass `-nx` when a batch must finish
+  regardless — and never read "no further errors" as "the rest ran".
 
 **No two utilities spell "don't ask" the same way**, so the flag cannot be
 guessed: `copy -r`, `deldir -q`, `frestore -s`, `format -r`, `fsave -p`. `del`

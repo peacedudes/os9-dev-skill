@@ -122,6 +122,11 @@ by granting it `e`; do set `pr` (and `pe` only if a module) when someone
 else must run it. Not separately confirmed on 6809, though the mechanism is
 kernel-level rather than port-specific.
 
+**A procedure file stops at its first failing command** — `-x` abort-on-error
+is the default, and nothing reports that the remaining lines were skipped
+(`Live` (os9exec); `-nx` to run on regardless, and see
+`using-os9exec-repl.md`).
+
 **That fallback has no guard, so any readable text file is a script.** `Live`
 (os9exec): naming a file of ordinary prose executed its first word and reported
 `shell: can't execute "this" - Error #000:216`, quoting a word from *inside* the

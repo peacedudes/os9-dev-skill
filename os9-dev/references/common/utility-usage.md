@@ -64,12 +64,21 @@ for" descriptions: `os9-tools-and-shell.md`.
 - `count [<opts>] {<path>}` — `-l` lines, `-w` words, `-c` characters,
   `-b` per-character frequency breakdown.
 - `del [<opts>] {<path>}` — `-f` delete write-protected, `-p` prompt per
-  file, `-e` zero the freed disk space (secure erase). **An empty directory
-  deletes like a file**, `Live` (os9exec): `del <dir>` removed one whose `d`
-  bit was still set, with no error and no need for `deldir` or a prior
-  `attr -nd`. A non-empty one is refused with `E_DNE`/238, so what protects a
-  directory here is being non-empty, not being a directory — a `del` aimed at
-  a name you believed was a file will take the directory with it.
+  file, `-e` zero the freed disk space (secure erase). `del` refuses a
+  directory: *"You cannot delete directory files with this utility unless
+  their attribute is changed to non-directory"*, `Manual` (*Using
+  Professional OS-9* v2.4). **On a real RBF image os9exec agrees**, `Live`
+  (os9exec): `del <dir>` gives `E_FNA`/214 whether the directory is empty or
+  not. **On a host-native directory it does not**, `Live` (os9exec): an EMPTY
+  directory with its `d` bit set is removed silently, no error and no prior
+  `attr -nd`; a non-empty one is still refused, with `E_DNE`/238. So on that
+  mount type what protects a directory is being non-empty rather than being a
+  directory. This is an emulator-shim divergence, not an OS-9 behaviour — a
+  host directory has no RBF underneath it (see the host-native-vs-image note
+  in `using-os9exec-repl.md`), and nothing is lost but an empty directory.
+  **Measure `del` semantics on an image, never on a host mount**: an earlier
+  revision of this entry reported the host-native result as a general OS-9
+  hazard, which it is not.
 - `deldir [<opts>] {<path>}` — recursive; `-f` ignore write protection,
   `-q` no confirmation prompts.
 - `dir [<opts>] {<path>}` — `-e` extended (owner, dates, size, perms),

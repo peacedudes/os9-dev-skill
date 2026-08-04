@@ -93,6 +93,31 @@ timeout 5 env OS9DISK=/abs/path/disk ./os9exec /dd/CMDS/<name> </dev/null 2>&1
 tests "loads and starts" (a usage message is a pass) — the right signal
 for auditing a disk full of binaries, and far faster than driving a shell.
 
+## An internal command can BE the boot program — no shell needed
+
+`Live` (os9exec). os9exec's own built-ins run as the boot program, so a disk
+image can be built and populated with no shell, no SDK and no Microware
+software at all:
+
+```
+os9exec mount -k=360k h7      # a real RBF image at <startPath>/h7
+os9exec makdir /h7/SCRATCH    # ...and directories inside it
+os9exec dir /h7               # SCRATCH
+```
+
+This is the route for CI and for a fresh clone with no system disk. `mount -k`
+streams the image (head plus a zero tail) rather than buffering it, so size is
+bounded by host disk, not by the 68k arena — 125 MB builds in well under a
+second. `mount -r`, a genuine RAM disk, IS bounded by the arena and says so.
+
+**`OS9DISK` cannot point at an RBF image on macOS/Linux**, `Live` (os9exec):
+the top-level process's data and execution directories are resolved as HOST
+paths, so an image file cannot hold them and the boot program never starts
+(`E_PNNF`, or `E_UNIT` from the first relative open). The same image mounted
+as `OS9Hx` works perfectly by ABSOLUTE path. So a program that names files
+relatively cannot be pointed at an image this way; give it an `OS9Hx` device
+and absolute paths, or run it from a host directory.
+
 ## Batch-driving a whole session: a procedure file, never a pipe
 
 For unattended multi-command work (building an image, populating a disk),

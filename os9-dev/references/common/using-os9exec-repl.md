@@ -43,6 +43,15 @@ or SDK. A host directory of your own files works identically for basic testing.
   configured baud rate (`baud_throttle`, on by default); `-r` disables it.
   Keep the throttle only for a test that genuinely depends on real-time
   pacing.
+- **But never check OUTPUT behaviour with `-r`**, `Live` (os9exec). Pacing runs
+  bytes through a finite FIFO, and that is where output gets lost or reordered;
+  `-r` bypasses it, so a truncation bug is invisible under the flag you
+  normally run with. This is not hypothetical: `mount -?` delivered four of its
+  eleven option lines under pacing and all eleven under `-r`, and the missing
+  lines were read as "this build has no `-k` option" — twice, once into a
+  roadmap and once into a retraction of that roadmap entry. If a claim is about
+  what reaches the screen, reproduce it the way a user sees it: no `-r`, and
+  compare against the `-r` run rather than trusting either alone.
 
 ## REPL harness: two send modes
 

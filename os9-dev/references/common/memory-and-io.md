@@ -274,7 +274,7 @@ re-reading it on every access.
 | `I$Create` | Same as `I$Open`; on multi-file devices creates a new file, otherwise synonymous with `I$Open` |
 | `I$Delete` | Searches for the file, removes it from the directory, returns its space to the free pool (multi-file managers only) |
 | `I$Read` | Returns the requested byte count into the caller's buffer; EOF error if no more data; generally no editing |
-| `I$ReadLn` | Like `I$Read` but stops at the first CR (end-of-record) and applies input editing. On SCF the terminator is PD_EOR, CR by default; the byte count bounds the data returned but does not end the read — excess is discarded (PD_OVF echoed) until PD_EOR arrives |
+| `I$ReadLn` | Like `I$Read` but stops at the first CR (end-of-record) and applies input editing. On SCF the terminator is PD_EOR, CR by default; the byte count truncates the line rather than ending the read — the excess is discarded (PD_OVF echoed) until PD_EOR arrives, so the tail is lost |
 | `I$Write` | Writes data (generally unedited); writing past EOF expands the file. On fixed-record devices (e.g. RBF) may need to pre-read a sector before a partial-sector write |
 | `I$WritLn` | Writes up to and including the first CR, with output editing (e.g. SCF appends LF after CR). On SCF the terminator is PD_EOR; the auto LF follows a CR, so once PD_EOR is moved the two stop coinciding |
 | `I$Seek` | Random-access devices only; logical repositioning, no physical effect, no error going past EOF; no-op elsewhere |

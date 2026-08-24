@@ -259,7 +259,8 @@ re-reading it on every access.
 - **SCF** (Sequential Character File Manager) — the file manager for
   character-at-a-time devices (terminals, character printers):
   line editing, special-character handling, parity stripping, flow control.
-  - Line buffer: **512 bytes max** including the trailing CR, one buffer per
+  - Line buffer: **512 bytes max** including the trailing end-of-record
+    character, one buffer per
     open path.
   - Editing keys are path-descriptor options, remappable via `tmode`/`xmode`
     (full key table: `os9-tools-and-shell.md`); setting a key code to zero
@@ -273,9 +274,9 @@ re-reading it on every access.
 | `I$Create` | Same as `I$Open`; on multi-file devices creates a new file, otherwise synonymous with `I$Open` |
 | `I$Delete` | Searches for the file, removes it from the directory, returns its space to the free pool (multi-file managers only) |
 | `I$Read` | Returns the requested byte count into the caller's buffer; EOF error if no more data; generally no editing |
-| `I$ReadLn` | Like `I$Read` but stops at the first CR (end-of-record) and applies input editing |
+| `I$ReadLn` | Like `I$Read` but stops at the first CR (end-of-record) and applies input editing. On SCF the terminator is PD_EOR, CR by default; the byte count bounds the data returned but does not end the read — excess is discarded (PD_OVF echoed) until PD_EOR arrives |
 | `I$Write` | Writes data (generally unedited); writing past EOF expands the file. On fixed-record devices (e.g. RBF) may need to pre-read a sector before a partial-sector write |
-| `I$WritLn` | Writes up to and including the first CR, with output editing (e.g. SCF appends LF after CR) |
+| `I$WritLn` | Writes up to and including the first CR, with output editing (e.g. SCF appends LF after CR). On SCF the terminator is PD_EOR; the auto LF follows a CR, so once PD_EOR is moved the two stop coinciding |
 | `I$Seek` | Random-access devices only; logical repositioning, no physical effect, no error going past EOF; no-op elsewhere |
 | `I$GetStt` / `I$SetStt` | Wildcard status get/set; file manager handles known codes, passes unknown codes to the driver |
 | `I$MakDir` | Creates a directory (multi-file devices); unsupported managers return carry-set + unknown-service error |

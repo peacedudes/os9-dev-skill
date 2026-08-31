@@ -119,13 +119,29 @@ streams the image (head plus a zero tail) rather than buffering it, so size is
 bounded by host disk, not by the 68k arena — 125 MB builds in well under a
 second. `mount -r`, a genuine RAM disk, IS bounded by the arena and says so.
 
-**`OS9DISK` cannot point at an RBF image on macOS/Linux**, `Live` (os9exec):
-the top-level process's data and execution directories are resolved as HOST
-paths, so an image file cannot hold them and the boot program never starts
-(`E_PNNF`, or `E_UNIT` from the first relative open). The same image mounted
-as `OS9Hx` works perfectly by ABSOLUTE path. So a program that names files
-relatively cannot be pointed at an image this way; give it an `OS9Hx` device
-and absolute paths, or run it from a host directory.
+**`OS9DISK` CAN point at an RBF image** — `Live` (os9exec), re-measured
+against os9exec `e8a3c81` on macOS, with `env -i` and from an unrelated
+working directory. All three of these work against a 253 MB RBF
+image:
+
+```
+env -i OS9DISK=/abs/image.dd os9exec -r /dd/CMDS/cat /dd/SYS/motd   # absolute
+env -i OS9DISK=/abs/image.dd os9exec -r cat SYS/motd                # bare name
+env -i OS9DISK=/abs/image.dd os9exec -r /dd/CMDS/cat SYS/motd       # relative open
+```
+
+The bare-name boot program proves the execution directory resolves inside the
+image, and the relative open proves the data directory does. A whole test
+harness in the wild drives its RBF image this way.
+
+**This entry previously said the opposite**, tagged `Live`, on the strength of
+one session: that the top-level process's directories were resolved as HOST
+paths, so the boot program never started (`E_PNNF`, or `E_UNIT` from the first
+relative open). It does not reproduce. Either os9exec changed, or that session
+hit the `OS9DISK=./disk` trap documented immediately above — a leading `./`
+breaks every ordinary file open while module loading still works, which
+produces very much this shape of failure. Rule that out first if you ever see
+it again; do not conclude the image cannot be mounted.
 
 ## Batch-driving a whole session: a procedure file, never a pipe
 

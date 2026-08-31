@@ -191,6 +191,25 @@ Stack size:      $400        #1024
 Copying this file to `exgood1` and loading it still put `exfio1` in `mdir` —
 worth knowing before hunting for a module under the name you saved it as.
 
+**But `argv[0]` is the FILENAME, not the module name** — `Live` (os9exec).
+This matters because a family of Unix ports switches
+behaviour on `argv[0]`: elvis ships one small wrapper binary copied under
+several names, and it reads the LAST LETTER of `argv[0]` (`w` → `-R`
+read-only, `t` → `-i` input mode, anything else → plain vi). The same bytes
+under a name ending `w` opened `[READONLY]`; under a name ending `s` they
+opened plain; under a name ending `t` they opened in insert mode — while the
+module name in the header stayed the same throughout. So:
+
+- renaming a module does **not** change how such a program behaves, and
+- renaming the FILE does, which is easy to do by accident when a name is
+  already taken and you reach for a suffix. `input.elvis` ends in `s`, so
+  that copy silently stopped being the input personality.
+
+Two files sharing one module name is the other half of this: OS-9 answers by
+module name once a module is resident, whatever path you type, so the loser
+becomes unreachable and nothing warns. Check both when a program under a new
+name misbehaves.
+
 ### What each integrity check actually covers — `Live` (os9exec)
 
 Flipping a single bit in a copy of the module, then re-running `ident`,
@@ -273,6 +292,22 @@ address + M$Exec; the linker takes it from whichever psect was designated root.
   word, count× LSW offsets, zero terminator). First table marks data slots
   holding pointers into TEXT (fixed up with the module base), second marks
   pointers into DATA (fixed up with the data base). Walked by F$Fork.
+
+**The name string sits immediately after this header, and has no slack** —
+`Live` (os9exec), read off 943 program modules on a real disk: every one had
+`M$Name` = `$48`, i.e. the NUL-terminated name directly after `M$IRefs`, with
+the first instruction right behind it at `$4C`/`$50`/`$52`. So a *longer* name
+cannot be written where the old one is without moving every byte of code.
+
+To rename a module in place: append the new NUL-terminated string after the
+`M$IRefs` zero terminator (before the linker's pad byte and the 3-byte CRC),
+point `M$Name` at it, add its length to `M$Size`, then recompute header parity
+and the CRC. Nothing already in the module moves, so `M$Exec` and both tables
+above stay valid. `fixmod` alone will not do it, because `M$Size` changes.
+Keep the module an even number of bytes; every one measured was.
+
+Do this when two files answer to one module name — see the `argv[0]` note
+under "Reading a real module", which is the other half of the same problem.
 
 ## Module CRC
 

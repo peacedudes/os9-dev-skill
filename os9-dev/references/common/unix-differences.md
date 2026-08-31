@@ -186,6 +186,21 @@ is how host files with long names collide when they are dropped into the tree,
 silently and without either name being wrong. Only the boundary this runtime
 enforces was measured; the specified maximum is unconfirmed, `Flag`.
 
+**It is the same boundary on a real RBF image**, `Live` (os9exec), measured
+independently on a fresh `mount -k=360k` image and on a host-directory mount:
+
+| | host directory | RBF image |
+|---|---|---|
+| 27 characters | opens | created, listed, opens |
+| 28 characters | `E_PNNF` on open | **`makdir` succeeds silently**, `dir` shows 27, opening the full name fails |
+| 29+ characters | `E_PNNF` on open | `makdir` refuses outright — "can't make" |
+
+So 28 is the dangerous one: on RBF the directory entry is made and reports
+success, and only the 27-character prefix can ever reach it afterwards. A tool
+that writes a 28-character output file is told nothing and cannot reopen what
+it wrote. Do not read a successful create as a usable name — **check that the
+name you are about to write is 27 characters or fewer**, not 28.
+
 ### Priority + aging scheduler
 
 Preemptive, priority-driven, default 2-tick (20ms) timeslice. Aging is a

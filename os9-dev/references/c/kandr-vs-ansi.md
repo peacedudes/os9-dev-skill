@@ -78,3 +78,18 @@ Cross-checked against "The OS-9 Primer." Note: rows marked *(6809 manual)*
 are `Manual`, sourced from 6809-era material only, and may not apply
 unchanged to 68k; check `os9-c-cheatsheet.md` for 68k-specific
 differences.
+
+## `char` is SIGNED — `Live` (os9exec)
+
+Measured by compiling on a Microware SDK and running: `char c = -1;` tests
+negative, and **`EOF` assigned to a `char` still compares equal to `EOF`**.
+
+This matters because the commonest 1980s C read loop is
+
+    char ch;
+    while ((ch = getc(fp)) != EOF) ...
+
+which is a latent bug on any compiler where `char` is unsigned, and is NOT one
+here. Do not reach for it as an explanation when a K&R program reads past end
+of file on OS-9 — it will not be the cause, and it is an easy theory to spend
+an hour on. (It was, on `cdiff`.)

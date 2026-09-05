@@ -67,6 +67,7 @@ on TRAP #1–#15 via F$TLink.
 
 | Call | Purpose | Key inputs | Key outputs | Notes |
 |------|---------|-----------|------------|-------|
+| **F$Mem** | Resize the data memory area | d0.l=desired size in bytes, rounded up to an allocation block ("16 bytes in version 2.0"); 0=information request | d0.l=actual size, (a1)=new end of the data area (+1) | Grows "contiguously upward", shrinks "downward from the old highest address": the base never moves (A6 points into it). Contracting to at or below the stack pointer is `E$DelSP` (223). An expansion may be refused with adequate memory free, because the space directly ABOVE the data area must itself be free (`Manual`, F$Mem page 1 - 43) — a C program built with `cc -I` loads `cio` right after entry and that module then sits above its data area, so `load` the trap handler first if a program's F$Mem expansion keeps failing. `Live` (os9exec): information request, E$DelSP, and expansion when the arena above is free (CONF68K t51–t53); v4.0.0 answered 208. |
 | **F$SRqMem** | Request system memory | d0.l=size (rounded up to 16 bytes; `$FFFFFFFF`=request the largest available block) | d0.l=actual size, (a2)=block pointer | `Live` (os9exec) |
 | **F$SRtMem** | Return system memory | d0.l=size, (a2)=block pointer | — | Must pass back exactly the size `F$SRqMem` returned, or the block silently isn't freed. `Live` (os9exec) |
 | **F$SRqCMem** | Request colored system memory | d0.l=size, d1.l=color | d0.l=actual size, (a2)=block pointer | Shares `F$SRqMem`'s handler on os9exec; the color parameter is accepted but never read, so it has no effect there. `Live` (os9exec) |
@@ -245,10 +246,15 @@ identified.
 
 ## Not implemented on os9exec
 
-**F$SSpd, F$Mem, F$SchBit, F$AllBit, F$DelBit, F$Trans, F$UAcct** — all
-seven route to a shared unimplemented handler. Calling any is a clean, safe
-`E$UNKSVC` (208): no crash, no side effect, and no real register contract to
-document. `Live` (os9exec).
+**F$SSpd, F$SchBit, F$AllBit, F$DelBit, F$Trans, F$UAcct** — all six route
+to a shared unimplemented handler. Calling any is a clean, safe `E$UNKSVC`
+(208): no crash, no side effect, and no real register contract to document.
+`Live` (os9exec). F$SSpd is the one Microware's own v2.4 manual marks
+"currently not implemented" (`Manual`), so 208 is the conformant answer
+there, not a gap. F$Mem used to be on this list: os9exec v4.0.0 answered it
+with 208, and a program whose first allocation goes through it (Carl
+Kreider's `subber`) simply stopped; later builds implement it — see its
+row above.
 
 ## Notes
 

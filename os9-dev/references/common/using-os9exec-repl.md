@@ -98,7 +98,9 @@ needed:
 timeout 5 env OS9DISK=/abs/path/disk ./os9exec /dd/CMDS/<name> </dev/null 2>&1
 ```
 
-`</dev/null` stops stdin-readers hanging; the timeout is mandatory. This
+`</dev/null` is explicit and harmless (a redirected host stdin now returns
+end-of-file on its own, so a stdin-reader no longer hangs without it); the
+timeout is still mandatory. This
 tests "loads and starts" (a usage message is a pass) — the right signal
 for auditing a disk full of binaries, and far faster than driving a shell.
 
@@ -159,9 +161,12 @@ all `Live` (os9exec), the first two silent:
 - **The procedure file must be CR-only.** With LF endings OS-9 sees one
   enormous line: the shell echoes the entire file and runs nothing, reporting
   no error. Generate with `tr '\n' '\r'`.
-- Piping the same commands into an interactive `shell` instead **hangs** —
-  and is separately forbidden above. The procedure file is the supported
-  route; a pipe is not.
+- Piping the same commands into an interactive `shell` **used to hang** at
+  end of input and no longer does (`Live` (os9exec), as of the freeware-sweep
+  fixes): a redirected or piped host stdin now delivers end-of-file, so the
+  shell runs the piped commands and then exits. The procedure file is still
+  the tidier route — it gives CR-ending control and a named artifact — but a
+  pipe terminating cleanly is the difference between the two now, not a hang.
 - **A utility that prompts devours the rest of the file.** `copy` onto an
   existing destination reports `Error #000:218` and then asks `Overwrite
   (yes/no/all/quit)?`. The following procedure lines are read as answers to

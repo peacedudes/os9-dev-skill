@@ -46,6 +46,18 @@ and the active/waiting/sleeping process queues. `F$SetSys` reads or writes
 individual system globals by offset (superuser only for writes; the MSB of
 `d1.w` selects read-vs-write).
 
+A few offsets a process actually reads at run time, and what os9exec answers
+(`Live` (os9exec), as of the freeware-sweep fixes): `D_SPUMem` ($3D8), the
+System Security Module's static storage, is read by every Microware-C start-up
+to detect an SSM -- os9exec has none and returns 0, which is what a machine
+without one shows (before this it fell through to a console "unimplemented
+03D8" line, four per program). `D_Julian` ($30, today's Julian day) and
+`D_Second` ($34, seconds SINCE midnight -- the OS-9 Guru's "until midnight"
+wording is a transcription slip; the v2.4 TRM's F$Time/F$STime both say since)
+are answered from the same clock as F$Time/F$Julian, so a monitor that ages
+processes by the raw globals (aprocs) agrees with the syscalls. Most other
+`D_*` remain stubbed to 0.
+
 Exception vector 0 holds the reset-time initial supervisor stack pointer
 (SSP) value — every subsequent exception dispatch uses this vector to
 relocate the base address of system global storage, which is why at least
@@ -67,6 +79,15 @@ modules, and saved register/stack state. `F$GPrDsc` retrieves a copy of a
 specific process's descriptor by PID; `F$GPrDBT` retrieves the whole
 process descriptor block table (what the `procs`/`iprocs` utilities use to
 list running processes).
+
+`P$PModul` (the pointer to a process's primary module) must be a valid guest
+address, because a monitor reads the descriptor and follows it to the module
+header to print the module name -- `devprc -a`, `top`, `sysmon` and `aprocs`
+all do. On os9exec the synthetic kernel process runs a module built into the
+emulator (outside the 68k arena), which has no real header; that process now
+reports `P$PModul`=0 (a header probe there reads the zeroed low page and fails
+cleanly) rather than a wild pointer that bus-errored the monitor (`Live`
+(os9exec)).
 
 - **Process descriptor table**: an array of process-descriptor addresses; a
   process's ID is literally its index into this table (a zero entry means

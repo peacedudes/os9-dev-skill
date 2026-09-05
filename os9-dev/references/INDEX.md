@@ -55,6 +55,7 @@ has bitten a real session.
 | Harness times out with the command visibly working | prompt gate doesn't recognise a sub-program's prompt — use raw keys | both REPL files |
 | Session hangs or dies on a syscall that looked ordinary | `F$SSvc`/`F$IOQu`/`F$NProc` (6809), `F$SysDbg`/`F$RTE` (68k) | both REPL files |
 | Fix has no effect although the rebuild succeeded | besides a stale output file (above): the crashed module is **still resident** and shadows the new one | `basic09/basic09-per-target.md` |
+| `Exception: ... vector=$08 err=#000:108` (E$Violat) at an ordinary-looking instruction, classically `MVSR2.W` / `MOVE SR,<ea>` | the binary was built for a 68000, where reading SR is user-legal; it is privileged from the 68010 on, and the system is not emulating it. os9exec v4.0.0 did this to every RTF Fortran program; later builds do not | `68k/os9-68k-assembly.md`, exception vector table |
 | `Error #001 — Unconditional Abort` printed after output that was correct | `F$Exit` called with `B` never cleared — cosmetic, not a real failure | `6809/syscalls-and-module-format.md` |
 | Breakpoint or examine lands at the wrong address | `sc`'s listing double-applies an offset — never take an address from it | `common/using-os9exec-repl.md` |
 | `-d 2` trace shows a `<<<` return under the wrong call name | a nested call overwrote the per-process current-call field — pair returns to entries by position | `common/using-os9exec-repl.md` |

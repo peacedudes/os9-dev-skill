@@ -44,6 +44,7 @@ has bitten a real session.
 | `mdir` shows a different name than the file you linked | the module name comes from `l68 -o=`, not the source | `68k/os9-68k-assembly.md` |
 | Link fails on `I$`/`F$` symbol names | call names aren't defined anywhere — declare them yourself | `68k/os9-68k-assembly.md` |
 | Program opens a file, reads nothing, and reports on it anyway | the SDK `cio` library's trap-13 selectors hit the `cio` module's memory routine — rebuild trap-free (`-qm`) | `c/os9-c-cheatsheet.md` |
+| Program needs Enter after every key though it called `cbreak()` | `cbreak()` sets a curses flag only; stdio `getchar()` ignores it — read with `getch()` | `c/os9-clib-reference.md` |
 | `r68`: `branch out of range` on a branch to the very next line | it is too **close**, not too far — the short form would need displacement 0, which is the reserved "use the word form" encoding; drop the `.s` | `68k/os9-68k-assembly.md` |
 | `r68` error points at an instruction that is plainly correct | the diagnostic is printed **above** the line it refers to — read the line *after* the `*** error ***` | `68k/os9-68k-assembly.md` |
 | "Can't find" a command that is plainly present | fork lookups use `chx`, not `PATH` | `common/using-os9exec-repl.md` |

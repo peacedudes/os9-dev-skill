@@ -305,7 +305,7 @@ repeated here. Assembly/module-format-specific additions:
 | 3 | Address error (`T_ADDERR`) | |
 | 4 | Illegal instruction (`T_ILLINS`) | |
 | 5 | Zero divide (`T_ZERDIV`) | |
-| 8 | Privilege violation (`T_PRIV`) | Supervisor-state instruction executed in user state. One trap for 68000-era binaries: `MOVE SR,<ea>` is a user instruction on the MC68000/MC68008 and privileged only from the MC68010 on (`Manual`, Motorola M68000 Family PRM: the entry headed MC68000/MC68008 in the integer chapter, and the 68010+ entry in the supervisor chapter). Old compilers read SR for the condition codes -- the RTF Fortran run-time does -- so on a 68010+ system that does not emulate it in the privilege-violation handler, as Motorola advised, the program dies at an ordinary-looking instruction with `vector=$08 err=#000:108`. os9exec emulates a 68020; v4.0.0 trapped it, and builds after that let user state read SR and deliver S clear (`Live (os9exec)`, CONF68K t50). Whether Microware's own 68010+ kernel emulates it is unrecorded -- t50 on real hardware would say. `MOVE CCR,<ea>` is the 68010+ user-legal way to read the flags, and is not a 68000 instruction at all. |
+| 8 | Privilege violation (`T_PRIV`) | Supervisor-state instruction executed in user state. 68000-era binaries have a specific trap here — see **Reading SR in user state** below |
 | 9 | Trace | Single-step; `F$DFork`/`F$DExec`/`F$DExit` and the OS-9 debugger use this |
 | 25-31 | Autovectored interrupts, levels 1-7 | Serviced through `F$IRQ`; level 7 (vector 31) is non-maskable and should not be used for ordinary devices — reserved for hardware the kernel doesn't need to coordinate with (e.g. DRAM refresh); a level-7 ISR must never call a system call or touch kernel data |
 | 32 | `TRAP #0` — OS-9 system calls | See above |
@@ -318,6 +318,25 @@ Error exception vectors all dispatch through `F$STrap` and are normally fatal
 via `F$DFork`, its state is preserved rather than torn down, and control passes
 back to the parent debugger for a post-mortem look instead. The table above
 shows only a subset.
+
+### Reading SR in user state
+
+`MOVE SR,<ea>` is a **user** instruction on the MC68000/MC68008 and privileged
+only from the MC68010 on (`Manual`, Motorola M68000 Family PRM: the entry
+headed MC68000/MC68008 in the integer chapter, and the 68010+ entry in the
+supervisor chapter). Old compilers read SR to get at the condition codes — the
+RTF Fortran run-time does — so on a 68010 or later that does not emulate the
+instruction in its privilege-violation handler, as Motorola advised, such a
+program dies at an ordinary-looking instruction with
+`vector=$08 err=#000:108`.
+
+os9exec emulates a 68020: v4.0.0 trapped it, and later builds let user state
+read SR and deliver S clear (`Live` (os9exec), CONF68K t50). Whether
+Microware's own 68010+ kernel emulates it is unrecorded — t50 on real hardware
+would settle it.
+
+`MOVE CCR,<ea>` is the 68010+ user-legal way to read the flags, and is not a
+68000 instruction at all.
 
 ### What an `F$STrap` handler is handed
 

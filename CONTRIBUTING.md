@@ -10,7 +10,8 @@ project. It was built for a purpose, it reached a usable state, and it may sit
 untouched for long stretches. Corrections may be merged promptly, slowly, or
 not at all. Nothing here is a commitment to respond, and a quiet repository is
 the expected steady state rather than a sign something went wrong. If that makes
-a fork the better route for you, fork it — the license permits it without asking.
+forking the better route for you, check [LICENSE](LICENSE) for whether that is
+permitted yet — while the pre-publication notice stands, it is not.
 
 ## The most useful thing you can send
 
@@ -51,6 +52,26 @@ Several claims are flagged precisely because only hardware can settle them, and
 one measurement from a real system may resolve a question that has been open
 here for months.
 
+### If you have real hardware, there is a worklist waiting for you
+
+Two ready-made lists of open questions, both already written down:
+
+```sh
+python3 tools/check_doc_consistency.py    # prints every open `Flag`, with file and line
+```
+
+That inventory is the set of places where sources contradict each other or a
+measurement is missing, each one named and located. Several say outright that
+only Microware or real hardware can settle them.
+
+`DIVERGENCES.md` is the shorter, sharper list: places where observed behaviour
+disagrees with a Microware manual. Every item on it is a question a real machine
+could answer, and the first one is flagged as having been seen only under
+emulation.
+
+Pick any line from either and test it. You do not need to fix the file — saying
+"I ran this on real hardware and got X" is the whole contribution.
+
 ## If you want to send a patch
 
 The same three things apply, plus the conventions that keep the corpus
@@ -66,7 +87,9 @@ Then:
 
 - **Tag every claim.** `Hearsay`, `Manual`, `Source`, `Live`, `Absent`, `Flag` —
   defined in `os9-dev/references/CONFIDENCE-TAGS.md`. An untagged assertion
-  cannot be weighed by the next reader and will not be merged as-is.
+  cannot be weighed by the next reader, so it will need a tag before it lands —
+  and if you are unsure which applies, say what you did and leave the tag to
+  whoever merges it. That is not a reason to hold the patch back.
 - **A `Live` tag names what it ran on** — `Live` (os9exec), `Live` (NitrOS-9),
   `Live` (OS-9/68000). Never a bare `Live`. A `Live` claim is evidence about
   that implementation, not about OS-9 in the abstract.
@@ -79,8 +102,10 @@ Then:
   resolution.
 - **Don't overwrite an established measurement on one reading.** If something
   looks like a contradiction, check it against the existing `Live` claims and
-  against a manual first. A lone correction silently replacing a verified fact
-  is this project's known failure mode, and it has been caught happening.
+  against a manual first — the two may be describing different things. This is
+  the mistake the project's own authors have made most often, which is why it is
+  listed: a plausible correction that quietly replaced a verified fact has had to
+  be reverted here more than once.
 - **Reference files carry no dates, commit hashes, host paths, or narrative**
   about their own history. State the rule positively; provenance belongs in the
   tag and the `Sources` footer, not in a story about what the file used to say.

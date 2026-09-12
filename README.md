@@ -6,9 +6,11 @@
 > [NOTICE](NOTICE) credits the sources and is in force regardless.
 
 Two reference collections for working with Microware OS-9 — the real one, on
-6809 and 68000. Plain Markdown: no build, no dependencies, no framework. Any
-coding agent can use them by reading the files; [Claude
+6809 and 68000. They are documentation, not a toolchain: plain Markdown with
+nothing to build, readable by a person or by any coding agent, and [Claude
 Code](https://claude.com/claude-code) can additionally load them as skills.
+**Doing the work they describe needs an emulator and a Microware SDK that this
+repository cannot supply** — see What you will need, below.
 
 | Skill | Covers |
 |---|---|
@@ -16,6 +18,36 @@ Code](https://claude.com/claude-code) can additionally load them as skills.
 | **`os9-systems-dev`** | Below the application line: device drivers, file managers, kernel internals, the scheduler, 6809 Level 2 MMU/DAT |
 
 They are siblings and cross-reference each other; keep both.
+
+## Start here
+
+Routing by what you are trying to do. If you are a person rather than an agent,
+read `os9-dev/SKILL.md` first, then the `INDEX.md` beside it.
+
+| If you want to… | Read |
+|---|---|
+| Port or write a **C** program | `os9-dev/references/c/kandr-vs-ansi.md` — the porting checklist — then `c/os9-c-cheatsheet.md` |
+| Get a **running OS-9 system** to test on | `os9-dev/references/common/using-os9exec-repl.md` |
+| Write **68k or 6809 assembly** | `os9-dev/references/68k/os9-68k-assembly.md`, or `6809/assembly-and-tools.md` |
+| Work in **BASIC09** | `os9-dev/references/basic09/basic09-language.md` |
+| Understand an **error or a symptom** you already hit | the symptom table in `os9-dev/references/INDEX.md` — it maps symptom to cause, which is the faster door once something has failed |
+| Write a **driver, file manager or kernel** code | `os9-systems-dev/SKILL.md` |
+| Know **how OS-9 differs from Unix** | `os9-dev/references/common/unix-differences.md` |
+
+### What you will need
+
+Nothing here is a toolchain, and two prerequisites gate most of the work:
+
+- **An emulator.** OS-9/68k runs under
+  [os9exec](https://github.com/peacedudes/os9exec), built from source; OS-9/6809
+  runs as NitrOS-9 under XRoar. Neither is included here.
+- **A legally-held Microware SDK or disk image.** Microware's shell, C compiler
+  and utilities are proprietary and ship with nothing in this repository. A host
+  directory of your own files is enough for basic testing, but **you cannot
+  compile C without Microware's `cc`**, which you must hold a licence to.
+
+`common/using-os9exec-repl.md` covers getting from those two things to a shell
+prompt; it is the file to read before the language references, not after.
 
 ## Not official, and not error-free
 

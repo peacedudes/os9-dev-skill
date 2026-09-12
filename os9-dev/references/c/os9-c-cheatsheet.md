@@ -5,6 +5,14 @@ available to this project — the 1983-manual column below is `Manual`.
 
 ## Setup
 
+**Before any of this works you need a running OS-9 system and Microware's
+compiler.** Neither ships with this material: `cc`, `cpp`, `c68`, `o68`, `r68`
+and `l68` are proprietary Microware programs that come from a licensed SDK or
+disk image. Getting from an emulator plus such an image to the shell prompt these
+commands are typed at is covered in `common/using-os9exec-repl.md` — read that
+first if you do not already have a prompt. The commands below assume one.
+
+
 ```bash
 chx /h0/CMDS
 setenv CLIB /h0/LIB

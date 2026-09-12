@@ -7,28 +7,16 @@
 # an untracked scratch file cannot ride along. maintainer/ is gitignored and
 # therefore excluded by construction rather than by a rule that could rot.
 #
-# Two editions ship from the same corpus; only the wrapper documents differ.
-#   (default)     for Microware review -- README installs it as a Claude skill
-#   --variant sol for any other agent -- adds START-HERE.md and drops the
-#                 Claude-specific install steps, since a reader who cannot use
-#                 the skill runtime should not be told to symlink into it.
-# Variant wrappers live in packaging/<name>/ and overlay the bundle root.
-# packaging/ itself never ships in either edition.
+# One edition serves every reader: README.md leads with the runtime-neutral
+# route (point any agent at AGENTS.md) and carries the Claude Code symlink step
+# as an explicitly optional extra. There is nothing to vary.
 #
-# Usage: tools/make-bundle.sh [--variant sol] [output.zip]
+# Usage: tools/make-bundle.sh [output.zip]
 
 set -eu
 
 root=$(cd "$(dirname "$0")/.." && pwd)
-variant=
-if [ "${1:-}" = "--variant" ]; then
-    variant=$2
-    shift 2
-    [ -d "$root/packaging/$variant" ] || { echo "no such variant: $variant" >&2; exit 1; }
-fi
-default_out="$root/../os9-dev-skills.zip"
-[ -n "$variant" ] && default_out="$root/../os9-dev-skills-for-agents.zip"
-out=${1:-$default_out}
+out=${1:-$root/../os9-dev-skills.zip}
 name=os9-dev-skills
 
 cd "$root"
@@ -49,11 +37,8 @@ mkdir "$staging/$name"
 
 # Committed files only, then drop what the reader has no use for.
 git archive HEAD | tar -x -C "$staging/$name"
-rm -rf "$staging/$name/tools" "$staging/$name/.gitignore" "$staging/$name/packaging"
-
-if [ -n "$variant" ]; then
-    cp "$root/packaging/$variant/"* "$staging/$name/"
-fi
+# tools/ stays in the repo for contributors but has no use inside a bundle.
+rm -rf "$staging/$name/tools" "$staging/$name/.gitignore"
 
 # A bundle that leaked maintainer notes would be worse than no bundle.
 if find "$staging/$name" -name 'maintainer' -o -name '*.pyc' | grep -q .; then

@@ -4,29 +4,42 @@
 > no license is granted yet. A license will follow after review by Microware.
 > See [LICENSE](LICENSE).
 
-Two [Claude Code](https://claude.com/claude-code) skills for working with
-Microware OS-9 — the real one, on 6809 and 68000.
+Two reference collections for working with Microware OS-9 — the real one, on
+6809 and 68000. Plain Markdown: no build, no dependencies, no framework. Any
+coding agent can use them by reading the files; [Claude
+Code](https://claude.com/claude-code) can additionally load them as skills.
 
 | Skill | Covers |
 |---|---|
 | **`os9-dev`** | Application work: BASIC09, Microware C, 68k and 6809 assembly, the shell and utilities, modules, syscalls, error codes, driving the emulators |
 | **`os9-systems-dev`** | Below the application line: device drivers, file managers, kernel internals, the scheduler, 6809 Level 2 MMU/DAT |
 
-They are siblings and cross-reference each other; install both.
+They are siblings and cross-reference each other; keep both.
 
-## Install
+## Using it
 
-Unpack anywhere, then point Claude Code at the two skill directories:
+Put the folder anywhere your agent can read files. There is nothing to build.
+
+**Any agent** — point it at [`AGENTS.md`](AGENTS.md), which says what the two
+collections cover and how to route within them. The material is written to be
+**opened on demand rather than read whole**: together the files run to roughly
+12,000 lines, which is worth keeping out of a context window until it is
+needed. Each collection's `references/INDEX.md` maps *topic to file* and,
+separately, *symptom to cause* — when something has already failed and you
+don't know which topic owns it, the symptom table is the faster door.
+
+**Claude Code**, additionally — expose the two directories as skills, so they
+load themselves when a task matches:
 
 ```sh
-unzip os9-dev-skills.zip -d ~/Developer/os9      # any location will do
-ln -s ~/Developer/os9/os9-dev-skills/os9-dev         ~/.claude/skills/os9-dev
-ln -s ~/Developer/os9/os9-dev-skills/os9-systems-dev ~/.claude/skills/os9-systems-dev
+ln -s "$PWD/os9-dev"         ~/.claude/skills/os9-dev
+ln -s "$PWD/os9-systems-dev" ~/.claude/skills/os9-systems-dev
 ```
 
-Nothing to build, and no dependencies. Copying the two directories in place of
-symlinking works equally well. Other agents can simply read the files — start
-from `AGENTS.md`.
+Copying in place of symlinking works equally well. That step is specific to one
+runtime and is entirely optional — every other agent just reads the files. The
+YAML header on the two `SKILL.md` files is metadata for that runtime; it is
+harmless to ignore.
 
 ## Scope
 
@@ -94,6 +107,45 @@ project's resource collection and has never been opened for any purpose;
 NitrOS-9's open kernel source is held to cross-check-only use and is never
 extracted at length.
 
+## Working on this
+
+Two gates must be green before anything lands, and a tracked pre-commit hook
+enforces both:
+
+```sh
+git config core.hooksPath tools/hooks     # re-run this after every fresh clone
+python3 tools/check_doc_consistency.py    # presence, hygiene, cross-file drift
+python3 tools/tests/test_check.py         # the checker's own test suite
+```
+
+**The hook is tracked but the config that arms it is local**, so a fresh clone
+has no hook until you run that first line. The checker enforces more than
+presence: no calendar dates, commit hashes or host paths in reference files;
+well-formed confidence tags, and none inside code fences; no blanket `Live` or
+`Source` claim without a stated exception; every hex-dump decode-table claim
+checked against the dump above it; cross-file enumeration drift; and any error
+symbol absent from the error-code table.
+
+Conventions worth knowing before editing a reference file:
+
+- **Every claim carries a confidence tag**, and a `Live` tag always names the
+  implementation it ran on — `Live` (os9exec), not a bare `Live`.
+- **Reference files carry no dates, hashes, host paths or narrative** about
+  their own history. A correction states the rule positively and puts its
+  provenance in the tag and the `Sources` footer — never in a story about what
+  the file used to say.
+- **Cross-check before you correct.** Anything that looks like a contradiction
+  gets checked against the skill's own `Live` claims, and against a manual or a
+  running system, *before* an edit. Overwriting an established fact on one
+  session's reading is this project's known regression pattern.
+- **An example ships only if it was run.** An unrun example is `Manual` at
+  best. Where something could not be run, say which claim went unchecked.
+- **Shared content lives in `os9-dev`**, which stands alone (see Layout below).
+
+`tools/make-bundle.sh` builds a distributable zip from `git archive HEAD`: only
+committed files can appear, it refuses a dirty tree, it runs both gates first,
+and it aborts if maintainer material reaches the staging tree.
+
 ## Layout
 
 ```
@@ -106,8 +158,10 @@ os9-dev/
     common/ 68k/ 6809/ basic09/ c/
 os9-systems-dev/
   SKILL.md  SOURCES.md  references/
+AGENTS.md               entry point for any agent
 DIVERGENCES.md          where a runtime disagrees with a manual
 SOURCE-AUTHORITY.md     what counts as Microware's word
+tools/                  the checker, its tests, the pre-commit hook, make-bundle.sh
 ```
 
 **Shared content lives in `os9-dev`, which stands alone.** Anything both
@@ -117,5 +171,7 @@ skills need — the confidence tags, the provenance rules — belongs there.
 something as out of scope. Always name the skill when citing across the
 split — a bare filename won't resolve from the other skill's directory.
 
-The two root files are review material, not part of either installed skill;
-nothing under `os9-dev/` or `os9-systems-dev/` may reference them.
+`DIVERGENCES.md` and `SOURCE-AUTHORITY.md` are review material rather than part
+of either collection; nothing under `os9-dev/` or `os9-systems-dev/` may
+reference them, so that each collection stays self-contained wherever it is
+installed.

@@ -455,6 +455,37 @@ Both look ordinary in the call table and are not:
 Neither has been exercised live for that reason. Call them only from a forked
 child, or where losing the session is acceptable.
 
+## What os9exec does not implement, and how it says so
+
+A missing call is not a crash. The unimplemented kernel-internal requests —
+named under "Not implemented on os9exec" in `68k/syscall-reference.md` —
+return a clean `E$UNKSVC` (208) and change nothing. A program that tests the
+carry survives; one that does not may read 208 as its own failure.
+
+Unmodelled **system globals** answer differently. A `F$GetSys`/`F$SetSys`
+read of an offset os9exec does not keep prints `F$SetSys: unimplemented
+<hex>` on the console and returns 0. Usually harmless, and `getsys` prints a
+page of them. `D_SPUMem` ($3D8) is the one worth recognising: every
+Microware-C start-up reads it to detect a System Security Module, so it
+appears several times per C program, and 0 is now answered deliberately
+because that is what a machine without an SSM reports — see
+`kernel-internals.md` in `os9-systems-dev`.
+
+**Do not chase these from an older report.** `F$Mem`, `F$GPrDsc` and
+`F$GPrDBT` were all gaps in v4.0.0 — the first answered 208 and stopped any
+program whose first allocation went through it, the other two took a bus
+error instead of refusing — and later builds implement all three. `top` still
+dies, and that one is `top`'s own bug rather than the emulator's: it asks for
+PID 0, gets the documented `E$IPrcID` (224) refusal, ignores the carry, and
+reads its unfilled buffer. It would do the same on real hardware.
+`Live` (os9exec).
+
+**The emulator's own diagnostics share the running program's stderr.** Every
+`# `-prefixed line — the unimplemented-global notice above, `# No more
+memory:` from the allocator, `# /tN is /dev/ttysNNN` from hostterm — goes to
+that path rather than a channel of its own, so it interleaves with guest
+output. `2>/nil` is what separates the two when capturing. `Live` (os9exec).
+
 ## Stopping a runaway program
 
 - **Ctrl-C**: shell keeps the prompt, child continues in background.

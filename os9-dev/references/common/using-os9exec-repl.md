@@ -321,9 +321,17 @@ That OS-9 text is CR-terminated is easy to remember. What catches people is
 that an LF file announces itself in three different ways, and only the first
 is obvious. `Live` (os9exec), all three met in one evening:
 
-1. **Source (`.c`, `.h`) — loud.** `**** source line too long ****` from
-   `cpp`, on every file at once. Hard to miss, easy to misread as a defect in
-   the code rather than in the line endings.
+1. **Source (`.c`, `.h`) — loud, but not always in the same way.** The whole
+   file is one line, and what that does depends on how long the file is.
+   Reported for real sources: `**** source line too long ****` from `cpp`, on
+   every file at once — hard to miss, easy to misread as a defect in the code.
+   Measured here on a *short* LF file, `cpp` said **nothing at all** and the
+   failure surfaced at link time as `Symbol 'main' unresolved`, referenced by
+   `cstart_a` — because with everything on one line the leading `#include`
+   directive swallows the rest of it, so no `main` is ever compiled. That form
+   is the more misleading of the two: it points at your entry point, not at
+   your line endings. A long enough one-line file has also been seen to hang
+   `cpp` outright rather than diagnose anything. `Live` (os9exec).
 2. **Data read at run time — silent.** The program builds, starts, and reads
    records that are not delimited the way it expects. A word list, a
    dictionary, a grammar, a score file. Nothing reports anything.

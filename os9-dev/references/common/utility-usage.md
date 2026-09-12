@@ -8,15 +8,28 @@ for" descriptions: `os9-tools-and-shell.md`.
 
 ## Conventions shared by many utilities (stated once, not repeated below)
 
-- **`-?`** — prints the utility's own function/syntax/options. This is the
-  OS-9 **convention**, honoured by Microware's own set and by most EFFO-era
-  freeware; it is not universal, and a sweep that assumes it will record
-  working programs as mute. `Live` (os9exec), across a mixed freeware disk:
-  GNU ports answer `illegal option -- ?` (and print usage anyway) or
-  ``Try `X --help'``; BSD ports want `-h`; `zoo` and `strfile` want a lone
-  `-`; `binhex` and the macutils want `-H`; TeX, Metafont and the BibTeX
-  family read `-?` as a **file name** and stop; games, editors and
-  full-screen programs have no help flag at all and `-?` simply starts them.
+- **`-?`** — prints the utility's own function/syntax/options. The OS-9
+  **convention**, and the right first try: across a freeware collection of 609
+  programs whose help output was captured individually, **545 answer `-?`**.
+  `Live` (os9exec). The remaining tenth needs something else, and the families
+  are specific enough to be worth knowing:
+
+  | Wants | Programs |
+  |---|---|
+  | `-h` | the `gzip` and `zip` families, `ckermit`, `elm`, `gmake`, `nroff`, `rayshade`, `ularn`, `chksum`, `crypto`, `cuts`, `frm`, `pep`, `scales`, `undump` |
+  | `-H` | the macutils — `binhex`, `hexbin`, `macsave`, `macstream`, `macunpack`, `UnMacpack` — and `travesty` |
+  | `--help` | the coreutils-style set: `ed`, `env`, `logname`, `ls`, `su`, `whoami` (their `-?` reply is ``Try `X --help'``) |
+  | a lone `-` | `fortune`, `shuffle`, `strfile` |
+  | `h`, no dash | `zoo` |
+  | no help flag at all | the TeX and netpbm families — `afm2tfm`, `dvi2tty`, `pbmtopk`, `pktopbm`, `pnmconvol`, `ppmmake`, and others |
+
+  **The subtler hazard: 67 of the programs that do accept `-?` emit an option
+  error first and print their usage anyway** — `illegal option -- ?`,
+  ``unrecognized option `-?'``, `invalid option -- ?`, `bad flag: '?'`, all
+  present on one disk, including `grep`, `diff`, `head` and `sort`. A sweep that
+  scores "produced an error word" as failure therefore marks working programs
+  broken, exactly as one keyed on "printed a usage line" marks broken programs
+  working. Quote the flag (`'-?'`) at any shell that globs `?`.
 - **`-z` / `-z=<file>`** — read the operand list (file/module/device
   names) from standard input / from `<file>`. Supported by most utilities
   that take name lists; the glue for pipelines like

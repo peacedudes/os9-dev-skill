@@ -8,7 +8,15 @@ for" descriptions: `os9-tools-and-shell.md`.
 
 ## Conventions shared by many utilities (stated once, not repeated below)
 
-- **`-?`** — every utility prints its own function/syntax/options.
+- **`-?`** — prints the utility's own function/syntax/options. This is the
+  OS-9 **convention**, honoured by Microware's own set and by most EFFO-era
+  freeware; it is not universal, and a sweep that assumes it will record
+  working programs as mute. `Live` (os9exec), across a mixed freeware disk:
+  GNU ports answer `illegal option -- ?` (and print usage anyway) or
+  ``Try `X --help'``; BSD ports want `-h`; `zoo` and `strfile` want a lone
+  `-`; `binhex` and the macutils want `-H`; TeX, Metafont and the BibTeX
+  family read `-?` as a **file name** and stop; games, editors and
+  full-screen programs have no help flag at all and `-?` simply starts them.
 - **`-z` / `-z=<file>`** — read the operand list (file/module/device
   names) from standard input / from `<file>`. Supported by most utilities
   that take name lists; the glue for pipelines like

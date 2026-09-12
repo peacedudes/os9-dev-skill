@@ -159,18 +159,40 @@ type-based selection is demonstrated by the raw disk read.
 
 ## Single-key input: `cbreak()` does not make the terminal raw
 
-`Live` (os9exec). OS-9's `cbreak()`/`crmode()` set a flag **inside curses** and
-nothing else — they do not put the path into raw mode. So:
+`cbreak()` and `crmode()` **cannot affect stdio**, because they are not calls at
+all. The SDK's `DEFS/curses.h` defines them as `#define cbreak() crmode()` and
+`#define crmode() _crmode = TRUE` — a flag assignment. Nothing issues `SS_Opt`,
+nothing calls `tmode`, nothing reaches the SCF driver, so the path's line
+discipline is untouched.
 
-- `getch()`, which consults that flag, returns on a single keypress.
-- `getchar()` and the rest of stdio do not consult it, stay line-buffered, and
-  go on waiting for a carriage return.
+Measured, `Live` (os9exec), sending one bare keystroke and only then an Enter:
 
-A program that calls `cbreak()` and then reads with `getchar()` therefore
-compiles, links, runs, and silently requires Enter after every key — which
-reads as a broken game rather than a porting error, and costs an evening per
-program. Read keys with `getch()`, or change the path's own editing with
-`tmode`/`I$SetStt` rather than expecting `cbreak()` to have done it.
+| Program | Bare key | Enter |
+|---|---|---|
+| `initscr(); cbreak();` then `getchar()` | echoed, still blocked | returned |
+| `initscr(); crmode();` then `getchar()` | echoed, still blocked | returned |
+| plain `getchar()`, no curses (control) | echoed, still blocked | returned |
+
+All three identical, which is exactly what a flag-only macro predicts. So a
+program that calls `cbreak()` and then reads with `getchar()` compiles, links,
+runs, and silently requires Enter after every key — it reads as a broken game
+rather than a porting error. Change the path's own editing with `tmode`/`SS_Opt`
+if you need single keys from stdio.
+
+**`getch()` is the untested half**, `Flag`: since `_crmode` is only a flag,
+curses' own `getch()` is the one path that *could* consult it and do a
+single-character read. That is the expectation and the reason ports use it, but
+it is not measured here — the probe would not link (`wclrtoeol` unresolved,
+which is a link-order problem rather than a missing symbol, since `curses.l`
+both references and defines it). So: `cbreak()` is proven invisible to stdio,
+not proven inert.
+
+**A curses program needs `TERM` set inside the guest.** `Live` (os9exec): boot
+straight to a shell rather than through a login and `initscr()` fails with
+`Unknown terminal type ''`, because the host's `TERM` does not reach the guest —
+the guest's own login/startup is what normally sets it. The tell is that
+message; a run that shows it has measured nothing about curses behaviour,
+because `initscr()` never succeeded. `setenv TERM vt100` in the guest first.
 
 ## String Functions (`strings.h`, not `string.h`)
 

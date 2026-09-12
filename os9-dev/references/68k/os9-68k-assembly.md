@@ -313,10 +313,38 @@ repeated here. Assembly/module-format-specific additions:
 | 57-63 | 68070 on-chip autovectored interrupts, levels 1-7 | 68070 only |
 | 64-255 | Ordinary vectored interrupts | |
 
-Error exception vectors (2-8, 10-24, 48-63) all dispatch through `F$STrap` and are normally fatal — the
-offending process is terminated. Exception: if the process was created via
-`F$DFork`, its state is preserved rather than torn down, and control passes
-back to the parent debugger for a post-mortem look instead. (The table above shows only a subset; the gaps are listed for completeness here.)
+Error exception vectors all dispatch through `F$STrap` and are normally fatal
+— the offending process is terminated. Exception: if the process was created
+via `F$DFork`, its state is preserved rather than torn down, and control passes
+back to the parent debugger for a post-mortem look instead. The table above
+shows only a subset.
+
+### What an `F$STrap` handler is handed
+
+`Manual` (v2.4 TRM p. 1-60), and `Live` (os9exec) — CONF68K t55–t56, which
+pass on big- and little-endian hosts alike. Runtimes depend on this contract,
+so it is worth stating exactly:
+
+| Register | On entry to the handler |
+|---|---|
+| `d7.w` | The exception's vector offset — which error this is |
+| `(a0)` | The program counter at the exception. The manual notes this is the same value as `R$PC(a5)` |
+| `(a1)` | The stack pointer at the exception (`R$a7(a5)`) |
+| `(a5)` | The saved register image — the whole user register set |
+| `(a6)` | The program's global data pointer |
+
+To resume, restore the registers from the image at `(a5)` and jump to the PC.
+To continue past a faulting instruction rather than retry it, advance the
+saved `R$PC` first.
+
+Do not confuse `(a0)` here with `F$STrap`'s own `(a0)` **input**, which is
+something else entirely: the stack the handler is to run on, zero meaning
+whichever stack is current when the call is made.
+
+Which vectors can be caught is the manual's list above — 2–8, 10 and 11, plus
+48–54 on a machine with a floating-point coprocessor. os9exec installs only
+2–8, so a handler registered for the FPU exceptions is accepted there and
+never fires (`Live` (os9exec)).
 
 An IRQ service routine invoked by kernel interrupt polling receives
 `(a2)` = driver static storage, `(a3)` = device port address, `(a6)` =

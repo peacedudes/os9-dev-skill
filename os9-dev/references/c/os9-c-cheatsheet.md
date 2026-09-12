@@ -67,22 +67,19 @@ in this file:
   to.
 - **`<strings.h>`, not `<string.h>`** — different API (`index`/`rindex`,
   not `strchr`/`strrchr`); see `os9-clib-reference.md`.
-- **Check that your `cio` library and your `cio` module are the same vintage.**
-  `putc`/`getc` from `LIB/cio.l` are macros that reach the handler by trap-13
-  *selector number*, so a library built against one selector assignment and a
-  module implementing another will send a byte-write to whatever routine now
-  sits at that selector. The reported symptom is a wrong answer rather than a
-  crash: the program opens your file, reads not one byte, and reports on it
-  confidently. Eleven programs in one collection shipped that way before the
-  cause was found, and the collection's answer was to build anything installed
-  trap-free (`-qm`).
-  **`Live` (os9exec), and it does NOT reproduce on a matched pair** — where the
-  SDK supplying `cio.l` also supplies the `cio` module, a `getc` loop read a
-  74-byte file as exactly 74 bytes. Verify the pairing before suspecting it:
-  `ident` both modules and compare the CRC (a matched SDK and collection showed
-  the identical module, CRC `$6F1D58`, edition 6). Note also that a disk may
-  carry more than one handler — `cio` and `cio020` are different modules with
-  different data sizes — so which one a program links is part of the question.
+- **Build anything you intend to install trap-free (`-qm`), not `-qixm` against
+  the `cio` trap library.** A program linked the trap way can produce
+  confidently *wrong* I/O rather than failing: in one collection such builds
+  opened a file, read not a byte, and reported on it anyway, and eleven programs
+  shipped in that state before the cause was found — `printf` was the case that
+  exposed it. Rebuilding `-qm` fixed them. This is a property of how the program
+  was linked, **not a defect in `cio`**, and a healthy disk shows nothing:
+  `Live` (os9exec), a default `cc` build's `getc` loop read a 74-byte file as
+  exactly 74 bytes, and the `cio` and `csl` modules were byte-identical between
+  the SDK and the collection. If you ever do suspect a library/module skew,
+  `ident` both and compare the CRC before believing it — and note that a disk
+  may carry more than one handler (`cio` and `cio020` are different modules),
+  so which one a program links is part of the question.
 - **A usage message is not proof a program works** — and for the class above
   it is specifically misleading. Those programs print their usage perfectly.
   A sweep that runs everything bare and scores a usage line as success will

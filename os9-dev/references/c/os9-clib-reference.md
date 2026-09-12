@@ -268,7 +268,41 @@ parameters/buffers — override with `-m=<n>` (`-m=2` = 512 bytes, `-m=10k`
 | `setpr(pid, priority)` | Priority 0–255. |
 | `sleep(seconds)` | Actually delays in **ticks**, not true seconds — tick duration is clock/hardware-dependent (68k systems typically run 100Hz/~10ms ticks, see os9-systems-dev kernel-internals; 6809 CoCo/Dragon systems commonly derive 60Hz/~16.66ms ticks from video vertical sync) — `sleep(0)` sleeps indefinitely; `sleep(1)` gives up time slice but may not wait a full tick. |
 | `kill(pid, signal)` / `intercept(handler)` | `intercept()` installs a signal handler function. |
-| `system(char *cmd)` | Passes the string to the OS-9 shell; blocks until it completes. **Max 80 characters** — use `os9fork()` directly for anything longer. |
+| `system(char *cmd)` | Passes the string to the OS-9 shell; blocks until it completes. **Max 80 characters** — use `os9fork()` directly for anything longer. **It may launch nothing at all from a program you build yourself** — see below. |
+
+### `system()` may launch nothing, and the quickest tell is redirection
+
+`Live` (os9exec). From freshly built programs, `system()` returned 640552 —
+not an error code in any list; it reads like an address — and no child ran:
+
+```
+system("/dd/CMDS/cat /dd/SYS/motd")           -> 640552, no output
+system("/dd/CMDS/cat /dd/SYS/motd > /tmp/f")  -> 640552, no file either
+os9exec(os9fork, "/dd/CMDS/cat", av, environ, 0, 0, 3)  -> a pid, motd prints
+```
+
+The second line is the diagnostic worth copying: if a redirection written
+inside the command string never creates its file, the child never ran at all,
+which separates this from "the child ran and printed nothing".
+
+Two plausible explanations are **false**, measured: it is not the trap-free
+build (a `cio`-linked build of the same probe fails identically), and it is not
+`wait(0)` with a null pointer (`wait(0)` and `wait(&status)` behave the same).
+Period-built binaries that shell out work correctly on the same image in the
+same shell, so the split is between programs built now and programs built then.
+The mechanism is unresolved, `Flag`.
+
+**The workaround is clean** — fork the command yourself, which is what
+`system()` would have done. Note this is `os9exec()` with `os9fork` as its
+first argument, not the `os9fork()` in the table above:
+
+```c
+os9exec(os9fork, av[0], av, environ, 0, 0, 3);
+wait(&status);
+```
+
+The honest limitation: no shell is involved, so a redirection or pipe written
+*inside* the command line is not interpreted. Build the argument vector instead.
 
 ## Startup & Arguments
 

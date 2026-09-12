@@ -307,18 +307,26 @@ Most archived OS-9/68k programs were linked against Microware's
 proprietary `cio` C-I/O trap handler; on a disk without it they die
 immediately with `**** Can't install trap handler **** / **** cio ****`.
 
-- Classify binaries by searching for the NUL-terminated module name
-  `cio\0` — not a bare substring (matches inside words), and not `math`
-  (the floating-point handler is optional; referencing it is harmless).
-  Only `cio`/`csl` are fatal.
+- **Classify by running it, not by reading the binary** — `Live` (os9exec).
+  Run each program against an image with `cio`, `csl`, `csl020`, `math` and
+  `math881` removed, and match the banner. Searching the file for the module
+  name `cio` is wrong in *both* directions: `vi_nocio` contains the string
+  and runs without the module, while `cyberwar`, `gnuchess` and `g` do not
+  contain it and need it. Only `cio`/`csl` are fatal — `math`/`math881` are
+  the optional floating-point handlers and referencing one is harmless.
 - A statically linked "cio-free" build of the same utility is noticeably
   larger; prefer it when both exist.
 - Escape hatch: anything compiled with a public compiler plus a POSIX
   wrapper header set that calls syscalls directly needs no trap handler.
-- A trap handler's companion module must be reachable from the current
-  `chx` (that's `F$Load`'s search path) — a module on another device fails
-  with a generic Path-Not-Found even though the file exists. Check `chx`
-  before suspecting a wrong-CPU binary.
+- **The same banner also means "present but not reachable."** A trap
+  handler's companion module is found through the module directory and then
+  the current execution directory, so moving `chx` off the directory holding
+  `cio` stops every `cio`-linked program with the identical
+  `**** Can't install trap handler **** cio ****` — `chx /dd/CMDS/GCC2`, to
+  reach a compiler driver by bare name, does exactly this. `load /dd/CMDS/cio`
+  first cures it. A module on another *device* instead fails with a generic
+  Path-Not-Found though the file exists. `Live` (os9exec). Check `chx` before
+  concluding the module is absent or the binary is built for the wrong CPU.
 
 ## Discovering what's installed
 

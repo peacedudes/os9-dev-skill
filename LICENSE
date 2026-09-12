@@ -27,7 +27,15 @@ Care taken in good faith is still not the same as terms agreed. What may
 properly be published, and under what license, is Microware's to weigh in on
 first. This notice stands until they have had that opportunity.
 
-A license file will replace this notice after review by Microware.
+A license file will replace this notice after review by Microware. The intended
+terms are staged in LICENSE.pending -- the MIT License, chosen to be as
+permissive as is reasonable while keeping credit attached to every copy.
+
+Attribution does not wait on any of this: NOTICE credits Microware Systems
+Corporation, the licensee publishers, Motorola, the third-party authors, the
+community reimplementations this material was tested against, and the
+preservation archives that kept the documentation alive. It is in force now and
+is unaffected by whatever license follows.
 
 
 IF YOU HAVE BEEN GIVEN A COPY

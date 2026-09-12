@@ -1,8 +1,9 @@
 # OS-9 development skills
 
 > **Pre-publication — not for distribution.** Circulated privately for review;
-> no license is granted yet. A license will follow after review by Microware.
-> See [LICENSE](LICENSE).
+> no license is granted yet. See [LICENSE](LICENSE) for why, and
+> [LICENSE.pending](LICENSE.pending) for the terms intended to replace it.
+> [NOTICE](NOTICE) credits the sources and is in force regardless.
 
 Two reference collections for working with Microware OS-9 — the real one, on
 6809 and 68000. Plain Markdown: no build, no dependencies, no framework. Any
@@ -159,6 +160,7 @@ os9-dev/
 os9-systems-dev/
   SKILL.md  SOURCES.md  references/
 AGENTS.md               entry point for any agent
+NOTICE                  attribution: Microware and every other source
 DIVERGENCES.md          where a runtime disagrees with a manual
 SOURCE-AUTHORITY.md     what counts as Microware's word
 tools/                  the checker, its tests, the pre-commit hook, make-bundle.sh

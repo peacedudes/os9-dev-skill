@@ -1,0 +1,100 @@
+NOTICE — attribution and acknowledgements
+
+This repository is an independent, original description of Microware OS-9. It
+is not Microware documentation, is not endorsed by or affiliated with any
+rights holder named below, and carries no warranty that it describes any
+shipping system correctly.
+
+
+MICROWARE SYSTEMS CORPORATION
+
+OS-9, OS-9000 and BASIC09 are products of Microware Systems Corporation, which
+holds the copyright in the documentation that most of this material was learned
+from, and in the operating system it describes. OS-9 is not a historical
+curiosity: it remains a commercial product with an active rights holder.
+
+Those manuals are the reason this work was possible. Where this repository
+states a fact, the fact was usually first found in a Microware manual; where it
+quotes, it quotes briefly and cites the chapter and page so the original can be
+checked. `SOURCE-AUTHORITY.md` lists each source and whether it is Microware
+speaking or someone else's reading of Microware, and each collection's
+`SOURCES.md` says which manuals stand behind which file.
+
+No Microware source code was used in assembling this material. An archive of
+genuine Microware 6809 source exists in the wider project's resource
+collection and has never been opened for any purpose.
+
+
+MICROWARE MANUALS PUBLISHED UNDER LICENSEE IMPRINT
+
+Several of the manuals relied on are Microware's own, carrying a licensee's
+front matter. Acknowledgement is due to those publishers as well:
+
+  Tandy Corporation / Radio Shack
+  Dragon Data Ltd.
+  GIMIX Inc.
+  Motorola Inc.
+  Peripheral Technology
+
+
+MOTOROLA
+
+The M68000 Family Programmer's Reference Manual (Motorola, 1992) is the
+authority used for processor behaviour — instruction semantics, privilege
+rules, exception frames. It is cited for the CPU and never for OS-9.
+
+
+THIRD-PARTY AUTHORS
+
+These works are not Microware's word, and this repository is careful to say so
+wherever it matters. They were nonetheless heavily used — better indexed and
+far easier to search than OCR'd manual scans — and in several places they are
+what made a manual passage findable at all:
+
+  Paul S. Dayan, "The OS-9 Guru" (Galactic Industrial, 1992)
+  F. G. Swygert and FARNA Systems, the OS-9 quick references and
+    "Mastering OS-9 on the Tandy Color Computer"
+  Paul K. Ward
+  Alexander and Honaker, "OS-9 Level Two and the Tandy Color Computer 3"
+  FHL Inc.
+
+
+COMMUNITY REIMPLEMENTATIONS
+
+Much of this material is tagged `Live`, meaning it was run and observed rather
+than only read. That was possible because of community reverse-engineered
+reimplementations, built and maintained without Microware's source:
+
+  os9exec — Lukas Zeller and Beat Forster, and later contributors
+  NitrOS-9 — the NitrOS-9 project
+  XRoar — the XRoar project
+
+These are credited with a caveat that protects them as much as the reader: a
+`Live` claim is evidence about a reimplementation, never about OS-9 itself.
+Where a runtime and a Microware manual disagree, this repository treats the
+manual as the specification and the runtime as the candidate defect. Both
+projects have had real errors found this way, which is a compliment to their
+openness rather than a criticism of their quality.
+
+
+PRESERVATION ARCHIVES
+
+The documentation for this era was never centralised and survives because
+people chose to keep it: scanning manuals, correcting OCR, and hosting the
+results for decades without being asked to. Specific archives are named in
+`SOURCES.md` where a file came from one. The rest of this work rests on that
+effort.
+
+
+TRADEMARKS
+
+OS-9, OS-9000 and BASIC09 are trademarks or registered trademarks of Microware
+Systems Corporation. Other names may be trademarks of their respective owners.
+They are used here only to identify the systems described.
+
+
+CORRECTIONS
+
+If anything here misstates OS-9, misattributes a source, or reads as going
+further with someone else's material than it should, that is a defect and the
+author wants to hear about it.

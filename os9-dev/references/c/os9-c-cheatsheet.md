@@ -67,6 +67,23 @@ in this file:
   to.
 - **`<strings.h>`, not `<string.h>`** — different API (`index`/`rindex`,
   not `strchr`/`strrchr`); see `os9-clib-reference.md`.
+- **The SDK's `cio` library and the `cio` module on your disk can disagree
+  about trap-13 selector numbers — and the result is a wrong answer, not a
+  crash.** `Live` (os9exec). The `LIB/cio.l` the SDK ships is the `$44`
+  vintage: its `putc`/`getc` are macros that call trap-13 selectors `$41`
+  and `$42`. The `cio` *modules* actually in circulation put a **memory**
+  routine at those selectors. So a program linked against that library and
+  run against such a module calls the allocator at the point it means to
+  write a byte. It does not die — it opens your file, reads not one byte,
+  and reports on it anyway, confidently. Build anything you intend to
+  install trap-free (`-qm`) rather than linking the library's trap path.
+- **A usage message is not proof a program works** — and for the class above
+  it is specifically misleading. Those programs print their usage perfectly.
+  A sweep that runs everything bare and scores a usage line as success will
+  pass every one of them; eleven shipped that way in one collection before
+  the cause was found. A check has to make the program do its job on real
+  input and assert the **content** of the answer (that `2^200` comes back as
+  its 61 digits), never exit status or merely non-empty output.
 - **CLIB/CDEF must be set correctly** or the linker/preprocessor can't find
   their inputs — errors here look like missing-file errors, not
   environment errors.

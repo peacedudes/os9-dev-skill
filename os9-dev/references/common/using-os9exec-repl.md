@@ -349,6 +349,10 @@ immediately with `**** Can't install trap handler **** / **** cio ****`.
   the optional floating-point handlers and referencing one is harmless.
 - A statically linked "cio-free" build of the same utility is noticeably
   larger; prefer it when both exist.
+- **Linking the SDK's `cio` library against a mismatched `cio` module
+  silently corrupts I/O** rather than failing — the selector numbers differ.
+  Build trap-free (`-qm`) for anything installed; see the `cio` selector
+  pitfall in `c/os9-c-cheatsheet.md`.
 - Escape hatch: anything compiled with a public compiler plus a POSIX
   wrapper header set that calls syscalls directly needs no trap handler.
 - **The same banner also means "present but not reachable."** A trap

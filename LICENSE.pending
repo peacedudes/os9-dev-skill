@@ -3,9 +3,18 @@ STAGED LICENSE — NOT YET IN FORCE
 This is the license intended to replace LICENSE once the pre-publication notice
 is lifted. Until then LICENSE governs, and no license is granted.
 
-To publish: replace LICENSE with everything below the line, delete this file,
-and drop the pre-publication banner from the top of README.md. Keep NOTICE as
-it is — it is attribution, not licensing, and it stands either way.
+To publish, in order:
+
+  1. Replace LICENSE with everything below the line, and delete this file.
+  2. Drop the pre-publication banner from the top of README.md.
+  3. Fill in the issue-tracker URL in CONTRIBUTING.md, marked there with a
+     `PUBLISH:` comment. Until that is done, a reader who finds an error has
+     nowhere to send it.
+  4. Re-run both gates and rebuild the bundle, so the shipped copy carries the
+     real license rather than the notice.
+
+Keep NOTICE as it is — it is attribution, not licensing, and it stands either
+way.
 
 Chosen for being as permissive as a license can reasonably be while still
 carrying credit with every copy. A public-domain dedication (CC0) would be

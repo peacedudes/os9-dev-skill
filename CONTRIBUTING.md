@@ -32,6 +32,19 @@ That third point is not bureaucracy. Every claim here carries a confidence tag
 naming its evidence, so a report that says *where* can be acted on, while one
 that says only *what* usually cannot.
 
+### Where to send it
+
+If you are reading this in a checkout of the published repository, use its issue
+tracker — that is the place, and no account beyond the host's is needed.
+
+<!-- PUBLISH: replace the line above with the real issue-tracker URL. -->
+
+If you have a copy that came to you some other way — a zip, a folder someone
+sent you — it may have travelled without its repository link. In that case send
+the report to whoever gave you the copy, or raise it on any OS-9 community forum
+where the author is likely to see it; a correction recorded publicly is better
+than one that waits for the right inbox.
+
 **Reports from real hardware are the rarest and most valuable thing** this
 project can receive. Nothing in it has been checked against a real OS-9 machine.
 Several claims are flagged precisely because only hardware can settle them, and

@@ -41,7 +41,7 @@ error text and an original file that was never touched.
 
 | Form | Redirects | Notes |
 |---|---|---|
-| `<path` | stdin | **Nothing may come between `<` and the path.** `Live` (os9exec): `cmd < file` is a *syntax error*, `cmd <file` runs. A Unix reflex that fails here |
+| `<path` | stdin | **Nothing may come between `<` and the path.** `Live` (os9exec): `list < zzprobe.txt` is rejected before the program runs — the shell echoes the line and marks the column with `^syntax error` — while `list <zzprobe.txt` parses and runs. A Unix reflex that fails here, and the caret is the tell |
 | `>path` | stdout | **Create only — fails if the file already exists** |
 | `>+path` | stdout | **Append** to an existing file, or create it. The Unix `>>` |
 | `>-path` | stdout | Truncate an existing file, or create it. The Unix `>` |
@@ -135,13 +135,19 @@ is the default, and nothing reports that the remaining lines were skipped
 `using-os9exec-repl.md`).
 
 **And "failing" means any non-zero exit status, reported through the error
-table as though it were an error code.** `Live` (os9exec): a program exiting
-with status 2 makes the shell print `Error #000:002 (S_Abort) User abort
-(Cmd-'.')` and stop; status 255 gives `Error #255:255 (E_???)`. The text is
-whatever that *number* means in the error table and has nothing to do with what
-the program did. GNU and BSD ports that print their usage and `exit(2)`
-therefore appear to abort every time they are asked for help — the message
-describes a user abort that never happened.
+table as though it were an error code.** `Live` (os9exec), measured with
+one-line C programs that do nothing but `exit(n)`:
+
+| `exit(n)` | What the shell prints |
+|---|---|
+| `0` | nothing |
+| `2` | `Error #000:002 (S_Abort) User abort (Cmd-'.')` |
+| `255` | `Error #000:255 (E_FORMAT) Device is format protected` |
+
+The text is whatever that *number* means in the error table, and has nothing to
+do with what the program did — no disk was touched to produce that last line.
+GNU and BSD ports that print their usage and `exit(2)` therefore appear to abort
+every time they are asked for help, and in a procedure file they end the run.
 
 **That fallback has no guard, so any readable text file is a script.** `Live`
 (os9exec): naming a file of ordinary prose executed its first word and reported

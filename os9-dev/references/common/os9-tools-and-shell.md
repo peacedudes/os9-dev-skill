@@ -41,7 +41,7 @@ error text and an original file that was never touched.
 
 | Form | Redirects | Notes |
 |---|---|---|
-| `<path` | stdin | |
+| `<path` | stdin | **Nothing may come between `<` and the path.** `Live` (os9exec): `cmd < file` is a *syntax error*, `cmd <file` runs. A Unix reflex that fails here |
 | `>path` | stdout | **Create only — fails if the file already exists** |
 | `>+path` | stdout | **Append** to an existing file, or create it. The Unix `>>` |
 | `>-path` | stdout | Truncate an existing file, or create it. The Unix `>` |
@@ -133,6 +133,15 @@ kernel-level rather than port-specific.
 is the default, and nothing reports that the remaining lines were skipped
 (`Live` (os9exec); `-nx` to run on regardless, and see
 `using-os9exec-repl.md`).
+
+**And "failing" means any non-zero exit status, reported through the error
+table as though it were an error code.** `Live` (os9exec): a program exiting
+with status 2 makes the shell print `Error #000:002 (S_Abort) User abort
+(Cmd-'.')` and stop; status 255 gives `Error #255:255 (E_???)`. The text is
+whatever that *number* means in the error table and has nothing to do with what
+the program did. GNU and BSD ports that print their usage and `exit(2)`
+therefore appear to abort every time they are asked for help — the message
+describes a user abort that never happened.
 
 **That fallback has no guard, so any readable text file is a script.** `Live`
 (os9exec): naming a file of ordinary prose executed its first word and reported

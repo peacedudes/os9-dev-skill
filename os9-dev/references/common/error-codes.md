@@ -122,7 +122,7 @@ is the manuals' own, not a transcription loss.
 | Code | Symbolic name | Meaning | Cause |
 |---|---|---|---|
 | 000:001 | — | Process aborted | The process has aborted |
-| 000:002 | — | Keyboard quit | Control-E (abort signal) sent to the process |
+| 000:002 | — | Keyboard quit | Control-E (abort signal) sent to the process. The shell also prints this row for a **child that merely exited with status 2** — as `Error #000:002 (S_Abort) User abort (Cmd-'.')`, a name the table does not define — because an exit status is rendered through this table as if it were an error code. `Live` (os9exec); see `os9-tools-and-shell.md` |
 | 000:003 | — | Keyboard interrupt | Control-C (interrupt signal) sent to the process |
 | 000:004 | — | Modem hangup | Device driver detected loss of data carrier |
 | 000:064 | E$IllFnc § | Illegal function code | Math trap handler received an invalid function code |

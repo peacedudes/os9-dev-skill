@@ -28,9 +28,32 @@ worth debugging.
    is source-only. Writing to your own storage needs `lea` then a write
    through the address register.
 
+6. **Branch mnemonics already default to the 16-bit form** — so `.w` buys
+   nothing. Bare `bcs`, `bra` and `bsr` all assemble as the opcode with a
+   zero low byte plus a 16-bit extension word, byte-identical to the same
+   mnemonic written `.w`, and a bare branch over a 210-byte gap assembles
+   `Errors: 00000`. `.s` is the suffix that changes anything, emitting the
+   2-byte short form. (Measured on r68 V1.9; `Live` (os9exec).)
+7. **A diagnostic is printed BEFORE the source line it refers to**, with a
+   caret under the offending column and no address/bytes field on that line:
+
+   ```
+   00004 0002 4e71            nop
+   *** error - bad mnemonic ***
+   00005  bogusop d0,d1
+                  ^
+   ```
+
+   Read it the other way and you go hunting in the previous instruction.
+   `Live` (os9exec).
+
 Two directive traps in the same class: `dc.b "text"` needs double quotes
 (single quotes fail regardless of length), and `ds.b` is not a valid
-directive — reserve space with an explicit `dc.b 0,0,0,…`.
+directive — reserve space with an explicit `dc.b 0,0,0,…`. A third, harder to
+place: **a label named `a0`-`a7` or `d0`-`d7` collides with the register
+names**, and the complaint lands on the instruction that *references* the
+label — `*** error - illegal addressing mode ***` — not on the label as a
+duplicate symbol, so it sends you to read the wrong line. `Live` (os9exec).
 
 ## Toolchain (`Live` (os9exec), end-to-end)
 
@@ -211,8 +234,15 @@ What the program demonstrates that the tables alone don't:
 - **Reach your own data `(pc)`-relative via `lea`** — see the addressing-mode
   note under "Known gaps"; a PC-relative *destination* is not available.
 - `r68` emits `*** warning - destination in short branch range ***` for each
-  `bcs`/`bcc` here. It is a size hint, not an error (`Errors: 00000`);
-  `bcs.s`/`bcc.s` silences it.
+  `bcs`/`bcc` here. It is a size hint, not an error (`Errors: 00000`); the
+  `.s` form silences it. It fires whenever the target is close enough that
+  `.s` *would* assemble, for the bare and `.w` spellings alike — but **not**
+  when the target is the very next instruction, where the short form cannot
+  encode it at all: shrinking the 4-byte word branch would put the target at
+  displacement 0, and 0 is the reserved encoding meaning "use the word form".
+  Which is why `bcs.s` to the immediately following label answers
+  `*** error - branch out of range ***` — it reads like "too far" and means
+  the exact opposite. `Live` (os9exec).
 - **After `l68 -o=exfio1` the program was not in the data directory** — it
   landed in the execution directory, as the toolchain section above warns.
   `dir` showed only the `.a` and `.r`; the linked module ran by bare name.

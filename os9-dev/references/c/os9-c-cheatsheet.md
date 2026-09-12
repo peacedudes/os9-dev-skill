@@ -67,16 +67,22 @@ in this file:
   to.
 - **`<strings.h>`, not `<string.h>`** — different API (`index`/`rindex`,
   not `strchr`/`strrchr`); see `os9-clib-reference.md`.
-- **The SDK's `cio` library and the `cio` module on your disk can disagree
-  about trap-13 selector numbers — and the result is a wrong answer, not a
-  crash.** `Live` (os9exec). The `LIB/cio.l` the SDK ships is the `$44`
-  vintage: its `putc`/`getc` are macros that call trap-13 selectors `$41`
-  and `$42`. The `cio` *modules* actually in circulation put a **memory**
-  routine at those selectors. So a program linked against that library and
-  run against such a module calls the allocator at the point it means to
-  write a byte. It does not die — it opens your file, reads not one byte,
-  and reports on it anyway, confidently. Build anything you intend to
-  install trap-free (`-qm`) rather than linking the library's trap path.
+- **Check that your `cio` library and your `cio` module are the same vintage.**
+  `putc`/`getc` from `LIB/cio.l` are macros that reach the handler by trap-13
+  *selector number*, so a library built against one selector assignment and a
+  module implementing another will send a byte-write to whatever routine now
+  sits at that selector. The reported symptom is a wrong answer rather than a
+  crash: the program opens your file, reads not one byte, and reports on it
+  confidently. Eleven programs in one collection shipped that way before the
+  cause was found, and the collection's answer was to build anything installed
+  trap-free (`-qm`).
+  **`Live` (os9exec), and it does NOT reproduce on a matched pair** — where the
+  SDK supplying `cio.l` also supplies the `cio` module, a `getc` loop read a
+  74-byte file as exactly 74 bytes. Verify the pairing before suspecting it:
+  `ident` both modules and compare the CRC (a matched SDK and collection showed
+  the identical module, CRC `$6F1D58`, edition 6). Note also that a disk may
+  carry more than one handler — `cio` and `cio020` are different modules with
+  different data sizes — so which one a program links is part of the question.
 - **A usage message is not proof a program works** — and for the class above
   it is specifically misleading. Those programs print their usage perfectly.
   A sweep that runs everything bare and scores a usage line as success will

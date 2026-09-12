@@ -45,6 +45,13 @@ or SDK. A host directory of your own files works identically for basic testing.
   that boot-time "Unable to open error message file" is the tell. Bare or
   absolute paths both work. The symptom is indistinguishable from a
   missing C-library trap handler, so rule this out first.
+  - **On `OS9Hx` the same mistake hides instead of showing.** A relative path
+    that does not resolve falls back to the magic `h0`…`hz` name beside the
+    binary, so the device mounts, works, and is **the wrong image** — you get no
+    error at all. `Live` (os9exec). If a leftover `h0` file or symlink sits
+    beside the emulator, remove it: its only effect is to mask a misconfigured
+    `OS9H0`. Give these variables absolute paths and the fallback can never
+    fire.
 - **A device has to answer a *raw* open for `stat()` to work at all.**
   Microware's C library opens the device's identification sector (`/h1@`) and
   reads 256 bytes before it will describe any file on it — and bash finds

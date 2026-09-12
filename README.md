@@ -17,6 +17,31 @@ Code](https://claude.com/claude-code) can additionally load them as skills.
 
 They are siblings and cross-reference each other; keep both.
 
+## Not official, and not error-free
+
+This is an **independent description**, assembled by reading published manuals
+and by testing against emulators. It is not Microware's documentation, it is not
+endorsed by or affiliated with any rights holder, and it certainly contains
+mistakes.
+
+You are not asked to take it on trust. Every claim carries a tag saying what
+backs it — see [Confidence](#confidence) below, and read the tag on the line you
+are about to rely on. The known limits, stated up front rather than buried:
+
+- **Nothing here has been checked against real OS-9 hardware.** Not one claim.
+- **`Live` means an emulator** — a community reimplementation, not a
+  specification. Where a runtime and a manual disagree, the manual is treated as
+  authoritative and the runtime as the candidate defect.
+- **Open `Flag`s mark genuinely unresolved questions**, where sources contradict
+  each other; `python3 tools/check_doc_consistency.py` prints the current
+  inventory. Several of them need real hardware to settle.
+- **Coverage follows what could be verified.** Silence on a topic means untested
+  here, not absent from OS-9.
+
+Found an error? [Corrections are wanted](CONTRIBUTING.md) — including a bare
+"this line is wrong, here is what I saw instead". Reports from real hardware are
+the rarest and most valuable thing this project can receive.
+
 ## Using it
 
 Put the folder anywhere your agent can read files. There is nothing to build.
@@ -161,6 +186,7 @@ os9-systems-dev/
   SKILL.md  SOURCES.md  references/
 AGENTS.md               entry point for any agent
 NOTICE                  attribution: Microware and every other source
+CONTRIBUTING.md         how to send a correction, and what gets declined
 DIVERGENCES.md          where a runtime disagrees with a manual
 SOURCE-AUTHORITY.md     what counts as Microware's word
 tools/                  the checker, its tests, the pre-commit hook, make-bundle.sh

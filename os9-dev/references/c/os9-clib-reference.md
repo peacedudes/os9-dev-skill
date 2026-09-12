@@ -285,30 +285,41 @@ parameters/buffers — override with `-m=<n>` (`-m=2` = 512 bytes, `-m=10k`
 | `kill(pid, signal)` / `intercept(handler)` | `intercept()` installs a signal handler function. |
 | `system(char *cmd)` | Passes the string to the OS-9 shell; blocks until it completes. **Max 80 characters** — use `os9fork()` directly for anything longer. **It may launch nothing at all from a program you build yourself** — see below. |
 
-### `system()` may launch nothing, and the quickest tell is redirection
+### `system()` may launch nothing, and the return value will not tell you
 
-`Live` (os9exec). From freshly built programs, `system()` returned 640552 —
-not an error code in any list; it reads like an address — and no child ran:
+**`system()` is environment-dependent here — verify it before relying on it.**
+`Live` (os9exec), one binary built with the SDK's `cc` and run unchanged in two
+environments:
+
+| Where | Child ran? | `system()` returned |
+|---|---|---|
+| SDK disk, Microware's `shell` | **yes** — output appeared, redirect file created | 0 |
+| freeware disk, `bash`, `SHELL=/dd/CMDS/ksh` | **no** — no output, no redirect file | 0 |
+
+So the return value is worthless as a signal: the failing case returned **0**,
+which reads as success. A large address-like value (640552) has also been seen
+from the failing case. Neither tells you anything.
+
+**The reliable diagnostic is a redirection inside the command string.** Put one
+there and check whether the file appears:
 
 ```
-system("/dd/CMDS/cat /dd/SYS/motd")           -> 640552, no output
-system("/dd/CMDS/cat /dd/SYS/motd > /tmp/f")  -> 640552, no file either
-os9exec(os9fork, "/dd/CMDS/cat", av, environ, 0, 0, 3)  -> a pid, motd prints
+system("list pctl.c >sysprobe.out")   -> no sysprobe.out  =>  no shell ran
 ```
 
-The second line is the diagnostic worth copying: if a redirection written
-inside the command string never creates its file, the child never ran at all,
-which separates this from "the child ran and printed nothing".
+That distinguishes "nothing ran" from "the child ran and printed nothing",
+because a shell creates the redirect target *before* running the command — even
+a command that does not exist leaves an empty file behind. A writable directory
+and no file therefore means the command string was never interpreted at all.
 
-Two plausible explanations are **false**, measured: it is not the trap-free
-build (a `cio`-linked build of the same probe fails identically), and it is not
-`wait(0)` with a null pointer (`wait(0)` and `wait(&status)` behave the same).
-Period-built binaries that shell out work correctly on the same image in the
-same shell, so the split is between programs built now and programs built then.
-The mechanism is unresolved, `Flag`.
+Ruled out by measurement, so do not re-investigate: it is not the trap-free
+build (a `cio`-linked build fails the same way), and not `wait(0)` versus
+`wait(&status)` (identical). Period-built binaries shell out correctly on the
+disk where freshly built ones do not. The mechanism is unresolved, `Flag`.
 
-**The workaround is clean** — fork the command yourself, which is what
-`system()` would have done:
+**The workaround is clean, and is verified to run** — fork the command
+yourself, which is what `system()` would have done. `Live` (os9exec): this
+returned a pid, the child's output appeared, and `wait` reported status 0:
 
 ```c
 extern int os9exec(), os9fork(), wait();

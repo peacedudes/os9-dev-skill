@@ -360,10 +360,18 @@ Do not confuse `(a0)` here with `F$STrap`'s own `(a0)` **input**, which is
 something else entirely: the stack the handler is to run on, zero meaning
 whichever stack is current when the call is made.
 
-Which vectors can be caught is the manual's list above — 2–8, 10 and 11, plus
-48–54 on a machine with a floating-point coprocessor. os9exec installs only
-2–8, so a handler registered for the FPU exceptions is accepted there and
-never fires (`Live` (os9exec)).
+**Which vectors, exactly.** Two different facts are easy to conflate. The
+*error-exception group* is **vectors 2–8, 10–24, 48–63** — the manual's own
+section heading (`Manual`, v2.4 TRM p. 2-31) — and membership of it is what makes
+an exception normally fatal. `F$STrap` then catches the members of that group
+**considered non-fatal**, which p. 1-60 enumerates: bus error, address error,
+illegal instruction, zero divide, CHK, TRAPV, privilege violation, line 1010 and
+line 1111 (2–8, 10, 11), plus seven FPCP exceptions (48–54). So the wide range
+is not wrong and the narrow list is not a contradiction — one is the group, the
+other is the catchable part of it. The manual adds that not all catchable vectors
+apply to every CPU: 48–54 are 68020/68030 only. os9exec installs just 2–8, so a
+handler registered for the FPCP exceptions is accepted there and never fires
+(`Live` (os9exec)).
 
 An IRQ service routine invoked by kernel interrupt polling receives
 `(a2)` = driver static storage, `(a3)` = device port address, `(a6)` =

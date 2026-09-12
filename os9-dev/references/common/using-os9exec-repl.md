@@ -45,13 +45,18 @@ or SDK. A host directory of your own files works identically for basic testing.
   that boot-time "Unable to open error message file" is the tell. Bare or
   absolute paths both work. The symptom is indistinguishable from a
   missing C-library trap handler, so rule this out first.
-  - **On `OS9Hx` the same mistake hides instead of showing.** A relative path
-    that does not resolve falls back to the magic `h0`…`hz` name beside the
-    binary, so the device mounts, works, and is **the wrong image** — you get no
-    error at all. `Live` (os9exec). If a leftover `h0` file or symlink sits
-    beside the emulator, remove it: its only effect is to mask a misconfigured
-    `OS9H0`. Give these variables absolute paths and the fallback can never
-    fire.
+  - **On `OS9Hx` the same mistake can hide instead of showing** — reported,
+    not verified here (`Hearsay`): a relative path that does not resolve is
+    said to fall back to the magic `h0`…`hz` name beside the binary, mounting a
+    device that works and is the wrong image. **Give these variables absolute
+    paths** and the question cannot arise.
+  - **Do not "tidy away" an `h0`…`hz` file or symlink** because it looks like a
+    leftover of the magic-name scheme. It may be exactly what `OS9H0` names: a
+    symlink is a perfectly ordinary target for the variable, and deleting one
+    took out a working system here, because the variable pointed at the link
+    rather than at the image behind it. Read the configuration that launches the
+    emulator — the alias, script or `.zshrc` line — before deciding any path
+    beside it is unused.
 - **A device has to answer a *raw* open for `stat()` to work at all.**
   Microware's C library opens the device's identification sector (`/h1@`) and
   reads 256 bytes before it will describe any file on it — and bash finds

@@ -9,7 +9,7 @@ of these, inline, next to the claim it qualifies.
 | `Hearsay` | Stated directly by a person, not from any manual or test. **Lowest** confidence. |
 | `Manual` | Derived from and cross-referenced across published manuals. Not run, not checked against code. |
 | `Source` | Checked against real source code (os9exec's C, or NitrOS-9's open kernel source) — not run for this specific claim. |
-| `Live` | Actually run and observed. **Always names where** — `Live (NitrOS-9)`, `Live (os9exec)`, `Live (OS-9/68000)`. See below. |
+| `Live` | Actually run and observed. **Always names where** — `Live` (NitrOS-9), `Live` (os9exec), `Live` (OS-9/68000). See below. |
 | `Absent` | Actively searched for and confirmed **not to exist** — distinct from "nobody's checked yet". One line, a fact stamp. Add a clause only to state what happens instead (e.g. 6809 has no `events` utility because it uses `F$Send`/`F$Icpt`/`F$Sleep` signals rather than 68k's named-event objects) — never describe the syntax the absent thing *would* have had. |
 | `Flag` | Two or more sources disagree; unresolved. |
 
@@ -19,8 +19,9 @@ the others rather than replacing them.
 ## `Live` names the implementation it was run on
 
 "OS-9" is not one system, so "we ran it" is not one claim. A `Live` tag
-therefore carries the implementation in parentheses, and a claim confirmed on
-more than one lists each: `Live (NitrOS-9, os9exec)`.
+therefore carries the implementation in parentheses, outside the tag's own
+backticks, and a claim confirmed on more than one lists each:
+`Live` (NitrOS-9, os9exec).
 
 | Qualifier | What it is |
 |---|---|

@@ -277,7 +277,7 @@ parameters/buffers — override with `-m=<n>` (`-m=2` = 512 bytes, `-m=10k`
 
 | Function | Notes |
 |---|---|
-| `os9fork(char *modname, int paramsize, char *paramptr, int type, int lang, int datasize)` | Not a standard C function — direct OS-9 process creation. `type`=1 is "program". `lang`=1 is native object code for whatever CPU the running system is (the module header's `M$Lang` field) — on a 6809 system that's 6809 object code (code 4 there is C I-code instead); on 68k, code 1 is 68K object code. It's not a single cross-architecture enum where one number always means "6809." Returns child PID or -1. Parent does **not** automatically wait — pair with `wait()`. **`modname` resolution — `Live` (os9exec)**: a bare name (no leading `/`) resolves via the exec-directory search, same as `F$Fork`/Shell — confirmed forking `"childprg68k"` by bare name, correct child PID and exit status returned (needs the target module actually present in the current exec directory, which tripped up the first attempt here purely on directory placement, not a real resolution-rule question). **`datasize` sizing — `Source`-confirmed**: `os9exec`'s `F$Fork` implementation (`procstuff.c`) calls the same `prepData()` used for `F$TLink`'s trap-handler memory, with `datasize` (plus `paramsize`) simply *added* to the module's own declared `_mdata`+`_mstack` — it is headroom on top of the module's own requirement, not a replacement absolute total. A `4096`-byte guess "worked" because it's headroom added to whatever the module already needs, not because 4096 is itself the right number for any particular program. |
+| `os9fork(char *modname, int paramsize, char *paramptr, int type, int lang, int datasize)` | Not a standard C function — direct OS-9 process creation. `type`=1 is "program". `lang`=1 is native object code for whatever CPU the running system is (the module header's `M$Lang` field) — on a 6809 system that's 6809 object code (code 4 there is C I-code instead); on 68k, code 1 is 68K object code. It's not a single cross-architecture enum where one number always means "6809." Returns child PID or -1. Parent does **not** automatically wait — pair with `wait()`. **`modname` resolution — `Live` (os9exec)**: a bare name (no leading `/`) resolves via the exec-directory search, same as `F$Fork`/Shell — confirmed forking `"childprg68k"` by bare name, correct child PID and exit status returned (needs the target module actually present in the current exec directory, which tripped up the first attempt here purely on directory placement, not a real resolution-rule question). **`datasize` sizing — `Source`-confirmed**: `os9exec`'s `F$Fork` implementation (`procstuff.c`) calls the same `prepData()` used for `F$TLink`'s trap-handler memory, with `datasize` (plus `paramsize`) simply *added* to the module's own declared `_mdata`+`_mstack` — it is headroom on top of the module's own requirement, not a replacement absolute total. A `4096`-byte guess "worked" because it's headroom added to whatever the module already needs, not because 4096 is itself the right number for any particular program. **Arity is not agreed across the SDK's own headers**, `Flag`: the six-parameter form above is the one exercised here, while the GCC2 tree's `stdlib.h` declares `os9fork(const char*, int, const char*, short, short, int, short)` — seven, and differently typed. A third name, `os9forkc`, is declared there with eight. Confirm against the header for the tree you are compiling in before trusting any one arity, and see the `system()` note below. |
 | `exit`/`_exit` | `exit()` flushes stdio buffers first; `_exit()` doesn't. |
 | `wait(int *status)` | Waits for a child to terminate. |
 | `setpr(pid, priority)` | Priority 0–255. |
@@ -308,16 +308,44 @@ same shell, so the split is between programs built now and programs built then.
 The mechanism is unresolved, `Flag`.
 
 **The workaround is clean** — fork the command yourself, which is what
-`system()` would have done. Note this is `os9exec()` with `os9fork` as its
-first argument, not the `os9fork()` in the table above:
+`system()` would have done:
 
 ```c
-os9exec(os9fork, av[0], av, environ, 0, 0, 3);
+extern int os9exec(), os9fork(), wait();
+int status = 0;
+
+if ((pid = os9exec(os9fork, av[0], av, environ, 0, 0, 3)) < 0)
+        return -1;
 wait(&status);
 ```
 
-The honest limitation: no shell is involved, so a redirection or pipe written
-*inside* the command line is not interpreted. Build the argument vector instead.
+**`os9exec()` takes a fork function as its first argument** — a *pointer*,
+which is why `os9fork` appears bare with no parentheses. It is a wrapper that
+calls the fork routine you nominate, so the name is passed as a value, never
+invoked here. Its prototype, from the SDK's own `DEFS/os9lib/stdlib.h`:
+
+```c
+os9exec(int (*procfunc)(), char *, char **, char **, unsigned int, short, short)
+```
+
+Two things follow, and both are traps:
+
+- **Do not collapse it into a direct `os9fork(...)` call.** The two take
+  different arguments in every position, and under K&R rules the wrong one
+  compiles silently and misbehaves at run time rather than failing to build.
+- **The fork function has more than one name, and period code mostly uses the
+  other one.** `os9forkc` sits in that slot in five of six archive sources
+  measured on one disk (smail, `eo`, netpbm, `sc`, forum9), `os9fork` in the
+  sixth. Both work, as a function-pointer argument should.
+
+The trailing `0, 0, 3` is **measured as used, not documented**: the prototype
+gives the types, six independent period sources pass exactly these values, and
+it works — but what the `unsigned int` and the two `short`s select has not been
+traced here, and the library header leaves the fork prototypes commented out.
+
+The honest limitation of the whole approach: no shell is involved, so a
+redirection or pipe written *inside* the command line is not interpreted. Build
+the argument vector instead.
 
 ## Startup & Arguments
 

@@ -87,6 +87,12 @@ or SDK. A host directory of your own files works identically for basic testing.
   the prompt at line-start — times out even though the shell is fine.
   Recovery for both cases: one raw `key Enter` to force a blank prompt line,
   confirm, resend. The timed-out command was never sent, so nothing is lost.
+  The same byte costs you output at the *end* of a run: a program whose last
+  message ends in a bare CR has that line overwritten by the shell prompt that
+  follows, so a capture shows `Cannot open modem path (/t0) - bash#` or
+  `bash# EM port defined!` and reads as the program truncating itself.
+  Appending `; echo ""` to the command moves the prompt to a fresh line and the
+  message survives. `Live` (os9exec).
 - **Raw `key`** — no gating, returns after a fixed delay **without waiting
   for the program to finish**. Poll the pane until the expected prompt
   returns; never treat `key`'s return as completion.
@@ -257,7 +263,15 @@ Three routes, in order of preference by size:
    EOF is ESC by default, Ctrl-D after `tmode eof=04`. Works on RBF images
    and host dirs alike.
 2. **`vi`** (or `ed`) — for real editing; produces correct CR-only line
-   endings natively. Needs a correct `TERM`/termcap. Basic loop: `i`,
+   endings natively. Needs a correct `TERM`/termcap — and for this era
+   **`vt100` is usually the right answer, not a modern value**. `Live`
+   (os9exec): under `TERM=xterm-256color` (a valid entry in the disk's own
+   termcap) `sc` refuses to start at all with
+   `'xterm-256color': Unknown terminal type`, and `backgammon` draws its top
+   rule and nothing else — no cursor-addressed walls or pieces. `TERM=vt100`
+   and both render fully. Programs that carry their own compiled termcap, or
+   that simply assume a vt100, do not all accept a modern name. Set it before
+   blaming the program or the emulator. Basic loop: `i`,
    type, ESC, `:wq`.
 3. **Host-side editing + `flip`** — host-native directories only (a file
    inside an RBF image has no host file to touch). `flip -m` → CR-only

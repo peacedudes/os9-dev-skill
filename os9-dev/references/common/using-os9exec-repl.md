@@ -74,7 +74,35 @@ or SDK. A host directory of your own files works identically for basic testing.
   what reaches the screen, reproduce it the way a user sees it: no `-r`, and
   compare against the `-r` run rather than trusting either alone.
 
-## REPL harness: two send modes
+## REPL harness: what it is, and two send modes
+
+The harness is **`tools/os9repl.sh`** in the os9exec checkout — a tmux helper
+that drives the emulator one command at a time and prints only the output that
+command produced, instead of the whole scrollback. `tools/nitros9repl.sh` beside
+it is the 6809 sibling (NitrOS-9 under XRoar plus DriveWire). Its own header
+comment is the authority on the full command set; the shape of it is:
+
+| Verb | Does |
+|---|---|
+| `start` | boot via `/dd/startup` — preloads the toolchain, then `tsmon` to `User name?:` |
+| `send <cmd>` | send one command, wait for a prompt, print the new output |
+| `key <keys…>` | raw keystrokes, no Enter (`Escape Enter Up Down Left Right`) |
+| `snap [label]` | labelled snapshot of the pane |
+| `vi <file> <seq>` | run `vi` and walk a key sequence, showing the screen at each step |
+| `peek` | the whole current pane — the one to reach for after a crash |
+| `stop` / `restart` | kill the session / stop, rebuild and start |
+
+**Right after `start`, send the bare account name** (`send dog`, not
+`login dog`): `tsmon` has already invoked `login`, so there is no login verb.
+The prompts it treats as "ready" are the shell `$`, `for hlp)` ending a
+debug-prompt line, `User name?:` and `Password:`.
+
+**Set `OS9REPL_SESSION` when another session may be running.** It names the tmux
+session (default `os9exec`), and two callers sharing one name will fight over
+the same pane. `OS9REPL_TIMEOUT` is seconds per command (default 20 — raise it
+for a compile), `OS9REPL_KEY_DELAY` the gap between keystrokes in `vi` mode. The
+6809 script reads `NITROS9REPL_*` equivalents and adds `connect` (an interactive
+session in your own terminal) and `server` (the DriveWire protocol log).
 
 - **Gated `send`** — waits for a recognized prompt (shell `$`, debugger)
   before and after sending. **It goes silent inside any sub-program with

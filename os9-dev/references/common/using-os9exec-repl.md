@@ -7,8 +7,9 @@ emulator: launching, running programs, editing files, accounts, recovery. The
 os9exec **is** the CPU plus an OS-9 kernel implementation, not a hardware
 emulator running real firmware — no ROM, no video/keyboard console to bridge
 around. Its stdin/stdout are the OS-9 console, so a plain PTY/pipe harness
-works directly. It builds native on macOS and Linux and cross-compiles to a
-Windows PE via mingw-w64. A few *host*-filesystem behaviors differ on Windows
+works directly. It runs on macOS, Linux and Windows — in practice anything
+with a C compiler; the Windows build is a PE cross-compiled with mingw-w64.
+A few *host*-filesystem behaviors differ on Windows
 (NTFS permission mapping, device-alias path resolution) — emulator-platform
 quirks, not OS-9 facts; don't encode them as OS-9 behavior.
 
@@ -19,8 +20,22 @@ or SDK. A host directory of your own files works identically for basic testing.
 ## Launching and disks
 
 - `OS9DISK=<path>` (or a `dd` file/dir beside the binary) mounts as `/dd`;
-  `OS9H0`…`OS9HZ` (or `h0`…`hz` beside the binary) mount as `/h0`…`/hz`.
-  Each can be a host directory or an RBF disk image.
+  `OS9H0`…`OS9Hz` (or `h0`…`hz` beside the binary) mount as `/h0`…`/hz`.
+  Each can be a host directory or an RBF disk image. **Configure devices by
+  these variables** rather than by the magic file names and host symlinks —
+  the variable says plainly which image is which.
+  - **The device letter is case-sensitive**: `/hz` is configured by `OS9Hz`,
+    and `OS9HZ` is silently ignored — no device, no complaint. `Live` (os9exec).
+  - **Two variables may name the same image, and that is supported.** A
+    collection that programs expect at both `/dd` and `/h0` needs only
+    `OS9DISK=<img> OS9H0=<img>`; the emulator says so on the console
+    (`# /h0: using OS9H0='<img>', ignoring '<startPath>/h0'`) and mounts it.
+    `Live` (os9exec). No symlinking or copying required.
+- **Prefer an RBF image over a host directory** for anything but the most
+  basic testing. File permission attributes are enforced, and record locking
+  works, only on the RBF path — on a host directory locking is deliberately
+  absent, so a program that relies on it appears to work and silently
+  doesn't. `mount -k=<size> h0`…`hz` makes a blank image to start from.
 - Launch: `OS9DISK=/abs/path/disk ./os9exec /dd/CMDS/shell`
 - macOS first run: `xattr -d com.apple.quarantine os9exec`
 - **Never write `OS9DISK=./disk`.** A leading `./` silently breaks every
@@ -30,6 +45,12 @@ or SDK. A host directory of your own files works identically for basic testing.
   that boot-time "Unable to open error message file" is the tell. Bare or
   absolute paths both work. The symptom is indistinguishable from a
   missing C-library trap handler, so rule this out first.
+- **A device has to answer a *raw* open for `stat()` to work at all.**
+  Microware's C library opens the device's identification sector (`/h1@`) and
+  reads 256 bytes before it will describe any file on it — and bash finds
+  commands, and answers `[ -f ]`/`[ -x ]`, through `stat()`. So a device that
+  refuses that raw open has no working command lookup even with `PATH`
+  correct and the files plainly present. `Source` (os9exec, traced).
 - **Verify which host directory a device maps to before creating host-side
   test files**: run `dir` inside the emulator and `ls` on the host and
   compare. A file dropped into the wrong host directory is simply invisible
@@ -120,6 +141,13 @@ This is the route for CI and for a fresh clone with no system disk. `mount -k`
 streams the image (head plus a zero tail) rather than buffering it, so size is
 bounded by host disk, not by the 68k arena — 125 MB builds in well under a
 second. `mount -r`, a genuine RAM disk, IS bounded by the arena and says so.
+
+**The RAM-disk form wants the size on the option and the device as a path** —
+`mount -r=256k /r0`. `Live` (os9exec): `mount -r r0` answers `can't mount
+device ""` and `mount -r=256k r0` answers `can't mount device "r0"`; only the
+leading slash works. `mount -?` also lists `-n=<bytes>` sector size,
+`-c=<num>` cluster size and `-d=<device>` (a RAM disk copied from a device).
+Worth knowing because a good deal of freeware wants a `/r0` to scribble on.
 
 **`OS9DISK` CAN point at an RBF image** — `Live` (os9exec), re-measured
 against os9exec `e8a3c81` on macOS, with `env -i` and from an unrelated

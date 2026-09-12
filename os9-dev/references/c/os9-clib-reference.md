@@ -167,25 +167,32 @@ discipline is untouched.
 
 Measured, `Live` (os9exec), sending one bare keystroke and only then an Enter:
 
-| Program | Bare key | Enter |
+| Reader, after `initscr(); cbreak();` | Bare keystroke | Enter |
 |---|---|---|
-| `initscr(); cbreak();` then `getchar()` | echoed, still blocked | returned |
-| `initscr(); crmode();` then `getchar()` | echoed, still blocked | returned |
-| plain `getchar()`, no curses (control) | echoed, still blocked | returned |
+| `getchar()` | echoed, still blocked | returned |
+| `getchar()` after `crmode()` instead | echoed, still blocked | returned |
+| `getchar()` with no curses at all (control) | echoed, still blocked | returned |
+| **`getch()`** | **returned immediately** | not needed |
 
-All three identical, which is exactly what a flag-only macro predicts. So a
-program that calls `cbreak()` and then reads with `getchar()` compiles, links,
-runs, and silently requires Enter after every key — it reads as a broken game
-rather than a porting error. Change the path's own editing with `tmode`/`SS_Opt`
-if you need single keys from stdio.
+**So `cbreak()` is honoured by curses and invisible to stdio** — it is not
+inert, and it is not a no-op; it simply only means something to the one reader
+that consults the flag. The three `getchar()` rows agreeing with the no-curses
+control is what a flag-only macro predicts, and `getch()` returning on the bare
+key is `curses` doing its own single-character read.
 
-**`getch()` is the untested half**, `Flag`: since `_crmode` is only a flag,
-curses' own `getch()` is the one path that *could* consult it and do a
-single-character read. That is the expectation and the reason ports use it, but
-it is not measured here — the probe would not link (`wclrtoeol` unresolved,
-which is a link-order problem rather than a missing symbol, since `curses.l`
-both references and defines it). So: `cbreak()` is proven invisible to stdio,
-not proven inert.
+The tell in the `getch()` capture is worth recognising: the echoed key and the
+program's output run together on one line (`kGOT 107`), because `getch()`
+returned before any line discipline was involved.
+
+Practical consequence: a program that calls `cbreak()` and then reads with
+`getchar()` compiles, links, runs, and silently requires Enter after every
+key — it reads as a broken game rather than a porting error. Read keys with
+`getch()`, or change the path's own editing with `tmode`/`SS_Opt`.
+
+**Building a curses probe**: if the link reports `wclrtoeol` unresolved *while
+naming `curses.l` as the referencing file*, that is link order, not a missing
+symbol — `curses.l` both references and defines it, so a single-pass linker has
+already passed the definition. Listing `-l=.../curses.l` **twice** resolves it.
 
 **A curses program needs `TERM` set inside the guest.** `Live` (os9exec): boot
 straight to a shell rather than through a login and `initscr()` fails with
@@ -299,7 +306,7 @@ parameters/buffers — override with `-m=<n>` (`-m=2` = 512 bytes, `-m=10k`
 
 | Function | Notes |
 |---|---|
-| `os9fork(char *modname, int paramsize, char *paramptr, int type, int lang, int datasize)` | Not a standard C function — direct OS-9 process creation. `type`=1 is "program". `lang`=1 is native object code for whatever CPU the running system is (the module header's `M$Lang` field) — on a 6809 system that's 6809 object code (code 4 there is C I-code instead); on 68k, code 1 is 68K object code. It's not a single cross-architecture enum where one number always means "6809." Returns child PID or -1. Parent does **not** automatically wait — pair with `wait()`. **`modname` resolution — `Live` (os9exec)**: a bare name (no leading `/`) resolves via the exec-directory search, same as `F$Fork`/Shell — confirmed forking `"childprg68k"` by bare name, correct child PID and exit status returned (needs the target module actually present in the current exec directory, which tripped up the first attempt here purely on directory placement, not a real resolution-rule question). **`datasize` sizing — `Source`-confirmed**: `os9exec`'s `F$Fork` implementation (`procstuff.c`) calls the same `prepData()` used for `F$TLink`'s trap-handler memory, with `datasize` (plus `paramsize`) simply *added* to the module's own declared `_mdata`+`_mstack` — it is headroom on top of the module's own requirement, not a replacement absolute total. A `4096`-byte guess "worked" because it's headroom added to whatever the module already needs, not because 4096 is itself the right number for any particular program. **Arity is not agreed across the SDK's own headers**, `Flag`: the six-parameter form above is the one exercised here, while the GCC2 tree's `stdlib.h` declares `os9fork(const char*, int, const char*, short, short, int, short)` — seven, and differently typed. A third name, `os9forkc`, is declared there with eight. Confirm against the header for the tree you are compiling in before trusting any one arity, and see the `system()` note below. |
+| `os9fork(char *modname, int paramsize, char *paramptr, int type, int lang, int datasize)` | Not a standard C function — direct OS-9 process creation. `type`=1 is "program". `lang`=1 is native object code for whatever CPU the running system is (the module header's `M$Lang` field) — on a 6809 system that's 6809 object code (code 4 there is C I-code instead); on 68k, code 1 is 68K object code. It's not a single cross-architecture enum where one number always means "6809." Returns child PID or -1. Parent does **not** automatically wait — pair with `wait()`. **`modname` resolution — `Live` (os9exec)**: a bare name (no leading `/`) resolves via the exec-directory search, same as `F$Fork`/Shell — confirmed forking `"childprg68k"` by bare name, correct child PID and exit status returned (needs the target module actually present in the current exec directory, which tripped up the first attempt here purely on directory placement, not a real resolution-rule question). **`datasize` sizing — `Source`-confirmed**: `os9exec`'s `F$Fork` implementation (`procstuff.c`) calls the same `prepData()` used for `F$TLink`'s trap-handler memory, with `datasize` (plus `paramsize`) simply *added* to the module's own declared `_mdata`+`_mstack` — it is headroom on top of the module's own requirement, not a replacement absolute total. A `4096`-byte guess "worked" because it's headroom added to whatever the module already needs, not because 4096 is itself the right number for any particular program. **Arity is deliberately unprototyped, `Flag` — and the one fixed prototype is the outlier.** The six-parameter form above is what was exercised here. Three separate Microware-derived `stdlib.h` copies (the SDK's `os9lib` tree and two archived ones) decline to commit: they declare bare `os9fork(), os9forkc(),` — K&R empty parens, any arity — and carry the only full signature **commented out**, as `(char *, char *, int, int, short, short, short, ...)`: **variadic**, and differently typed from the GCC2 tree's fixed seven-parameter `(const char*, int, const char*, short, short, int, short)` (`os9forkc` there takes eight). All three copies are character-identical, so they are one original rather than three witnesses. Read that as the Microware side documenting a variadic call and refusing to prototype it, with GCC2 having re-derived a fixed prototype for it — so a GCC2 arity is not corroboration. **Which arity the library actually implements is unmeasured**; pass arguments the way working period code does rather than trusting any header, and see the `system()` note below. |
 | `exit`/`_exit` | `exit()` flushes stdio buffers first; `_exit()` doesn't. |
 | `wait(int *status)` | Waits for a child to terminate. |
 | `setpr(pid, priority)` | Priority 0–255. |

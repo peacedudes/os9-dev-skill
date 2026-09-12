@@ -45,11 +45,13 @@ or SDK. A host directory of your own files works identically for basic testing.
   that boot-time "Unable to open error message file" is the tell. Bare or
   absolute paths both work. The symptom is indistinguishable from a
   missing C-library trap handler, so rule this out first.
-  - **On `OS9Hx` the same mistake can hide instead of showing** — reported,
-    not verified here (`Hearsay`): a relative path that does not resolve is
-    said to fall back to the magic `h0`…`hz` name beside the binary, mounting a
-    device that works and is the wrong image. **Give these variables absolute
-    paths** and the question cannot arise.
+  - **`OS9Hx` has the same trap, and its symptom is split down the middle.**
+    `Live` (os9exec): with a relative path the variable falls back to
+    `<startPath>/hx`, and what you then see is **module loading from that device
+    succeeding while opening a file on it fails with `E_BPNAM` (215)** — which
+    reads exactly like a corrupt image and is not one. Same shape as the
+    `OS9DISK` case above, on a different variable. **Always pass an absolute
+    path.**
   - **Do not "tidy away" an `h0`…`hz` file or symlink** because it looks like a
     leftover of the magic-name scheme. It may be exactly what `OS9H0` names: a
     symlink is a perfectly ordinary target for the variable, and deleting one
@@ -85,6 +87,12 @@ or SDK. A host directory of your own files works identically for basic testing.
   roadmap and once into a retraction of that roadmap entry. If a claim is about
   what reaches the screen, reproduce it the way a user sees it: no `-r`, and
   compare against the `-r` run rather than trusting either alone.
+- **`-r` also destroys any animation built from carriage returns**, `Live`
+  (os9exec). Removing the pacing removes the only thing that made successive
+  frames distinguishable in time, so a program that redraws a line per frame —
+  a spinner, a counter, a progress bar, anything CR-per-frame — **collapses to
+  its last frame**. Run without `-r` before describing what a program's output
+  looks like, or you will document a still image as the whole behaviour.
 
 ## REPL harness: what it is, and two send modes
 

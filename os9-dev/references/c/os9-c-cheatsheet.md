@@ -75,26 +75,37 @@ in this file:
   to.
 - **`<strings.h>`, not `<string.h>`** — different API (`index`/`rindex`,
   not `strchr`/`strrchr`); see `os9-clib-reference.md`.
-- **Build anything you intend to install trap-free (`-qm`), not `-qixm` against
-  the `cio` trap library.** A program linked the trap way can produce
-  confidently *wrong* I/O rather than failing: in one collection such builds
-  opened a file, read not a byte, and reported on it anyway, and eleven programs
-  shipped in that state before the cause was found — `printf` was the case that
-  exposed it. Rebuilding `-qm` fixed them. This is a property of how the program
-  was linked, **not a defect in `cio`**, and a healthy disk shows nothing:
-  `Live` (os9exec), a default `cc` build's `getc` loop read a 74-byte file as
-  exactly 74 bytes, and the `cio` and `csl` modules were byte-identical between
-  the SDK and the collection. If you ever do suspect a library/module skew,
-  `ident` both and compare the CRC before believing it — and note that a disk
-  may carry more than one handler (`cio` and `cio020` are different modules),
-  so which one a program links is part of the question.
-- **A usage message is not proof a program works** — and for the class above
-  it is specifically misleading. Those programs print their usage perfectly.
-  A sweep that runs everything bare and scores a usage line as success will
-  pass every one of them; eleven shipped that way in one collection before
-  the cause was found. A check has to make the program do its job on real
-  input and assert the **content** of the answer (that `2^200` comes back as
-  its 61 digits), never exit status or merely non-empty output.
+- **Link installed programs `-qm` (trap-free), never `-qixm`.** This is the
+  costliest trap in the C toolchain and it does not announce itself. `-qixm`
+  links the SDK's `LIB/cio.l`, whose `putc`/`getc` are **macros reaching trap-13
+  by selector number** — `$41`/`$42` in the `$44`-vintage library — while the
+  `cio` *modules* in circulation put a **memory** routine at those selectors. So
+  the program calls the allocator at the point it means to write a byte.
+
+  `Live` (os9exec), decisive and reproducible: `putchar('x')` 4000 times,
+  same source, two link modes.
+
+  | Build | Result |
+  |---|---|
+  | `-qixm` | **zero characters written**, console flooded with `No more memory !!!` |
+  | `-qm` | all 4000 characters written |
+
+  **This happens with the SDK's own matched `cio`/`csl`, so it is not version
+  skew** — comparing module CRCs will show them identical and tell you nothing.
+  The variable is the link mode, not the module. Eleven programs in one
+  collection shipped in this state before the cause was found.
+
+  The failure arrives at **first file I/O**, after argument parsing, and the
+  program still **exits 0** — so it opens your file, reads not one byte, and
+  reports on it confidently.
+- **A usage message is not proof a program works**, and for the class above it
+  is specifically misleading: a usage line proves only that **argument parsing
+  ran**. The failure is later, at first file I/O, and the exit status is still 0 —
+  so neither the banner nor `$?` can see it. **The sound test is whether a
+  redirect target was actually created and written**: give the program real input,
+  send its output to a file, and check the file. Better still, assert the
+  *content* of the answer — that `2^200` comes back as its 61 digits — rather
+  than that output merely exists.
 - **CLIB/CDEF must be set correctly** or the linker/preprocessor can't find
   their inputs — errors here look like missing-file errors, not
   environment errors.

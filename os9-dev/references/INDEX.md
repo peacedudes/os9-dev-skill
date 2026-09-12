@@ -47,6 +47,7 @@ has bitten a real session.
 | Program needs Enter after every key though it called `cbreak()` | `cbreak()` sets a curses flag only; stdio `getchar()` ignores it — read with `getch()` | `c/os9-clib-reference.md` |
 | Full-screen program refuses to start (`Unknown terminal type`) or draws only part of its screen | a modern `TERM` it does not know — try `TERM=vt100` before suspecting the program | `common/using-os9exec-repl.md` |
 | A program's last line of output is missing, or the prompt sits on top of it | the message ended in a bare CR and the prompt overwrote it — append `; echo ""` | `common/using-os9exec-repl.md` |
+| Shell says `User abort` / `Error #000:002` / `E_???` and nobody pressed a key | a child's non-zero exit status is printed through the error table as though it were an error code — a GNU port that prints usage and `exit(2)` does this every time | `common/os9-tools-and-shell.md` |
 | `r68`: `branch out of range` on a branch to the very next line | it is too **close**, not too far — the short form would need displacement 0, which is the reserved "use the word form" encoding; drop the `.s` | `68k/os9-68k-assembly.md` |
 | `r68` error points at an instruction that is plainly correct | the diagnostic is printed **above** the line it refers to — read the line *after* the `*** error ***` | `68k/os9-68k-assembly.md` |
 | "Can't find" a command that is plainly present | fork lookups use `chx`, not `PATH` | `common/using-os9exec-repl.md` |

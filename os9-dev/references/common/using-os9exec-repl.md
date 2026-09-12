@@ -245,6 +245,39 @@ own separator even with `-l`, so a typed C line arrives without its
 semicolon — a baffling syntax error on a line that looks correct in the
 pane. Escape it (`\;`) or don't end the send with `;`.
 
+### The CR rule fails differently depending on what the file is FOR
+
+That OS-9 text is CR-terminated is easy to remember. What catches people is
+that an LF file announces itself in three different ways, and only the first
+is obvious. `Live` (os9exec), all three met in one evening:
+
+1. **Source (`.c`, `.h`) — loud.** `**** source line too long ****` from
+   `cpp`, on every file at once. Hard to miss, easy to misread as a defect in
+   the code rather than in the line endings.
+2. **Data read at run time — silent.** The program builds, starts, and reads
+   records that are not delimited the way it expects. A word list, a
+   dictionary, a grammar, a score file. Nothing reports anything.
+3. **Data `#include`d as source — the trap.** Files that are data by name and
+   extension but source by use: `monop` keeps its board, properties and cards
+   in `.dat` files that `monop.def` pulls in as C initialisers, so an LF
+   `.dat` kills the *build*, with `cpp` dying exactly as it would on a `.c`.
+   Convert "the source" and leave "the data" alone and you have broken the
+   build in a file you are not looking at.
+
+**The handling that avoids all three: unpack inside the OS-9 universe.** A
+well-stocked disk carries `unshar`, `tar`, `ar`, `lha`, `gzip`, `compress`,
+`unzip`, `zip`, `arc` and `zoo`; every file an OS-9 tool writes is
+CR-terminated by construction, whatever its extension or role. Verified by
+extracting one archive both ways — the disk's own `unshar` produced files
+byte-identical to a host-side unpack, without the conversion step that can be
+got wrong.
+
+That leaves exactly one host-side step, and it is transport: a **text** archive
+has to arrive on the disk as OS-9 text. Skip it and OS-9's `unshar` cannot read
+it either — it answers `No shell commands in <file>`, which is not an obvious
+way of saying "wrong line endings". Binary archives (`.lzh`, `.Z`, `.tar`)
+transport unconverted; converting one corrupts it.
+
 ## Compiling and running C
 
 ```

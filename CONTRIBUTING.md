@@ -35,16 +35,17 @@ that says only *what* usually cannot.
 
 ### Where to send it
 
-If you are reading this in a checkout of the published repository, use its issue
-tracker — that is the place, and no account beyond the host's is needed.
+**The repository's issue tracker, and nowhere else.** That is the only channel;
+there is deliberately no email address here, and the author is not reachable
+through OS-9 forums or mailing lists.
 
-<!-- PUBLISH: replace the line above with the real issue-tracker URL. -->
+<!-- PUBLISH: put the repository URL on the line below. -->
 
-If you have a copy that came to you some other way — a zip, a folder someone
-sent you — it may have travelled without its repository link. In that case send
-the report to whoever gave you the copy, or raise it on any OS-9 community forum
-where the author is likely to see it; a correction recorded publicly is better
-than one that waits for the right inbox.
+If you are holding a copy that arrived as a zip or a folder rather than a
+checkout, it travelled without its link. The repository is public; search for its
+name, or ask whoever gave you the copy. A correction posted anywhere public is
+still better than one that waits for the right inbox — but the tracker is where
+it will actually be seen.
 
 **Reports from real hardware are the rarest and most valuable thing** this
 project can receive. Nothing in it has been checked against a real OS-9 machine.
@@ -125,6 +126,37 @@ Then:
   where it is.
 - Large new sections on topics nobody has tested. The corpus is sized to what
   could be verified.
+
+## Taking this over
+
+**This project is built to be adopted, and a fork becoming the active copy is a
+good outcome rather than a failure.** The author's preference is for it to end up
+maintained by people who use it, and to step back. Nothing here depends on him
+continuing.
+
+What a successor inherits is unusually self-sufficient for a documentation
+project, and it is worth knowing before you decide:
+
+- **The claims carry their own evidence.** Every statement has a confidence tag
+  naming what backs it, so a new maintainer can tell measured fact from read-it-
+  in-a-manual without re-deriving the whole corpus. That is the thing that
+  normally rots first and here it is explicit.
+- **The quality rules are mechanical, not cultural.** `tools/check_doc_consistency.py`
+  enforces tag hygiene, cross-file numeric drift, dump-decode claims, error
+  symbols against the error table, and the no-dates/no-hashes/no-host-paths rule.
+  Its own behaviour is covered by 136 tests. You do not have to absorb a house
+  style by osmosis; run the checker.
+- **The provenance chain is written down.** `SOURCE-AUTHORITY.md` says which
+  sources are Microware speaking and which are someone's reading of Microware,
+  and `NOTICE` records who is owed credit. Keep those current and the project
+  stays defensible.
+- **The open questions are listed, not implied.** The checker prints every
+  unresolved `Flag`, and `DIVERGENCES.md` holds the manual-versus-observed
+  conflicts. That is a roadmap you did not have to write.
+
+If you fork it and take it somewhere better, the license permits that outright
+once it is in force, and credit under `NOTICE` is the only thing asked. Say so in
+your README so readers can find the active copy.
 
 ## Scope
 

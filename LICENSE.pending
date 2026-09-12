@@ -7,9 +7,11 @@ To publish, in order:
 
   1. Replace LICENSE with everything below the line, and delete this file.
   2. Drop the pre-publication banner from the top of README.md.
-  3. Fill in the issue-tracker URL in CONTRIBUTING.md, marked there with a
-     `PUBLISH:` comment. Until that is done, a reader who finds an error has
-     nowhere to send it.
+  3. Fill in the repository URL wherever a `PUBLISH:` comment marks it —
+     `grep -rn 'PUBLISH:' .` finds them all. The issue tracker is the project's
+     only contact channel by choice, so until the URL is real a reader who finds
+     an error has nowhere to send it. There is no email to add: that is
+     deliberate, not an omission.
   4. Re-run both gates and rebuild the bundle, so the shipped copy carries the
      real license rather than the notice.
 

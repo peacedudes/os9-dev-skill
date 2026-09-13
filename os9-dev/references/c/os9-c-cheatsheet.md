@@ -94,6 +94,24 @@ in this file:
   again — and **every character leaks a fresh chunk until the arena is gone**,
   which is what produces a flood of `No more memory !!!`.
 
+  Measured, `Live` (os9exec), from `putchar('x')` four thousand times:
+
+  | Build | x's written | `No more memory !!!` |
+  |---|---|---|
+  | `-qixm` | **2** | **3920** |
+  | `-qm` | 4002 | 0 |
+
+  And the syscall trace makes the per-character leak direct rather than inferred:
+  the `-qixm` build issues **4001 `F$SRqMem` calls, one per `putchar`**, each
+  asking for **413,256 bytes**, never returning one, until the 32 MB arena is
+  gone — against just **2 `I$WritLn`**, which is why exactly two characters reach
+  the terminal. That 413,256 *is* the `FILE` pointer read as a byte count, and it
+  was proven to be an address by moving the heap under it and watching the
+  "size" follow.
+
+  **Do not try to fix it with a bigger buffer.** `-qixm=4k`, `=16k` and `=64k`
+  behave identically, to the same counts. It is not a size problem.
+
   Why the library and not the module is the variable: in the **matched** vintage
   `putc`/`getc` compile to ordinary function calls (`$12`/`$09`) and the buffering
   happens inside the module, consistently. In the **mismatched** vintage the

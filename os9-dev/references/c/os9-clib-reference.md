@@ -387,6 +387,24 @@ The honest limitation of the whole approach: no shell is involved, so a
 redirection or pipe written *inside* the command line is not interpreted. Build
 the argument vector instead.
 
+### `popen()` — undocumented here, and one report worth knowing
+
+`popen()` exists in this C library and **nothing in these references covers it**;
+treat that as a gap rather than as evidence it behaves like the Unix call. One
+third-party account is available and is `Hearsay` — a freeware collection's notes
+on `rayshade`, not a measurement made for this skill — but it is specific enough
+to be worth repeating, because the failure string is distinctive:
+
+    popen of "cccp ..." failed!
+
+According to that account a `popen()` caller needs **`shell` reachable**, and the
+command it names is resolved from the **data** directory rather than the execution
+directory — so the cure was to copy the wanted program to `/dd` rather than to put
+it on the execution path. If that is right it inverts the usual rule that a forked
+command resolves against `chx`, which would make it a genuine trap for a porter.
+**Unmeasured.** Anyone with the rig could settle it in a few minutes, and it is
+the single most useful thing missing from this file.
+
 ## Startup & Arguments
 
 Every C program is linked against `LIB/cstart.r` first — the compiler

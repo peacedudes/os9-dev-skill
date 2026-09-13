@@ -175,6 +175,29 @@ that does `fopen(dir, "r")` to walk a directory simply doesn't work here.
 `../..` → `...`; `../../..` → `....` — one more dot per level, not another
 `../`. `..` (one level) is unchanged. Verified for both `dir` and `chd`.
 
+**And a stacked `../..` is not an error — it silently means `..`.** `Live`
+(os9exec): from three levels down, `open("../..", S_IREAD|S_IFDIR)` and
+`open("../../..")` both returned the **parent**, the same descriptor sector as a
+plain `..`, while `...` and `....` climbed two and three levels as specified. The
+extra components are absorbed rather than rejected.
+
+That silence is the whole trap, and it bites twice:
+
+- **Code that climbs a tree by appending `/..`** — the obvious way to write a
+  `getcwd` or a `pwd` — works correctly one level up and then silently stops
+  moving, reporting the wrong directory rather than failing.
+- **A borrowed Unix path fails somewhere else entirely.** From `/dd/CMDS/GCC2`,
+  `../../SYS/motd` resolves to `/dd/CMDS/SYS/motd`, which does not exist, so you
+  get `E_PNNF` (216) on a *file* when the real fault was in the *path shape*. The
+  error names the thing you were trying to read, not the `../..` that misdirected
+  it. `Live` (os9exec), seen from `cat` as well as from compiler drivers.
+
+So `E_PNNF` on a file you can see on the disk is worth one look at how many `../`
+the path contains. The working form from `/dd/CMDS/GCC2` is `.../SYS/motd`.
+Resolution happens in the kernel's path parser rather than in the program, so the
+dotted form is available to anything that opens a path — though it has only been
+verified here through `dir` and `chd`.
+
 ### A filename stops addressing at 27 characters
 
 `Live` (os9exec): 27 characters reach a file and 28 do not. `build` accepted a

@@ -107,6 +107,23 @@ for" descriptions: `os9-tools-and-shell.md`.
   directories themselves only, `-r` / `-r=<num>` recursive (to depth),
   `-s` unsorted, `-u` unformatted (for piping), `-x` list the execution
   directory.
+  - **`-e` output is fixed-width, and the filename starts at column 54.**
+    `Live` (os9exec) against the SDK's own `dir`, measured over 666 lines in
+    four directories: the sector address (2–5 hex digits) and the byte size
+    (2–7 digits) are **right-aligned in fixed fields**, so neither widens the
+    line, and the name began at column 54 in every line.
+
+    ```
+    0.0     26/08/03 1900   ---wr-wr   6E3B8       318 bench.f
+    0.0     26/09/13 0016   d-ewrewr      90        96 .ELM/
+    ```
+
+    Worth knowing because programs do parse this listing by column, and the
+    question "is my column index brittle or wrong?" turns on whether the fields
+    move. They do not. Check the **year format** before trusting a column count
+    against some other `dir`, though: this one prints a two-digit year
+    (`26/08/03`), and a listing showing `126` for 2026 is a different utility
+    (the emulator's own directory header does that) with its own layout.
 - `dsave [<opts>] [<path>]` — emits a copy script for a whole tree; run
   it (or `-e` execute immediately). `-d`/`-d=<date>` copy only newer
   files, `-f`/`-r` force/overwrite via copy's flags, `-i` indent by

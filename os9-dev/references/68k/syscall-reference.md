@@ -198,6 +198,16 @@ error, and a zero-length element is the only way to raise it**; reaching
 loop ends**, not a fault. 68k BASIC09 depends on exactly that and consumes it
 silently (`Live` (os9exec)) — see `basic09/pack-and-runb.md`.
 
+**A leading space is not skipped**, which follows from "no character is
+invalid": a blank ahead of the name terminates a zero-length element rather than
+being stepped over. `Live` (os9exec). The reason it is worth stating separately
+is where the consequence appears — a pathname built with an off-by-one slice,
+`" bench.f"`, produced **`E$FNA` (214) from the open**, not a name-parse
+diagnostic. So a leading blank reads as a *permission* failure on a file that is
+present and readable, some distance from the code that built the string. Compare
+the 6809 entry, which *does* skip trailing spaces; neither line skips leading
+ones, and `I$Open` separately skips **trailing** spaces (see its row above).
+
 One os9exec divergence: it additionally accepts `{` and `}` as element
 characters (a deliberate MPW-shell-variable convenience, per its own source
 comment). `Source, Flag` against the manual's character set. It makes os9exec

@@ -294,3 +294,32 @@ And the flavour of false positive to watch for is a check firing on text that
 *documents* the thing it forbids. Every `../..` in this corpus appears in prose
 teaching that OS-9 spells it `...`; a naive pathlist gate would flag the
 explanation of the rule it enforces. Screen the context, not just the string.
+
+**Wiring is a separate claim from correctness, and needs its own proof.** A check
+can be right, tested, and never invoked. The function passing its unit tests and
+the tree being green are two true statements that together still permit a check
+that the CLI never calls — registering it in the driver is a third thing, and
+reading the line is not evidence it executes.
+
+`check_absent_scope` was therefore proven along the whole chain, not just at the
+function. Removing the scope from one real `Absent` entry in
+`6809/utility-usage.md`:
+
+1. the **function**, called directly, reports the finding;
+2. the **CLI** exits 1 and names `os9-dev/references/6809/utility-syntax.md:400`
+   under `[absent-scope]`;
+3. the **pre-commit hook** refuses the commit — *"nothing committed"* — with the
+   violation staged.
+
+Reverting is silent again at all three. Step 2 is the one worth insisting on: it
+is what distinguishes a registered check from a defined one, and a unit test
+cannot see the difference. A sister project hit exactly this — a breaker function
+written but not added to its registry, with the verification tool then reporting
+"24 of 24 breaks were caught", which was true and answered a different question.
+Nothing lied; the missing label in the output was the only evidence.
+
+**Where a breaker cannot reach, say so instead of writing one.** A proof that
+exercises nothing is worse than a documented absence of proof, because it reports
+success. If the harness cannot put a check's inputs under test, record that and
+prove the check another way rather than staging a break the check could not have
+seen.

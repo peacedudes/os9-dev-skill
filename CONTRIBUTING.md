@@ -107,6 +107,17 @@ Then:
   the mistake the project's own authors have made most often, which is why it is
   listed: a plausible correction that quietly replaced a verified fact has had to
   be reverted here more than once.
+
+  The reason the tags and the git history earn their keep is that **a recorded
+  measurement is the control case for the next observation.** When what you see
+  disagrees with what the file says, one of you is wrong and the file is the one
+  with its evidence written down — so the first move is to find out whether you
+  are looking at the same thing, not to replace it. A sister project doing
+  captured-output work had two results that looked exactly like damage it had just
+  caused, and the only reason neither was "fixed" is that the previous capture was
+  committed and could be compared byte for byte. Both turned out to be
+  long-standing behaviour. Preserve the old reading in a `Flag` if you cannot
+  reconcile it.
 - **Reference files carry no dates, commit hashes, host paths, or narrative**
   about their own history. State the rule positively; provenance belongs in the
   tag and the `Sources` footer, not in a story about what the file used to say.

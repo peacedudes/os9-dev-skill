@@ -267,3 +267,30 @@ in `device-drivers.md` alone) makes it flag the symbol and name all four
 contributing locations across three files, exit 1; reverting is silent again,
 exit 0. The disown-suppression is exercised against the real `M$Parity` `$28`
 scan-error line, not a synthetic one.
+
+`check_absent_scope` was proven in both directions, and the second direction is
+the one this section exists to insist on — because it is the one that was nearly
+skipped even with this page already written.
+
+Must-flag: the three bare `Absent` tags that shipped in `6809/utility-usage.md`
+before the scope rule existed, recovered from git and fed to the check, produce
+exactly three findings. Must-not-flag: the forms it has to accept —
+`Absent` (6809), `Absent` on real NitrOS-9, `Absent` from this SDK,
+`Absent`: untestable here.
+
+**The first version of the pattern passed the must-flag test and failed the
+must-not-flag one.** It required the scope marker immediately after the tag, so
+`` `Absent` — from the v2.4 manuals `` and `` `Absent` -- on NitrOS-9 `` were
+flagged for obeying the rule. Both are now regression tests.
+
+Worth stating the asymmetry, because it decides which direction to test when time
+is short: **a false positive is the more expensive failure.** A check that misses
+a violation costs one defect. A check that flags correct work teaches contributors
+that the rule is arbitrary, and a gate nobody believes gets routed around,
+commented out, or `--no-verify`d — taking every other check with it. A gate is
+only as strong as its credibility.
+
+And the flavour of false positive to watch for is a check firing on text that
+*documents* the thing it forbids. Every `../..` in this corpus appears in prose
+teaching that OS-9 spells it `...`; a naive pathlist gate would flag the
+explanation of the rule it enforces. Screen the context, not just the string.

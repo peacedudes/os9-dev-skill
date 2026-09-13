@@ -276,8 +276,15 @@ all `Live` (os9exec), the first two silent:
   its first failing command: that command's own error prints, the remaining
   lines never execute, and the run then exits looking exactly like a completed
   one. A four-line file whose second command failed produced line one's output,
-  the error, and nothing further. Pass `-nx` when a batch must finish
-  regardless — and never read "no further errors" as "the rest ran".
+  the error, and nothing further. Use `-nx` when a batch must finish regardless —
+  and never read "no further errors" as "the rest ran".
+  - **`-nx` goes on the first line of the procedure file, not on the command
+    line.** `Live` (os9exec): `os9exec shell -nx /h6/proc` prints
+    `^syntax error` and runs nothing at all — the shell is parsing `-nx` as the
+    thing to execute. Put `-nx` as the file's own first line and invoke it plainly
+    with `os9exec shell /h6/proc`. Worth knowing because the failing spelling is
+    the one a Unix habit reaches for, and its error names syntax rather than the
+    option.
 
 **No two utilities spell "don't ask" the same way**, so the flag cannot be
 guessed: `copy -r`, `deldir -q`, `frestore -s`, `format -r`, `fsave -p`. `del`

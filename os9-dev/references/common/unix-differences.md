@@ -188,9 +188,22 @@ So `...` is the idiomatic OS-9 spelling and the one the manual documents, but
 `../..` is **not an error** — it is two components of one level each, which comes
 to the same place. Both forms work and may be mixed in one pathlist.
 
+**Chained `../..` is confirmed on real OS-9** — `Hearsay` (rdoggett, from a real
+system: "yes real os-9 accepts `../../../..` no problem"). So neither spelling is
+a runtime indulgence; both are legal, and `...` is the idiomatic one rather than
+the only one.
+
 `Live` (os9exec, 985e0d8 and later): an RBF image and a host directory agree on
 `../..`, `../...`, `.../..`, `../......./.././`, `A/..`, `A/B/...`,
 `A/B/C/../../..`, absolute pathlists with mixed runs, and `chd ../..`.
+
+The measured case worth copying, because it carries its own control. From seven
+levels down, `list ./../.../...././SYS/f` opens a file **exactly six levels up**
+— `0+1+2+3+0` — on both device types, and `chd` with the same pathlist followed
+by `pd` lands six up. The control: that climb does **not** reach a file seven
+levels up, which fails `E_PNNF`. So the runs are being *counted* rather than
+merely accepted, a leading `./` and a trailing `/.` contribute zero without
+disturbing the sum, and every run length in between composes.
 
 **Historical note, because earlier text here said otherwise.** os9exec before
 `985e0d8` mis-resolved relative dot-runs **on RBF images only**: the path code

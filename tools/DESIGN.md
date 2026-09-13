@@ -306,7 +306,7 @@ function. Removing the scope from one real `Absent` entry in
 `6809/utility-usage.md`:
 
 1. the **function**, called directly, reports the finding;
-2. the **CLI** exits 1 and names `os9-dev/references/6809/utility-syntax.md:400`
+2. the **CLI** exits 1 and names `os9-dev/references/6809/utility-usage.md:400`
    under `[absent-scope]`;
 3. the **pre-commit hook** refuses the commit — *"nothing committed"* — with the
    violation staged.

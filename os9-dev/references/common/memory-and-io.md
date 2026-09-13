@@ -265,6 +265,36 @@ re-reading it on every access.
   - Editing keys are path-descriptor options, remappable via `tmode`/`xmode`
     (full key table: `os9-tools-and-shell.md`); setting a key code to zero
     disables that feature.
+  - **`PD_ALF` decides whether a carriage return is followed by a line feed**
+    (`Manual`, v2.4 Technical I/O, SCF path options: "If PD_ALF is not zero,
+    carriage returns are automatically followed by line-feeds"). Clearing it is
+    how a program gets a clean binary stream out of a terminal — and it is worth
+    knowing what that costs, because **the damage does not look like an I/O
+    problem.**
+
+    With `PD_ALF` off every line ends in a bare CR, so the cursor returns to
+    column 0 without advancing and each line is drawn over the last. What you
+    *see* is a program that "printed almost nothing", or one missing a few
+    characters from the front of a line — overwritten in place by whatever was
+    written next, typically the shell prompt. A `bash# ` prompt eats exactly six
+    characters. **No bytes are lost**, which is why looking for where the
+    characters went never converges.
+
+    **The one-step diagnostic is the CR:LF ratio of the raw byte stream.**
+    Healthy is roughly one LF per CR; `PD_ALF` off is many CRs and almost no LFs.
+
+    **How far the setting reaches is the open question, `Flag`.** Measured
+    `Live` (os9exec): an option set on one path to a terminal affected other
+    paths on that device, so one program can leave the terminal — and the shell,
+    and everything run afterwards — in this state. The manual cuts the other way
+    on its face: the option table lives in the **path descriptor**, copied from
+    the device descriptor when each path is opened, which reads as per-path. But
+    a path descriptor also carries **`PD_PATHS` ($16), the list of open paths on
+    the device**, so a file manager has the means to apply a change across all of
+    them, and inherited standard paths share a descriptor outright. Whether
+    Microware's SCF propagates, and for which options, is not stated in the
+    passages held here. Either way, do not assume an option change is private to
+    your path.
 
 ### I$ service requests
 

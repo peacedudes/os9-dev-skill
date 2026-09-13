@@ -151,6 +151,12 @@ session in your own terminal) and `server` (the DriveWire protocol log).
   `bash# EM port defined!` and reads as the program truncating itself.
   Appending `; echo ""` to the command moves the prompt to a fresh line and the
   message survives. `Live` (os9exec).
+
+  **If EVERY line behaves that way, suspect `PD_ALF` rather than the program.**
+  A single program ending its last message with a bare CR is the case above; a
+  terminal where nothing advances a line is a path option that some earlier
+  program cleared, and it can outlive that program. The CR:LF ratio of the raw
+  stream settles which you have — see `common/memory-and-io.md`.
 - **Raw `key`** — no gating, returns after a fixed delay **without waiting
   for the program to finish**. Poll the pane until the expected prompt
   returns; never treat `key`'s return as completion.

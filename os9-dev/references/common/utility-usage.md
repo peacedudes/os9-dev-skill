@@ -108,10 +108,12 @@ for" descriptions: `os9-tools-and-shell.md`.
   `-s` unsorted, `-u` unformatted (for piping), `-x` list the execution
   directory.
   - **`-e` output is fixed-width, and the filename starts at column 54.**
-    `Live` (os9exec) against the SDK's own `dir`, measured over 666 lines in
-    four directories: the sector address (2–5 hex digits) and the byte size
-    (2–7 digits) are **right-aligned in fixed fields**, so neither widens the
-    line, and the name began at column 54 in every line.
+    `Live` (os9exec) against the SDK's own `dir`, measured across **666 file
+    entries** in four directories: the sector address (2–5 hex digits) and the
+    byte size (2–7 digits) are **right-aligned in fixed fields**, so neither
+    widens the line, and the name began at column 54 in every one. (The count is
+    of entry lines; a listing's header and footer carry no name and the claim
+    does not cover them.)
 
     ```
     0.0     26/08/03 1900   ---wr-wr   6E3B8       318 bench.f

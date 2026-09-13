@@ -188,15 +188,25 @@ the file, with a marker proving the `chd` had landed first.
 plain `..`, while `...` and `....` climbed as specified. The extra components are
 absorbed rather than rejected.
 
-**`chd` may not agree with `open` here, and that is unresolved — `Flag`.** A
-measurement of `chd ../..` from two levels down reports it landing **two** levels
-up, which is what the Unix reader expects and what the absorption above says an
-*open* will not do. Two runtimes' worth of evidence now disagree about whether the
-path parser behaves the same for a directory change as for a file open, and it is
-filed against the emulator's own path-adjustment code. Until it is settled, **do
-not reason from one to the other**: if you need to know, test the call you are
-actually going to make. The dotted form is correct for both and avoids the
-question entirely.
+**Which is not the whole story: the Unix spelling behaves differently depending
+on who resolves it, and that is unresolved — `Flag`.** Three measurements, all
+`Live` (os9exec), that do not agree:
+
+| Who resolves the path | `../..` from two levels down |
+|---|---|
+| a shell forking a command | **works** — reaches the intended program |
+| `chd` | **climbs two levels**, as a Unix reader expects |
+| a program's own `open()` | **climbs one** — the extra component is absorbed, so the open lands in the parent and the file is not there |
+
+So the absorption above is established for *opens* and cannot be generalised to
+the other two. Why the three differ is filed against the emulator's own
+path-adjustment code and is not settled here.
+
+The practical rule survives whichever way it resolves: **do not reason from one
+call to another — test the one you are actually going to make.** And the dotted
+form is correct for all three, so writing `...` rather than `../..` avoids the
+question entirely. A `../..` that works today is working by luck of which layer
+resolved it, not by specification.
 
 That silence is the whole trap, and it bites twice:
 

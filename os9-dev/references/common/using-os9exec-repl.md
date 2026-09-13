@@ -558,15 +558,16 @@ Two different things behind the same device names:
   image from a blank file on an `OS9Hx` device when RBF-specific behavior
   needs testing.
 
-  **Traversal above the root is confined**, `Live` (os9exec), for devices
-  configured through `OS9DISK`/`OS9Hx` and for ones created by `mount -k=0`
-  alike: `list ../outside` and a deeper climb both give `E_PNNF` while a read
-  inside the device works. Retest the deep case with a **dotted** run
-  (`list ...../outside`) if you need it to carry weight: the original evidence
-  used a stacked `../../../../`, and on an RBF image before os9exec `985e0d8`
-  such a run collapsed to a single level (see the climbing section in
-  `common/unix-differences.md`), so it may only ever have tested one level up.
-  The single-`..` result is unaffected and the clamp itself is not in doubt. The one exception is NESTED device
+  **Traversal above the root is confined**, `Live` (os9exec), **on
+  host-directory devices** — those configured through `OS9DISK`/`OS9Hx` pointing
+  at a directory, and those created by `mount -k=0`, which also makes one:
+  `list ../outside` and `list ../../../../outside` both give `E_PNNF` while a
+  read inside the device works. The four-level climb really did climb four
+  levels: on a host directory a relative pathlist is joined to an absolute path
+  and resolved host-side, which counted stacked runs correctly even on builds
+  before `985e0d8`, where the same spellings failed on an RBF image (see the
+  climbing section in `common/unix-differences.md`). Naming the device type
+  matters here, because `OS9DISK`/`OS9Hx` can equally name an image. The one exception is NESTED device
   roots — if one device's host root sits inside another's, `..` walks from the
   inner device into the outer one (the clamp matches the first configured root
   the path is a prefix of, which is the enclosing one). It still cannot leave

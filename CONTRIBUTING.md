@@ -113,6 +113,17 @@ Then:
 - **Where the manual and an emulator disagree**, the manual is the
   specification and the emulator is the candidate defect. Record both; see
   `SOURCE-AUTHORITY.md`.
+- **If you script an edit across many files, check what each match *does*, not
+  only what it *is*.** A pattern can identify the right lines and still miss what
+  those lines are responsible for. Two real instances, both caught only by reading
+  the result back: a script that removed "the staging line" from a set of
+  documents was correct that each line staged a file, and wrong that staging was
+  all it did — one of them also set an environment variable the program needed.
+  And `git commit -- <path>` is genuinely a commit scoped to a path, while also
+  committing the *working tree* rather than the index, quietly including changes
+  that were deliberately left unstaged. In both cases the pattern matched exactly
+  what it was meant to. **Read back what a bulk edit produced before trusting the
+  pattern that produced it** — a diff line count is usually enough to see it.
 
 ## What is likely to be declined
 

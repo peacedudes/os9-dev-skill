@@ -560,8 +560,13 @@ Two different things behind the same device names:
 
   **Traversal above the root is confined**, `Live` (os9exec), for devices
   configured through `OS9DISK`/`OS9Hx` and for ones created by `mount -k=0`
-  alike: `list ../outside` and `list ../../../../outside` both give `E_PNNF`
-  while a read inside the device works. The one exception is NESTED device
+  alike: `list ../outside` and a deeper climb both give `E_PNNF` while a read
+  inside the device works. Retest the deep case with a **dotted** run
+  (`list ...../outside`) if you need it to carry weight: the original evidence
+  used a stacked `../../../../`, and on an RBF image before os9exec `985e0d8`
+  such a run collapsed to a single level (see the climbing section in
+  `common/unix-differences.md`), so it may only ever have tested one level up.
+  The single-`..` result is unaffected and the clamp itself is not in doubt. The one exception is NESTED device
   roots — if one device's host root sits inside another's, `..` walks from the
   inner device into the outer one (the clamp matches the first configured root
   the path is a prefix of, which is the enclosing one). It still cannot leave

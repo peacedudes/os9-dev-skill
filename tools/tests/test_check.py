@@ -232,6 +232,42 @@ class TestTagForm(unittest.TestCase):
 
 
 # --------------------------------------------------------------------------
+# `Absent` must name what it is absent from
+# --------------------------------------------------------------------------
+class TestAbsentScope(unittest.TestCase):
+    def test_flags_a_bare_absent(self):
+        findings = chk.check_absent_scope("- `code` — `Absent`.\n", "a.md", KNOWN)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("absent from", findings[0].message)
+
+    def test_flags_bare_absent_followed_by_prose(self):
+        text = "- `devs`, `irqs` — `Absent`. These are 68k utilities.\n"
+        self.assertEqual(len(chk.check_absent_scope(text, "a.md", KNOWN)), 1)
+
+    def test_parenthesised_scope_is_clean(self):
+        self.assertEqual(chk.check_absent_scope("`Absent` (6809).\n", "a.md", KNOWN), [])
+
+    def test_prose_scope_is_clean(self):
+        for line in ("`Absent` on real 6809 NitrOS-9\n",
+                     "`Absent` from this SDK\n",
+                     "`Absent`: untestable here\n"):
+            self.assertEqual(chk.check_absent_scope(line, "a.md", KNOWN), [], line)
+
+    def test_a_dash_may_separate_the_tag_from_its_scope(self):
+        # The first version of this pattern required the scope marker immediately
+        # after the tag and wrongly flagged both of these. Kept as a regression.
+        for line in ("`Absent` \u2014 from the v2.4 manuals\n",
+                     "`Absent` -- on NitrOS-9\n"):
+            self.assertEqual(chk.check_absent_scope(line, "a.md", KNOWN), [], line)
+
+    def test_the_conventions_own_file_is_exempt(self):
+        self.assertEqual(
+            chk.check_absent_scope("`Absent` shown bare as an example\n",
+                                   "CONFIDENCE-TAGS.md", KNOWN), []
+        )
+
+
+# --------------------------------------------------------------------------
 # tags inside code fences
 # --------------------------------------------------------------------------
 class TestTagsInCode(unittest.TestCase):

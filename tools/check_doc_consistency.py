@@ -348,6 +348,46 @@ def check_tag_form(text, filename, known_tags):
     return findings
 
 
+# An `Absent` tag must name what the claim is absent FROM, exactly as `Live`
+# names where it ran. An absence is as implementation-specific as a presence, and
+# an unscoped one tells a reader their own OS-9 lacks something Microware ships.
+# Accepted scope forms, matching what the corpus already uses:
+#   `Absent` (6809)             parenthetical
+#   `Absent` on real NitrOS-9   prose with "on"
+#   `Absent` from this SDK      prose with "from"
+#   `Absent`: untestable here   colon, then the explanation
+#   `Absent` -- on NitrOS-9     a dash may separate the tag from its scope
+# The dash alternative was added after the first version of this pattern flagged
+# two legitimate forms: requiring the scope marker IMMEDIATELY after the tag is
+# too strict, because a writer may set it off with an em dash or `--`. Found by
+# probing the check against forms it should accept, not by a green run.
+_ABSENT_SCOPED = re.compile(
+    r"`Absent`\s*(?:[\u2014\u2013-]{1,2}\s*)?(?:\(|:|on\b|from\b|for\b|in\b)"
+)
+_ABSENT_TOKEN = re.compile(r"`Absent`")
+
+
+def check_absent_scope(text, filename, known_tags):
+    """An `Absent` tag that does not say what it is absent from."""
+    del known_tags
+    if os.path.basename(filename) == CONFIDENCE_TAGS_FILE:
+        return []  # the convention's own file defines the tag
+    findings = []
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        for m in _ABSENT_TOKEN.finditer(line):
+            if _ABSENT_SCOPED.match(line, m.start()):
+                continue
+            findings.append(
+                Finding(
+                    "absent-scope", None,
+                    "`Absent` does not name what it is absent from -- "
+                    "write `Absent` (6809) or `Absent` from this SDK, as `Live` names where it ran",
+                    [(filename, lineno)],
+                )
+            )
+    return findings
+
+
 _TAG_TOKEN = re.compile(r"`(?:Live|Manual|Source|Hearsay|Absent|Flag)`")
 
 
@@ -1146,6 +1186,7 @@ def run(roots, register_text=None):
         findings.extend(check_no_session_dates(text, display, known))
         findings.extend(check_tag_form(text, display, known))
         findings.extend(check_tags_in_code(text, display, known))
+        findings.extend(check_absent_scope(text, display, known))
         findings.extend(check_blanket_tags(text, display, known))
         findings.extend(check_dump_claims(text, display, known))
         enumerations.extend(extract_enumerations(text, display))

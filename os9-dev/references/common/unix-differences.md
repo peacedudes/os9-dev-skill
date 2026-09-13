@@ -172,14 +172,31 @@ that does `fopen(dir, "r")` to walk a directory simply doesn't work here.
 
 ### More dots, not more `../`
 
-`../..` → `...`; `../../..` → `....` — one more dot per level, not another
-`../`. `..` (one level) is unchanged. Verified for both `dir` and `chd`.
+`../..` → `...`; `../../..` → `....` — **one more period per level**, not
+another `../`. `..` (one level) is unchanged. `Manual` (*Using Professional
+OS-9* v2.4, p. 4-9: "add a period for each higher directory level"), so this is
+the specification rather than a runtime quirk. `Live` (os9exec) for `dir`, `chd`
+and ordinary file opens alike: from three levels down `cat ..../SYS/motd` reads
+the file, with a marker proving the `chd` had landed first.
 
-**And a stacked `../..` is not an error — it silently means `..`.** `Live`
-(os9exec): from three levels down, `open("../..", S_IREAD|S_IFDIR)` and
+**Do not mix the two forms.** `.../../SYS/motd` fails `E_PNNF` just as
+`../../../SYS/motd` does. `Live` (os9exec).
+
+**And the Unix spelling is not an error — on an open it silently means `..`.**
+`Live` (os9exec): from three levels down, `open("../..", S_IREAD|S_IFDIR)` and
 `open("../../..")` both returned the **parent**, the same descriptor sector as a
-plain `..`, while `...` and `....` climbed two and three levels as specified. The
-extra components are absorbed rather than rejected.
+plain `..`, while `...` and `....` climbed as specified. The extra components are
+absorbed rather than rejected.
+
+**`chd` may not agree with `open` here, and that is unresolved — `Flag`.** A
+measurement of `chd ../..` from two levels down reports it landing **two** levels
+up, which is what the Unix reader expects and what the absorption above says an
+*open* will not do. Two runtimes' worth of evidence now disagree about whether the
+path parser behaves the same for a directory change as for a file open, and it is
+filed against the emulator's own path-adjustment code. Until it is settled, **do
+not reason from one to the other**: if you need to know, test the call you are
+actually going to make. The dotted form is correct for both and avoids the
+question entirely.
 
 That silence is the whole trap, and it bites twice:
 

@@ -36,6 +36,16 @@ or SDK. A host directory of your own files works identically for basic testing.
   works, only on the RBF path — on a host directory locking is deliberately
   absent, so a program that relies on it appears to work and silently
   doesn't. `mount -k=<size> h0`…`hz` makes a blank image to start from.
+  - **The trade is immediacy.** A host directory shows the guest whatever is on
+    the host *now*, so an edit is live on the next open. An image is a snapshot:
+    **a file you add to the source tree an image is built from does not exist
+    inside the emulator until the image is rebuilt.** The symptom is
+    `Error #000:216` / `E_PNNF` on a path you just created and can see on the
+    host, which reads convincingly like a broken program or a corrupt image.
+    `dir /dd/<the directory you added to>` settles it in seconds, and is worth
+    making a reflex before debugging anything else. Build pipelines make this
+    easy to forget twice: knowing the rule does not help if the build step is a
+    separate command you did not run.
 - Launch: `OS9DISK=/abs/path/disk ./os9exec /dd/CMDS/shell`
 - macOS first run: `xattr -d com.apple.quarantine os9exec`
 - **Never write `OS9DISK=./disk`.** A leading `./` silently breaks every

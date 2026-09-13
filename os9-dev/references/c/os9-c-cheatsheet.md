@@ -76,28 +76,44 @@ in this file:
 - **`<strings.h>`, not `<string.h>`** — different API (`index`/`rindex`,
   not `strchr`/`strrchr`); see `os9-clib-reference.md`.
 - **Link installed programs `-qm` (trap-free), never `-qixm`.** This is the
-  costliest trap in the C toolchain and it does not announce itself. `-qixm`
-  links the SDK's `LIB/cio.l`, whose `putc`/`getc` are **macros reaching trap-13
-  by selector number** — `$41`/`$42` in the `$44`-vintage library — while the
-  `cio` *modules* in circulation put a **memory** routine at those selectors. So
-  the program calls the allocator at the point it means to write a byte.
+  costliest trap in the C toolchain, it does not announce itself, and on at least
+  one SDK a `-qixm` build is broken **by construction rather than by choice**.
 
-  `Live` (os9exec), decisive and reproducible: `putchar('x')` 4000 times,
-  same source, two link modes.
+  The mechanism, `Source` (both sides disassembled): a cio-linked program reaches
+  the C library through `TRAP #13` with a selector word. Two library vintages
+  exist and the maximum selector in a program's stub table identifies which it
+  linked — **`$45` is the 70-entry library and matches the modules; `$44` is the
+  69-entry library and does not.** Every `cio` module agrees with the stub table up
+  to `$40` and then carries **five memory routines at `$41`..`$45`**, where the
+  69-entry library expects `_flshbuf` and `_filbuf`.
 
-  | Build | Result |
-  |---|---|
-  | `-qixm` | **zero characters written**, console flooded with `No more memory !!!` |
-  | `-qm` | all 4000 characters written |
+  So a program calling `$41` to flush a buffer lands on the module's raw
+  allocator, which reads `d0` as a byte count while `d0` actually holds the
+  `FILE *`. The allocation *succeeds*, so the call appears to return a pointer,
+  the `FILE`'s `ptr`/`end` are never updated, the next `putc` takes the slow path
+  again — and **every character leaks a fresh chunk until the arena is gone**,
+  which is what produces a flood of `No more memory !!!`.
 
-  **This happens with the SDK's own matched `cio`/`csl`, so it is not version
-  skew** — comparing module CRCs will show them identical and tell you nothing.
-  The variable is the link mode, not the module. Eleven programs in one
-  collection shipped in this state before the cause was found.
+  Why the library and not the module is the variable: in the **matched** vintage
+  `putc`/`getc` compile to ordinary function calls (`$12`/`$09`) and the buffering
+  happens inside the module, consistently. In the **mismatched** vintage the
+  header *inlines* them and the slow path reaches `$41`/`$42`. Across 353
+  cio-linked programs on one collection, **no** program from the 70-entry library
+  calls `$41`/`$42` and **all 41** that do came from the 69-entry one.
 
-  The failure arrives at **first file I/O**, after argument parsing, and the
-  program still **exits 0** — so it opens your file, reads not one byte, and
-  reports on it confidently.
+  Two consequences worth knowing before you debug this:
+
+  - **Comparing module CRCs will tell you nothing.** The modules are identical
+    between SDK and collection; the mismatch is between a module and the
+    *library* a program was linked against. `ident` cannot see it.
+  - **`cio020` fails differently** — its table stops at `$40`, so it cannot serve
+    `$41` at all and wild-jumps rather than flooding.
+
+  And one false lead: a program making many large identical allocations is not
+  necessarily this. `ksh` issues 188 requests of ~262 KB from `malloc` (`$3B`)
+  reaching the module's own allocator — one chunk, reused, working correctly. From
+  outside it looks exactly like the fault.
+
 - **A usage message is not proof a program works**, and for the class above it
   is specifically misleading: a usage line proves only that **argument parsing
   ran**. The failure is later, at first file I/O, and the exit status is still 0 —

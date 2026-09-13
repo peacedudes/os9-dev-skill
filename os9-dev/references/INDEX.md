@@ -50,6 +50,10 @@ has bitten a real session.
 | Shell says `User abort` / `Error #000:002` / `E_???` and nobody pressed a key | a child's non-zero exit status is printed through the error table as though it were an error code — a GNU port that prints usage and `exit(2)` does this every time | `common/os9-tools-and-shell.md` |
 | `r68`: `branch out of range` on a branch to the very next line | it is too **close**, not too far — the short form would need displacement 0, which is the reserved "use the word form" encoding; drop the `.s` | `68k/os9-68k-assembly.md` |
 | `r68` error points at an instruction that is plainly correct | the diagnostic is printed **above** the line it refers to — read the line *after* the `*** error ***` | `68k/os9-68k-assembly.md` |
+| A conversion tool or port hangs at 100% CPU with no error | an unbounded scan: os9exec's arena is zeroed, so an out-of-bounds read finds no terminator and never stops | `common/using-os9exec-repl.md`, `c/kandr-vs-ansi.md` |
+| Output stops at a suspiciously round byte count | a stdio buffer boundary, not a write ceiling — the program stopped writing | `common/using-os9exec-repl.md` |
+| `c68` says `; expected` / `expression with little effect` on correct-looking C | adjacent string literals — nothing in this toolchain joins them, and `cccp2` runs `-traditional` | `c/kandr-vs-ansi.md` |
+| `**** multiple definition ****` on parameter declarations that look right | `ansi2knr` was run on an already-K&R tree and rewrote its own output | `c/kandr-vs-ansi.md` |
 | "Can't find" a command that is plainly present | fork lookups use `chx`, not `PATH` | `common/using-os9exec-repl.md` |
 | Redirect produced error text, or clobbered the file | `>>` is **stderr**; append is `>+`; plain `>` fails if the file exists | `common/os9-tools-and-shell.md` |
 | `Wildcard match failed` — the command never ran | a `*`/`?` pattern matched no file, which aborts the command instead of passing through; `?` in a borrowed `$?` idiom does this too | `common/os9-tools-and-shell.md` |

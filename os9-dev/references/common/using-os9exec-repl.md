@@ -621,6 +621,37 @@ memory:` from the allocator, `# /tN is /dev/ttysNNN` from hostterm — goes to
 that path rather than a channel of its own, so it interleaves with guest
 output. `2>/nil` is what separates the two when capturing. `Live` (os9exec).
 
+## A too-clean emulator makes someone else's bug look like the emulator's
+
+This is the failure mode to hold in mind whenever os9exec looks at fault, and it
+is the mirror of the rule that a `Live` claim is evidence about a
+reimplementation: the emulator can be *too well behaved* to let a third-party bug
+present honestly.
+
+**os9exec `calloc`s the guest arena** (`Source`: `memstuff.c` allocates
+`emul_base` with `calloc`, and `fcalls.c` carries a comment to the same effect),
+so unwritten guest memory is reliably zero. A program that scans past the end of
+a buffer therefore finds neither a terminator nor accidental garbage that happens
+to match — it reads zeros, for as long as you let it. On real hardware the same
+code would more likely fault, or stop by luck on whatever was lying in memory.
+
+A worked instance, `Live` (os9exec): a de-ANSIfier with an unbounded scan loop
+(see `c/kandr-vs-ansi.md`) spun at 100% CPU and never returned. It was first
+reported as an os9exec defect, on two pieces of circumstantial evidence that both
+dissolved:
+
+- **Output stopped at exactly 20,480 bytes.** The roundness of the number looked
+  like a write ceiling in the emulator. It was the last full stdio buffer flushed
+  before the program stopped writing anything at all — an artefact of buffering,
+  not a limit.
+- **The hang was perfectly reproducible** and the program was well known, so the
+  new variable in the system looked like the likely cause. The actual new
+  variable was a zeroed arena turning an out-of-bounds read into an infinite one.
+
+So: a round number in a byte count is usually a buffer boundary, not a ceiling;
+and a "deterministic emulator bug" in a long-established program is worth one look
+at that program's bounds checking before it is filed.
+
 ## Stopping a runaway program
 
 - **Ctrl-C**: shell keeps the prompt, child continues in background.

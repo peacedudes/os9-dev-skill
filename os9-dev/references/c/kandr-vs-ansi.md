@@ -56,6 +56,80 @@ compiler's own "Control Character Escape Sequences" section, extending
 K&R p.181): `\e` is documented explicitly "to distinguish LF from `\n`
 which on OS9 is the same as `\r`."
 
+## Converting an ANSI tree with `ansi2knr`
+
+`ansi2knr` (Aladdin/Ghostscript, shipped inside the JPEG library sources) is the
+standard de-ANSIfier and it builds under Microware `cc`, so it is the obvious
+tool to reach for. It earns its place, but four limits decide how much hand work
+is left, and a fifth can hang your build.
+
+**It rewrites definitions only — declarations reach `c68` untouched.** This is
+the one that changes how you estimate a job. `Live` (os9exec), two game ports:
+46 and 90 function *definitions* converted automatically, while 33 and 66
+*prototypes* survived in the headers and all had to be done by hand. **So when
+sizing an ANSI tree for this compiler, count the declarations.** The definitions
+are free.
+
+Three more blind spots, each confirmed in the tool's own source (`Source`):
+
+- **It only recognises a function whose name is at the left margin.** Its header
+  says so: *"a non-keyword identifier at the left margin, followed by a left
+  parenthesis."* So `static void f(void)` — keyword first — is skipped entirely.
+- **It has no variadic support at all.** `va_alist`, `va_dcl` and `va_list`
+  appear nowhere in `ansi2knr.c`. Variadic definitions convert by hand to
+  `format(va_alist) va_dcl` plus `va_start`/`va_arg`/`va_end` — and the converted
+  file must then be **excluded** from the pass, or the next run rewrites it again.
+- **It never looks inside a struct**, so ANSI function pointers declared as struct
+  members are invisible to it. Eleven `void (*init)(board_t *, ...)` members
+  produced 60 errors, none of them pointing at the real line.
+
+**A macro invocation at the left margin makes it hang — silently and forever.**
+`Live` (os9exec): a file of `ROOM(...)`/`OBJECT(...)` macro calls at the margin,
+with arguments spanning lines, has the same shape as a function header. The tool
+tries to rewrite them, spins at 100% CPU, never exits, and corrupts its output on
+the way — inserting `"\n"` into the middle of words *inside string literals*.
+There is no error and no exit status to test.
+
+The cause is visible in the source (`Source`): `convert1()` scans with
+`for ( ; end == NULL; p++ )`, switching only on `,` `(` `)`, with **no NUL check
+and no bound** against a 5000-byte buffer (`#define bufsize 5000 /* arbitrary
+size */`), so it walks off the end of the text. Note the tool documents the
+*confusion* and not the consequence: it warns that it will be confused by *"any
+other construct that starts at the left margin and follows the above syntax (such
+as a macro or function call)"*, and separately that *"there are no error
+messages"* — it just never says that being confused means hanging. The cure is to
+drop that one file from the conversion list.
+
+**Running it on an already-K&R tree is harmful, not merely useless.** `Live`
+(os9exec): it rewrites a definition it has already rewritten, and `c68` then
+reports `**** multiple definition ****` against parameter declarations that are
+plainly correct K&R. A distinctive symptom, easy to misread as a defect in the
+source.
+
+## Two ANSI features the preprocessor will not give you
+
+**Adjacent string literals are not joined.** `"abc" "def"` is ANSI translation
+phase 6 and nothing in this toolchain performs it: `c68` reads two expressions and
+says `; expected` plus `expression with little effect`. **GNU `cccp2` does not
+rescue it** — the driver runs it `-traditional`, which is precisely the mode with
+concatenation disabled. Join them in the source. `Live` (os9exec).
+
+When hunting for them, do not grep for lines beginning with a quote: that counts
+string-array initialisers and comma-separated arguments, both legal K&R, and
+scored 116 hits on a tree that compiled fine. A genuine adjacent pair is **a line
+ending in a closing quote with no comma, followed by a line opening with a
+quote.**
+
+**Line limits apply to the LOGICAL line, and continuations are spliced before
+counting** — so `\` buys you nothing. `Live` (os9exec): Microware `cpp`
+bus-errors at 513 characters and `c68` stops at 1023. Joining string literals by
+hand routinely lands a line between the two.
+
+The hidden case is `__FILE__` inside a macro's format string: it expands at every
+call site, so the line that breaks is the *caller*, and the errors point there
+rather than at the header that caused it. Pass it as a `%s` argument instead of
+embedding it.
+
 ## Porting checklist
 
 - [ ] K&R function definitions (params after name, types declared separately)
@@ -65,6 +139,10 @@ which on OS9 is the same as `\r`."
 - [ ] `<strings.h>`, not `<string.h>`
 - [ ] Source files need CR-only line endings before compiling (`flip -m`)
 - [ ] Assume string literals are read-only
+- [ ] Count the **declarations**, not the definitions — `ansi2knr` converts
+      definitions only, so prototypes are the hand work
+- [ ] Join adjacent string literals (`"a" "b"`); nothing here concatenates them
+- [ ] Keep logical lines under ~513 characters; `\` continuations do not help
 
 ---
 

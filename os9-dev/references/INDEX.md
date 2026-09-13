@@ -55,7 +55,7 @@ has bitten a real session.
 | A conversion tool or port hangs at 100% CPU with no error | an unbounded scan: os9exec's arena is zeroed, so an out-of-bounds read finds no terminator and never stops | `common/using-os9exec-repl.md`, `c/kandr-vs-ansi.md` |
 | Output stops at a suspiciously round byte count | a stdio buffer boundary, not a write ceiling — the program stopped writing | `common/using-os9exec-repl.md` |
 | `E_PNNF` (216) on a file you just created and can see on the host | the device is an RBF **image**, a snapshot — the file is not inside it until the image is rebuilt; a host directory would have shown it at once | `common/using-os9exec-repl.md` |
-| `E_PNNF` (216) on a file that is plainly on the disk, from a program run in a subdirectory | a stacked `../..` — it silently means `..`, so the path resolved somewhere else. Two levels up is `...`, not `../..` | `common/unix-differences.md` |
+| `E_PNNF` (216) on a relative pathlist containing `../..` or a mixed dot-run, on an RBF image | an os9exec defect before `985e0d8`, not OS-9 — dot-runs compose and may be mixed; host-directory devices were always correct | `common/unix-differences.md` |
 | `c68` says `; expected` / `expression with little effect` on correct-looking C | adjacent string literals — nothing in this toolchain joins them, and `cccp2` runs `-traditional` | `c/kandr-vs-ansi.md` |
 | `**** multiple definition ****` on parameter declarations that look right | `ansi2knr` was run on an already-K&R tree and rewrote its own output | `c/kandr-vs-ansi.md` |
 | "Can't find" a command that is plainly present | fork lookups use `chx`, not `PATH` | `common/using-os9exec-repl.md` |
@@ -100,7 +100,7 @@ Error *codes* (number → meaning) are a different lookup: `common/error-codes.m
 - file descriptor → path number
 - pipe syntax is **`!`**, not `|`; `>>` redirects **stderr**, not append —
   append is **`>+`** (`>-` truncates, plain `>` fails if the file exists)
-- `../..` → `...` (one more dot per level, not more `../`)
+- climbing with dot-runs: `.` 0 levels, `..` 1, `...` 2 — and components compose, so `../..` is legal and the forms may be mixed
 - Ctrl-C backgrounds; **Ctrl-E** is the kill key; ESC on a blank line
   exits the shell
 - shared memory → data modules; `/dev` + VFS → descriptors + file managers

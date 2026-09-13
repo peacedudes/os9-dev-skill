@@ -170,60 +170,39 @@ in the access mode (`S_IFDIR | S_IREAD`). `fopen()` offers no way to set
 that bit at all, so it cannot open a directory under any mode. Unix code
 that does `fopen(dir, "r")` to walk a directory simply doesn't work here.
 
-### More dots, not more `../`
+### Climbing: dot-runs compose, and `../..` is legal
 
-`../..` → `...`; `../../..` → `....` — **one more period per level**, not
-another `../`. `..` (one level) is unchanged. `Manual` (*Using Professional
-OS-9* v2.4, p. 4-9: "add a period for each higher directory level"), so this is
-the specification rather than a runtime quirk. `Live` (os9exec) for `dir`, `chd`
-and ordinary file opens alike: from three levels down `cat ..../SYS/motd` reads
-the file, with a marker proving the `chd` had landed first.
+**The rule.** A pathlist component made only of periods climbs **one level fewer
+than it has dots** — `.` stays put, `..` is the parent, `...` is two levels,
+`....` three — and **components compose**, so a pathlist may chain as many of
+them as it likes and mix the spellings freely. Climbing is **clamped at the
+volume root**: you cannot walk off the top of a device. `Hearsay` (rdoggett,
+from real OS-9) for the composition rule; `Manual` (*Using Professional OS-9*
+v2.4, p. 4-9, "add a period for each higher directory level") for the dotted
+spelling itself.
 
-**Do not mix the two forms.** `.../../SYS/motd` fails `E_PNNF` just as
-`../../../SYS/motd` does. `Live` (os9exec).
+Composition means the arithmetic is just addition. `../......./.././file`
+climbs 1 + 6 + 1 + 0 = **eight** levels.
 
-**And the Unix spelling is not an error — on an open it silently means `..`.**
-`Live` (os9exec): from three levels down, `open("../..", S_IREAD|S_IFDIR)` and
-`open("../../..")` both returned the **parent**, the same descriptor sector as a
-plain `..`, while `...` and `....` climbed as specified. The extra components are
-absorbed rather than rejected.
+So `...` is the idiomatic OS-9 spelling and the one the manual documents, but
+`../..` is **not an error** — it is two components of one level each, which comes
+to the same place. Both forms work and may be mixed in one pathlist.
 
-**Which is not the whole story: the Unix spelling behaves differently depending
-on who resolves it, and that is unresolved — `Flag`.** Three measurements, all
-`Live` (os9exec), that do not agree:
+`Live` (os9exec, 985e0d8 and later): an RBF image and a host directory agree on
+`../..`, `../...`, `.../..`, `../......./.././`, `A/..`, `A/B/...`,
+`A/B/C/../../..`, absolute pathlists with mixed runs, and `chd ../..`.
 
-| Who resolves the path | `../..` from two levels down |
-|---|---|
-| a shell forking a command | **works** — reaches the intended program |
-| `chd` | **climbs two levels**, as a Unix reader expects |
-| a program's own `open()` | **climbs one** — the extra component is absorbed, so the open lands in the parent and the file is not there |
-
-So the absorption above is established for *opens* and cannot be generalised to
-the other two. Why the three differ is filed against the emulator's own
-path-adjustment code and is not settled here.
-
-The practical rule survives whichever way it resolves: **do not reason from one
-call to another — test the one you are actually going to make.** And the dotted
-form is correct for all three, so writing `...` rather than `../..` avoids the
-question entirely. A `../..` that works today is working by luck of which layer
-resolved it, not by specification.
-
-That silence is the whole trap, and it bites twice:
-
-- **Code that climbs a tree by appending `/..`** — the obvious way to write a
-  `getcwd` or a `pwd` — works correctly one level up and then silently stops
-  moving, reporting the wrong directory rather than failing.
-- **A borrowed Unix path fails somewhere else entirely.** From `/dd/CMDS/GCC2`,
-  `../../SYS/motd` resolves to `/dd/CMDS/SYS/motd`, which does not exist, so you
-  get `E_PNNF` (216) on a *file* when the real fault was in the *path shape*. The
-  error names the thing you were trying to read, not the `../..` that misdirected
-  it. `Live` (os9exec), seen from `cat` as well as from compiler drivers.
-
-So `E_PNNF` on a file you can see on the disk is worth one look at how many `../`
-the path contains. The working form from `/dd/CMDS/GCC2` is `.../SYS/motd`.
-Resolution happens in the kernel's path parser rather than in the program, so the
-dotted form is available to anything that opens a path — though it has only been
-verified here through `dir` and `chd`.
+**Historical note, because earlier text here said otherwise.** os9exec before
+`985e0d8` mis-resolved relative dot-runs **on RBF images only**: the path code
+treated the start of a relative pathlist as the device root, so `../..`
+collapsed to `..` and a leading component was never cancelled (`A/../x` became
+`A/x`). Every spelling in which a dot-run followed another component failed
+`E_PNNF`. Host-directory devices resolved the same pathlists on the host and were
+correct throughout, and absolute pathlists were always correct. **That was an
+emulator defect, not OS-9 behaviour** — if you are reading a claim that `../..`
+silently means `..`, or that the two forms cannot be mixed, it described that
+bug. It is also a clean example of why a result measured on one device type is
+not evidence about the other.
 
 ### A filename stops addressing at 27 characters
 

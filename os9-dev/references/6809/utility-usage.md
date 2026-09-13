@@ -388,7 +388,7 @@ they generalize to every 6809 board.
   manual) — re-applies `wcreate`-style parameters to an already-created
   window, but does **not** touch anything governed by `xmode`/`tmode` —
   those still need their own separate invocation.
-- `devs`, `irqs`, `events` — `Absent`. These are Professional OS-9/68000
+- `devs`, `irqs`, `events` — `Absent` (6809). These are Professional OS-9/68000
   utilities (attached-device table, IRQ polling table, active
   named-event listing) documented in `common/utility-usage.md`. 6809 has
   no `events` counterpart because its own IPC primitives are
@@ -396,8 +396,8 @@ they generalize to every 6809 board.
   `6809/syscalls-and-module-format.md`'s Signals section) rather than
   68k's named-event-object model (`F$Event` with `Ev$Signl`/`Ev$Wait`
   subfunctions — see `68k/syscall-reference.md`).
-- `tape`, `tapegen`, `diskcache` — `Absent`.
-- `code` — `Absent`.
+- `tape`, `tapegen`, `diskcache` — `Absent` (6809).
+- `code` — `Absent` (6809).
 
 ## Level 1 vs Level 2: user-visible differences
 

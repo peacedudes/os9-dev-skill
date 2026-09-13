@@ -10,7 +10,7 @@ of these, inline, next to the claim it qualifies.
 | `Manual` | Derived from and cross-referenced across published manuals. Not run, not checked against code. |
 | `Source` | Checked against real source code (os9exec's C, or NitrOS-9's open kernel source) — not run for this specific claim. |
 | `Live` | Actually run and observed. **Always names where** — `Live` (NitrOS-9), `Live` (os9exec), `Live` (OS-9/68000). See below. |
-| `Absent` | Actively searched for and confirmed **not to exist** — distinct from "nobody's checked yet". One line, a fact stamp. Add a clause only to state what happens instead (e.g. 6809 has no `events` utility because it uses `F$Send`/`F$Icpt`/`F$Sleep` signals rather than 68k's named-event objects) — never describe the syntax the absent thing *would* have had. |
+| `Absent` | Actively searched for and confirmed **not to exist** — distinct from "nobody's checked yet". **Always names what it is absent from**, exactly as `Live` names where it ran: `Absent` (6809), `Absent` (the v2.4 manuals), `Absent` (this SDK). One line, a fact stamp. Add a clause only to state what happens instead (e.g. 6809 has no `events` utility because it uses `F$Send`/`F$Icpt`/`F$Sleep` signals rather than 68k's named-event objects) — never describe the syntax the absent thing *would* have had. |
 | `Flag` | Two or more sources disagree; unresolved. |
 
 `Absent` and `Flag` are status flags, not evidence tiers — they sit alongside
@@ -22,6 +22,21 @@ the others rather than replacing them.
 therefore carries the implementation in parentheses, outside the tag's own
 backticks, and a claim confirmed on more than one lists each:
 `Live` (NitrOS-9, os9exec).
+
+## `Absent` names its scope for the same reason
+
+An absence is exactly as implementation-specific as a presence, so an unscoped
+`Absent` is the same defect as a bare `Live`. "There is no `ident`" is a very
+different claim from "there is no `ident` **in this SDK**" — the first tells a
+reader their own OS-9 lacks a utility that Microware ships and their machine may
+well have. Write the second.
+
+The failure mode to avoid is stating a local absence as a general one. A
+reader arrives with a real system, and a flat "X does not exist" that is only true
+of one disk image or one toolchain is both discouraging and, from where they are
+sitting, wrong. Where you can, say what *is* there instead of what is not: naming
+the utility that does the job on the reader's system is more use than recording
+that yours did not have it.
 
 | Qualifier | What it is |
 |---|---|

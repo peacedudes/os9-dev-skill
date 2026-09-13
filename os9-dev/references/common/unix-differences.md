@@ -170,35 +170,34 @@ in the access mode (`S_IFDIR | S_IREAD`). `fopen()` offers no way to set
 that bit at all, so it cannot open a directory under any mode. Unix code
 that does `fopen(dir, "r")` to walk a directory simply doesn't work here.
 
-### Climbing: dot-runs compose, and `../..` is legal
+### Climbing: count the dots
 
-**The rule.** A pathlist component made only of periods climbs **one level fewer
-than it has dots** — `.` stays put, `..` is the parent, `...` is two levels,
-`....` three — and **components compose**, so a pathlist may chain as many of
-them as it likes and mix the spellings freely. Climbing is **clamped at the
-volume root**: you cannot walk off the top of a device. `Hearsay` (rdoggett,
-from real OS-9) for the composition rule; `Manual` (*Using Professional OS-9*
-v2.4, p. 4-9, "add a period for each higher directory level") for the dotted
-spelling itself.
+**Write `...`, not `../..`.** One period per level plus one — `.` stays put,
+`..` is the parent, `...` climbs two, `....` three. This is the form the manual
+documents (`Manual`, *Using Professional OS-9* v2.4, p. 4-9: "add a period for
+each higher directory level") and the form to use in anything you write, because
+**it is uniquely OS-9** and says so at a glance where a stack of `../` reads as
+borrowed Unix.
 
-Composition means the arithmetic is just addition. `../......./.././file`
-climbs 1 + 6 + 1 + 0 = **eight** levels.
+**The rule underneath.** A component made only of periods climbs one level fewer
+than it has dots, and **components compose** — a pathlist may chain any number of
+them, and the arithmetic is simply addition. `../......./.././file` climbs
+1 + 6 + 1 + 0 = **eight** levels. Climbing is **clamped at the volume root**: you
+cannot walk off the top of a device.
 
-So `...` is the idiomatic OS-9 spelling and the one the manual documents, but
-`../..` is **not an error** — it is two components of one level each, which comes
-to the same place. Both forms work and may be mixed in one pathlist.
-
-**Chained `../..` is confirmed on real OS-9** — `Hearsay` (rdoggett, from a real
-system: "yes real os-9 accepts `../../../..` no problem"). So neither spelling is
-a runtime indulgence; both are legal, and `...` is the idiomatic one rather than
-the only one.
+**`../..` is also accepted** — it is two one-level components and lands in the
+same place. Worth knowing so that borrowed Unix code is not suspected wrongly,
+and so that a mixed pathlist is read correctly, but not worth writing.
+`Hearsay` (rdoggett, from a real system: "yes real os-9 accepts `../../../..`
+no problem"), so this is OS-9's behaviour and not a runtime indulgence.
 
 `Live` (os9exec, 985e0d8 and later): an RBF image and a host directory agree on
 `../..`, `../...`, `.../..`, `../......./.././`, `A/..`, `A/B/...`,
 `A/B/C/../../..`, absolute pathlists with mixed runs, and `chd ../..`.
 
-The measured case worth copying, because it carries its own control. From seven
-levels down, `list ./../.../...././SYS/f` opens a file **exactly six levels up**
+One measured case is worth quoting in full, because it carries its own control —
+note that it mixes spellings to *exercise* composition, and is evidence rather
+than a model to copy. From seven levels down, `list ./../.../...././SYS/f` opens a file **exactly six levels up**
 — `0+1+2+3+0` — on both device types, and `chd` with the same pathlist followed
 by `pd` lands six up. The control: that climb does **not** reach a file seven
 levels up, which fails `E_PNNF`. So the runs are being *counted* rather than

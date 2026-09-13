@@ -102,7 +102,7 @@ Error *codes* (number → meaning) are a different lookup: `common/error-codes.m
 - file descriptor → path number
 - pipe syntax is **`!`**, not `|`; `>>` redirects **stderr**, not append —
   append is **`>+`** (`>-` truncates, plain `>` fails if the file exists)
-- climbing with dot-runs: `.` 0 levels, `..` 1, `...` 2 — and components compose, so `../..` is legal and the forms may be mixed
+- climbing: write `...` (one dot per level plus one) — runs compose and add; `../..` also works but the dotted form is the OS-9 one
 - Ctrl-C backgrounds; **Ctrl-E** is the kill key; ESC on a blank line
   exits the shell
 - shared memory → data modules; `/dev` + VFS → descriptors + file managers

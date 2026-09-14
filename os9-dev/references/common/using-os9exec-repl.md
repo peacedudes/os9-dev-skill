@@ -31,6 +31,21 @@ or SDK. A host directory of your own files works identically for basic testing.
     `OS9DISK=<img> OS9H0=<img>`; the emulator says so on the console
     (`# /h0: using OS9H0='<img>', ignoring '<startPath>/h0'`) and mounts it.
     `Live` (os9exec). No symlinking or copying required.
+  - **But only ONE PROCESS may have an image open for writing.** One emulator
+    mounting the same image as two devices is fine — it is one kernel, with one
+    copy of the allocation bitmap. **Two emulator processes sharing one image are
+    two kernels, each caching its own bitmap**, and each will allocate over the
+    other's blocks. `Source, Flag`: this is the reasoning recorded in a
+    collection's own image-locking tool rather than a corruption anyone here has
+    reproduced, and the failure it predicts is the nastiest kind — a damaged
+    volume discovered much later, with nothing to say when it happened.
+    Until someone measures it, treat it as a rule and not a risk to weigh.
+
+    The practical check before starting any harness: **`lsof` the image** and
+    confirm no long-lived session — somebody's interactive shell, a REPL left
+    running — is holding it. If one is, build a fresh image under another name
+    and point the harness at that. Cheaper than the alternative, and it is the
+    one hazard here whose symptom does not arrive while you are watching.
 - **Prefer an RBF image over a host directory** for anything but the most
   basic testing. File permission attributes are enforced, and record locking
   works, only on the RBF path — on a host directory locking is deliberately
@@ -186,14 +201,25 @@ Each candidate can be its own boot program in a fresh instance — no shell
 needed:
 
 ```
-timeout 5 env OS9DISK=/abs/path/disk ./os9exec /dd/CMDS/<name> </dev/null 2>&1
+gtimeout 5 env OS9DISK=/abs/path/disk ./os9exec /dd/CMDS/<name> </dev/null 2>&1
 ```
+
+**`gtimeout`, not `timeout`, on macOS** — the GNU coreutils build installs under
+the `g` prefix there (`/opt/local/bin/gtimeout` from MacPorts, likewise
+Homebrew), and a bare `timeout` does not exist. On Linux it is `timeout`. Harness
+code that assumes the unprefixed name dies before it runs a single case, so pick
+one and use it everywhere; the examples in this file all say `gtimeout`.
 
 `</dev/null` is explicit and harmless (a redirected host stdin now returns
 end-of-file on its own, so a stdin-reader no longer hangs without it); the
-timeout is still mandatory. This
-tests "loads and starts" (a usage message is a pass) — the right signal
-for auditing a disk full of binaries, and far faster than driving a shell.
+timeout is still mandatory.
+
+This tests **"loads and starts"** and nothing more — at that narrow question a
+usage message is a pass, and it is the right signal for auditing a disk full of
+binaries, far faster than driving a shell. **Do not carry it further than that.**
+A usage line proves argument parsing ran and says nothing about whether the
+program's I/O works; for the case where that distinction bites hardest, and the
+sounder test, see the `cio` link-mode pitfall in `c/os9-c-cheatsheet.md`.
 
 ## An internal command can BE the boot program — no shell needed
 
@@ -250,11 +276,14 @@ pass the shell a **procedure file** — the mechanism `os9repl.sh` itself uses
 to boot (`shell /h0/startup`):
 
 ```
-gtimeout 60 env OS9DISK=<dir>/h0 OS9STOP=1 ./os9exec shell /h1/<proc> </dev/null 2>&1
+gtimeout 60 env OS9DISK=/abs/path/image OS9H1=/abs/workdir OS9STOP=1 \
+    ./os9exec shell /h1/<proc> </dev/null 2>&1
 ```
 
-`/h1` here is any host directory under the emulator's start path. Four traps,
-all `Live` (os9exec), the first two silent:
+`/h1` is whatever `OS9H1` names — give it an **absolute path** to the directory
+holding the procedure file, rather than relying on a magic `h1` beside the
+binary, for the reasons under "Launching and disks" above. Four traps, all
+`Live` (os9exec), the first two silent:
 
 - **The procedure file must be CR-only.** With LF endings OS-9 sees one
   enormous line: the shell echoes the entire file and runs nothing, reporting

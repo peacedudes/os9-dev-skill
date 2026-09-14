@@ -56,6 +56,7 @@ has bitten a real session.
 | A conversion tool or port hangs at 100% CPU with no error | an unbounded scan: os9exec's arena is zeroed, so an out-of-bounds read finds no terminator and never stops | `common/using-os9exec-repl.md`, `c/kandr-vs-ansi.md` |
 | Output stops at a suspiciously round byte count | a stdio buffer boundary, not a write ceiling — the program stopped writing | `common/using-os9exec-repl.md` |
 | `E_PNNF` (216) on a file you just created and can see on the host | the device is an RBF **image**, a snapshot — the file is not inside it until the image is rebuilt; a host directory would have shown it at once | `common/using-os9exec-repl.md` |
+| An RBF image turns out damaged, with no telling when | two emulator processes had it open at once, each caching its own allocation bitmap — one writer per image; `lsof` before starting a harness | `common/using-os9exec-repl.md` |
 | `E_PNNF` (216) on a relative pathlist containing `../..` or a mixed dot-run, on an RBF image | an os9exec defect before `985e0d8`, not OS-9 — dot-runs compose and may be mixed; host-directory devices were always correct | `common/unix-differences.md` |
 | `^syntax error` and nothing runs, from a batch invocation | a shell option written on the command line — `-nx` belongs on the procedure file's first line | `common/using-os9exec-repl.md` |
 | `c68` says `; expected` / `expression with little effect` on correct-looking C | adjacent string literals — nothing in this toolchain joins them, and `cccp2` runs `-traditional` | `c/kandr-vs-ansi.md` |

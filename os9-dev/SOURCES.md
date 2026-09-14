@@ -16,6 +16,39 @@ by running real programs on OS-9/68k (the os9exec emulator) or OS-9/6809
 (NitrOS-9 under XRoar) — those confirmations are original findings,
 independent of any manual.
 
+## A freeware corpus as evidence, and how to weigh its numbers
+
+Some findings here are measured across a **curated collection of OS-9/68k
+freeware** rather than against one program, and where a count appears — "545 of
+609 programs answer `-?`", "353 cio-linked programs", "no program from the
+70-entry library calls `$41`/`$42`" — that corpus is what it refers to. What a
+reader needs in order to judge such a number:
+
+- **Roughly a thousand catalogued programs**, assembled from public preservation
+  archives rather than from any vendor distribution.
+- **Period binaries.** Built by their original authors with the compilers of the
+  day, not rebuilt now. That is what makes them usable as *controls*: a program
+  from the era and one you just built, on the same disk in the same shell, differ
+  in exactly one way.
+- **Source frequently included** beside the binary.
+- **Mixed by construction** — Microware's own utilities, GNU and BSD ports,
+  EFFO-era European freeware (a substantial German-language share), and one-off
+  programs from magazines and user groups.
+
+**The mix is the point, and also the limit.** A census across it describes *what
+a real disk holds*, which is the useful question when you are deciding whether a
+convention can be relied on. It is **not** a statement about Microware's
+conventions, which that disk represents only in part.
+
+**One scope caveat that matters for the `-?` figure.** The 609 are the programs
+whose help response was individually captured — around two-thirds of the
+catalogue. Programs with no help flag at all, and full-screen programs that
+simply start when given one, are largely absent from that 609. So "545 of 609"
+is *of the programs that answered something*, not of everything on the disk, and
+the true proportion of programs honouring `-?` across a whole disk is lower.
+
+<!-- PUBLISH: when the collection is public, name it and link it here. -->
+
 ## Primary sources by file
 
 | File | Primary sources |

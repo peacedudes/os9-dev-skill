@@ -44,6 +44,7 @@ has bitten a real session.
 | `mdir` shows a different name than the file you linked | the module name comes from `l68 -o=`, not the source | `68k/os9-68k-assembly.md` |
 | Link fails on `I$`/`F$` symbol names | call names aren't defined anywhere — declare them yourself | `68k/os9-68k-assembly.md` |
 | Program opens a file, reads nothing, and reports on it anyway | the SDK `cio` library's trap-13 selectors hit the `cio` module's memory routine — rebuild trap-free (`-qm`) | `c/os9-c-cheatsheet.md` |
+| Unsure whether a fault is yours or the system's | run a period-built program that does the same thing on the same disk — it differs from yours only in who compiled it | `common/using-os9exec-repl.md` |
 | Program needs Enter after every key though it called `cbreak()` | `cbreak()` sets a curses flag only; stdio `getchar()` ignores it — read with `getch()` | `c/os9-clib-reference.md` |
 | `popen of "..." failed!` | reported to need `shell` reachable and the named program in the **data** directory, not on `chx` — `Hearsay`, unmeasured | `c/os9-clib-reference.md` |
 | `E_FNA` (214) opening a file that is present and readable | a leading space in the pathname — `F$PrsNam` does not skip one, and the failure surfaces at the open as a permission error | `68k/syscall-reference.md` |

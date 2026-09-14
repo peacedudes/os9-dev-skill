@@ -515,6 +515,30 @@ immediately with `**** Can't install trap handler **** / **** cio ****`.
   Path-Not-Found though the file exists. `Live` (os9exec). Check `chx` before
   concluding the module is absent or the binary is built for the wrong CPU.
 
+## Existing freeware is a development resource, not just software to run
+
+Worth knowing before you write anything: a well-stocked OS-9 disk carries a
+large body of period freeware, and **source frequently ships beside the binary**.
+Two uses that are not obvious:
+
+- **Read a working program instead of deriving a convention.** When a manual
+  gives you a register contract but no idiom, a program from the era that already
+  does the thing is often the faster answer — and it is evidence that the
+  sequence works, which the manual alone is not.
+- **A period-built binary is a control.** This is the more valuable one. When
+  something you built misbehaves, a program built by its author in the 1980s or
+  90s, run on the same disk in the same shell, differs from yours in exactly one
+  way: who compiled it. That comparison is what narrowed `system()` from "this
+  call is broken" to "our builds differ from period builds" (see
+  `c/os9-clib-reference.md`), and it is the cheapest way to find out whether a
+  fault is yours or the system's.
+
+The corollary is worth stating because it has bitten: **a program failing is not
+evidence the system is at fault until a period binary fails the same way.** Most
+of the C-toolchain traps in these references — link mode, line endings, buffering
+— produce programs that are broken by how they were built, on a disk where
+everything around them works.
+
 ## Discovering what's installed
 
 Ask the running system, never assume: `dir /dd/CMDS` (core set), look for

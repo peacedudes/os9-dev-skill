@@ -73,9 +73,28 @@ default `math` module (`Flag`): `0.1+0.2-0.3` leaves a residual of exactly
 2⁻²², not the ~1e-16 a 52-bit double would give. Consequences: `0.1+0.2 = 0.3`
 compares **EQUAL**, and `1.0/3.0` yields ~9 good digits rather than 15. Not a
 display artifact — `DIGITS 15` shows the same residual — and not
-BASIC09-specific: os9exec's C `double` behaves identically, so this is the
-shared soft-float `math` trap handler, not the CPU core. **BASIC09's fix is a
-module swap:** `load /dd/CMDS/math881` before running `basic` upgrades REAL
+BASIC09-specific: os9exec's C `double` behaves identically.
+
+> **Do not trust the diagnosis below on an os9exec build earlier than
+> `209b35c`, and do not read any of this as OS-9 behaviour.** A CPU-core defect
+> of exactly the right shape was found and fixed there: `NEG` and `NBCD` never
+> copied C into X in any CPU table, and the `SUB` family did not in the
+> 68000/68010 tables. Microware's software doubles negate a 64-bit mantissa as
+> `NEG.L` low then `NEGX.L` high, so that defect corrupts every soft-float
+> result — measured symptoms included `1.0-1.0` giving −2⁻²⁰ and `printf
+> "%.15g"` of `0.1` giving `0.100000000046566`.
+>
+> **That breaks the inference that this is the `math` handler rather than the
+> CPU.** BASIC09 and C agreeing proves only that both go through software
+> doubles, which is precisely what a CPU carry/extend bug corrupts — a common
+> cause explains both observations at least as well as a single-precision
+> handler does. The `math881` result is consistent either way, since hardware FP
+> bypasses the soft-float path entirely. A residual of exactly a power of two is
+> likewise more suggestive of a bit going astray than of honest single
+> precision. **Re-measure on `209b35c` or later before concluding anything about
+> Microware's math module.** `Flag`.
+
+**BASIC09's fix is a module swap:** `load /dd/CMDS/math881` before running `basic` upgrades REAL
 math to the 68881 and drives that residual to exactly 0. Full analysis, and
 the different fix a `cc`-compiled program needs (`-K=2F`, since it links
 software FP statically and ignores the `math` module): `c/os9-c-cheatsheet.md`'s

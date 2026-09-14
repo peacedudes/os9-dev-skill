@@ -288,6 +288,19 @@ binary, for the reasons under "Launching and disks" above. Four traps, all
 - **The procedure file must be CR-only.** With LF endings OS-9 sees one
   enormous line: the shell echoes the entire file and runs nothing, reporting
   no error. Generate with `tr '\n' '\r'`.
+- **And commands fed on HOST stdin must be the opposite — LF-terminated.**
+  `Live` (os9exec): `./os9exec shell < cmds`, or the same commands through a
+  pipe, needs `\n` endings. A CR-only stdin file is echoed as **one line** with
+  only the first command taking effect — typically surfacing as a complaint from
+  that first command alone (`setenv requires two arguments`) while everything
+  after it silently never runs.
+
+  **The two rules are opposites and it is the same session that needs both**: a
+  file named as an *argument* is read by OS-9 and wants CR; bytes arriving on
+  *stdin* cross the host boundary and want LF. Which rule applies is decided by
+  how the commands reach the shell, not by what the file is called — so a
+  generator that emits one ending for both uses is wrong half the time, which
+  is how this bites twice in a day.
 - Piping the same commands into an interactive `shell` **used to hang** at
   end of input and no longer does (`Live` (os9exec), as of the freeware-sweep
   fixes): a redirected or piped host stdin now delivers end-of-file, so the
@@ -702,6 +715,29 @@ reads its unfilled buffer. It would do the same on real hardware.
 memory:` from the allocator, `# /tN is /dev/ttysNNN` from hostterm — goes to
 that path rather than a channel of its own, so it interleaves with guest
 output. `2>/nil` is what separates the two when capturing. `Live` (os9exec).
+
+## Floating point: check the build before judging any FP result
+
+`Live` (os9exec). A CPU-core defect fixed in `209b35c` made **every soft-float
+result subtly wrong** on earlier builds: `NEG` and `NBCD` never copied C into X
+in any CPU table, and the `SUB` family did not in the 68000/68010 tables.
+Microware's software doubles negate a 64-bit mantissa as `NEG.L` low then
+`NEGX.L` high, so the missing extend bit corrupts the negation. Measured
+symptoms: `1.0-1.0` = −2⁻²⁰, `2.0-1.0` = 0.99999…, `exp(1)` correct to six
+places, `printf "%.15g"` of `0.1` = `0.100000000046566`.
+
+**So a floating-point result from a build before `209b35c` is not evidence about
+Microware's math library, and not evidence about OS-9.** Rebuild the emulator
+before judging FP precision, and treat any existing FP finding measured on an
+older build as unverified — including one in these references, flagged in
+`basic09/basic09-per-target.md`.
+
+The trap worth naming: the first diagnosis blamed `math.l`, and it was wrong.
+Both BASIC09 and C showed the same error, which looked like proof that the fault
+lay in the shared soft-float handler they have in common — but it is equally
+what a CPU bug produces, since both reach the CPU through that handler. **Two
+consumers agreeing points at what they share, and the CPU is shared by
+everything.**
 
 ## A too-clean emulator makes someone else's bug look like the emulator's
 

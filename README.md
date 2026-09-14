@@ -27,7 +27,8 @@ read `os9-dev/SKILL.md` first, then the `INDEX.md` beside it.
 | If you want to… | Read |
 |---|---|
 | Port or write a **C** program | `os9-dev/references/c/kandr-vs-ansi.md` — the porting checklist — then `c/os9-c-cheatsheet.md` |
-| Get a **running OS-9 system** to test on | `os9-dev/references/common/using-os9exec-repl.md` |
+| Get a **running OS-9/68000 system** to test on | `os9-dev/references/common/using-os9exec-repl.md` (the os9exec emulator) |
+| Drive **NitrOS-9 on a CoCo or Dragon** — XRoar, DriveWire, a scriptable shell | `os9-dev/references/6809/using-nitros9-repl.md` |
 | Write **68k or 6809 assembly** | `os9-dev/references/68k/os9-68k-assembly.md`, or `6809/assembly-and-tools.md` |
 | Work in **BASIC09** | `os9-dev/references/basic09/basic09-language.md` |
 | Understand an **error or a symptom** you already hit | the symptom table in `os9-dev/references/INDEX.md` — it maps symptom to cause, which is the faster door once something has failed |

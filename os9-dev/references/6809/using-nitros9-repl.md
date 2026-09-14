@@ -83,7 +83,13 @@ keystrokes to the XRoar application.
 Same gated-send / raw-key-fallback pattern as the 68k side, but the transport
 is TCP to the DriveWire-exposed channel rather than a PTY.
 
-- **Zero-config launch:** `tools/nitros9repl.sh start` with no environment
+**These harness scripts are not in this collection.** `nitros9repl.sh` and
+`coco` belong to the **os9exec** source checkout, under its own `tools/`
+directory; nothing executable ships with these references. Locate that
+repository before following the recipes below — a bare `tools/…` path here
+means *its* tools, not a directory you will find beside this file.
+
+- **Zero-config launch:** os9exec's `tools/nitros9repl.sh start` with no environment
   boots a private scratch clone it creates itself
   (`~/.cache/nitros9repl/eou-clone`, APFS `cp -c` of the golden master, reused
   across runs and reboots — delete the directory to reset the disk), at full
@@ -92,7 +98,7 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   pacing. Never point it at the golden master: XRoar edits the image in place.
   A human session is then just `connect` (Ctrl-] detaches and logs out).
   `connect` does not answer the `User name?:` prompt — a human types it.
-- **`tools/coco` is the human front door.** Bare `coco` is idempotent: it
+- **os9exec's `tools/coco` is the human front door.** Bare `coco` is idempotent: it
   connects if a guest is up and boots one first if not, so it can be run any
   time without checking state. Any arguments are forwarded to
   `nitros9repl.sh`, so `coco send 'dir'`, `coco stop`, `coco server` all work.
@@ -133,7 +139,7 @@ is TCP to the DriveWire-exposed channel rather than a PTY.
   TCP connects fine, **no banner ever arrives**. A session ended with Escape
   (SCF EOF → shell exits) is retired properly and the channel recycles
   immediately — proven by consecutive join/logout cycles reusing one channel.
-  `tools/nitros9repl.sh connect` sends the Escapes itself on Ctrl-] detach.
+  os9exec's `tools/nitros9repl.sh connect` sends the Escapes itself on Ctrl-] detach.
 - **Logging out is necessary but has not proved sufficient: channels still
   run out after a few interactive connect/detach cycles.** `Live`
   (NitrOS-9), measured: across repeated attach-then-detach cycles the session

@@ -702,17 +702,29 @@ so anything that walks directories (`dsave`, `deldir`, `pd`) sees the device roo
 a second time under a name that is not it. That is the real cost: wrong data,
 silently, in tools whose output you then trust.
 
-**Writing through it fails, confusingly but harmlessly.** `Live` (os9exec):
-`del` of such a link reports `E_DNE`, and the root and its contents are intact
-afterwards. `Source`: the delete cannot succeed, rather than merely happening not
-to — the host call behind it removes a directory only when empty, and the root
-cannot be empty while it still holds the link that redirected you there.
-`attr -nd` hits the same wall, and creating a file through a directory link asks
-the host to open a directory as a file, which fails. So the hazard here is a
-misleading error and bad reads, not destruction.
+**`deldir` through such a link DELETES FILES IN THE DEVICE ROOT.** `Live`
+(os9exec), measured on the last build before the fix: a scratch device holding
+`rootfile1`, `rootfile2` and `outlink`; `deldir -q /h7/outlink` printed
+`can't delete 'outlink' - E_DNE` — and had already deleted `rootfile2` from the
+root. The directory the link actually pointed at was untouched.
 
-**Remove stray outward links on the host** rather than through OS-9 — that is
-the only place a `del` on one will do what you meant.
+**The mechanism is what generalises, so know it rather than the instance.**
+`deldir` does not delete through the link's path. It `chd`s into what it takes to
+be a directory — which the clamp has made the device root — and then deletes each
+entry **by relative name**. Those names resolve normally inside the root, so they
+are the root's real files, and no link is involved by the time the deletes
+happen. How many it destroys before erroring depends on host ordering. **Any tool
+that walks directories and changes files is dangerous near an outward link**, not
+just this one.
+
+By contrast `del` of the link *itself* is harmless — it reports `E_DNE` and
+removes nothing, because the host call behind it removes a directory only when
+empty and the root cannot be empty while it holds the link. That harmlessness is
+specific to that one operation and **does not generalise to writing through the
+link**, which is exactly the inference that hid the `deldir` case.
+
+**Remove outward links on the host before running `deldir`, or anything else
+that walks and modifies, anywhere near one.**
 `deldir` recurses into and deletes a directory-symlink's real target (OS-9
 has no link concept, so it can't tell). Symlink cycles can crash the
 emulator after ~40–60 hops.

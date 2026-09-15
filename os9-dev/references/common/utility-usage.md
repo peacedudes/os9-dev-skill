@@ -100,6 +100,10 @@ for" descriptions: `os9-tools-and-shell.md`.
   **Measure `del` semantics on an image, never on a host mount**: an earlier
   revision of this entry reported the host-native result as a general OS-9
   hazard, which it is not.
+- **`deldir` near a host symlink pointing outside the device deletes the wrong
+  files** — it `chd`s through the link into the device root and deletes by
+  relative name. `Live` (os9exec); see the host-links passage in
+  `using-os9exec-repl.md` before running it on a host-native device.
 - **`deldir` is broken on a host-native directory when the tree is nested** —
   `Live` (os9exec), a standing defect rather than a fixed one: `deldir -q` of a
   directory that contains a subdirectory fails `can't delete 'inner'` with

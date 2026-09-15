@@ -40,7 +40,27 @@ A process with no intercept handler for a given signal is killed by it —
 **except** for codes 0 and 1, which always act on their built-in meaning
 regardless of handler state.
 
-**Dispatch:** active processes run intercept routines immediately. Sleeping/waiting processes move to active queue, run the intercept, then resume the original wait via queued call.
+**Dispatch:** active processes run intercept routines immediately. A process
+sleeping or waiting moves to the active queue and runs the intercept — but
+**whether the original wait then resumes depends on what it was waiting for.**
+
+For `F$Sleep`/`F$Wait` the wait resumes via a queued call. **For blocked I/O it
+does not**: `Manual` (v2.4 TRM, ch. 4, "Relative Time Alarms") documents aborting
+a read on a deadline as a supported technique — *"Relative time alarms are
+frequently used to cause an `I$Read` request to abort if it is not satisfied
+within a maximum time. Do this by sending a keyboard abort signal at the maximum
+allowable time, and then issuing the `I$Read` request. If the alarm arrives
+before the input is received, the `I$Read` request returns with an error."* So
+the read **returns an error** rather than resuming, and the Guard pattern below
+depends on exactly that.
+
+Two limits on how far to carry this. The manual's technique names a **keyboard
+abort** signal specifically, so do not assume every signal aborts every blocked
+call. And *which* error an interrupted read returns is not stated in that passage
+— the error-code appendix listing `000:002` KEYBOARD QUIT, `000:003` KEYBOARD
+INTERRUPT and `000:004` MODEM HANGUP as error numbers suggests the signal code
+comes back as the error, but that is inference from a table rather than a
+measurement, `Flag`.
 
 **Delivery is queued, not dropped:** a signal sent to a process that already
 has one pending is *not* discarded — signals queue and deliver in send

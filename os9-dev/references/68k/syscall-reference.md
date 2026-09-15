@@ -129,6 +129,25 @@ Ev$Link — the waiter has to Ev$Creat first, which is a startup race.
 d4.l=date): subfunctions A$Delete=0, A$Set=1 (one-shot), A$Cycle=2
 (periodic), A$AtDate=3 / A$AtJul=4 (absolute Gregorian/Julian). `Live` (os9exec).
 
+**How `d3` is encoded, which decides whether your alarm fires at all**
+(`Manual`, v2.4 TRM, F$Alarm and both A$Set/A$Cycle): the interval is a count of
+**system clock ticks** — *unless* **bit 31 is set**, in which case the low 31
+bits are **256ths of a second**. All times round up to the nearest tick. The
+absolute subfunctions read `d3` differently again: **A$AtDate** takes `00hhmmss`
+and **A$AtJul** takes seconds after midnight.
+
+That high bit is easy to lose and expensive to lose: a C `alarm()` built on
+`secs<<8 | $80000000` is asking for 256ths, and a runtime that ignores bit 31
+reads the same word as an enormous tick count, so the alarm silently never fires
+rather than firing early or late. `Live` (os9exec): that is exactly what
+os9exec did as of `d74b174`, and it is reported there.
+
+**The same high-bit convention appears elsewhere**, so recognise it rather than
+learning it per-call: a record-lock timeout uses it too — zero sleeps forever,
+one returns an error if the record is not free immediately, and with bit 31 set
+the low bits convert from 256ths into ticks, "so that programmed delays are
+independent of the system clock rate" (`Manual`, same TRM).
+
 Time-of-day alarms fire at the *corrected* time after a clock adjustment. A
 system-state variant runs a kernel subroutine instead of signaling; pending
 alarms die with their process, so a persistent one must be requested as the

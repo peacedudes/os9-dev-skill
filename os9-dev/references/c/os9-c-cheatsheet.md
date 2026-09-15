@@ -278,10 +278,12 @@ limit.** `Live` (os9exec), two rigs and two line constructions agreeing:
 | line alone, no `#include` | 508-511 | builds |
 | line alone, no `#include` | 512 | `cpp` aborts, no diagnostic |
 | line alone, no `#include` | 513-600 | `**** source line too long ****` |
+| **same line after `#include <stdio.h>`** | **520** | **`cpp` aborts, no diagnostic** |
 | **same line after `#include <stdio.h>`** | **600** | **`cpp` aborts, no diagnostic** |
 
-The last row is the point: **identical line, identical construction — only a
-preceding `#include` differs, and a length that was diagnosed becomes a crash.**
+The last two rows are the point: **identical line, identical construction — only
+a preceding `#include` differs, and a length that was diagnosed becomes a
+crash.** The pair was run at 520 and again at 600, both times flipping.
 Reported independently, a statement inside `main()` after `<stdio.h>` failed at
 **505** where the same statement without the include passed at 511.
 

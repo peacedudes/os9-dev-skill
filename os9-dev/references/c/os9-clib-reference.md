@@ -157,6 +157,60 @@ intact (`COUNT=3`, no line-editing) — i.e. `getc` uses raw `read()` for a disk
 file. The terminal side (line-edited `readln()`) isn't scriptable here, but the
 type-based selection is demonstrated by the raw disk read.
 
+## `putchar`/`putc` evaluate the character twice when the stream is line-buffered
+
+**Never give `putchar` or `putc` an argument with a side effect.** `putchar(*p++)`
+is a bug here, and it is a bug that hides from the obvious test.
+
+`Source` (SDK `<stdio.h>`):
+
+```c
+#define putc(c, p)	\
+	(((p)->_ptr >= (p)->_end || (((p)->_flag & _IOLBF) && (c) == '\n')) \
+	? _flshbuf((p), (c)) : ((p)->_flag |= _WRITTEN, *(p)->_ptr++ = (c)))
+#	define putchar(c)	putc(c, stdout)
+```
+
+`(c)` appears in the guard and again in whichever branch runs. When `_IOLBF`
+(`0x0800`) is clear the guard short-circuits before reaching `(c)`, so it is
+evaluated once. **When `_IOLBF` is set it is evaluated twice** — once to ask
+whether it is a newline, once to store it. The usual licence for `putc` to
+evaluate its argument repeatedly covers the *stream*, not the character, so this
+is a real defect rather than a hazard you were warned about.
+
+The stream argument is multiply evaluated too, unconditionally — `putc(c,
+*fpp++)` is broken on any stream, and `getc(p)` evaluates `(p)` several times
+for the same reason.
+
+**Which streams are line-buffered is the whole problem.** `Live` (os9exec), one
+binary writing `ABCDEFGH` with `while (*p) putchar(*p++);`:
+
+| stdout is | output |
+|---|---|
+| a terminal | `ACEG` + a NUL |
+| a pipe | `ACEG` + a NUL — and it stays wrong downstream |
+| a file | `ABCDEFGH`, byte-exact |
+
+Every second byte is eaten by the newline test, and the string's own terminating
+NUL is written as data at the end. The first byte survives because the buffer is
+not yet set up, so that call takes the flush branch and evaluates `(c)` once.
+
+**So `prog >file` is clean and `prog | anything >file` is corrupt.** A test that
+captures output by redirecting to a file cannot find this class of bug, and a
+byte-identical file comparison will pronounce the program correct. Test through a
+pipe.
+
+The fix is one line at the top of the file:
+
+```c
+#undef putchar
+#define putchar(c) fputc((c), stdout)
+```
+
+`fputc` is a function, so its argument is evaluated once. Do the same for `putc`
+where a stream may be line-buffered. Afterwards file output is unchanged and pipe
+output becomes correct.
+
 ## Restore the option fields you changed, never a whole saved struct
 
 `Live` (os9exec). `_gs_opt`/`_ss_opt` read and write the path's whole option

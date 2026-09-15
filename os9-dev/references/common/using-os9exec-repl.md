@@ -221,6 +221,15 @@ A usage line proves argument parsing ran and says nothing about whether the
 program's I/O works; for the case where that distinction bites hardest, and the
 sounder test, see the `cio` link-mode pitfall in `c/os9-c-cheatsheet.md`.
 
+**When you do test output, send it through a pipe rather than straight to a
+file.** Whether a program's stdout is a terminal, a pipe or a file changes how
+this C library buffers it, and one whole class of defect — `putchar`/`putc`
+given an argument with a side effect — damages pipe and terminal output while
+leaving file output byte-exact (`c/os9-clib-reference.md`). A harness that
+captures by redirecting to a file, then compares checksums, will pass those
+programs every time and report the collection clean. The redirect is the thing
+hiding the bug, not the program.
+
 ## An internal command can BE the boot program — no shell needed
 
 `Live` (os9exec). os9exec's own built-ins run as the boot program, so a disk

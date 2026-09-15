@@ -384,7 +384,9 @@ Three routes, in order of preference by size:
    rule and nothing else — no cursor-addressed walls or pieces. `TERM=vt100`
    and both render fully. Programs that carry their own compiled termcap, or
    that simply assume a vt100, do not all accept a modern name. Set it before
-   blaming the program or the emulator. Basic loop: `i`,
+   blaming the program or the emulator. If a correct `vt100` still draws
+   `Unknown terminal type`, the program may carry the termcap reader whose
+   file route does not work at all — see the section on that below. Basic loop: `i`,
    type, ESC, `:wq`.
 3. **Host-side editing + `flip`** — host-native directories only (a file
    inside an RBF image has no host file to touch). `flip -m` → CR-only
@@ -551,6 +553,51 @@ evidence the system is at fault until a period binary fails the same way.** Most
 of the C-toolchain traps in these references — link mode, line endings, buffering
 — produce programs that are broken by how they were built, on a disk where
 everything around them works.
+
+## When `vt100` is right and the program still says "Unknown terminal type"
+
+A family of ported programs carries its own termcap reader, and **its file route
+has never been made to work here** — so a correct `TERM` and a correct
+`SYS/termcap` are not enough, and the `TERM=vt100` advice above does not rescue
+it. You can identify the family from the binary:
+
+```sh
+strings -a <program> | grep -E '/dd/sys/termcap|%s/sys/termcap'
+```
+
+Both strings together mean this reader. With `TERMCAP` unset it tries
+`/dd/sys/termcap` then `$HOME/sys/termcap`; set to a path, it opens that. `Live`
+(os9exec): all of those routes answered `'vt100': Unknown terminal type` for one
+such program across nine file variants — CR, LF, CRLF, LF+CR and no terminator,
+long entries and short, default path and explicit. The entry is never matched.
+
+**The route that works is putting the capability string itself in `TERMCAP`**,
+not a path to a file:
+
+```sh
+TERMCAP='vt100|dec vt100:bs:co#80:li#24:cl=\E[H\E[J:...'
+```
+
+The reader decides which you meant by testing the first character: a leading `/`
+means filename, anything else means the entry itself. `Live` (os9exec): several
+programs in this family run correctly this way and only this way.
+
+Two hazards on that route, both measured `Live` (os9exec) in one build:
+
+- **The copy that reads the string stops only on a carriage return** — no length
+  limit and no NUL check. An environment variable is NUL-terminated, so that
+  build runs away through memory until it dies. A program that aborts *after*
+  you supply a working `TERMCAP` string may be failing this way rather than
+  failing at anything you did.
+- **The destination is a 128-byte buffer** while the line buffer is 256, so an
+  entry over about 127 bytes overruns it even when it is terminated correctly.
+  Keep entries short.
+
+Where the file route is concerned, two requirements are visible in the reader
+and are worth knowing before concluding your file is fine: a line beginning `#`
+is skipped as a comment, and **a line is skipped unless its third byte is `|`** —
+the archaic two-character alias form, `d0|vt100|...`. Meeting both was still not
+sufficient in the case measured, so treat them as necessary, not enough.
 
 ## Discovering what's installed
 

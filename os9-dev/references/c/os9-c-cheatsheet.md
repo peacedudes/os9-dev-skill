@@ -186,6 +186,46 @@ in this file:
   inside functions supported. See the reference section below for both
   mechanisms' details.
 
+## Big data: the 64K wall, and `remote`
+
+Two walls stop a port with large buffers, and they are the same wall twice:
+
+- **Static data over 64K** — `l68` refuses with
+  `non-remote data allocation exceeds 64k`.
+- **A stack local past a 16-bit displacement** — the assembler refuses with
+  `*** error - value out of range ***`.
+
+The cause is the addressing mode, and it is already documented in
+`68k/os9-68k-assembly.md`: globals are reached A6-relative, with A6 biased by
+`+0x8000` so that a **16-bit signed** offset spans a full 64K and no more. Stack
+locals are reached the same way from the frame pointer. Anything that will not fit
+in that window cannot be addressed by the ordinary mode.
+
+**`remote` is the escape, and Microware's `c68` supports it** — `Live` (os9exec),
+measured with `cc … -qm=16k`:
+
+- **File scope.** `remote char big[300000];` compiles, links and runs: writing
+  `big[0]` and `big[299999]` and printing both works.
+- **Function-local static.** `static remote char buf[200000];` inside a
+  non-recursive function, called twice, returns the right values across both
+  calls.
+
+This is what a Unix port with real buffers needs — agrep 2.01 carries over a
+megabyte of file-scope arrays and 98K of locals, and hits both walls without it.
+
+**Two things not established**, so do not assume either way:
+
+- whether an `extern` declaration of a remote array must itself say `remote`;
+- whether **initialized** remote data is accepted in a program module. There is a
+  lead rather than an answer: Microware's Enhanced OS-9 release notes record that
+  `l68` "will now correctly report when remote initialized data exists as well as
+  non-remote initialized data, **when it is not allowed for certain module
+  types**", fixed in `l68` edition 151. That says such a restriction exists and
+  that older linkers mis-reported it — it does not say which module types, and
+  those notes document a **v3.2-era** system that this reference otherwise keeps
+  out of scope, so treat it as a pointer for testing rather than as the rule
+  here. `Flag`.
+
 ## Reference: Calling Conventions (68k)
 
 Register usage when C calls (or is called from) assembly:

@@ -43,6 +43,7 @@ has bitten a real session.
 | Module runs but its data area is wrong / corrupt scratch | `mod` data size written with `*` (program counter) instead of `.` | `6809/assembly-and-tools.md` |
 | `mdir` shows a different name than the file you linked | the module name comes from `l68 -o=`, not the source | `68k/os9-68k-assembly.md` |
 | Link fails on `I$`/`F$` symbol names | call names aren't defined anywhere — declare them yourself | `68k/os9-68k-assembly.md` |
+| `non-remote data allocation exceeds 64k`, or `value out of range` on a big local | A6-relative addressing spans one 64K window — declare the array `remote` | `c/os9-c-cheatsheet.md` |
 | Program opens a file, reads nothing, and reports on it anyway | the SDK `cio` library's trap-13 selectors hit the `cio` module's memory routine — rebuild trap-free (`-qm`) | `c/os9-c-cheatsheet.md` |
 | Unsure whether a fault is yours or the system's | run a period-built program that does the same thing on the same disk — it differs from yours only in who compiled it | `common/using-os9exec-repl.md` |
 | Program needs Enter after every key though it called `cbreak()` | `cbreak()` sets a curses flag only; stdio `getchar()` ignores it — read with `getch()` | `c/os9-clib-reference.md` |

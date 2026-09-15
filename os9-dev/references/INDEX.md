@@ -59,7 +59,7 @@ has bitten a real session.
 | `**** macro arguments required ****` naming a library function you never called directly | an object-like macro expanding to a function-like macro name — give the wrapper parameters | `c/os9-c-cheatsheet.md` |
 | `**** incorrect include file syntax ****` on a line that looks fine | `#include<file.h>` needs a space before the `<` | `c/os9-c-cheatsheet.md` |
 | Your macro is ignored and the library's is still in force, after one `**** redefined macro ****` warning | this `cpp` keeps the FIRST definition on redefinition — `#undef` before redefining any macro | `c/os9-c-cheatsheet.md` |
-| `'vt100': Unknown terminal type` with a correct TERM and a correct termcap file | a ported termcap reader whose file route never matches — put the entry itself in `TERMCAP` | `common/using-os9exec-repl.md` |
+| `'vt100': Unknown terminal type` from a termcap file that plainly contains vt100 | a reader that skips any entry whose first field is not two characters — use `d0|vt100:...` | `common/using-os9exec-repl.md` |
 | A crash dump names a syscall that cannot be where the fault is | `Last syscall` is latched at the last call made, not the fault site; convert `PC` to a module offset via the `Executing:` bytes | `common/using-os9exec-repl.md` |
 | `E_FNA` (214) opening a file that is present and readable | a leading space in the pathname — `F$PrsNam` does not skip one, and the failure surfaces at the open as a permission error | `68k/syscall-reference.md` |
 | Full-screen program refuses to start (`Unknown terminal type`) or draws only part of its screen | a modern `TERM` it does not know — try `TERM=vt100` before suspecting the program | `common/using-os9exec-repl.md` |

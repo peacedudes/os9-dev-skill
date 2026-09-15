@@ -61,6 +61,20 @@ or SDK. A host directory of your own files works identically for basic testing.
     making a reflex before debugging anything else. Build pipelines make this
     easy to forget twice: knowing the rule does not help if the build step is a
     separate command you did not run.
+  - **A device you did not configure is not absent — it falls back**, and the
+    fallback can be a different tree from the one you are editing. Setting only
+    `OS9H0` leaves `/dd` pointing at whatever the start path supplies, so a file
+    you changed under your own image is read from somewhere else entirely by any
+    program that opens `/dd/...` — and most do, since `/dd` is the default data
+    directory. Nothing warns you: the read succeeds, against the wrong file.
+    `Live` (os9exec): a program reported `Unknown terminal type` against a
+    termcap that had been corrected, because the correction was made under
+    `OS9H0` while the program read `/dd/sys/termcap` from the original tree.
+    **Set every device you intend to be the same image** (`OS9DISK=<img>
+    OS9H0=<img>`), and when a program's behaviour disagrees with a file you just
+    edited, confirm *which* file it read before concluding anything about the
+    program. The crash dump's `Current` and `Execution` directory lines name
+    real host paths and will tell you outright.
 - Launch: `OS9DISK=/abs/path/disk ./os9exec /dd/CMDS/shell`
 - macOS first run: `xattr -d com.apple.quarantine os9exec`
 - **Never write `OS9DISK=./disk`.** A leading `./` silently breaks every
@@ -394,8 +408,9 @@ Three routes, in order of preference by size:
    and both render fully. Programs that carry their own compiled termcap, or
    that simply assume a vt100, do not all accept a modern name. Set it before
    blaming the program or the emulator. If a correct `vt100` still draws
-   `Unknown terminal type`, the program may carry the termcap reader whose
-   file route does not work at all — see the section on that below. Basic loop: `i`,
+   `Unknown terminal type` against a termcap that plainly contains it, the
+   program may carry the reader that skips any entry lacking a two-character
+   first field — see the section on that below. Basic loop: `i`,
    type, ESC, `:wq`.
 3. **Host-side editing + `flip`** — host-native directories only (a file
    inside an RBF image has no host file to touch). `flip -m` → CR-only
@@ -577,59 +592,59 @@ before you spend an evening on the wrong question.
 
 ## When `vt100` is right and the program still says "Unknown terminal type"
 
-A family of ported programs carries its own termcap reader, and **its file route
-has never been made to work here** — so a correct `TERM` and a correct
-`SYS/termcap` are not enough, and the `TERM=vt100` advice above does not rescue
-it. You can identify the family from the binary:
+A family of ported programs carries its own termcap reader, and **it will not
+look at a modern termcap entry** — so a correct `TERM` and a termcap file that
+plainly contains `vt100` are not enough, and the `TERM=vt100` advice above does
+not rescue it. Identify the family from the binary:
 
 ```sh
 strings -a <program> | grep -E '/dd/sys/termcap|%s/sys/termcap'
 ```
 
 Both strings together mean this reader. With `TERMCAP` unset it tries
-`/dd/sys/termcap` then `$HOME/sys/termcap`; set to a path, it opens that.
+`/dd/sys/termcap` then `$HOME/sys/termcap`; set to a path it opens that; set to
+anything not starting with `/` it treats the value itself as the entry.
 
-`Live` (os9exec), the comparison that isolates it: one 68-byte entry, correctly
-formed and CR-terminated, was given to the same program by both routes. Passed
-in `TERMCAP` as the string, the program started and drew its screen. Placed in a
-file — as the default `/dd/sys/termcap` and again as an explicit `TERMCAP` path
-— the same text produced `'vt100': Unknown terminal type`. The only variable is
-the route. A second program was tried across nine file variants (CR, LF, CRLF,
-LF+CR and no terminator, long entries and short, default and explicit path) and
-never matched either.
+**The cause is the entry's first field.** The reader skips a line unless its
+**third byte is `|`** — the archaic two-character alias form, `d0|vt100:...` —
+and it skips lines beginning `#` as comments. A modern entry whose first field
+is longer than two characters is skipped outright:
 
-**The route that works is putting the capability string itself in `TERMCAP`**,
-not a path to a file:
+```
+xterm-256color|xterm|vt100|xterm with 256 colors:     skipped: byte 2 is 'e'
+d0|vt100:bs:co#80:li#24:cl=\E[H\E[J:...              matched
+```
+
+`vt100` present only as a later alias is never reached, because the line
+carrying it is discarded before any alias is examined.
+
+**The fix is to give the entry a two-character alias.** `Live` (os9exec): with
+`TERMCAP` pointing at a file holding `d0|vt100:...`, two programs of this family
+that had answered `'vt100': Unknown terminal type` against a stock termcap both
+got past `tgetent` — one drew its screen correctly, the other proceeded into
+terminal setup and failed there for an unrelated reason. Same file, same
+programs, only the first field changed.
+
+**The alternative is to put the entry in `TERMCAP` directly**, which needs no
+termcap file at all and is the better answer when you do not own the file:
 
 ```sh
 TERMCAP='vt100|dec vt100:bs:co#80:li#24:cl=\E[H\E[J:...'
 ```
 
-The reader decides which you meant by testing the first character: a leading `/`
-means filename, anything else means the entry itself. `Live` (os9exec): several
-programs in this family run correctly this way and only this way.
+The value is used as the entry, so the two-character alias is not required on
+this route — the first field is only read when scanning lines of a file.
 
-Two hazards on that route, both measured `Live` (os9exec) in one build:
+Two hazards, both measured `Live` (os9exec) in one build, and both on the string
+route rather than the file route:
 
-- **The copy that reads the string stops only on a carriage return** — no length
+- **The copy that reads the value stops only on a carriage return** — no length
   limit and no NUL check. An environment variable is NUL-terminated, so that
   build runs away through memory until it dies. A program that aborts *after*
-  you supply a working `TERMCAP` string may be failing this way rather than
-  failing at anything you did.
+  you supply a working `TERMCAP` string may be failing this way; give that one a
+  file instead, where the line's terminator stops the copy.
 - **The destination is a 128-byte buffer** while the line buffer is 256, so an
-  entry over about 127 bytes overruns it even when it is terminated correctly.
-  Keep entries short.
-
-Two requirements are visible in the reader, and they explain why a stock
-termcap cannot match even before the route is considered: a line beginning `#`
-is skipped as a comment, and **a line is skipped unless its third byte is `|`** —
-the archaic two-character alias form, `d0|vt100|...`. A modern entry whose first
-field is longer than two characters (`xterm-256color|xterm|vt100|...`) fails that
-test, so `vt100` present only as a later alias is never reached.
-
-That is a real constraint, but it is **not** the explanation for the file route
-failing: the comparison above supplied the two-character form and the file route
-still did not match. Treat these as necessary and not sufficient.
+  entry over about 127 bytes overruns it. Keep entries short on either route.
 
 ## Discovering what's installed
 

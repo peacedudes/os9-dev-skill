@@ -186,7 +186,14 @@ in this file:
   inside functions supported. See the reference section below for both
   mechanisms' details.
 
-## `#include<file.h>` needs the space
+## Microware `cpp` is pre-ANSI: three measured divergences
+
+Each of these is legal C that this preprocessor rejects or quietly mishandles,
+and each was measured `Live` (os9exec) with `cc -qm=16k` against the SDK. They
+surface immediately on Unix code and nowhere on your development host, so when a
+port fails in the preprocessor, check all three before suspecting the code.
+
+### `#include<file.h>` needs the space
 
 `Live` (os9exec), `cc -qm=16k` against the SDK. `#include<stdio.h>` is rejected
 outright:
@@ -205,7 +212,7 @@ It costs nothing to comply and it is the **first** error you hit on code written
 the other way, so it masks everything after it — fix all of them before reading
 any other diagnostic from the file.
 
-## `#undef` before redefining a macro: this `cpp` keeps the first definition
+### `#undef` before redefining a macro: it keeps the first definition
 
 `Live` (os9exec), measured with two probes, `cc -qm=16k` against the SDK:
 
@@ -231,6 +238,31 @@ getchar() md_getchar()` in a header included after `<stdio.h>`. The one warning
 scrolled past, the build linked, and in play no key did what it should — every
 keystroke behaved as though stdio's `getchar` was still in force, because it was.
 Adding `#undef getchar` on the line above fixed input entirely.
+
+### An object-like macro is not rescanned with the `(` that follows it
+
+`#define P putchar` and then `P(65)` fails:
+
+```
+pobj.c : line 5 **** macro arguments required ****
+putchar
+         ^
+```
+
+The echoed line shows why: `P` expanded to `putchar`, and the `(65)` sitting
+right after it in the source was never joined to it, so the function-like
+`putchar` macro from `<stdio.h>` was left without arguments. A conforming
+preprocessor rescans the replacement together with the rest of the source and
+finds that `(`.
+
+**The fix is to make the macro function-like**: `#define P(x) putchar(x)`
+compiles and prints as expected. The general rule — **an object-like macro whose
+expansion names a function-like macro will not pick up arguments from the call
+site** — so give the wrapper the parameters instead of relying on the rescan.
+
+This one is worth knowing by name because the error names `putchar`, which is
+correct and unhelpful: the macro at fault is `P`, and `P` appears nowhere in the
+diagnostic.
 
 ## Big data: the 64K wall, and `remote`
 

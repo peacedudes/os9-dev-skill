@@ -321,6 +321,34 @@ the guest's own login/startup is what normally sets it. The tell is that
 message; a run that shows it has measured nothing about curses behaviour,
 because `initscr()` never succeeded. `setenv TERM vt100` in the guest first.
 
+## `termlib`: the pad character is `PC_`, and the error you get hides the real bug
+
+`Source` (SDK `DEFS/termcap.h`):
+
+```c
+extern char PC_, *BC, *UP, *tgetstr(), *tgoto();
+extern short ospeed;
+```
+
+Two things follow, and the dangerous one is silent.
+
+**The pad character is named `PC_`, not `PC`.** Period termcap code declaring
+`PC` fails to link. That is the *safe* failure: the linker names it, you rename
+it, it works.
+
+**`BC` and `UP` are `char *`.** Code of the era commonly declares them as small
+arrays — `extern char BC[2], UP[2], PC;` — and against this library the array
+declarations **link cleanly**, because the symbols exist and a linker cannot see
+the type disagreement. Writing `BC[0]`/`BC[1]` then overwrites termlib's pointer
+rather than filling a buffer, and what breaks is whatever uses that pointer
+later.
+
+So the trap is the shape of the diagnostic: **the one symbol that fails to link
+is the one that is harmless to fix, and fixing only it leaves two silent memory
+corruptions in place.** If `PC` is unresolved in a port, treat it as a signal to
+check the declarations of `BC` and `UP` in the same file and make them `char *`,
+not as a one-line rename.
+
 ## String Functions (`strings.h`, not `string.h`)
 
 | Function | Notes |

@@ -186,7 +186,7 @@ in this file:
   inside functions supported. See the reference section below for both
   mechanisms' details.
 
-## Microware `cpp` is pre-ANSI: three measured divergences
+## Microware `cpp` is pre-ANSI: four measured divergences
 
 Each of these is legal C that this preprocessor rejects or quietly mishandles,
 and each was measured `Live` (os9exec) with `cc -qm=16k` against the SDK. They
@@ -263,6 +263,24 @@ site** — so give the wrapper the parameters instead of relying on the rescan.
 This one is worth knowing by name because the error names `putchar`, which is
 correct and unhelpful: the macro at fault is `P`, and `P` appears nowhere in the
 diagnostic.
+
+### A long logical line kills `cpp` even inside a skipped `#if`
+
+`cpp` joins backslash-continued lines *before* applying its line-length limit,
+and it does that **inside a conditional group it is discarding**. So the obvious
+workaround — move the offending line into `#if 0` and put a short version in
+`#else` — does not work.
+
+`Live` (os9exec), one variable changed: a 735-character logical line built from
+twelve backslash-continued physical lines, wrapped in `#if 0` with a short
+`#else` definition, **aborts `cpp`** (`Process Aborted`, no diagnostic). The same
+file with that line *deleted* rather than skipped compiles and runs. The line is
+never compiled in either case; only its presence in the file matters.
+
+Note the failure mode: not `**** source line too long ****` but the preprocessor
+dying, so the message you get points at nothing. **A long line has to be absent
+from the file, not merely disabled** — shorten it, split it into separate
+statements, or move it to a file you do not include.
 
 ## Big data: the 64K wall, and `remote`
 

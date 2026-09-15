@@ -57,6 +57,8 @@ has bitten a real session.
 | A shipped binary misbehaves in ways the source beside it cannot explain | they may be different editions — compare the binary's usage text against the source before debugging further | `common/using-os9exec-repl.md` |
 | Output is right in a file and wrong on screen or through a pipe | `putchar`/`putc` evaluate their argument twice when the stream is line-buffered — `putchar(*p++)` | `c/os9-clib-reference.md` |
 | `**** macro arguments required ****` naming a library function you never called directly | an object-like macro expanding to a function-like macro name — give the wrapper parameters | `c/os9-c-cheatsheet.md` |
+| `cpp` dies with no diagnostic, and the offending line is inside `#if 0` | the line-length limit is applied after joining continuations, even in a skipped branch — delete the line, don't disable it | `c/os9-c-cheatsheet.md` |
+| `PC` unresolved at link in a termcap port | it is `PC_` here — and check `BC`/`UP`, which link silently as the wrong type | `c/os9-clib-reference.md` |
 | `**** incorrect include file syntax ****` on a line that looks fine | `#include<file.h>` needs a space before the `<` | `c/os9-c-cheatsheet.md` |
 | Your macro is ignored and the library's is still in force, after one `**** redefined macro ****` warning | this `cpp` keeps the FIRST definition on redefinition — `#undef` before redefining any macro | `c/os9-c-cheatsheet.md` |
 | `'vt100': Unknown terminal type` from a termcap file that plainly contains vt100 | a reader that skips any entry whose first field is not two characters — use `d0|vt100:...` | `common/using-os9exec-repl.md` |

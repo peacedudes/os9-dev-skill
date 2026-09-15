@@ -186,32 +186,32 @@ in this file:
   inside functions supported. See the reference section below for both
   mechanisms' details.
 
-## Zero-argument function-like macros: two reports, same shape
+## `#undef` before redefining a macro: this `cpp` keeps the first definition
 
-`Live` (os9exec), twice, in unrelated ports — and **neither was isolated**, so
-this is a thing to suspect rather than a rule to rely on:
+`Live` (os9exec), measured with two probes, `cc -qm=16k` against the SDK:
 
-- **flex 2.3's skeleton** defines `#define yywrap() 1` and calls `yywrap()`
-  twice. Built with the SDK's `cc`, `l68` reported `Symbol 'yywrap' unresolved`,
-  referenced twice — so the calls were not expanded.
-- **A rogue 5.3 port** put `#define getchar() md_getchar()` in a header included
-  *after* `<stdio.h>`. `cpp` emitted `**** redefined macro ****` once per file
-  and the build linked, but in play no key did what it should — every keystroke
-  behaved as though stdio's `getchar` was still in force. Adding **`#undef
-  getchar` on the line above the define** silenced the warning and fixed input
-  entirely.
+- `#define answer() 42` with **no earlier definition**, then `printf("%d",
+  answer())` prints `42`. Zero-argument function-like macros expand normally.
+- `#include <stdio.h>`, then `#define getchar() 7` with **no `#undef`**, then
+  `printf("%d", getchar())` with stdin on `/nil`. `cpp` warns `**** redefined
+  macro ****` and the program prints `-1` — stdio's `getchar` reading EOF. **The
+  new definition was ignored and the first one stayed in force.**
 
-The common factor is a **zero-argument function-like macro** apparently not
-expanding. The second case has a redefinition confound the first does not, and
-nobody has established whether this `cpp` keeps the first definition on
-redefinition or whether something else differs. So:
+So the diagnostic is real and the redefinition is not. **`#undef` before
+redefining any macro, library or not.** It is one line and it is the difference
+between your definition being used and silently discarded.
 
-- **`#undef` before redefining any library macro.** It is one line, it removes
-  the warning, and in the measured case it removed the bug.
-- If a zero-argument macro looks unexpanded — an unresolved symbol at link, or
-  the old behaviour persisting — suspect this before suspecting your logic.
+This is a legitimate reading of the standard rather than a defect — redefining a
+macro with a different body requires a diagnostic, and what happens next is not
+guaranteed — so do not expect a host compiler to reproduce it. A host `cpp` that
+takes the *second* definition will hide the bug on your development machine and
+surface it only on OS-9.
 
-`Flag`, pending someone isolating it with a minimal case.
+**What it looks like when it bites: nothing.** A rogue 5.3 port put `#define
+getchar() md_getchar()` in a header included after `<stdio.h>`. The one warning
+scrolled past, the build linked, and in play no key did what it should — every
+keystroke behaved as though stdio's `getchar` was still in force, because it was.
+Adding `#undef getchar` on the line above fixed input entirely.
 
 ## Big data: the 64K wall, and `remote`
 

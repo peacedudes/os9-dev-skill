@@ -200,6 +200,13 @@ captures output by redirecting to a file cannot find this class of bug, and a
 byte-identical file comparison will pronounce the program correct. Test through a
 pipe.
 
+Grepping source for `putc`/`putchar` with a `++` or `--` argument is a useful
+screen but **not a verdict** — binaries carrying the pattern in their source have
+been measured clean. A shipped binary need not have been built from the source
+beside it, or against this library vintage. Use the grep to choose what to test,
+then settle it on the binary by comparing its output to a file against its output
+through a pipe.
+
 The fix is one line at the top of the file:
 
 ```c

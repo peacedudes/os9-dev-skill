@@ -563,6 +563,18 @@ of the C-toolchain traps in these references — link mode, line endings, buffer
 — produce programs that are broken by how they were built, on a disk where
 everything around them works.
 
+**Check that the binary and the source beside it are the same program.** Both
+uses above assume they are, and an archive is not obliged to honour that: a
+directory can hold one edition's source and a different edition's binary, in
+which case reading the source tells you nothing about the binary, and the binary
+is not a control for anything you build from that source. `Live` (os9exec): a
+shipped `ispell` faulted at its first dictionary lookup while a build from the
+source next to it worked — different editions, and neither the emulator nor the
+data was at fault. **The cheapest tell is the usage text**: run the binary with
+no arguments and compare its usage line, option letters and version string
+against the source. A mismatch settles it in seconds and costs nothing to check
+before you spend an evening on the wrong question.
+
 ## When `vt100` is right and the program still says "Unknown terminal type"
 
 A family of ported programs carries its own termcap reader, and **its file route

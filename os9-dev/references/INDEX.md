@@ -56,7 +56,7 @@ has bitten a real session.
 | A ported program's `alarm()`/`signal()` handler never runs | a Unix-compat `signal()` that only records the code — the handler waits for a `check_signal()` poll | `c/os9-clib-reference.md` |
 | One terminal setting is wrong while the others are right, after code that saves and restores options | a whole-struct `_gs_opt`/`_ss_opt` replay overwriting another routine's change — restore only your own fields | `c/os9-clib-reference.md` |
 | A shipped binary misbehaves in ways the source beside it cannot explain | they may be different editions — compare the binary's usage text against the source before debugging further | `common/using-os9exec-repl.md` |
-| Output is right in a file and wrong on screen or through a pipe | `putchar`/`putc` evaluate their argument twice when the stream is line-buffered — `putchar(*p++)` | `c/os9-clib-reference.md` |
+| Output is right in a file and wrong on screen or through a pipe — dropped characters, or a stray NUL byte | `putchar`/`putc` evaluate their argument twice when the stream is line-buffered — `putchar(*p++)` | `c/os9-clib-reference.md` |
 | `**** macro arguments required ****` naming a library function you never called directly | an object-like macro expanding to a function-like macro name — give the wrapper parameters | `c/os9-c-cheatsheet.md` |
 | `cpp` dies with no diagnostic, and the offending line is inside `#if 0` | the line-length limit is applied after joining continuations, even in a skipped branch — delete the line, don't disable it | `c/os9-c-cheatsheet.md` |
 | `PC` unresolved at link in a termcap port | it is `PC_` here — and check `BC`/`UP`, which link silently as the wrong type | `c/os9-clib-reference.md` |

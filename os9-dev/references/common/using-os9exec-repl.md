@@ -442,7 +442,12 @@ is obvious. `Live` (os9exec), all three met in one evening:
    directive swallows the rest of it, so no `main` is ever compiled. That form
    is the more misleading of the two: it points at your entry point, not at
    your line endings. A long enough one-line file has also been seen to hang
-   `cpp` outright rather than diagnose anything. `Live` (os9exec).
+   `cpp` outright rather than diagnose anything. `Live` (os9exec). **A silent
+   `cpp` death is not diagnostic of line endings on its own** — an over-long
+   *logical* line kills it the same way, including one you believed you had
+   disabled inside `#if 0` (`c/os9-c-cheatsheet.md`). Both are the same
+   underlying limit reached from opposite directions; check line endings first
+   because it is cheaper, then the line.
 2. **Data read at run time — silent.** The program builds, starts, and reads
    records that are not delimited the way it expects. A word list, a
    dictionary, a grammar, a score file. Nothing reports anything.
@@ -604,6 +609,12 @@ strings -a <program> | grep -E '/dd/sys/termcap|%s/sys/termcap'
 Both strings together mean this reader. With `TERMCAP` unset it tries
 `/dd/sys/termcap` then `$HOME/sys/termcap`; set to a path it opens that; set to
 anything not starting with `/` it treats the value itself as the entry.
+
+**First rule out the file you think it is reading.** A device you did not
+configure falls back to another tree, so a termcap you corrected under `OS9H0`
+is not what a program opening `/dd/sys/termcap` sees — that trap is described
+under "Launching and disks" above, and it produces this identical message. Once
+the program is provably reading your file, read on.
 
 **The cause is the entry's first field.** The reader skips a line unless its
 **third byte is `|`** — the archaic two-character alias form, `d0|vt100:...` —

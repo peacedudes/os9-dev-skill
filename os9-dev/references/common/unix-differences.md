@@ -134,6 +134,13 @@ open paths.
 - A handler runs immediately and can't be interrupted by another signal
   (kernel masks during it) — keep it short/reentrant, no syscalls or
   sleeping. Do real work in the mainline under a mask, not in the handler.
+  - **This is the kernel's `F$Icpt` contract, and a ported program may not be
+    using it.** A Unix-compatibility `signal()` can install an intercept that
+    only *records* the code, leaving your handler to run at the next poll —
+    so "handlers run immediately" is true of OS-9 and can be false of the
+    library in front of it. Establish which `signal()` was linked before
+    concluding the kernel or the emulator is at fault; see
+    `c/os9-clib-reference.md`.
 - Masking nests with ±1 (`F$SigMask`); clearing to 0 wipes all nesting, not
   just yours. `F$Sleep` auto-unmasks — this is what makes
   mask→request→sleep→service safe.

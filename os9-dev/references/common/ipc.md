@@ -44,6 +44,14 @@ regardless of handler state.
 sleeping or waiting moves to the active queue and runs the intercept — but
 **whether the original wait then resumes depends on what it was waiting for.**
 
+This describes `F$Icpt`, the kernel's own mechanism. **A C program's `signal()`
+need not be a thin wrapper over it** — a Unix-compatibility library's version
+may only record the signal and defer your handler to a `check_signal()` poll,
+in which case the read is still interrupted here exactly as described while the
+handler does not run. The layers disagree without either being wrong; see
+`c/os9-clib-reference.md` before treating a handler that never fires as a
+kernel or emulator fault.
+
 For `F$Sleep`/`F$Wait` the wait resumes via a queued call. **For blocked I/O it
 does not**: `Manual` (v2.4 TRM, ch. 4, "Relative Time Alarms") documents aborting
 a read on a deadline as a supported technique — *"Relative time alarms are

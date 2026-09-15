@@ -49,7 +49,7 @@ on TRAP #1–#15 via F$TLink.
 | **F$SPrior** | Set priority | d0.w=PID, d1.w=priority (0=min, 65535=max) | — | Same-user rule; superuser (group 0) can set any. Shell: `setpr`. `Live` (os9exec) |
 | **F$ID** | Get process identity | — | d0.w=PID, d1.l=group.user (packed, group in high word), d2.w=priority | The call exists on both targets, but **the identity format does not carry across**: 6809's `F$ID` returns a *flat* user ID with no group field at all, so a group/user split applied there is wrong — see the cross-target trap in `6809/syscalls-and-module-format.md`. `Live` (os9exec) |
 | **F$SUser** | Set process identity | d1.l=(group:16)(user:16), full 16-bit fields each | — | Same wire format as `F$ID`'s `d1.l` output, so save/restore round-trips. Permitted in exactly **three** cases, `E$Permit` otherwise: (1) caller is 0.0; (2) caller's primary module is *owned by* 0.0; (3) the new ID equals the caller's own primary module's owner. Owner = `M$Owner`, header offset $008, group word then user word — same packing as d1.l, so it compares directly. Case 3 is OS-9's setuid: a module owned by X lets whoever runs it become X. Case 2 is why `login` works at all — `ident` shows `login` owned by 0.0 while `shell`/`list`/`attr` are 1.0. **Case 1 is literally 0.0, both halves — NOT `is_super()` (group 0 alone).** The TRM draws that line deliberately: `is_super` is what an identity may *do*, F$SUser case 1 is who may *change* identity, so a group-0/user-nonzero account (0.153) is a super user that still cannot freely reassign its ID. `Live` (os9exec, enforced + tested) + `Manual` (v2.4 TRM p.1-62, checked against the manual's own wording) |
-| **F$Sleep** | Suspend process | d0.l=ticks (0=indefinite until signaled, 1=no-op/return immediately, negative=fractional 1/256-sec units, positive=raw tick count) | d0.l=remaining ticks if woken early | `Live` (os9exec). Both Microware manuals document the `d0.l` output (68k: "remaining number of ticks if awakened prematurely"; 6809: `(X)` decremented by ticks slept), so a process woken by a signal can tell how much sleep was left |
+| **F$Sleep** | Suspend process | d0.l=ticks (0=indefinite until signaled, 1=no-op/return immediately, positive=raw tick count, **high bit set = the low 31 bits are 256ths of a second** — the same convention as `F$Alarm`'s `d3`, `Manual`) | d0.l=remaining ticks if woken early | `Live` (os9exec). Both Microware manuals document the `d0.l` output (68k: "remaining number of ticks if awakened prematurely"; 6809: `(X)` decremented by ticks slept), so a process woken by a signal can tell how much sleep was left |
 
 ## Module management
 
@@ -136,11 +136,30 @@ bits are **256ths of a second**. All times round up to the nearest tick. The
 absolute subfunctions read `d3` differently again: **A$AtDate** takes `00hhmmss`
 and **A$AtJul** takes seconds after midnight.
 
-That high bit is easy to lose and expensive to lose: a C `alarm()` built on
-`secs<<8 | $80000000` is asking for 256ths, and a runtime that ignores bit 31
-reads the same word as an enormous tick count, so the alarm silently never fires
-rather than firing early or late. `Live` (os9exec): that is exactly what
-os9exec did as of `d74b174`, and it is reported there.
+That high bit is easy to lose and expensive to lose. A C `alarm()` built on
+`secs<<8 | $80000000` is asking for 256ths — which is what the `unix.l` `alarm()`
+shipping with the freeware collection does, so `alarm(2)` passes `$80000200`. A
+runtime that ignores bit 31 reads the same word as an enormous tick count, and
+the alarm **silently never fires** rather than firing early or late.
+
+**`Live` (os9exec), and true of every build a reader currently has:** bit 31 is
+ignored for `A$Set` and `A$Cycle` and `d3` is stored as raw ticks, so `$80000200`
+comes due roughly 2³¹ ticks away. **The call itself returns carry clear**, so
+nothing reports a problem — `alarm()` appears to work and no `SIGALRM` ever
+arrives. Measured with an assembled `A$Set`/`A$Cycle` of `$80000100` against a
+10-second `F$Sleep`: the sleep ran to its end. Ported programs that arm a
+deadline and wait simply hang; 4.3BSD's `atc` freezes this way.
+
+**Workaround on those builds:** pass the interval in **raw ticks with bit 31
+clear** — 100 ticks per second on os9exec. A fix is in progress there.
+
+**And note the asymmetry, because it is what makes this confusing to diagnose:**
+`F$Sleep` documents the same high-bit convention for its `d0.l`, and os9exec
+**does** decode it there. So sub-second `F$Sleep` timing works while `F$Alarm`
+intervals do not, in the same program, on the same build — which reads as the
+alarm machinery being broken generally rather than one call's argument going
+undecoded. (The `F$Sleep` page states no rounding rule where `F$Alarm`'s NOTE
+requires rounding up; os9exec rounds down there, which is not thereby wrong.)
 
 **The same high-bit convention appears elsewhere**, so recognise it rather than
 learning it per-call: a record-lock timeout uses it too — zero sleeps forever,

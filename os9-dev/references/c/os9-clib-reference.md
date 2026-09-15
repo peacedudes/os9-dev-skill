@@ -268,10 +268,31 @@ freeware collection implements `signal()` **without asynchronous delivery**: it
 installs an intercept that merely *records* the signal code, and your handler
 runs only when the program later calls `check_signal()`.
 
-A Unix program that arms `alarm()` and then blocks, expecting the handler to
-interrupt it, therefore **never gets a tick** — the signal arrives, the code is
-noted, and nothing runs until the program happens to poll. Microware's own
-`intercept()` does run the handler: measured, it ran for a self-sent signal.
+**What is deferred is the handler, not the signal.** The distinction matters,
+because the signal has a visible effect that looks like success. Measured `Live`
+(os9exec) on a real terminal, `signal(5, lose)` then `alarm(3)` then blocking in
+`gets()`:
+
+| time | what happened |
+|---|---|
+| 0.0s | blocked in `gets()` |
+| 3.0s | **`gets()` returned early**, with no key pressed — the alarm interrupted the read |
+| — | the handler had *not* run |
+| 3.1s | handler ran, on the next `check_signal()` |
+
+So a ported program can time out at exactly the right moment and print exactly
+the right message while its handler has never been entered — the timeout it is
+reporting came from the interrupted read, and whatever it prints next is
+ordinary code after `gets()`. **Do not read a correct-looking timeout as evidence
+that asynchronous delivery works.** Conversely, a program that only ever waits,
+with no poll and no read to interrupt, gets nothing.
+
+An interrupted read is also the case that latches stdio's error flag — see the
+section on that below, because the two together turn one timeout into a spinning
+loop.
+
+Microware's own `intercept()` does run the handler: measured, it ran for a
+self-sent signal.
 
 So when a ported program's timers appear dead, establish **which `signal()` it
 linked** before suspecting the kernel or the emulator. The two have the same name

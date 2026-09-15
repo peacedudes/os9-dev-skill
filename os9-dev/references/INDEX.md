@@ -52,6 +52,7 @@ has bitten a real session.
 | An alarm never fires at all, however long you wait | `F$Alarm`'s `d3` is ticks unless **bit 31** is set, which means 256ths — a runtime ignoring that bit reads a huge tick count | `68k/syscall-reference.md` |
 | A blocked `I$Read` returns an error instead of resuming after a signal | specified, not a fault — signals 2-31 are deadly to serial and pipe I/O, and the error returned is the signal number | `common/ipc.md` |
 | A program "hangs" while burning CPU on a `getchar()` loop | a signal killed the read and latched `ferror(stdin)`; every later read returns −1 at once until `clearerr` | `c/os9-clib-reference.md` |
+| A ported program times out correctly, yet its signal handler was never entered | the alarm interrupts the blocked read; the handler waits for `check_signal()` | `c/os9-clib-reference.md` |
 | A ported program's `alarm()`/`signal()` handler never runs | a Unix-compat `signal()` that only records the code — the handler waits for a `check_signal()` poll | `c/os9-clib-reference.md` |
 | One terminal setting is wrong while the others are right, after code that saves and restores options | a whole-struct `_gs_opt`/`_ss_opt` replay overwriting another routine's change — restore only your own fields | `c/os9-clib-reference.md` |
 | A shipped binary misbehaves in ways the source beside it cannot explain | they may be different editions — compare the binary's usage text against the source before debugging further | `common/using-os9exec-repl.md` |

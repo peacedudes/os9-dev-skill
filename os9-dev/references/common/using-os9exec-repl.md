@@ -696,13 +696,23 @@ content). In-root symlinks resolve correctly. A symlink pointing *outside*
 the device root is silently redirected to the device root — no error, wrong
 data; a single such stray link can corrupt `dsave` output downstream.
 
-**And a delete aimed at such a link is aimed at your device root.** `Live`
-(os9exec): because the link resolves to the root, `del` on it attempts to delete
-**the root itself**, and fails with `E_DNE` only because the root happens not to
-be empty. Do not rely on that: it is the directory-not-empty check saving you,
-not any protection around the device root, and `dir /h5/out` listing the whole of
-`/h5` with no error is the same redirection showing its other face. **Remove
-stray outward links on the host**, before OS-9 ever resolves one.
+The redirection shows two faces. **Reading through the link gives you the root
+under the link's name** — `dir /h5/out` lists the whole of `/h5`, with no error —
+so anything that walks directories (`dsave`, `deldir`, `pd`) sees the device root
+a second time under a name that is not it. That is the real cost: wrong data,
+silently, in tools whose output you then trust.
+
+**Writing through it fails, confusingly but harmlessly.** `Live` (os9exec):
+`del` of such a link reports `E_DNE`, and the root and its contents are intact
+afterwards. `Source`: the delete cannot succeed, rather than merely happening not
+to — the host call behind it removes a directory only when empty, and the root
+cannot be empty while it still holds the link that redirected you there.
+`attr -nd` hits the same wall, and creating a file through a directory link asks
+the host to open a directory as a file, which fails. So the hazard here is a
+misleading error and bad reads, not destruction.
+
+**Remove stray outward links on the host** rather than through OS-9 — that is
+the only place a `del` on one will do what you meant.
 `deldir` recurses into and deletes a directory-symlink's real target (OS-9
 has no link concept, so it can't tell). Symlink cycles can crash the
 emulator after ~40–60 hops.

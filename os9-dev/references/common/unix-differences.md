@@ -233,8 +233,14 @@ independently on a fresh `mount -k=360k` image and on a host-directory mount:
 | | host directory | RBF image |
 |---|---|---|
 | 27 characters | opens | created, listed, opens |
-| 28 characters | `E_PNNF` on open | **`makdir` succeeds silently**, `dir` shows 27, opening the full name fails |
-| 29+ characters | `E_PNNF` on open | `makdir` refuses outright — "can't make" |
+| 28 characters | full name `E_PNNF`; the **27-char cut name opens it** | **`makdir` succeeds silently**, `dir` shows 27, opening the full name fails |
+| 29+ characters | full name `E_PNNF`; the cut name opens it | `makdir` refuses outright — "can't make" |
+
+On a host directory the cut name is not merely what `dir` displays — it is the
+name that works, and the full one is the name that fails. Two host files sharing
+their first 27 characters are therefore one file as far as OS-9 can reach: both
+list identically and only the first in host order opens. See the host-directory
+lookup rules in `common/using-os9exec-repl.md`.
 
 So 28 is the dangerous one: on RBF the directory entry is made and reports
 success, and only the 27-character prefix can ever reach it afterwards. A tool

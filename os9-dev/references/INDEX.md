@@ -61,6 +61,9 @@ has bitten a real session.
 | `E_PNNF` (216) on a relative pathlist containing `../..` or a mixed dot-run, on an RBF image | an os9exec defect before `985e0d8`, not OS-9 — dot-runs compose and may be mixed; host-directory devices were always correct | `common/unix-differences.md` |
 | `^syntax error` and nothing runs, from a batch invocation | a shell option written on the command line — `-nx` belongs on the procedure file's first line | `common/using-os9exec-repl.md` |
 | Only the FIRST command of a batch takes effect, the rest silently ignored | commands fed on host **stdin** need LF endings; only a file passed as an *argument* wants CR-only | `common/using-os9exec-repl.md` |
+| A host file opens under the wrong case, or the wrong one of two similar names | host-directory lookup falls back to a case-insensitive, 27-char-cut, spaces-as-`_` scan and takes the FIRST match | `common/using-os9exec-repl.md` |
+| `linecount` or any line reader sees 0 lines in a file that plainly has several | a host directory translates nothing: LF endings, and `I$ReadLn` stops only at CR | `common/using-os9exec-repl.md` |
+| `deldir` refuses with `E_DNE` and deletes nothing | a nested tree on a host-native directory — a standing defect; works on a RAM disk | `common/utility-usage.md` |
 | Floating-point results are subtly wrong — `1.0-1.0` nonzero, `0.1` printing as `0.100000000046566` | an os9exec CPU defect before `209b35c` broke soft-float negation; not evidence about OS-9 or Microware's math | `common/using-os9exec-repl.md` |
 | `c68` says `; expected` / `expression with little effect` on correct-looking C | adjacent string literals — nothing in this toolchain joins them, and `cccp2` runs `-traditional` | `c/kandr-vs-ansi.md` |
 | `**** multiple definition ****` on parameter declarations that look right | `ansi2knr` was run on an already-K&R tree and rewrote its own output | `c/kandr-vs-ansi.md` |

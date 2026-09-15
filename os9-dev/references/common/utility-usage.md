@@ -100,6 +100,12 @@ for" descriptions: `os9-tools-and-shell.md`.
   **Measure `del` semantics on an image, never on a host mount**: an earlier
   revision of this entry reported the host-native result as a general OS-9
   hazard, which it is not.
+- **`deldir` is broken on a host-native directory when the tree is nested** —
+  `Live` (os9exec), a standing defect rather than a fixed one: `deldir -q` of a
+  directory that contains a subdirectory fails `can't delete 'inner'` with
+  `E_DNE` and removes **nothing**, leaving the tree intact. The same tree on a
+  `mount -r` RAM disk is removed correctly, so it is the host-directory path at
+  fault, not the utility. Flatten first, or do the delete on the host.
 - `deldir [<opts>] {<path>}` — recursive; `-f` ignore write protection,
   `-q` no confirmation prompts.
 - `dir [<opts>] {<path>}` — `-e` extended (owner, dates, size, perms),

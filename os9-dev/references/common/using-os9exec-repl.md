@@ -649,6 +649,47 @@ Two different things behind the same device names:
   module with no `e` still runs from a host mount, because only the RBF path
   checks attributes before an open. Test permission behaviour on an RBF image.
 
+**Name lookup on a host directory is not what OS-9 does**, `Live` (os9exec) and
+`Source` (its own `CaseSens` path lookup). The exact host name is tried first;
+failing that, the directory is scanned and the **first** entry whose *shown* name
+matches wins — where "shown" means cut to 27 characters with spaces rendered as
+`_`, compared **case-insensitively**. Consequences, none of them OS-9 semantics:
+
+- **Case-insensitive even on Linux.** `list /h5/sub/file.txt` opens `Sub/File.txt`
+  on a case-sensitive host filesystem. Code that relies on case to distinguish
+  two files will not behave here as it does on the host.
+- **A host name longer than 27 characters opens by its cut name**, and its *full*
+  name gives `E_PNNF` — the reverse of the intuition that the full name is the
+  real one.
+- **Two host names sharing their first 27 characters are indistinguishable**:
+  `dir` lists both identically and only the one earlier in host order can be
+  opened. The other is unreachable without renaming it on the host.
+- **A name containing spaces opens by its `_` spelling** — unless a file really
+  spelt with `_` also exists, which then wins and shadows it.
+- **`makdir sub` beside an existing `Sub` fails `E_CEF`** on Linux, because the
+  lookup finds `Sub` first.
+
+**Line endings are not translated on a host directory.** `Live` (os9exec):
+nothing converts LF, and `I$ReadLn` ends only at CR, so a three-line LF file
+reads as a single line — `linecount` reports **0 lines** for it. Editing a file
+host-side therefore leaves it unreadable to OS-9 line I/O unless you convert it
+(see the CR-rule section above); the device being a plain host directory does not
+buy you host line endings.
+
+**A host path containing a space is unusable**, `Live` (os9exec) through
+`78d03c1`: `OS9H5="/tmp/has space"` gives `E_PNNF` on `dir /h5`. Keep device
+paths free of spaces. (A fix for this is in flight; until it lands in a build you
+have, assume the limitation.)
+
+**Host-side modes the emulator chooses**, `Live` (os9exec): `makdir` creates a
+directory at `0700`, and a shell `>` redirect creates a file at `0600`. Since
+`78d03c1` a super-user `I$Create` on a host directory always keeps owner **read**
+and never write — a deliberate choice, and RBF is unchanged.
+
+**Fuller treatment**: the emulator's own `docs/host-drives.md`
+([os9exec](https://github.com/peacedudes/os9exec)) is a guide to how host drives
+work and how they differ from RBF, and goes further than this section needs to.
+
 **Host links inside a device root — avoid; if present, know the quirks**:
 hard links behave as ordinary files (deleting one name leaves the other's
 content). In-root symlinks resolve correctly. A symlink pointing *outside*

@@ -186,6 +186,33 @@ in this file:
   inside functions supported. See the reference section below for both
   mechanisms' details.
 
+## Zero-argument function-like macros: two reports, same shape
+
+`Live` (os9exec), twice, in unrelated ports — and **neither was isolated**, so
+this is a thing to suspect rather than a rule to rely on:
+
+- **flex 2.3's skeleton** defines `#define yywrap() 1` and calls `yywrap()`
+  twice. Built with the SDK's `cc`, `l68` reported `Symbol 'yywrap' unresolved`,
+  referenced twice — so the calls were not expanded.
+- **A rogue 5.3 port** put `#define getchar() md_getchar()` in a header included
+  *after* `<stdio.h>`. `cpp` emitted `**** redefined macro ****` once per file
+  and the build linked, but in play no key did what it should — every keystroke
+  behaved as though stdio's `getchar` was still in force. Adding **`#undef
+  getchar` on the line above the define** silenced the warning and fixed input
+  entirely.
+
+The common factor is a **zero-argument function-like macro** apparently not
+expanding. The second case has a redefinition confound the first does not, and
+nobody has established whether this `cpp` keeps the first definition on
+redefinition or whether something else differs. So:
+
+- **`#undef` before redefining any library macro.** It is one line, it removes
+  the warning, and in the measured case it removed the bug.
+- If a zero-argument macro looks unexpanded — an unresolved symbol at link, or
+  the old behaviour persisting — suspect this before suspecting your logic.
+
+`Flag`, pending someone isolating it with a minimal case.
+
 ## Big data: the 64K wall, and `remote`
 
 Two walls stop a port with large buffers, and they are the same wall twice:

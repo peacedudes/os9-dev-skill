@@ -53,6 +53,8 @@ has bitten a real session.
 | A blocked `I$Read` returns an error instead of resuming after a signal | specified, not a fault — signals 2-31 are deadly to serial and pipe I/O, and the error returned is the signal number | `common/ipc.md` |
 | A program "hangs" while burning CPU on a `getchar()` loop | a signal killed the read and latched `ferror(stdin)`; every later read returns −1 at once until `clearerr` | `c/os9-clib-reference.md` |
 | A ported program's `alarm()`/`signal()` handler never runs | a Unix-compat `signal()` that only records the code — the handler waits for a `check_signal()` poll | `c/os9-clib-reference.md` |
+| One terminal setting is wrong while the others are right, after code that saves and restores options | a whole-struct `_gs_opt`/`_ss_opt` replay overwriting another routine's change — restore only your own fields | `c/os9-clib-reference.md` |
+| `**** redefined macro ****`, and the old macro still seems to be in force | `#undef` before redefining a library macro; zero-argument function-like macros have looked unexpanded twice | `c/os9-c-cheatsheet.md` |
 | `E_FNA` (214) opening a file that is present and readable | a leading space in the pathname — `F$PrsNam` does not skip one, and the failure surfaces at the open as a permission error | `68k/syscall-reference.md` |
 | Full-screen program refuses to start (`Unknown terminal type`) or draws only part of its screen | a modern `TERM` it does not know — try `TERM=vt100` before suspecting the program | `common/using-os9exec-repl.md` |
 | A program's last line of output is missing, or the prompt sits on top of it | the message ended in a bare CR and the prompt overwrote it — append `; echo ""` | `common/using-os9exec-repl.md` |

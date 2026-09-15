@@ -157,6 +157,31 @@ intact (`COUNT=3`, no line-editing) — i.e. `getc` uses raw `read()` for a disk
 file. The terminal side (line-edited `readln()`) isn't scriptable here, but the
 type-based selection is demonstrated by the raw disk read.
 
+## Restore the option fields you changed, never a whole saved struct
+
+`Live` (os9exec). `_gs_opt`/`_ss_opt` read and write the path's whole option
+structure, so the obvious idiom — save a `struct _sgs` on entry, put the copy
+back on exit — makes every routine that does it **clobber every other one**.
+
+Measured in a rogue port with two independent routines: one turned echo off, the
+other cleared the `^C`, `^E` and `ESC` keys. The keyboard routine took its copy
+*after* echo was already off, and on exit wrote that copy back *after* the echo
+routine had turned echo on — leaving `kbich=3 kbach=5 eofch=27` correct and
+**`echo=0`**, with nothing having failed. Restoring only the fields each routine
+had actually changed gave `echo=1` and the rest unchanged.
+
+Nothing here is concurrent. It is an ordinary read-modify-write on shared state,
+where the "shared state" is a struct each routine believed it owned, and the
+stale write wins simply by happening last. **Read, change your fields, write —
+do not snapshot and replay.**
+
+Two reasons this is worse on OS-9 than the same mistake elsewhere: the failure is
+**silent and partial**, so what you get is one wrong setting among several right
+ones rather than an obvious breakage; and option changes may not be private to
+your path at all (see the `PD_ALF` discussion in `common/memory-and-io.md`), so a
+whole-struct replay can undo something another *process* set, not merely another
+routine of yours.
+
 ## A signal that kills a read leaves stdio latched, and the loop spins
 
 `Live` (os9exec). A signal in the deadly range aborts a blocked serial or pipe

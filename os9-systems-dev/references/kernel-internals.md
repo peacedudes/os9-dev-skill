@@ -54,9 +54,22 @@ without one shows (before this it fell through to a console "unimplemented
 03D8" line, four per program). `D_Julian` ($30, today's Julian day) and
 `D_Second` ($34, seconds SINCE midnight -- the OS-9 Guru's "until midnight"
 wording is a transcription slip; the v2.4 TRM's F$Time/F$STime both say since)
-are answered from the same clock as F$Time/F$Julian, so a monitor that ages
-processes by the raw globals (aprocs) agrees with the syscalls. Most other
-`D_*` remain stubbed to 0.
+are answered from the same clock as F$Time/F$Julian. The "since midnight"
+reading is corroborated live: `getsys` labels `D_Second` "seconds left until
+midnight" in its own output and then prints 78419 at 21:47, which is seconds
+*since*. Most other `D_*` remain stubbed to 0.
+
+**But correct globals do not make a process-age monitor correct**, `Flag`.
+Measured: `aprocs` reports every process's age as roughly 2³² seconds
+(`1193026:51:48` — a small negative difference wrapped), while Microware's
+`procs -e` on the same run shows `Age 0:00`. A syscall trace shows `aprocs`
+reading the globals *correctly* — `$30` = 2461297 and `$34` = `$11EEF`, both
+right — before calling `F$GPrDsc`, so the fault is downstream of the globals,
+most likely in the start date/time the process descriptor supplies for it to
+subtract from. Filed against the emulator. **Read this as the caution it is: a
+consumer of a correct value can still be wrong, so verifying the input does not
+verify the output** — and if you are using `aprocs` to reason about process
+ages here, prefer `procs -e`.
 
 Exception vector 0 holds the reset-time initial supervisor stack pointer
 (SSP) value — every subsequent exception dispatch uses this vector to

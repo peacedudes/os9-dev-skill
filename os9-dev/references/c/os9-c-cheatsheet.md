@@ -264,38 +264,35 @@ This one is worth knowing by name because the error names `putchar`, which is
 correct and unhelpful: the macro at fault is `P`, and `P` appears nowhere in the
 diagnostic.
 
-### The logical-line limit is 512, and `#if 0` does not exempt a line
+### Long source lines: the limit moves, and `#if 0` does not exempt one
 
-`cpp` joins backslash-continued lines **before** applying its line-length limit,
-and it applies that limit to lines in a conditional group it is discarding. So
-the obvious workaround — move the offending line into `#if 0` and put a short
-version in `#else` — does not work. Only deleting it does.
+`cpp` joins backslash-continued lines **before** measuring them, and it measures
+lines in a conditional group it is discarding. Moving an over-long line into
+`#if 0` with a short `#else` does not help; only deleting it does.
 
-`Live` (os9exec), measured by bisection on the joined length:
+**There is no single safe length, because content earlier in the file lowers the
+limit.** `Live` (os9exec), two rigs and two line constructions agreeing:
 
-| joined logical line | result |
-|---|---|
-| 508, 509, 510, 511 | builds |
-| **512** | **`cpp` aborts — `Process Aborted`, no diagnostic at all** |
-| 513, 514, 515, 516, 600 | `**** source line too long ****`, reported properly |
-| 735 | `cpp` aborts again, no diagnostic |
+| file | joined line | result |
+|---|---|---|
+| line alone, no `#include` | 508-511 | builds |
+| line alone, no `#include` | 512 | `cpp` aborts, no diagnostic |
+| line alone, no `#include` | 513-600 | `**** source line too long ****` |
+| **same line after `#include <stdio.h>`** | **600** | **`cpp` aborts, no diagnostic** |
 
-**So the limit is 512 characters**, and 511 is the longest that works — the
-value itself lands on a buffer boundary and takes the preprocessor down instead
-of reporting.
+The last row is the point: **identical line, identical construction — only a
+preceding `#include` differs, and a length that was diagnosed becomes a crash.**
+Reported independently, a statement inside `main()` after `<stdio.h>` failed at
+**505** where the same statement without the include passed at 511.
 
-**Do not count on getting a message.** Whether an over-long line is diagnosed or
-kills `cpp` outright is not monotonic in length: 513 reports cleanly and 735
-does not, on otherwise identical constructions. Why some lengths crash and
-others report is unexplained, `Flag`. Treat a `cpp` that dies saying nothing as
-a possible over-long line regardless of what it did on a slightly different
-file.
+So treat **511 as a best case observed with nothing else in the file**, not as
+the limit. The working rule is **keep joined logical lines well under 500**, and
+shorter still in a real file with headers.
 
-**`#if 0` changes none of this.** Measured at both 600 and 735, a line inside a
-skipped `#if` behaves exactly as the same line in live code — diagnosed at 600,
-aborting at 735 — while deleting it builds. The earlier reading that the skipped
-branch was what caused the crash was wrong: the length is what matters, and the
-conditional only fails to protect you.
+**Do not count on getting a message.** The same over-length condition is reported
+cleanly in some files and kills `cpp` silently in others, and the difference is
+what preceded it. A `cpp` that dies saying nothing is a candidate over-long line
+even when a slightly different file gave you a clean diagnostic.
 
 ## Big data: the 64K wall, and `remote`
 

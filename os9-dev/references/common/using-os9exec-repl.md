@@ -566,10 +566,16 @@ strings -a <program> | grep -E '/dd/sys/termcap|%s/sys/termcap'
 ```
 
 Both strings together mean this reader. With `TERMCAP` unset it tries
-`/dd/sys/termcap` then `$HOME/sys/termcap`; set to a path, it opens that. `Live`
-(os9exec): all of those routes answered `'vt100': Unknown terminal type` for one
-such program across nine file variants — CR, LF, CRLF, LF+CR and no terminator,
-long entries and short, default path and explicit. The entry is never matched.
+`/dd/sys/termcap` then `$HOME/sys/termcap`; set to a path, it opens that.
+
+`Live` (os9exec), the comparison that isolates it: one 68-byte entry, correctly
+formed and CR-terminated, was given to the same program by both routes. Passed
+in `TERMCAP` as the string, the program started and drew its screen. Placed in a
+file — as the default `/dd/sys/termcap` and again as an explicit `TERMCAP` path
+— the same text produced `'vt100': Unknown terminal type`. The only variable is
+the route. A second program was tried across nine file variants (CR, LF, CRLF,
+LF+CR and no terminator, long entries and short, default and explicit path) and
+never matched either.
 
 **The route that works is putting the capability string itself in `TERMCAP`**,
 not a path to a file:
@@ -593,11 +599,16 @@ Two hazards on that route, both measured `Live` (os9exec) in one build:
   entry over about 127 bytes overruns it even when it is terminated correctly.
   Keep entries short.
 
-Where the file route is concerned, two requirements are visible in the reader
-and are worth knowing before concluding your file is fine: a line beginning `#`
+Two requirements are visible in the reader, and they explain why a stock
+termcap cannot match even before the route is considered: a line beginning `#`
 is skipped as a comment, and **a line is skipped unless its third byte is `|`** —
-the archaic two-character alias form, `d0|vt100|...`. Meeting both was still not
-sufficient in the case measured, so treat them as necessary, not enough.
+the archaic two-character alias form, `d0|vt100|...`. A modern entry whose first
+field is longer than two characters (`xterm-256color|xterm|vt100|...`) fails that
+test, so `vt100` present only as a later alias is never reached.
+
+That is a real constraint, but it is **not** the explanation for the file route
+failing: the comparison above supplied the two-character form and the file route
+still did not match. Treat these as necessary and not sufficient.
 
 ## Discovering what's installed
 

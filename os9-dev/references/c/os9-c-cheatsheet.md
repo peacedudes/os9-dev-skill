@@ -264,23 +264,38 @@ This one is worth knowing by name because the error names `putchar`, which is
 correct and unhelpful: the macro at fault is `P`, and `P` appears nowhere in the
 diagnostic.
 
-### A long logical line kills `cpp` even inside a skipped `#if`
+### The logical-line limit is 512, and `#if 0` does not exempt a line
 
-`cpp` joins backslash-continued lines *before* applying its line-length limit,
-and it does that **inside a conditional group it is discarding**. So the obvious
-workaround — move the offending line into `#if 0` and put a short version in
-`#else` — does not work.
+`cpp` joins backslash-continued lines **before** applying its line-length limit,
+and it applies that limit to lines in a conditional group it is discarding. So
+the obvious workaround — move the offending line into `#if 0` and put a short
+version in `#else` — does not work. Only deleting it does.
 
-`Live` (os9exec), one variable changed: a 735-character logical line built from
-twelve backslash-continued physical lines, wrapped in `#if 0` with a short
-`#else` definition, **aborts `cpp`** (`Process Aborted`, no diagnostic). The same
-file with that line *deleted* rather than skipped compiles and runs. The line is
-never compiled in either case; only its presence in the file matters.
+`Live` (os9exec), measured by bisection on the joined length:
 
-Note the failure mode: not `**** source line too long ****` but the preprocessor
-dying, so the message you get points at nothing. **A long line has to be absent
-from the file, not merely disabled** — shorten it, split it into separate
-statements, or move it to a file you do not include.
+| joined logical line | result |
+|---|---|
+| 508, 509, 510, 511 | builds |
+| **512** | **`cpp` aborts — `Process Aborted`, no diagnostic at all** |
+| 513, 514, 515, 516, 600 | `**** source line too long ****`, reported properly |
+| 735 | `cpp` aborts again, no diagnostic |
+
+**So the limit is 512 characters**, and 511 is the longest that works — the
+value itself lands on a buffer boundary and takes the preprocessor down instead
+of reporting.
+
+**Do not count on getting a message.** Whether an over-long line is diagnosed or
+kills `cpp` outright is not monotonic in length: 513 reports cleanly and 735
+does not, on otherwise identical constructions. Why some lengths crash and
+others report is unexplained, `Flag`. Treat a `cpp` that dies saying nothing as
+a possible over-long line regardless of what it did on a slightly different
+file.
+
+**`#if 0` changes none of this.** Measured at both 600 and 735, a line inside a
+skipped `#if` behaves exactly as the same line in live code — diagnosed at 600,
+aborting at 735 — while deleting it builds. The earlier reading that the skipped
+branch was what caused the crash was wrong: the length is what matters, and the
+conditional only fails to protect you.
 
 ## Big data: the 64K wall, and `remote`
 

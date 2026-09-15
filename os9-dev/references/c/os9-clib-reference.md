@@ -260,6 +260,14 @@ once you have decided the signal was survivable; the diagnosis is that a hang
 which burns CPU is a latched error flag, not a blocked read. A genuinely blocked
 read is idle.
 
+**So do not tidy away a `clearerr()` you cannot account for.** Period code
+already knew about this and guarded it: a 1980s game with an alarm timeout calls
+`clearerr(stdin)` on the path its interrupted read returns through, commented
+only as being in case a user sends end-of-file. `Live` (os9exec): that program
+takes its timeout, returns to its menu, and reads the next prompt normally — no
+spin. The guard is doing work that its comment does not claim, which is exactly
+what makes it easy to delete during a port.
+
 ## Third-party `signal()` may not be asynchronous at all
 
 `Live` (os9exec), and a trap for anything ported with a Unix compatibility

@@ -145,10 +145,21 @@ the alarm **silently never fires** rather than firing early or late.
 **`Live` (os9exec), and true of every build a reader currently has:** bit 31 is
 ignored for `A$Set` and `A$Cycle` and `d3` is stored as raw ticks, so `$80000200`
 comes due roughly 2³¹ ticks away. **The call itself returns carry clear**, so
-nothing reports a problem — `alarm()` appears to work and no `SIGALRM` ever
-arrives. Measured with an assembled `A$Set`/`A$Cycle` of `$80000100` against a
-10-second `F$Sleep`: the sleep ran to its end. Ported programs that arm a
-deadline and wait simply hang; 4.3BSD's `atc` freezes this way.
+nothing reports a problem — the alarm is simply never delivered.
+
+The evidence is deliberately free of any C library: two assembled probes calling
+`F$Alarm` directly with `A$Set`/`A$Cycle` of `$80000100` printed `ARMED` and then
+slept a full 10 seconds. That matters because the obvious symptom has a **second,
+independent cause** that would otherwise be mistaken for this one — see below.
+
+**Two different faults make a ported program's alarm look dead, and fixing one
+leaves the other.** This bit-31 bug means the alarm never comes due at all. But a
+Unix-compatibility `signal()` may also deliver handlers only on a poll, so even a
+correctly armed alarm runs nothing until the program calls `check_signal()` —
+that one is a library property, not a kernel or emulator property, and is
+described in `c/os9-clib-reference.md`. Establish which you have before changing
+anything: arm a deadline from **assembly**, or from Microware's own
+`intercept()`, and you have removed the library from the question.
 
 **Workaround on those builds:** pass the interval in **raw ticks with bit 31
 clear** — 100 ticks per second on os9exec. A fix is in progress there.

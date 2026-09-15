@@ -695,6 +695,14 @@ hard links behave as ordinary files (deleting one name leaves the other's
 content). In-root symlinks resolve correctly. A symlink pointing *outside*
 the device root is silently redirected to the device root — no error, wrong
 data; a single such stray link can corrupt `dsave` output downstream.
+
+**And a delete aimed at such a link is aimed at your device root.** `Live`
+(os9exec): because the link resolves to the root, `del` on it attempts to delete
+**the root itself**, and fails with `E_DNE` only because the root happens not to
+be empty. Do not rely on that: it is the directory-not-empty check saving you,
+not any protection around the device root, and `dir /h5/out` listing the whole of
+`/h5` with no error is the same redirection showing its other face. **Remove
+stray outward links on the host**, before OS-9 ever resolves one.
 `deldir` recurses into and deletes a directory-symlink's real target (OS-9
 has no link concept, so it can't tell). Symlink cycles can crash the
 emulator after ~40–60 hops.

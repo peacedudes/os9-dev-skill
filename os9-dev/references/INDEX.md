@@ -54,6 +54,7 @@ has bitten a real session.
 | A program "hangs" while burning CPU on a `getchar()` loop | a signal killed the read and latched `ferror(stdin)`; every later read returns −1 at once until `clearerr` | `c/os9-clib-reference.md` |
 | A ported program's `alarm()`/`signal()` handler never runs | a Unix-compat `signal()` that only records the code — the handler waits for a `check_signal()` poll | `c/os9-clib-reference.md` |
 | One terminal setting is wrong while the others are right, after code that saves and restores options | a whole-struct `_gs_opt`/`_ss_opt` replay overwriting another routine's change — restore only your own fields | `c/os9-clib-reference.md` |
+| `**** incorrect include file syntax ****` on a line that looks fine | `#include<file.h>` needs a space before the `<` | `c/os9-c-cheatsheet.md` |
 | Your macro is ignored and the library's is still in force, after one `**** redefined macro ****` warning | this `cpp` keeps the FIRST definition on redefinition — `#undef` before redefining any macro | `c/os9-c-cheatsheet.md` |
 | A crash dump names a syscall that cannot be where the fault is | `Last syscall` is latched at the last call made, not the fault site; convert `PC` to a module offset via the `Executing:` bytes | `common/using-os9exec-repl.md` |
 | `E_FNA` (214) opening a file that is present and readable | a leading space in the pathname — `F$PrsNam` does not skip one, and the failure surfaces at the open as a permission error | `68k/syscall-reference.md` |

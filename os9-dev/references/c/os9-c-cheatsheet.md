@@ -186,6 +186,25 @@ in this file:
   inside functions supported. See the reference section below for both
   mechanisms' details.
 
+## `#include<file.h>` needs the space
+
+`Live` (os9exec), `cc -qm=16k` against the SDK. `#include<stdio.h>` is rejected
+outright:
+
+```
+nospace.c : line 1 **** incorrect include file syntax ****
+#include<stdio.h>
+         ^
+```
+
+The caret sits on the `<`. The identical file with `#include <stdio.h>` compiles
+and runs. This `cpp` requires whitespace between `include` and the delimiter,
+where a C89-conforming preprocessor does not.
+
+It costs nothing to comply and it is the **first** error you hit on code written
+the other way, so it masks everything after it — fix all of them before reading
+any other diagnostic from the file.
+
 ## `#undef` before redefining a macro: this `cpp` keeps the first definition
 
 `Live` (os9exec), measured with two probes, `cc -qm=16k` against the SDK:

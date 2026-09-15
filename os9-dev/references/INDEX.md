@@ -48,7 +48,7 @@ has bitten a real session.
 | A named file reads as empty while the same data via stdin is fine | `open(path, 0)` — POSIX `O_RDONLY` is 0, which on OS-9 requests **no access**; the open succeeds and every read fails | `common/unix-differences.md` |
 | Unsure whether a fault is yours or the system's | run a period-built program that does the same thing on the same disk — it differs from yours only in who compiled it | `common/using-os9exec-repl.md` |
 | Program needs Enter after every key though it called `cbreak()` | `cbreak()` sets a curses flag only; stdio `getchar()` ignores it — read with `getch()` | `c/os9-clib-reference.md` |
-| `popen of "..." failed!` | reported to need `shell` reachable and the named program in the **data** directory, not on `chx` — `Hearsay`, unmeasured | `c/os9-clib-reference.md` |
+| `Symbol 'popen' unresolved`, after an `illegal pointer/integer combination` warning | `popen`/`pclose` are in no library on the SDK disk — use `os9fork` with an argument vector | `c/os9-clib-reference.md` |
 | An alarm never fires at all, however long you wait | `F$Alarm`'s `d3` is ticks unless **bit 31** is set, which means 256ths — a runtime ignoring that bit reads a huge tick count | `68k/syscall-reference.md` |
 | A blocked `I$Read` returns an error instead of resuming after a signal | specified, not a fault — signals 2-31 are deadly to serial and pipe I/O, and the error returned is the signal number | `common/ipc.md` |
 | A program "hangs" while burning CPU on a `getchar()` loop | a signal killed the read and latched `ferror(stdin)`; every later read returns −1 at once until `clearerr` | `c/os9-clib-reference.md` |

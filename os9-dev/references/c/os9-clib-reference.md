@@ -564,23 +564,42 @@ The honest limitation of the whole approach: no shell is involved, so a
 redirection or pipe written *inside* the command line is not interpreted. Build
 the argument vector instead.
 
-### `popen()` — undocumented here, and one report worth knowing
+### `popen()` is not in this C library at all
 
-`popen()` exists in this C library and **nothing in these references covers it**;
-treat that as a gap rather than as evidence it behaves like the Unix call. One
-third-party account is available and is `Hearsay` — a freeware collection's notes
-on `rayshade`, not a measurement made for this skill — but it is specific enough
-to be worth repeating, because the failure string is distinctive:
+Measured, because the gap was worth closing. On the v2.4-era SDK checked:
+
+- `Source`: **no library exports it.** Scanning every `LIB/*.l` for `popen` and
+  `pclose` finds neither — not `clib.l`, not `cio.l`, not `unix.l`.
+- `Source`: **Microware's `<stdio.h>` does not declare it.** The only
+  declaration on the disk is in `DEFS/GCC2/stdio.h`, a different toolchain's
+  header — and no GCC2 library is present to satisfy it.
+- `Live` (os9exec): a program calling `popen()` compiles with
+  `**** warning - illegal pointer/integer combination ****` at the assignment —
+  the tell that the function is undeclared and assumed to return `int` — and
+  then fails at link:
+
+```
+Symbol 'popen' unresolved.
+Symbol 'pclose' unresolved.
+```
+
+**So do not plan a port around `popen()` here.** Use `os9fork`/`os9exec` with an
+explicit argument vector, or a pipe set up by hand (`common/ipc.md`), and treat
+the warning above as the early signal — it appears at compile time, before the
+link error names the problem.
+
+There is a third-party account, `Hearsay`, of a `popen()` failing at run time
+with a distinctive message:
 
     popen of "cccp ..." failed!
 
-According to that account a `popen()` caller needs **`shell` reachable**, and the
-command it names is resolved from the **data** directory rather than the execution
-directory — so the cure was to copy the wanted program to `/dd` rather than to put
-it on the execution path. If that is right it inverts the usual rule that a forked
-command resolves against `chx`, which would make it a genuine trap for a porter.
-**Unmeasured.** Anyone with the rig could settle it in a few minutes, and it is
-the single most useful thing missing from this file.
+with the reported cure being to put the wanted program in the **data** directory
+rather than on the execution path. That account cannot be about this library,
+since a build here does not reach run time. It most likely describes a program
+built with the GCC2 toolchain, whose header does declare `popen`. **Unmeasured,
+and now known to be out of scope for a Microware `cc` build** — if you meet that
+message, establish which toolchain and which library the program was built with
+before treating the directory advice as a rule.
 
 ## Startup & Arguments
 

@@ -876,6 +876,47 @@ inner one. Trust `>>>` lines for what was called; pair a return with its
 entry by position, not by the name on it, and do not conclude a call
 returned a value it never returned.
 
+## Reading a process crash dump
+
+When a process dies, os9exec prints a dump: exit code, open paths, last
+syscall, registers, the faulting instruction with the bytes at `PC`, and the
+static-memory range. Three things about it are easy to misread.
+
+**`Last syscall` is the last one the process *made*, not where it died.**
+It is a latched field, so a program that faults in a stretch of pure
+computation still shows whatever it called before entering it — which can be
+thousands of instructions and an unrelated subsystem away. `Live` (os9exec): a
+program that ran away inside a memory-copy loop reported `Last syscall: F$ID
+(0x000c)`, and `F$ID` had nothing to do with the fault. **Never treat that line
+as the fault's location or cause** without independent evidence; it is a
+starting point for "what had it been doing", not a pointer to the bug.
+
+**`PC` is an absolute emulated address; the module is loaded somewhere.** To
+get the module-relative offset — the one your disassembly is numbered in —
+use the bytes the dump prints on the `Executing:` line:
+
+1. Take the byte string shown at `PC` (e.g. `18d0 206f 000c 700d b010`).
+2. Search the module file for that byte sequence; a run of 10-12 bytes is
+   normally unique.
+3. `base = PC - offset_of_match`. Sanity-check it: `base + M$Size` should land
+   just below the static range the dump reports.
+
+Then disassemble the file at that offset and you are looking at the
+instruction that faulted. This also settles a question worth settling early —
+**whether the fault is inside the module at all.** An address that matches
+nothing in the image means execution left the program, which is a different
+class of bug from one that has a line number.
+
+**A dump hinting at a corrupted module is not evidence of one.** Check the file
+with `ident`, which reports the module CRC and the header parity separately; a
+module that reports `Good CRC` and `Good parity` is intact, whatever a
+post-mortem probe of live memory made of it.
+
+**With stdout redirected to a file or a pipe, the dump has been observed
+truncating mid-line** shortly after the `Memory:` line — `Live` (os9exec). A
+captured dump that stops there is an incomplete record, not the whole one — do
+not conclude a section is absent because your capture ends before it.
+
 ## Symbolic debugging (the OS-9 `debug` command)
 
 `cc -g file.c` emits `file.dbg`/`file.stb`; `debug /dd/prog` auto-loads

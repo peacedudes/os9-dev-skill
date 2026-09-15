@@ -165,6 +165,45 @@ no error to flag the mismatch.
 
 ### Directories can't be opened like ordinary files
 
+### `open(path, 0)` opens a file you cannot read
+
+**The single most costly line to port unchanged.** OS-9's access mode is a *bit
+field* — `D S E W R`, directory/single-user/exec/write/read (`Manual`, v2.4 TRM,
+I$Open) — so **mode 0 requests no access at all**. POSIX spells read-only `0`.
+Ported code therefore asks for nothing while its author believes it asked for
+read, and **OS-9 grants exactly that**.
+
+It does not fail in any way the code notices. `Live` (os9exec), a probe opening a
+six-byte file and reading 64:
+
+```
+OPEN mode=0  fd=7  read=-1      <- a valid path number, and every read fails
+OPEN mode=1  fd=7  read=6       <- S_IREAD
+```
+
+So the open **succeeds**, returns a usable-looking descriptor, and the file reads
+as empty forever. Found in agrep 2.01, which calls `open(name, 0)` in five
+places: files named on the command line were searched as empty, `agrep -c e file`
+answered `0`, and nothing matched — while the *same* searches through stdin were
+correct, because stdin was never opened by that code. A program can therefore
+look half-working in a way that points at the pattern matcher rather than the
+open.
+
+Write `S_IREAD` (1). Treat a literal `0`, or any `O_RDONLY` from a compatibility
+header, as a porting defect until you have checked what that header defines.
+
+### `I$Create` is not `creat()`
+
+`Manual` (v2.4 TRM, I$Create): *"An error occurs if the pathlist specifies a file
+name that already exists."* Unix `creat()` on an existing file truncates it and
+hands it back; OS-9 refuses with **`E$CEF` (218)**. Anything built on
+open-or-create, or on "clobber the output file and start writing", needs its own
+delete-then-create, and should expect 218 rather than treating it as fatal.
+
+`I$Create` also **cannot make a directory** — that is `I$MakDir`. And on pipes
+the same rule holds by name: a named pipe that already exists returns `E$CEF`,
+while unnamed pipes cannot raise it.
+
 `open(path, S_IREAD)` on a directory fails — the directory bit must be set
 in the access mode (`S_IFDIR | S_IREAD`). `fopen()` offers no way to set
 that bit at all, so it cannot open a directory under any mode. Unix code

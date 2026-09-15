@@ -296,6 +296,11 @@ re-reading it on every access.
     passages held here. Either way, do not assume an option change is private to
     your path.
 
+    That is also why a routine restoring options should **write back only the
+    fields it changed**, never a whole saved `struct _sgs` — see
+    `c/os9-clib-reference.md`. A whole-struct replay can undo another routine's
+    change, and if options do propagate, another process's.
+
 ### I$ service requests
 
 | Call | Behavior |

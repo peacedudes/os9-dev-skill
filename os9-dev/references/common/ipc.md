@@ -54,13 +54,21 @@ before the input is received, the `I$Read` request returns with an error."* So
 the read **returns an error** rather than resuming, and the Guard pattern below
 depends on exactly that.
 
-Two limits on how far to carry this. The manual's technique names a **keyboard
-abort** signal specifically, so do not assume every signal aborts every blocked
-call. And *which* error an interrupted read returns is not stated in that passage
-— the error-code appendix listing `000:002` KEYBOARD QUIT, `000:003` KEYBOARD
-INTERRUPT and `000:004` MODEM HANGUP as error numbers suggests the signal code
-comes back as the error, but that is inference from a table rather than a
-measurement, `Flag`.
+**How far this reaches, and it is wider than that one technique.** `Manual`
+(Microware's OS-9 Intermediate training text): signals **2-31** are *"deadly to
+serial and pipe I/O system calls"* — the same range its signal table labels
+"Deadly I/O signals". So it is not only a keyboard abort, and equally not every
+signal: user-defined signals from 256 up are outside the range, and the rule is
+stated for **serial and pipe** I/O rather than for blocked calls in general.
+
+**The error a killed read returns is the signal number itself**, `Live`
+(os9exec): with signal 5 armed by `F$Alarm` and nothing typed, both
+`read(0,&c,1)` and `readln(0,buf,80)` returned −1 with `errno` = **5**. That
+confirms what the error-code appendix hints at by listing `000:002` KEYBOARD
+QUIT, `000:003` KEYBOARD INTERRUPT and `000:004` MODEM HANGUP as error *numbers*
+— they are signal codes surfacing as errors. Measured on a reimplementation, so
+it is evidence about that runtime and consistent with Microware's own wording,
+not a reading of real hardware.
 
 **Delivery is queued, not dropped:** a signal sent to a process that already
 has one pending is *not* discarded — signals queue and deliver in send

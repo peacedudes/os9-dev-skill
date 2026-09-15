@@ -48,7 +48,9 @@ has bitten a real session.
 | Program needs Enter after every key though it called `cbreak()` | `cbreak()` sets a curses flag only; stdio `getchar()` ignores it — read with `getch()` | `c/os9-clib-reference.md` |
 | `popen of "..." failed!` | reported to need `shell` reachable and the named program in the **data** directory, not on `chx` — `Hearsay`, unmeasured | `c/os9-clib-reference.md` |
 | An alarm never fires at all, however long you wait | `F$Alarm`'s `d3` is ticks unless **bit 31** is set, which means 256ths — a runtime ignoring that bit reads a huge tick count | `68k/syscall-reference.md` |
-| A blocked `I$Read` returns an error instead of resuming after a signal | that is specified, not a fault — a keyboard abort during a read aborts it; the wait only resumes for `F$Sleep`/`F$Wait` | `common/ipc.md` |
+| A blocked `I$Read` returns an error instead of resuming after a signal | specified, not a fault — signals 2-31 are deadly to serial and pipe I/O, and the error returned is the signal number | `common/ipc.md` |
+| A program "hangs" while burning CPU on a `getchar()` loop | a signal killed the read and latched `ferror(stdin)`; every later read returns −1 at once until `clearerr` | `c/os9-clib-reference.md` |
+| A ported program's `alarm()`/`signal()` handler never runs | a Unix-compat `signal()` that only records the code — the handler waits for a `check_signal()` poll | `c/os9-clib-reference.md` |
 | `E_FNA` (214) opening a file that is present and readable | a leading space in the pathname — `F$PrsNam` does not skip one, and the failure surfaces at the open as a permission error | `68k/syscall-reference.md` |
 | Full-screen program refuses to start (`Unknown terminal type`) or draws only part of its screen | a modern `TERM` it does not know — try `TERM=vt100` before suspecting the program | `common/using-os9exec-repl.md` |
 | A program's last line of output is missing, or the prompt sits on top of it | the message ended in a bare CR and the prompt overwrote it — append `; echo ""` | `common/using-os9exec-repl.md` |

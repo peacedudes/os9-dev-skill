@@ -157,6 +157,40 @@ intact (`COUNT=3`, no line-editing) — i.e. `getc` uses raw `read()` for a disk
 file. The terminal side (line-edited `readln()`) isn't scriptable here, but the
 type-based selection is demonstrated by the raw disk read.
 
+## A signal that kills a read leaves stdio latched, and the loop spins
+
+`Live` (os9exec). A signal in the deadly range aborts a blocked serial or pipe
+read (see `common/ipc.md`), and through Microware stdio the aftermath is worse
+than the abort:
+
+- `getchar()` returns **EOF**, with `ferror(stdin)` **set**;
+- the error flag **stays set**;
+- every later `getchar()` returns −1 **immediately, without reading**, until
+  `clearerr(stdin)`.
+
+So a program looping on `getchar()` does not block, does not report anything, and
+**spins** — consuming the CPU while appearing hung. The cure is `clearerr(stdin)`
+once you have decided the signal was survivable; the diagnosis is that a hang
+which burns CPU is a latched error flag, not a blocked read. A genuinely blocked
+read is idle.
+
+## Third-party `signal()` may not be asynchronous at all
+
+`Live` (os9exec), and a trap for anything ported with a Unix compatibility
+library rather than Microware's own calls. The `unix.l` shipping with one
+freeware collection implements `signal()` **without asynchronous delivery**: it
+installs an intercept that merely *records* the signal code, and your handler
+runs only when the program later calls `check_signal()`.
+
+A Unix program that arms `alarm()` and then blocks, expecting the handler to
+interrupt it, therefore **never gets a tick** — the signal arrives, the code is
+noted, and nothing runs until the program happens to poll. Microware's own
+`intercept()` does run the handler: measured, it ran for a self-sent signal.
+
+So when a ported program's timers appear dead, establish **which `signal()` it
+linked** before suspecting the kernel or the emulator. The two have the same name
+and different semantics, which is the whole difficulty.
+
 ## Single-key input: `cbreak()` does not make the terminal raw
 
 `cbreak()` and `crmode()` **cannot affect stdio**, because they are not calls at

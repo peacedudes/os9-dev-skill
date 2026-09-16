@@ -429,37 +429,45 @@ argument after the format and will break any call with a different count. It
 suits a program whose calls are uniform — and where they are not, `sprintf` into
 a buffer and `addstr` it remains the general answer.
 
-### `setenv` is not enough for curses: it reads the environment another way
+### A working `getenv` is not evidence a library can see your variable
 
-**A variable created by the OS-9 shell's `setenv` is visible to `getenv()` and
-invisible to this curses library.** `Live` (os9exec), one program printing both,
-so nothing differs but the route the variable took:
+Two routes exist into a guest process's environment — the emulator's parameter
+block (`@NAME=VALUE`, see `common/using-os9exec-repl.md`) and the OS-9 shell's
+`setenv` — and **they are not equivalent to every consumer.** `getenv` consults
+both. A library that walks the environment block itself need not.
 
-| how `TERM=vt100` was set | `getenv("TERM")` | `initscr()` |
+`Live` (os9exec), one program printing `getenv("TERM")` and then calling
+`initscr()`, so nothing differs but how the variable was created:
+
+| route | `getenv("TERM")` | `initscr()` |
 |---|---|---|
 | `@TERM=vt100` on the host command line | `vt100` | `LINES=24 COLS=80` |
 | `setenv TERM vt100` in a shell procedure | `vt100` | `Unknown terminal type ''`, `LINES=0 COLS=0` |
 
-Same binary, same value reported by `getenv` in both runs, opposite outcomes.
-Note the **empty** name in the message: curses is not failing to match `vt100`,
-it never sees a name at all.
+Same binary, same run, `getenv` agreeing in both. The failing case reports an
+**empty** name: curses is not failing to match `vt100`, it never sees a name.
 
-**So do not conclude from a working `getenv` that a library can see your
-variable.** Two routes exist into the guest's environment — the emulator's
-parameter block (`@NAME=VALUE`, see `common/using-os9exec-repl.md`) and the OS-9
-shell's `setenv` — and they are not equivalent to every consumer. `getenv`
-consults both; this curses evidently reads only the first. The mechanism has not
-been confirmed, `Flag`; what is measured is the asymmetry and that it is
-reproducible.
+**This is one rig's curses, not a property of OS-9 curses, `Flag`.** On a second
+rig the same comparison passes on all three routes — `@`-passed, `setenv`, and a
+real `SYS/login` session — so the builds differ. Two candidate explanations for
+the split were tested here and **eliminated**: forking the program by absolute
+path versus by bare name makes no difference, and `TERMCAP` holding a file path
+versus the entry string makes no difference. On the rig that fails, the route is
+the only variable that moves it.
 
-**The working recipe**, which needs no login session:
+**What to take from it regardless of which build you have:**
+
+- **Do not use `getenv` to prove a variable reached a library.** It is the one
+  check that cannot distinguish these routes, which makes it worthless for
+  exactly this fault and reassuring while you chase the wrong thing.
+- **If a terminal library reports an empty name**, try passing the variable as
+  `@TERM=`/`@TERMCAP=` before suspecting your termcap. It needs no login session:
 
 ```sh
-env '@TERM=vt100' '@TERMCAP=d0|vt100:cl=\E[H\E[J:…' os9exec /h0/CMDS/prog
+env '@TERM=vt100' '@TERMCAP=/dd/SYS/termcap' os9exec /h0/CMDS/prog
 ```
 
-`TERMCAP` holding the **entry itself** rather than a path; the two-character
-alias form matters there for the same reason it does everywhere else.
+  `TERMCAP` may hold a path or the entry itself; both work where this works.
 
 ## String Functions (`strings.h`, not `string.h`)
 

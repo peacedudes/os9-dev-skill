@@ -211,6 +211,52 @@ Meta-docs (`CONFIDENCE-TAGS.md`, `VERIFICATION-BACKLOG.md`, `INDEX.md`,
 `INDEX.md` is exactly what check 4 scans — they quote calls as examples but
 `INDEX.md`'s file-pointers are not "examples," they're the navigation table.
 
+## A second tool: `check_claim_coupling.py` (advisory, not a gate)
+
+**The failure it exists for is not a wrong value, it is a stale duplicate.** A
+fact gets measured again, the file being edited is corrected carefully, and an
+older statement of the same fact is left standing somewhere else. `check_shared_facts`
+above catches the value-level form (`SYMBOL $VALUE` given two values). It cannot
+catch the form that actually bit this corpus: `cpp` "bus-errors at 513
+characters" in one file while another had just established the limit is **not a
+fixed number**. Both files quoted the same digits. Nothing numeric disagreed —
+the claims disagreed about the *shape* of the fact.
+
+So this tool does not attempt to decide agreement. Given a commit (or the staged
+index) it reports **which other files make claims about the same subjects**, and
+hands the judgement back. A changed line is claim-bearing only if it carries a
+quantity or limit wording; a bare mention is not a claim, and treating every
+mention as one is what makes a check noisy enough to be switched off.
+
+**Why advisory and not a gate.** It reasons about adjacency, so it can only ever
+be a prompt. Per the false-positive rule above, a gate that blocks on a guess is
+one people learn to bypass — and a bypassed gate protects nothing. It prints and
+exits 0. Its *tests* are a gate; its findings are not.
+
+**Two limits worth knowing before trusting it:**
+
+- **It works per-commit, not corpus-wide.** A whole-tree sweep grouping every
+  claim by subject was tried and is useless: common identifiers (`dir`, `copy`,
+  `load`, `ident`) carry claims in seven to nine files each, so everything
+  couples to everything. Starting from what changed is what makes the subject set
+  small enough to be meaningful.
+- **It matches on blocks, not lines, and that was a bug first.** The corpus
+  hard-wraps prose, so a subject and its quantity routinely sit on different
+  physical lines — the real stale claim read "Microware `cpp`" / "bus-errors at
+  513 characters" across a break. The first implementation matched line by line,
+  passed its own unit tests, and **silently failed the historical case it was
+  built for**. Only running it against the tree as it stood at that commit
+  exposed it. `test_finds_a_claim_whose_subject_and_quantity_are_on_different_lines`
+  is the regression test.
+
+Measured on this repo's own history: silent on two of six sampled commits, three
+files named on the one that mattered — including, two commits before a human
+found it by accident, the file holding the stale claim.
+
+**What it still cannot find:** two prose statements that contradict each other in
+files that share no backticked subject, and any disagreement of reasoning rather
+than of fact. Those need a reader.
+
 ## Honest limits
 
 - **Level I vs Level II is not modelled.** Both fall in the "6809" bucket, so a

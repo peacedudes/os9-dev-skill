@@ -579,13 +579,24 @@ not. `Source`, scanning `clib.l` and `unix.l` for exported symbols:
 | `dup()`/`dup2()` | **no** | `os9exec`'s path arguments |
 | `kill()` | **no** | `F$Send`; `getpid()` *is* present in both libraries |
 | `sleep()` | **no** | `tsleep()` (unix.l), in **ticks** — with **bit 31** set it counts 256ths of a second, the same encoding as `F$Alarm` (`68k/syscall-reference.md`) |
-| `execl()` | unix.l | **but it is a CHAIN, not an exec after a fork** |
+| `execl()` | unix.l | **but it is a CHAIN, not an exec after a fork** — see below |
 
 **`execl()` replaces your process.** `Live` (os9exec): a program printing
 `BEFORE execl`, calling `execl("/h0/CMDS/echo", "echo", "CHILD-RAN", 0)`, then
 printing `AFTER` produced `BEFORE execl` and `CHILD-RAN` and **never printed
 `AFTER`** — control does not come back. A Unix idiom that forks and then `exec`s
 in the child will, transcribed literally, terminate the parent.
+
+**Why, and how to get the other behaviour.** `os9exec()` takes its process-
+creating function as its first argument (see the `os9exec()` entry below), and
+`chain`/`chainc` are the chaining counterparts of `os9fork`/`os9forkc` —
+`Source`, declared beside them in `os9lib/stdlib.h` in the same unprototyped
+style, with `chain` exported by `clib.l` and `chainc` by `unix.l`. A `unixlib`
+`execl` built as `exit(os9exec(chainc, ...))` therefore chains by construction.
+**Pass the fork function instead of the chain function and the caller survives.**
+One caution from the same scan: `os9forkc` is *declared* in that header but
+exported by **neither** library, so do not reach for it as the `unix.l`-side
+pairing.
 
 **So a program built around a coprocess cannot be ported by substituting calls.**
 Anything that forks a helper and talks to it over a two-way pipe — a front end

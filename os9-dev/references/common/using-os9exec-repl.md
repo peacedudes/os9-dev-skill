@@ -235,14 +235,23 @@ A usage line proves argument parsing ran and says nothing about whether the
 program's I/O works; for the case where that distinction bites hardest, and the
 sounder test, see the `cio` link-mode pitfall in `c/os9-c-cheatsheet.md`.
 
-**When you do test output, send it through a pipe rather than straight to a
-file.** Whether a program's stdout is a terminal, a pipe or a file changes how
-this C library buffers it, and one whole class of defect — `putchar`/`putc`
-given an argument with a side effect — damages pipe and terminal output while
-leaving file output byte-exact (`c/os9-clib-reference.md`). A harness that
-captures by redirecting to a file, then compares checksums, will pass those
-programs every time and report the collection clean. The redirect is the thing
-hiding the bug, not the program.
+**Drive a program the way a person would, not the way that is easiest to
+capture.** How you invoke it decides which defects can appear at all, and no
+single convenient route exposes them all — three measured classes, each
+invisible under a different one:
+
+| defect | hidden by | exposed by |
+|---|---|---|
+| `putchar`/`putc` with a side-effecting argument (`c/os9-clib-reference.md`) | redirect to a **file** | a **pipe** or a terminal |
+| a scanner whose `freopen(…, yyin)` did nothing (`c/os9-c-cheatsheet.md`) | a **pipe** — it was going to read `stdin` anyway | a **named file** argument |
+| a raw `write()` whose line feeds the terminal never adds | a **file** — the bytes are exactly as written | a **terminal** |
+
+Note that the first two point opposite ways: the pipe that reveals one conceals
+the other. **So "always capture through a pipe" is not the rule** — the rule is
+that a harness redirecting everything to files and comparing checksums will
+pronounce all three classes clean, and a harness that only ever pipes will miss
+the second. Exercise the real invocations: a named file argument, a pipe, and at
+least a spot-check on a terminal. `Live` (os9exec), all three.
 
 ## An internal command can BE the boot program — no shell needed
 

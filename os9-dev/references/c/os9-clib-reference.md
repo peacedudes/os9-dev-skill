@@ -429,39 +429,37 @@ argument after the format and will break any call with a different count. It
 suits a program whose calls are uniform — and where they are not, `sprintf` into
 a buffer and `addstr` it remains the general answer.
 
-### `initscr()` reporting an EMPTY terminal name, `Flag`
+### `setenv` is not enough for curses: it reads the environment another way
 
-`Live` (os9exec), unresolved on one rig and absent on another, so environmental
-rather than a defect in the library: `initscr()` fails with
+**A variable created by the OS-9 shell's `setenv` is visible to `getenv()` and
+invisible to this curses library.** `Live` (os9exec), one program printing both,
+so nothing differs but the route the variable took:
 
+| how `TERM=vt100` was set | `getenv("TERM")` | `initscr()` |
+|---|---|---|
+| `@TERM=vt100` on the host command line | `vt100` | `LINES=24 COLS=80` |
+| `setenv TERM vt100` in a shell procedure | `vt100` | `Unknown terminal type ''`, `LINES=0 COLS=0` |
+
+Same binary, same value reported by `getenv` in both runs, opposite outcomes.
+Note the **empty** name in the message: curses is not failing to match `vt100`,
+it never sees a name at all.
+
+**So do not conclude from a working `getenv` that a library can see your
+variable.** Two routes exist into the guest's environment — the emulator's
+parameter block (`@NAME=VALUE`, see `common/using-os9exec-repl.md`) and the OS-9
+shell's `setenv` — and they are not equivalent to every consumer. `getenv`
+consults both; this curses evidently reads only the first. The mechanism has not
+been confirmed, `Flag`; what is measured is the asymmetry and that it is
+reproducible.
+
+**The working recipe**, which needs no login session:
+
+```sh
+env '@TERM=vt100' '@TERMCAP=d0|vt100:cl=\E[H\E[J:…' os9exec /h0/CMDS/prog
 ```
-Unknown terminal type ''.
-```
 
-Note the **empty** name in the quotes. That is distinct from
-`'vt100': Unknown terminal type`, which means the name arrived and no entry
-matched it (see the termcap section in `common/using-os9exec-repl.md`). An empty
-name means curses never got a terminal type at all, and no amount of fixing the
-termcap file or `TERMCAP` will help.
-
-Recorded because the obvious causes were eliminated and are not worth anyone
-repeating: `getenv("TERM")` returns `vt100` **from a program linked against
-`curses.l`**, so it is not a getenv that the library replaces; `My_term` is `0`
-and `Def_term` is `NULL`, so the BSD `Def_term` override is not being taken;
-and the failure is identical with `TERMCAP` unset, holding a path, and holding
-the entry string, with `curses.l` listed twice, and under a real pty. The
-emulator's `@`-prefix rule (`common/using-os9exec-repl.md`) produces this same
-message and is the first thing to rule out. **Passing `@TERM=vt100` on the host
-command line does clear the message** — so an unset or non-crossing `TERM` is the
-usual cause. What remains unexplained is narrower: the message also appeared when
-the variable was set *in-universe* with `setenv`, in a run where a `getenv` probe
-inside a curses-linked program returned `vt100`. A variable the shell created and
-one the emulator created are evidently not equivalent to this library, and which
-difference matters has not been established.
-
-A rig where `SYS/login` exports `TERM` and `TERMCAP` into the session runs the
-same library correctly, so **suspect how the environment reaches the process**
-before suspecting curses.
+`TERMCAP` holding the **entry itself** rather than a path; the two-character
+alias form matters there for the same reason it does everywhere else.
 
 ## String Functions (`strings.h`, not `string.h`)
 

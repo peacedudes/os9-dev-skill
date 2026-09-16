@@ -67,8 +67,32 @@ is left, and a fifth can hang your build.
 the one that changes how you estimate a job. `Live` (os9exec), two game ports:
 46 and 90 function *definitions* converted automatically, while 33 and 66
 *prototypes* survived in the headers and all had to be done by hand. **So when
-sizing an ANSI tree for this compiler, count the declarations.** The definitions
-are free.
+sizing an ANSI tree for this compiler, count the declarations.**
+
+**But the definitions are only free in one brace style.** The tool requires the
+function *name* to be the first thing on its line (`Source`, `ansi2knr.c`: "the
+function name must be the first thing on the line", and its test returns early
+with `no name at left margin`). So it converts
+
+```c
+int                     /* name on its own line -> converted */
+foo(int a, char *b)
+```
+
+and skips the ordinary same-line form
+
+```c
+int foo(int a, char *b) /* `int` is at the margin, not `foo` -> skipped */
+```
+
+`Live` (os9exec), two trees that are ANSI throughout and converted **nothing**:
+one with all sixteen definitions written on one line, one with twenty-four. A
+tree in that style gets no benefit at all, and the estimate built on "the
+definitions are free" is wrong by the whole job.
+
+**So the pre-port measurement is two counts, not one:** the declarations (never
+converted), and the definitions *not* already in the split style (also never
+converted). "Is this ANSI?" does not predict the work; the brace style does.
 
 Three more blind spots, each confirmed in the tool's own source (`Source`):
 
@@ -121,9 +145,14 @@ ending in a closing quote with no comma, followed by a line opening with a
 quote.**
 
 **Line limits apply to the LOGICAL line, and continuations are spliced before
-counting** — so `\` buys you nothing. `Live` (os9exec): Microware `cpp`
-bus-errors at 513 characters and `c68` stops at 1023. Joining string literals by
-hand routinely lands a line between the two.
+counting** — so `\` buys you nothing, and neither does hiding the line in a
+`#if 0`. `Live` (os9exec): `cpp` gives way first, and **its limit is not a fixed
+number** — 511 characters is the best case measured in a file with nothing else
+in it, and content earlier in the file lowers it, with the same length diagnosed
+cleanly in one file and killing `cpp` outright in another (`os9-c-cheatsheet.md`
+has the measurements). `c68` stops at 1023. Joining string literals by hand
+routinely lands a line between the two, so **keep joined lines well under 500**
+rather than aiming at a threshold.
 
 The hidden case is `__FILE__` inside a macro's format string: it expands at every
 call site, so the line that breaks is the *caller*, and the errors point there
@@ -139,10 +168,12 @@ embedding it.
 - [ ] `<strings.h>`, not `<string.h>`
 - [ ] Source files need CR-only line endings before compiling (`flip -m`)
 - [ ] Assume string literals are read-only
-- [ ] Count the **declarations**, not the definitions — `ansi2knr` converts
-      definitions only, so prototypes are the hand work
+- [ ] Count **two** shapes: the declarations (`ansi2knr` never converts them)
+      and the definitions whose return type shares a line with the name (it
+      skips those too). Both are hand work; "is it ANSI" predicts neither
 - [ ] Join adjacent string literals (`"a" "b"`); nothing here concatenates them
-- [ ] Keep logical lines under ~513 characters; `\` continuations do not help
+- [ ] Keep joined logical lines well under 500 characters — the limit is not
+      fixed, earlier content in the file lowers it, and `\` continuations do not help
 
 ---
 

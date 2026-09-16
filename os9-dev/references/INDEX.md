@@ -61,6 +61,7 @@ has bitten a real session.
 | `cpp` dies with no diagnostic at all | an over-long joined source line — no fixed limit, earlier content lowers it; keep lines well under 500 and note `#if 0` does not exempt one | `c/os9-c-cheatsheet.md` |
 | `PC` unresolved at link in a termcap port | it is `PC_` here — and check `BC`/`UP`, which link silently as the wrong type | `c/os9-clib-reference.md` |
 | A flex scanner prints nothing for a named file but works when you pipe into it | `freopen(name,"r",yyin)` before the first `yylex()` — some skeletons leave `yyin` null until then | `c/os9-c-cheatsheet.md` |
+| Bus error in a byte-fill loop (`MOVE.B #$30,(A3)+`) after a write syscall | a float passed to curses `printw` — format with `sprintf`, draw with `addstr` | `c/os9-clib-reference.md` |
 | A ported program calls `fork`, `pipe`, `kill`, `sleep`, `dup` or `wait` | none of them exist in `clib.l`/`unix.l`; `execl` is a CHAIN that never returns | `c/os9-clib-reference.md` |
 | `**** incorrect include file syntax ****` on a line that looks fine | `#include<file.h>` needs a space before the `<` | `c/os9-c-cheatsheet.md` |
 | Your macro is ignored and the library's is still in force, after one `**** redefined macro ****` warning | this `cpp` keeps the FIRST definition on redefinition — `#undef` before redefining any macro | `c/os9-c-cheatsheet.md` |

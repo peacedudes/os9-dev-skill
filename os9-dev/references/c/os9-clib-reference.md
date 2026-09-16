@@ -378,6 +378,41 @@ corruptions in place.** If `PC` is unresolved in a port, treat it as a signal to
 check the declarations of `BC` and `UP` in the same file and make them `char *`,
 not as a one-line rename.
 
+## `printw()` bus-errors on a floating-point conversion
+
+**Do not pass a float to `printw`.** `Live` (os9exec), reproduced independently
+on two rigs with `curses.l`, `termlib.l` and `math.l` linked:
+
+```c
+printw("F %.2f", 100.0);        /* bus error, vector $02 */
+printw("I %d",   100);          /* fine -- same program, same libraries */
+sprintf(buf, "F %.2f", 100.0);  /* fine -- the C library formats it correctly */
+addstr(buf);
+```
+
+So it is `printw`'s own conversion, not the C library's float formatting and not
+a missing math library.
+
+**The trace is the reason this is worth knowing**, because it does not look like
+a formatting fault. The last syscall is a write, and the PC sits in a runaway
+zero-padding loop:
+
+```
+Executing: -->0005715a: 16fc 0030    MOVE.B #$30,(A3)+     ; $30 is ASCII '0'
+              0005715e: 5385         SUB.L  #$00000001,D5
+```
+
+A reader who sees a byte-fill loop and a write syscall will start auditing their
+own buffers. **The fix is to format with `sprintf` and draw with `addstr`.**
+
+**Scope: `printw` only, and deliberately not wider.** `mvprintw`, `wprintw` and
+`mvwprintw` did not crash when given the same value, but that observation is
+**not evidence they are safe** — it was made on a rig where `initscr()` never
+succeeded, and those three may return before reaching any conversion when there
+is no screen. Treat the family as unmeasured, `Flag`, and reach for
+`sprintf`+`addstr` for all of them until someone measures the other three with
+curses genuinely initialised.
+
 ## String Functions (`strings.h`, not `string.h`)
 
 | Function | Notes |

@@ -17,5 +17,12 @@ run_gate() {
 
 run_gate "doc-consistency check" python3 tools/check_doc_consistency.py --no-inventory
 run_gate "checker test suite" python3 tools/tests/test_check.py
+run_gate "claim-coupling tests" python3 tools/tests/test_claim_coupling.py
+
+# Advisory, deliberately NOT a gate: this one reasons about adjacency, not
+# correctness, so it can only ever say "these files discuss the same thing".
+# Blocking a commit on a guess is how a check earns the reputation that gets it
+# disabled. It prints and gets out of the way.
+python3 tools/check_claim_coupling.py 2>&1 | sed 's/^/  /'
 
 exit 0

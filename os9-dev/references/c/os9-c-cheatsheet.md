@@ -296,6 +296,34 @@ cleanly in some files and kills `cpp` silently in others, and the difference is
 what preceded it. A `cpp` that dies saying nothing is a candidate over-long line
 even when a slightly different file gave you a clean diagnostic.
 
+## flex: check where your skeleton sets `yyin` before using `freopen`
+
+The documented flex idiom for scanning a named file — `freopen(name, "r", yyin)`
+in `main()` before the first `yylex()` — **works or silently does nothing
+depending on which skeleton built your scanner**, and the two differ in one line.
+
+- A skeleton that initialises at declaration, `FILE *yyin = stdin, *yyout =
+  stdout;`, has a valid `yyin` before `yylex()` is ever called, and `freopen`
+  works (`Source`, the `LIB/flex.skel` shipped on one SDK disk).
+- **Skeleton 2.16 assigns `stdin` inside `yylex`'s initialisation block
+  instead**, so `yyin` is null until the first call. A `freopen` in `main()`
+  reopens nothing, the scanner then reads `stdin`, and the program prints
+  nothing — **with no error at all** — `Live` (os9exec).
+
+One grep settles which you have:
+
+```sh
+grep -n 'yyin' LIB/flex.skel        # declaration-initialised, or set in yylex?
+```
+
+**The failure hides from the obvious test.** A scanner whose `freopen` did
+nothing still works perfectly when you pipe input into it, because `stdin` was
+what it was going to read anyway. Only invoking it with a *named file* exposes
+the bug — so a test suite that pipes its fixtures will pass a scanner that
+cannot open a file at all. That is the same asymmetry as the `putc` line-buffering
+trap in `c/os9-clib-reference.md`: **the convenient way to drive a program under
+test is the way that conceals the defect.**
+
 ## Big data: the 64K wall, and `remote`
 
 Two walls stop a port with large buffers, and they are the same wall twice:

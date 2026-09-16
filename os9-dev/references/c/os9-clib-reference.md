@@ -564,7 +564,53 @@ The honest limitation of the whole approach: no shell is involved, so a
 redirection or pipe written *inside* the command line is not interpreted. Build
 the argument vector instead.
 
-### `popen()` is not in this C library at all
+### The Unix process surface is mostly absent — check before you plan a port
+
+The first thing to establish about a Unix program is whether the calls it is
+built on exist here at all. Most of the process and job-control surface does
+not. `Source`, scanning `clib.l` and `unix.l` for exported symbols:
+
+| Unix call | here? | what there is instead |
+|---|---|---|
+| `fork()` | **no** | `os9fork()` (clib) — see the entry above for its arity |
+| `wait()` | **no** | pair `os9fork` with the OS-9 wait; see `common/ipc.md` |
+| `pipe()` | **no** | named pipes, `/pipe` (`common/ipc.md`) |
+| `popen()`/`pclose()` | **no** | nothing; build it from `os9fork` + `/pipe` |
+| `dup()`/`dup2()` | **no** | `os9exec`'s path arguments |
+| `kill()` | **no** | `F$Send`; `getpid()` *is* present in both libraries |
+| `sleep()` | **no** | `tsleep()` (unix.l), in **ticks** — with **bit 31** set it counts 256ths of a second, the same encoding as `F$Alarm` (`68k/syscall-reference.md`) |
+| `execl()` | unix.l | **but it is a CHAIN, not an exec after a fork** |
+
+**`execl()` replaces your process.** `Live` (os9exec): a program printing
+`BEFORE execl`, calling `execl("/h0/CMDS/echo", "echo", "CHILD-RAN", 0)`, then
+printing `AFTER` produced `BEFORE execl` and `CHILD-RAN` and **never printed
+`AFTER`** — control does not come back. A Unix idiom that forks and then `exec`s
+in the child will, transcribed literally, terminate the parent.
+
+**So a program built around a coprocess cannot be ported by substituting calls.**
+Anything that forks a helper and talks to it over a two-way pipe — a front end
+driving `bc`, a pager, a filter pipeline built in C — needs restructuring around
+`os9fork` plus named pipes, not a compatibility shim.
+
+### `<signal.h>` defines five signals, and job control is not among them
+
+`Source` (SDK `DEFS/signal.h`), the complete list:
+
+| name | value |
+|---|---|
+| `SIGKILL` | 0 — cannot be caught or ignored |
+| `SIGWAKE` | 1 |
+| `SIGQUIT` | 2 — keyboard abort |
+| `SIGINT` | 3 — keyboard interrupt |
+| `SIGHUP` | 4 — modem hangup |
+
+With `SIG_DFL` 0 and `SIG_IGN` 1. **`SIGTERM`, `SIGSTOP`, `SIGCONT` and
+`SIGTSTP` do not exist here**, so job-control handlers cannot be ported — they
+have to be compiled out. Note also that a program quitting via
+`kill(getpid(), SIGINT)` has no `kill()` to call and must invoke its own cleanup
+path directly.
+
+## `popen()` is not in this C library at all
 
 Measured, because the gap was worth closing. On the v2.4-era SDK checked:
 

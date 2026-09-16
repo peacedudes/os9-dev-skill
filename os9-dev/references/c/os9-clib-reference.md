@@ -405,13 +405,55 @@ Executing: -->0005715a: 16fc 0030    MOVE.B #$30,(A3)+     ; $30 is ASCII '0'
 A reader who sees a byte-fill loop and a write syscall will start auditing their
 own buffers. **The fix is to format with `sprintf` and draw with `addstr`.**
 
-**Scope: `printw` only, and deliberately not wider.** `mvprintw`, `wprintw` and
-`mvwprintw` did not crash when given the same value, but that observation is
-**not evidence they are safe** — it was made on a rig where `initscr()` never
-succeeded, and those three may return before reaching any conversion when there
-is no screen. Treat the family as unmeasured, `Flag`, and reach for
-`sprintf`+`addstr` for all of them until someone measures the other three with
-curses genuinely initialised.
+**Scope: `printw` alone. The rest of the family is fine.** Measured with curses
+genuinely initialised (`LINES=24 COLS=80`), same float, same program:
+
+| call | result |
+|---|---|
+| `printw("%.2f", 100.0)` | **bus error** |
+| `wprintw(stdscr, "%.2f", 100.0)` | drew `100.00` |
+| `mvwprintw(stdscr, 2, 2, "%.2f", 100.0)` | drew `100.00` |
+| `mvprintw(2, 2, "%.2f", 100.0)` | survived |
+
+`stdscr` is what `printw` is shorthand for, so **the defect is in the wrapper,
+not in the window and not in curses initialisation.**
+
+That gives a lighter fix than `sprintf` for a program with many call sites:
+
+```c
+#define printw(f, a)   wprintw(stdscr, (f), (a))
+```
+
+**But note the arity.** `printw` is variadic; that macro takes exactly one
+argument after the format and will break any call with a different count. It
+suits a program whose calls are uniform — and where they are not, `sprintf` into
+a buffer and `addstr` it remains the general answer.
+
+### `initscr()` reporting an EMPTY terminal name, `Flag`
+
+`Live` (os9exec), unresolved on one rig and absent on another, so environmental
+rather than a defect in the library: `initscr()` fails with
+
+```
+Unknown terminal type ''.
+```
+
+Note the **empty** name in the quotes. That is distinct from
+`'vt100': Unknown terminal type`, which means the name arrived and no entry
+matched it (see the termcap section in `common/using-os9exec-repl.md`). An empty
+name means curses never got a terminal type at all, and no amount of fixing the
+termcap file or `TERMCAP` will help.
+
+Recorded because the obvious causes were eliminated and are not worth anyone
+repeating: `getenv("TERM")` returns `vt100` **from a program linked against
+`curses.l`**, so it is not a getenv that the library replaces; `My_term` is `0`
+and `Def_term` is `NULL`, so the BSD `Def_term` override is not being taken;
+and the failure is identical with `TERMCAP` unset, holding a path, and holding
+the entry string, with `curses.l` listed twice, and under a real pty.
+
+A rig where `SYS/login` exports `TERM` and `TERMCAP` into the session runs the
+same library correctly, so **suspect how the environment reaches the process**
+before suspecting curses.
 
 ## String Functions (`strings.h`, not `string.h`)
 

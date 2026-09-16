@@ -61,7 +61,7 @@ has bitten a real session.
 | `cpp` dies with no diagnostic at all | an over-long joined source line — no fixed limit, earlier content lowers it; keep lines well under 500 and note `#if 0` does not exempt one | `c/os9-c-cheatsheet.md` |
 | `PC` unresolved at link in a termcap port | it is `PC_` here — and check `BC`/`UP`, which link silently as the wrong type | `c/os9-clib-reference.md` |
 | A flex scanner prints nothing for a named file but works when you pipe into it | `freopen(name,"r",yyin)` before the first `yylex()` — some skeletons leave `yyin` null until then | `c/os9-c-cheatsheet.md` |
-| A variable you exported on the host is empty inside the emulator | the host environment does not cross; `TERM`/`TERMCAP` arrive as `""`, so a NULL check does not catch it | `common/using-os9exec-repl.md` |
+| A variable you exported on the host is ignored inside the emulator | only names starting with `@` cross (`@TERM=vt100`); what a non-crossing one looks like inside defeats a NULL check | `common/using-os9exec-repl.md` |
 | curses says `Unknown terminal type ''` with an EMPTY name | the type never reached curses at all — an empty name is not a termcap problem | `c/os9-clib-reference.md` |
 | Bus error in a byte-fill loop (`MOVE.B #$30,(A3)+`) after a write syscall | a float passed to curses `printw` — format with `sprintf`, draw with `addstr` | `c/os9-clib-reference.md` |
 | A ported program calls `fork`, `pipe`, `kill`, `sleep`, `dup` or `wait` | none of them exist in `clib.l`/`unix.l`; `execl` is a CHAIN that never returns | `c/os9-clib-reference.md` |

@@ -209,49 +209,54 @@ directory or `mdir` entry that exists then reads as absent — the same class of
 silent truncation as the `grep` case, and just as easy to build a wrong
 conclusion on.
 
-## The host environment does not cross, and `TERM` arrives EMPTY rather than unset
+## Passing environment variables in: the `@` prefix
 
-`Live` (os9exec), measured three ways with one probe printing `getenv("TERM")`:
+**A host variable reaches the emulated process only if its name starts with `@`.**
+`Source` (os9exec, `prepParams` in `os9exec_nt.c`): the routine that builds the
+guest's environment block walks the host `envp[]` and takes **only** entries
+beginning with `@` — "OS-9 environment variables must start with a '@'".
 
-| how the program was started | what it saw |
-|---|---|
-| host exports `TERM=vt100`, program run as the boot program | `TERM=[]` |
-| host exports `TERM=zzz`, same | `TERM=[]` |
-| no host `TERM` at all, same | `TERM=[]` |
-| `setenv TERM vt100` in an OS-9 shell procedure, then the program | `TERM=[vt100]` |
+`Live` (os9exec), one probe printing `getenv("TERM")`, run as the boot program:
 
-Two separate facts, and the second is the one that costs time.
+```sh
+env '@TERM=vt100' '@TERMCAP=…' os9exec /h0/CMDS/prog   # prog sees TERM=[vt100]
+env  'TERM=vt100'               os9exec /h0/CMDS/prog   # prog sees TERM=[]
+```
 
-**The host environment does not reach the emulated process.** Exporting a
-variable in the shell that launches `os9exec` does nothing for the program
-inside. The `OS9*` variables are the exception that proves it — they configure
-*the emulator*, not the process, which is why they work and `TERM` does not.
+So the familiar `TERM=vt100 os9exec …` does nothing for the program inside, and
+it fails **silently** — there is no warning that the variable was ignored. This
+is the first thing to check when a program behaves as though a variable you
+"set" is missing.
 
-**But `TERM` and `TERMCAP` are not absent inside — they are present and empty.**
-That defeats the check most programs make. `getenv("TERM")` returns a non-NULL
-pointer to `""`, so a guard like
+**What a non-crossing variable looks like inside is build-dependent, `Flag`.**
+Measured here, `TERM` and `TERMCAP` arrive as **empty strings** — non-NULL
+pointers to `""`. Measured on a different os9exec build (263b94a, started via
+`bash`), `TERM` instead arrives as **`dumb`** while `TERMCAP`, `USER` and `HOME`
+are genuinely **NULL**. Both were measured with probes that distinguish NULL from
+empty, so this is a real difference between builds or invocations and not a
+reporting artefact; which it is has not been established.
+
+**The consequence survives the difference, and is the part to act on.** A guard
+like
 
 ```c
 if ((t = getenv("TERM")) == NULL) { fprintf(stderr, "TERM not defined\n"); exit(1); }
 ```
 
-passes, and the program carries on with an empty terminal name — which is why a
-curses or termcap program started this way reports
+passes in *both* worlds, because the variable is present — just useless. The
+program then proceeds with `""` or with `dumb`, and a curses or termcap program
+reports either `Unknown terminal type ''` (empty name — the type never arrived)
+or a failure naming a terminal you never chose. Neither is a fault in your
+termcap file.
 
-```
-Unknown terminal type ''.
-```
+**`USER` and `HOME` being NULL matters for ports.** Programs that name the player
+from `getenv("USER")` hand that pointer straight to `strncpy`. Supply a fallback
+rather than assuming a login session set one.
 
-**with an empty name in the quotes.** That message is not about your termcap
-file. It means the variable never arrived, and no amount of correcting
-`SYS/termcap` or `TERMCAP` will change it. Contrast
-`'vt100': Unknown terminal type`, where the name *did* arrive and no entry
-matched — a different fault with a different fix (see the termcap section
-below).
-
-**So set terminal variables in-universe**: `setenv` in the shell procedure that
-runs the program, or let `SYS/login` export them in a real login session. Not on
-the host command line.
+**So: pass `@NAME=VALUE` on the host command line, or set the variable
+in-universe** (`setenv` in a shell procedure, or a real login through
+`SYS/login`, which is what exports `TERM`, `TERMCAP`, `USER` and `HOME` on a
+configured disk).
 
 ## Batch-testing binaries
 

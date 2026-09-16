@@ -450,11 +450,14 @@ repeating: `getenv("TERM")` returns `vt100` **from a program linked against
 and `Def_term` is `NULL`, so the BSD `Def_term` override is not being taken;
 and the failure is identical with `TERMCAP` unset, holding a path, and holding
 the entry string, with `curses.l` listed twice, and under a real pty. The
-emulator's own empty-`TERM` behaviour (`common/using-os9exec-repl.md`) produces
-this same message and is the first thing to rule out — but it is **not** the
-cause here: the variable was set in-universe and a `getenv` probe in a
-curses-linked program returned `vt100`, and removing the host's `TERM` before
-starting the emulator changed nothing.
+emulator's `@`-prefix rule (`common/using-os9exec-repl.md`) produces this same
+message and is the first thing to rule out. **Passing `@TERM=vt100` on the host
+command line does clear the message** — so an unset or non-crossing `TERM` is the
+usual cause. What remains unexplained is narrower: the message also appeared when
+the variable was set *in-universe* with `setenv`, in a run where a `getenv` probe
+inside a curses-linked program returned `vt100`. A variable the shell created and
+one the emulator created are evidently not equivalent to this library, and which
+difference matters has not been established.
 
 A rig where `SYS/login` exports `TERM` and `TERMCAP` into the session runs the
 same library correctly, so **suspect how the environment reaches the process**

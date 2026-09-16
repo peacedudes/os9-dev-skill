@@ -466,9 +466,13 @@ Three routes, in order of preference by size:
    and both render fully. Programs that carry their own compiled termcap, or
    that simply assume a vt100, do not all accept a modern name. Set it before
    blaming the program or the emulator. If a correct `vt100` still draws
-   `Unknown terminal type` against a termcap that plainly contains it, the
-   program may carry the reader that skips any entry lacking a two-character
-   first field — see the section on that below. Basic loop: `i`,
+   `Unknown terminal type`, two further causes sit behind that one message, and
+   the quotes tell them apart: a **named** type means the entry was not matched,
+   so suspect the reader that skips any entry lacking a two-character first
+   field (below); an **empty** `''` means the name never reached the library at
+   all — check the `@` prefix above, and note that a `setenv`-created variable
+   is visible to `getenv` and invisible to curses
+   (`c/os9-clib-reference.md`). Basic loop: `i`,
    type, ESC, `:wq`.
 3. **Host-side editing + `flip`** — host-native directories only (a file
    inside an RBF image has no host file to touch). `flip -m` → CR-only

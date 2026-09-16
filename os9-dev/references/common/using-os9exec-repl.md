@@ -209,6 +209,50 @@ directory or `mdir` entry that exists then reads as absent — the same class of
 silent truncation as the `grep` case, and just as easy to build a wrong
 conclusion on.
 
+## The host environment does not cross, and `TERM` arrives EMPTY rather than unset
+
+`Live` (os9exec), measured three ways with one probe printing `getenv("TERM")`:
+
+| how the program was started | what it saw |
+|---|---|
+| host exports `TERM=vt100`, program run as the boot program | `TERM=[]` |
+| host exports `TERM=zzz`, same | `TERM=[]` |
+| no host `TERM` at all, same | `TERM=[]` |
+| `setenv TERM vt100` in an OS-9 shell procedure, then the program | `TERM=[vt100]` |
+
+Two separate facts, and the second is the one that costs time.
+
+**The host environment does not reach the emulated process.** Exporting a
+variable in the shell that launches `os9exec` does nothing for the program
+inside. The `OS9*` variables are the exception that proves it — they configure
+*the emulator*, not the process, which is why they work and `TERM` does not.
+
+**But `TERM` and `TERMCAP` are not absent inside — they are present and empty.**
+That defeats the check most programs make. `getenv("TERM")` returns a non-NULL
+pointer to `""`, so a guard like
+
+```c
+if ((t = getenv("TERM")) == NULL) { fprintf(stderr, "TERM not defined\n"); exit(1); }
+```
+
+passes, and the program carries on with an empty terminal name — which is why a
+curses or termcap program started this way reports
+
+```
+Unknown terminal type ''.
+```
+
+**with an empty name in the quotes.** That message is not about your termcap
+file. It means the variable never arrived, and no amount of correcting
+`SYS/termcap` or `TERMCAP` will change it. Contrast
+`'vt100': Unknown terminal type`, where the name *did* arrive and no entry
+matched — a different fault with a different fix (see the termcap section
+below).
+
+**So set terminal variables in-universe**: `setenv` in the shell procedure that
+runs the program, or let `SYS/login` export them in a real login session. Not on
+the host command line.
+
 ## Batch-testing binaries
 
 Each candidate can be its own boot program in a fresh instance — no shell

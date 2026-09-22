@@ -407,21 +407,16 @@ toolchain): `int`, `long`, and pointers are all 32-bit there, not the
 | `float` | 4 bytes — proprietary sign-magnitude binary format (exponent biased by 128, 3-byte mantissa with implied leading 1), **not IEEE 754** | **4 bytes, IEEE-754 single (`Live` (os9exec))** — a C `float`=1.0 stored `3F 80 00 00` (big-endian), textbook IEEE single. NOT the 6809 proprietary format |
 | `double` | 8 bytes — same proprietary format, 7-byte mantissa | **8 bytes, IEEE-754 double (`Live` (os9exec))** — a C `double`=1.0 stored `3F F0 00 00 00 00 00 00` (big-endian), textbook IEEE double |
 
-**`float`/`double` *storage* is IEEE-754, but *arithmetic* is single-precision
-on os9exec (`Live` (os9exec)).** A `double` computation loses precision to
-about single-precision magnitude: `0.1+0.2-0.3` (and the runtime-computed
-`1.0/10.0+2.0/10.0-3.0/10.0`, so it isn't constant-parsing) yielded a 2⁻²²
-residual — `0.1+0.2 != 0.3` is still true (C does a real IEEE compare, unlike
-BASIC09's tolerant `=`), but you get ~7 good digits, not ~16. This is the
-default soft-float math (the `math` trap handler), shared with BASIC09 REAL, and
-it's fixed at compile time — `load math881` at runtime does NOT change an
-already-compiled program (`Live` (os9exec)). **To get full precision, compile for the
-68881 FPU: `cc -K=2F` (`-K=2` = target 68020, `F` = 68881; uses the `c68020`/
-`r68020` passes).** `Live` (os9exec): with `-K=2F`, the runtime-computed
-`1.0/10.0+2.0/10.0-3.0/10.0` gave a residual of **exactly 0** (the 68881's 80-bit
-extended precision — even tighter than 64-bit double), vs 2⁻²² without it. So the
-68881 emulation is accurate; the single-precision default is a `math`-trap
-limitation, not the CPU core. See `basic09/basic09-per-target.md`.
+**`double` arithmetic is full IEEE double**, `Live` (os9exec), whether through
+the default soft-float `math` trap handler or compiled for the 68881 with
+`cc -K=2F` (`-K=2` = target 68020, `F` = 68881; uses the `c68020`/`r68020`
+passes). The runtime-computed `1.0/10.0+2.0/10.0-3.0/10.0` leaves
+`5.5511151231257827e-17` (2⁻⁵⁴, the textbook double result) either way,
+`1.0/3.0` prints `0.3333333333333333` at `%.17g`, and `0.1+0.2 == 0.3` is false —
+so compare with a tolerance, as on any IEEE system. The choice is fixed at
+compile time: `load math881` at run time does not change an already-compiled
+program. See `basic09/basic09-per-target.md` for BASIC09 REAL, which shares the
+soft-float handler.
 
 On the 6809 compiler only, `SHORT`/`SHORT INT` are synonyms for plain
 `int`, `LONG INT` is a synonym for `long`, and `LONG FLOAT` means `double`

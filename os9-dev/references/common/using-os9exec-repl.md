@@ -326,6 +326,14 @@ leading slash works. `mount -?` also lists `-n=<bytes>` sector size,
 `-c=<num>` cluster size and `-d=<device>` (a RAM disk copied from a device).
 Worth knowing because a good deal of freeware wants a `/r0` to scribble on.
 
+**`mount <image> hX` attaches an existing RBF image while the emulator runs**,
+`Live` (os9exec). The image may be named by an OS-9 path (`mount /h5/disk.dsk
+hc`, the file sitting on a host-directory device), by a name relative to the
+current directory, or by a host path. `-w` mounts it write-protected, so a
+write gives `E_WP` (242). A device name already in use is refused with `/h5 is
+already a device` and `E_DEVBSY` (250). It is the alternative to naming the
+image with `OS9Hx` at startup when you only find out mid-session that you need it.
+
 **`OS9DISK` CAN point at an RBF image** — `Live` (os9exec), measured
 on macOS with `env -i` and from an unrelated
 working directory. All three of these work against a 253 MB RBF
@@ -867,8 +875,9 @@ the device is refused**: `dir`, `list` or `chd` through it gives `E_PNNF`, as
 does `deldir`, which therefore deletes nothing. `del` of the link itself fails
 with `E_BPNAM` and leaves it in place, so remove such links on the host.
 
-`deldir` recurses into and deletes an in-device directory-symlink's real
-target (OS-9 has no link concept, so it can't tell). Symlink cycles can crash
+`deldir -q` on an in-device link to a directory deletes everything inside the
+target — OS-9 has no link concept, so it cannot tell — and then removes the
+link. The target directory itself stays, empty. Symlink cycles can crash
 the emulator after ~40–60 hops.
 
 ## Launching two concurrent background processes

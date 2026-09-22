@@ -1096,6 +1096,22 @@ instruction that faulted. This also settles a question worth settling early —
 nothing in the image means execution left the program, which is a different
 class of bug from one that has a line number.
 
+**A crash that comes and goes with how busy memory is suggests a one-byte
+stack overrun into a saved register's high byte.** 68k is big-endian, so the
+first byte past a stack buffer is the high byte of whatever the function
+saved above it — typically the frame pointer. A string one character too long
+for its buffer writes its NUL there. While the program sits below 16 MB that
+byte is already `$00` and nothing happens; above 16 MB the damaged pointer
+sends `UNLK`/`RTS` into low memory, and the process dies with an illegal
+instruction wherever execution stops — a `PC` that matches nothing in the
+module. A 68000 or 68010 ignores the top address byte, so it never shows
+there; a 68020 or later with more than 16 MB shows it, and so does os9exec,
+which emulates a 68020 with a large arena. To reproduce, push the program's
+memory high: `sleep -s 12 #20000k &` at the shell holds 20 MB while you run
+it. `Live` (os9exec): the collection's `bash` 1.12 builds `BASH_VERSION` with
+`sprintf` into a 12-byte buffer and writes 13; it crashed 2 of 2 with memory
+pushed high, and a copy one character shorter ran 3 of 3.
+
 **A dump hinting at a corrupted module is not evidence of one.** Check the file
 with `ident`, which reports the module CRC and the header parity separately; a
 module that reports `Good CRC` and `Good parity` is intact, whatever a

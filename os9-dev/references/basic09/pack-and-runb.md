@@ -180,14 +180,6 @@ resolves sibling `RUN`s against the stale residents, silently changing
 results. For experiments that matter, run in a fresh emulator/system
 instance and audit `mdir` when results look impossible.
 
-Related, os9exec-specific: older os9exec builds intercepted `F$Link` for
-names matching emulator-internal commands (`move`, `dir`, `copy`, …), so a
-packed procedure named e.g. `move` crashed at its `RUN` with varying
-errors (BASIC09 043, `E_ILLINS`, `E_BUSERR`). Fixed (a genuine resident
-module now wins over an internal command); on an old build, check the
-procedure's name against the internal-command list before suspecting the
-program.
-
 ## Command-line arguments
 
 Arguments after the module name bind positionally to the entry procedure's

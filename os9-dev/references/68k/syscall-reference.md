@@ -67,8 +67,8 @@ on TRAP #1–#15 via F$TLink.
 
 | Call | Purpose | Key inputs | Key outputs | Notes |
 |------|---------|-----------|------------|-------|
-| **F$Mem** | Resize the data memory area | d0.l=desired size in bytes, rounded up to an allocation block ("16 bytes in version 2.0"); 0=information request | d0.l=actual size, (a1)=new end of the data area (+1) | Grows "contiguously upward", shrinks "downward from the old highest address": the base never moves (A6 points into it). Contracting to at or below the stack pointer is `E$DelSP` (223). An expansion may be refused with adequate memory free, because the space directly ABOVE the data area must itself be free (`Manual`, F$Mem page 1 - 43) — a C program built with `cc -I` loads `cio` right after entry and that module then sits above its data area, so `load` the trap handler first if a program's F$Mem expansion keeps failing. `Live` (os9exec): information request, E$DelSP, and expansion when the arena above is free (CONF68K t51–t53); v4.0.0 answered 208. |
-| **F$SysID** | Get system identification | Pre-3.0 form: (a0)/(a1)/(a2)=80-byte buffers for the version, copyright and author-names strings, 0=not wanted | d0.l=licensee, d1.l=serial (both 1 by default), d2.l=MPU in use, d3.l=MPU the kernel was built for (Motorola part numbers), d4–d7=0 | **Not in the v2.4 manual**: "implemented but not documented" before v3.0 (OS-9 Insights ed. 3, App. A), the register form above being the OS-9 Guru's 11.5.16 (`Hearsay`-grade third party, but confirmed by period code: hc_utils `sysid.c` passes exactly these registers). v3.0 redefined it around a parameter block after OS-9000's `_os_SysID()`; that layout is not documented in anything available here. `Live` (os9exec): the pre-3.0 form, answering 68020/68020, 1/1, and its own strings (CONF68K t54); v4.0.0 answered 208. |
+| **F$Mem** | Resize the data memory area | d0.l=desired size in bytes, rounded up to an allocation block ("16 bytes in version 2.0"); 0=information request | d0.l=actual size, (a1)=new end of the data area (+1) | Grows "contiguously upward", shrinks "downward from the old highest address": the base never moves (A6 points into it). Contracting to at or below the stack pointer is `E$DelSP` (223). An expansion may be refused with adequate memory free, because the space directly ABOVE the data area must itself be free (`Manual`, F$Mem page 1 - 43) — a C program built with `cc -I` loads `cio` right after entry and that module then sits above its data area, so `load` the trap handler first if a program's F$Mem expansion keeps failing. `Live` (os9exec): information request, E$DelSP, and expansion when the arena above is free (CONF68K t51–t53). |
+| **F$SysID** | Get system identification | Pre-3.0 form: (a0)/(a1)/(a2)=80-byte buffers for the version, copyright and author-names strings, 0=not wanted | d0.l=licensee, d1.l=serial (both 1 by default), d2.l=MPU in use, d3.l=MPU the kernel was built for (Motorola part numbers), d4–d7=0 | **Not in the v2.4 manual**: "implemented but not documented" before v3.0 (OS-9 Insights ed. 3, App. A), the register form above being the OS-9 Guru's 11.5.16 (`Hearsay`-grade third party, but confirmed by period code: hc_utils `sysid.c` passes exactly these registers). v3.0 redefined it around a parameter block after OS-9000's `_os_SysID()`; that layout is not documented in anything available here. `Live` (os9exec): the pre-3.0 form, answering 68020/68020, 1/1, and its own strings (CONF68K t54). |
 | **F$SRqMem** | Request system memory | d0.l=size (rounded up to 16 bytes; `$FFFFFFFF`=request the largest available block) | d0.l=actual size, (a2)=block pointer | `Live` (os9exec) |
 | **F$SRtMem** | Return system memory | d0.l=size, (a2)=block pointer | — | Must pass back exactly the size `F$SRqMem` returned, or the block silently isn't freed. `Live` (os9exec) |
 | **F$SRqCMem** | Request colored system memory | d0.l=size, d1.l=color | d0.l=actual size, (a2)=block pointer | Shares `F$SRqMem`'s handler on os9exec; the color parameter is accepted but never read, so it has no effect there. `Live` (os9exec) |
@@ -138,39 +138,25 @@ and **A$AtJul** takes seconds after midnight.
 
 That high bit is easy to lose and expensive to lose. A C `alarm()` built on
 `secs<<8 | $80000000` is asking for 256ths — which is what the `unix.l` `alarm()`
-shipping with the freeware collection does, so `alarm(2)` passes `$80000200`. A
-runtime that ignores bit 31 reads the same word as an enormous tick count, and
-the alarm **silently never fires** rather than firing early or late.
-
-**`Live` (os9exec), and true of every build a reader currently has:** bit 31 is
-ignored for `A$Set` and `A$Cycle` and `d3` is stored as raw ticks, so `$80000200`
-comes due roughly 2³¹ ticks away. **The call itself returns carry clear**, so
-nothing reports a problem — the alarm is simply never delivered.
-
-The evidence is deliberately free of any C library: two assembled probes calling
-`F$Alarm` directly with `A$Set`/`A$Cycle` of `$80000100` printed `ARMED` and then
-slept a full 10 seconds. That matters because the obvious symptom has a **second,
-independent cause** that would otherwise be mistaken for this one — see below.
+shipping with the freeware collection does, so `alarm(2)` passes `$80000200`.
+Code that drops bit 31 turns the same word into an enormous tick count, and
+the alarm **silently never fires** rather than firing early or late; the call
+still returns carry clear. `Live` (os9exec): `A$Set` and `A$Cycle` decode bit 31
+and round up to the tick, as the manual's NOTE requires (CONF68K t72–t76).
 
 **Two different faults make a ported program's alarm look dead, and fixing one
-leaves the other.** This bit-31 bug means the alarm never comes due at all. But a
+leaves the other.** A lost bit 31 means the alarm never comes due at all. But a
 Unix-compatibility `signal()` may also deliver handlers only on a poll, so even a
 correctly armed alarm runs nothing until the program calls `check_signal()` —
-that one is a library property, not a kernel or emulator property, and is
-described in `c/os9-clib-reference.md`. Establish which you have before changing
-anything: arm a deadline from **assembly**, or from Microware's own
-`intercept()`, and you have removed the library from the question.
+that one is a library property, not a kernel property, and is described in
+`c/os9-clib-reference.md`. Establish which you have before changing anything:
+arm a deadline from **assembly**, or from Microware's own `intercept()`, and you
+have removed the library from the question.
 
-**Workaround on those builds:** pass the interval in **raw ticks with bit 31
-clear** — 100 ticks per second on os9exec. A fix is in progress there.
-
-**And note the asymmetry, because it is what makes this confusing to diagnose:**
-`F$Sleep` documents the same high-bit convention for its `d0.l`, and os9exec
-**does** decode it there. So sub-second `F$Sleep` timing works while `F$Alarm`
-intervals do not, in the same program, on the same build — which reads as the
-alarm machinery being broken generally rather than one call's argument going
-undecoded. (The `F$Sleep` page states no rounding rule where `F$Alarm`'s NOTE
-requires rounding up; os9exec rounds down there, which is not thereby wrong.)
+**`F$Sleep` shares the high-bit convention but not the rounding rule.** Its page
+states none, where `F$Alarm`'s NOTE requires rounding up; os9exec rounds a
+sub-tick `F$Sleep` down and an `F$Alarm` up. That is not an inconsistency to
+tidy away — each follows its own page.
 
 **The same high-bit convention appears elsewhere**, so recognise it rather than
 learning it per-call: a record-lock timeout uses it too — zero sleeps forever,
@@ -188,8 +174,8 @@ including an indefinite `F$Sleep(0)`.
 
 | Call | Purpose | Notes |
 |------|---------|-------|
-| **F$Send** | Send signal to a process | **d0.w=receiver PID (0=all), d1.w=signal code**. Kill (0) restricted to same user/group (superuser excepted); other codes unrestricted. PID 0 broadcasts to all same-user/group processes except the sender. A signal sent while an earlier one is still pending joins a FIFO queue for that process `Manual`; Dibble's *OS-9 Insights* §8.9 (third-party) puts a queued send at up to 10× the cost of an unqueued one. `Live` (os9exec) for the order (CONF68K t69), but only on recent builds: v4.0.0 and builds until the fix put a queued signal that could not be delivered yet back at the END of the queue, so three sent while masked arrived as 301, 300, 302. Run t69 before debugging a program's signal order |
-| **F$Icpt** | Install signal intercept routine | The manual names only d1.w (signal code) and a6 as set on entry `Manual`. Dibble's *OS-9 Insights* §8.1 (third-party, "An Undocumented Feature") adds that d0.w holds the count of queued signals, counting the one being delivered, so 1 = nothing else waiting; the C `intercept()` wrapper hides it. `Live` (os9exec) (CONF68K t70), but only on recent builds: v4.0.0 and builds until the fix leave d0 as the interrupted code had it. No handler installed ⇒ any interceptable signal kills the process. `Live` (os9exec) |
+| **F$Send** | Send signal to a process | **d0.w=receiver PID (0=all), d1.w=signal code**. Kill (0) restricted to same user/group (superuser excepted); other codes unrestricted. PID 0 broadcasts to all same-user/group processes except the sender. A signal sent while an earlier one is still pending joins a FIFO queue for that process `Manual`; Dibble's *OS-9 Insights* §8.9 (third-party) puts a queued send at up to 10× the cost of an unqueued one. `Live` (os9exec) for the order (CONF68K t69) |
+| **F$Icpt** | Install signal intercept routine | The manual names only d1.w (signal code) and a6 as set on entry `Manual`. Dibble's *OS-9 Insights* §8.1 (third-party, "An Undocumented Feature") adds that d0.w holds the count of queued signals, counting the one being delivered, so 1 = nothing else waiting; the C `intercept()` wrapper hides it. `Live` (os9exec) (CONF68K t70). No handler installed ⇒ any interceptable signal kills the process. `Live` (os9exec) |
 | **F$SigMask** | Mask delivery | d1 = +1 increment / −1 decrement / 0 clear-to-zero. Counter is P$SigLvl (unsigned byte); over/underflow silently ignored. F$Sleep unmasks internally, making `mask → sleep(0)` a safe masked wait. `Live` (os9exec) |
 | **F$SigReset** | Reset intercept-nesting counter | Needed when `longjmp()` bypasses F$RTE exits |
 | **F$RTE** | Return from intercept | Processes queued signals first |
@@ -311,10 +297,7 @@ to a shared unimplemented handler. Calling any is a clean, safe `E$UNKSVC`
 (208): no crash, no side effect, and no real register contract to document.
 `Live` (os9exec). F$SSpd is the one Microware's own v2.4 manual marks
 "currently not implemented" (`Manual`), so 208 is the conformant answer
-there, not a gap. F$Mem used to be on this list: os9exec v4.0.0 answered it
-with 208, and a program whose first allocation goes through it (Carl
-Kreider's `subber`) simply stopped; later builds implement it — see its
-row above.
+there, not a gap.
 
 ## Notes
 

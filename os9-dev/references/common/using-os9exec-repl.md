@@ -273,8 +273,8 @@ Homebrew), and a bare `timeout` does not exist. On Linux it is `timeout`. Harnes
 code that assumes the unprefixed name dies before it runs a single case, so pick
 one and use it everywhere; the examples in this file all say `gtimeout`.
 
-`</dev/null` is explicit and harmless (a redirected host stdin now returns
-end-of-file on its own, so a stdin-reader no longer hangs without it); the
+`</dev/null` is explicit and harmless (a redirected host stdin returns
+end-of-file on its own, so a stdin-reader does not hang without it); the
 timeout is still mandatory.
 
 This tests **"loads and starts"** and nothing more — at that narrow question a
@@ -326,8 +326,8 @@ leading slash works. `mount -?` also lists `-n=<bytes>` sector size,
 `-c=<num>` cluster size and `-d=<device>` (a RAM disk copied from a device).
 Worth knowing because a good deal of freeware wants a `/r0` to scribble on.
 
-**`OS9DISK` CAN point at an RBF image** — `Live` (os9exec), re-measured
-against os9exec `e8a3c81` on macOS, with `env -i` and from an unrelated
+**`OS9DISK` CAN point at an RBF image** — `Live` (os9exec), measured
+on macOS with `env -i` and from an unrelated
 working directory. All three of these work against a 253 MB RBF
 image:
 
@@ -382,12 +382,10 @@ binary, for the reasons under "Launching and disks" above. The traps, all
   how the commands reach the shell, not by what the file is called — so a
   generator that emits one ending for both uses is wrong half the time, which
   is how this bites twice in a day.
-- Piping the same commands into an interactive `shell` **used to hang** at
-  end of input and no longer does (`Live` (os9exec), as of the freeware-sweep
-  fixes): a redirected or piped host stdin now delivers end-of-file, so the
+- Piping the same commands into an interactive `shell` works too (`Live`
+  (os9exec)): a redirected or piped host stdin delivers end-of-file, so the
   shell runs the piped commands and then exits. The procedure file is still
-  the tidier route — it gives CR-ending control and a named artifact — but a
-  pipe terminating cleanly is the difference between the two now, not a hang.
+  the tidier route — it gives CR-ending control and a named artifact.
 - **A utility that prompts devours the rest of the file.** `copy` onto an
   existing destination reports `Error #000:218` and then asks `Overwrite
   (yes/no/all/quit)?`. The following procedure lines are read as answers to
@@ -809,9 +807,8 @@ Two different things behind the same device names:
   `list ../outside` and `list ../../../../outside` both give `E_PNNF` while a
   read inside the device works. The four-level climb really did climb four
   levels: on a host directory a relative pathlist is joined to an absolute path
-  and resolved host-side, which counted stacked runs correctly even on builds
-  before `985e0d8`, where the same spellings failed on an RBF image (see the
-  climbing section in `common/unix-differences.md`). Naming the device type
+  and resolved host-side (see the climbing section in
+  `common/unix-differences.md`). Naming the device type
   matters here, because `OS9DISK`/`OS9Hx` can equally name an image. The one exception is NESTED device
   roots — if one device's host root sits inside another's, `..` walks from the
   inner device into the outer one (the clamp matches the first configured root
@@ -831,8 +828,7 @@ Two different things behind the same device names:
 **Name lookup on a host directory is not what OS-9 does**, `Live` (os9exec) and
 `Source` (its own `CaseSens` path lookup). The exact host name is tried first;
 failing that, the directory is scanned and the **first** entry whose *shown* name
-matches wins — where "shown" means cut to 28 characters (27 on v4.0.0 and
-builds until a recent fix) with spaces rendered as `_`, compared **case-insensitively**. Consequences, none of them OS-9 semantics:
+matches wins — where "shown" means cut to 28 characters with spaces rendered as `_`, compared **case-insensitively**. Consequences, none of them OS-9 semantics:
 
 - **Case-insensitive even on Linux.** `list /h5/sub/file.txt` opens `Sub/File.txt`
   on a case-sensitive host filesystem. Code that relies on case to distinguish
@@ -855,58 +851,25 @@ host-side therefore leaves it unreadable to OS-9 line I/O unless you convert it
 (see the CR-rule section above); the device being a plain host directory does not
 buy you host line endings.
 
-**A host path containing a space is unusable**, `Live` (os9exec) through
-`78d03c1`: `OS9H5="/tmp/has space"` gives `E_PNNF` on `dir /h5`. Keep device
-paths free of spaces. (A fix for this is in flight; until it lands in a build you
-have, assume the limitation.)
-
 **Host-side modes the emulator chooses**, `Live` (os9exec): `makdir` creates a
-directory at `0700`, and a shell `>` redirect creates a file at `0600`. Since
-`78d03c1` a super-user `I$Create` on a host directory always keeps owner **read**
+directory at `0700`, and a shell `>` redirect creates a file at `0600`. A
+super-user `I$Create` on a host directory always keeps owner **read**
 and never write — a deliberate choice, and RBF is unchanged.
 
 **Fuller treatment**: the emulator's own `docs/host-drives.md`
 ([os9exec](https://github.com/peacedudes/os9exec)) is a guide to how host drives
 work and how they differ from RBF, and goes further than this section needs to.
 
-**Host links inside a device root — avoid; if present, know the quirks**:
-hard links behave as ordinary files (deleting one name leaves the other's
-content). In-root symlinks resolve correctly. A symlink pointing *outside*
-the device root is silently redirected to the device root — no error, wrong
-data; a single such stray link can corrupt `dsave` output downstream.
+**Host links inside a device root**, `Live` (os9exec): hard links behave as
+ordinary files (deleting one name leaves the other's content), and a symlink
+that stays inside the device resolves normally. **A symlink pointing outside
+the device is refused**: `dir`, `list` or `chd` through it gives `E_PNNF`, as
+does `deldir`, which therefore deletes nothing. `del` of the link itself fails
+with `E_BPNAM` and leaves it in place, so remove such links on the host.
 
-The redirection shows two faces. **Reading through the link gives you the root
-under the link's name** — `dir /h5/out` lists the whole of `/h5`, with no error —
-so anything that walks directories (`dsave`, `deldir`, `pd`) sees the device root
-a second time under a name that is not it. That is the real cost: wrong data,
-silently, in tools whose output you then trust.
-
-**`deldir` through such a link DELETES FILES IN THE DEVICE ROOT.** `Live`
-(os9exec), measured on the last build before the fix: a scratch device holding
-`rootfile1`, `rootfile2` and `outlink`; `deldir -q /h7/outlink` printed
-`can't delete 'outlink' - E_DNE` — and had already deleted `rootfile2` from the
-root. The directory the link actually pointed at was untouched.
-
-**The mechanism is what generalises, so know it rather than the instance.**
-`deldir` does not delete through the link's path. It `chd`s into what it takes to
-be a directory — which the clamp has made the device root — and then deletes each
-entry **by relative name**. Those names resolve normally inside the root, so they
-are the root's real files, and no link is involved by the time the deletes
-happen. How many it destroys before erroring depends on host ordering. **Any tool
-that walks directories and changes files is dangerous near an outward link**, not
-just this one.
-
-By contrast `del` of the link *itself* is harmless — it reports `E_DNE` and
-removes nothing, because the host call behind it removes a directory only when
-empty and the root cannot be empty while it holds the link. That harmlessness is
-specific to that one operation and **does not generalise to writing through the
-link**, which is exactly the inference that hid the `deldir` case.
-
-**Remove outward links on the host before running `deldir`, or anything else
-that walks and modifies, anywhere near one.**
-`deldir` recurses into and deletes a directory-symlink's real target (OS-9
-has no link concept, so it can't tell). Symlink cycles can crash the
-emulator after ~40–60 hops.
+`deldir` recurses into and deletes an in-device directory-symlink's real
+target (OS-9 has no link concept, so it can't tell). Symlink cycles can crash
+the emulator after ~40–60 hops.
 
 ## Launching two concurrent background processes
 
@@ -951,19 +914,14 @@ appears several times per C program, and 0 is now answered deliberately
 because that is what a machine without an SSM reports — see
 `kernel-internals.md` in `os9-systems-dev`.
 
-**Do not chase these from an older report.** `F$Mem`, `F$GPrDsc` and
-`F$GPrDBT` were all gaps in v4.0.0 — the first answered 208 and stopped any
-program whose first allocation went through it, the other two took a bus
-error instead of refusing — and later builds implement all three. `top` still
-dies, and that one is `top`'s own bug rather than the emulator's: it asks for
+**`top` dies, and that is `top`'s own bug rather than the emulator's:** it asks for
 PID 0, gets the documented `E$IPrcID` (224) refusal, ignores the carry, and
 reads its unfilled buffer. It would do the same on real hardware.
 `Live` (os9exec).
 
 **The emulator's own diagnostics share the running program's stderr.** Most
-carry a `# ` prefix — `# No more memory:` from the allocator, and on v4.0.0
-`# /tN is /dev/ttysNNN` from hostterm (later builds name the host device only
-in `idevs`) — but **not all**: the unimplemented-global notice
+carry a `# ` prefix — `# No more memory:` from the allocator, for one — but
+**not all**: the unimplemented-global notice
 above prints bare, as `F$SetSys: unimplemented 0024 (size=80000004)`, so a
 filter keyed on `# ` lets it through. All of them go to that path rather than
 a channel of its own, so they interleave with guest output. `2>/nil` is what
@@ -975,29 +933,6 @@ connection to the client. `idbg -o <path>` typed in the guest moves it to a
 file instead, e.g. `idbg -o /h5/trc -d 2` with `OS9H5` naming a scratch
 directory; the file is appended to, and its lines end in CR. `Source`
 (os9exec: `Change_DbgPath`), `Live` (os9exec).
-
-## Floating point: check the build before judging any FP result
-
-`Live` (os9exec). A CPU-core defect fixed in `209b35c` made **every soft-float
-result subtly wrong** on earlier builds: `NEG` and `NBCD` never copied C into X
-in any CPU table, and the `SUB` family did not in the 68000/68010 tables.
-Microware's software doubles negate a 64-bit mantissa as `NEG.L` low then
-`NEGX.L` high, so the missing extend bit corrupts the negation. Measured
-symptoms: `1.0-1.0` = −2⁻²⁰, `2.0-1.0` = 0.99999…, `exp(1)` correct to six
-places, `printf "%.15g"` of `0.1` = `0.100000000046566`.
-
-**So a floating-point result from a build before `209b35c` is not evidence about
-Microware's math library, and not evidence about OS-9.** Rebuild the emulator
-before judging FP precision, and treat any existing FP finding measured on an
-older build as unverified — including one in these references, flagged in
-`basic09/basic09-per-target.md`.
-
-The trap worth naming: the first diagnosis blamed `math.l`, and it was wrong.
-Both BASIC09 and C showed the same error, which looked like proof that the fault
-lay in the shared soft-float handler they have in common — but it is equally
-what a CPU bug produces, since both reach the CPU through that handler. **Two
-consumers agreeing points at what they share, and the CPU is shared by
-everything.**
 
 ## A too-clean emulator makes someone else's bug look like the emulator's
 

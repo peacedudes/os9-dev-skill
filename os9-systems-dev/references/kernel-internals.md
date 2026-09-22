@@ -18,8 +18,8 @@ lift it.
 
 **System Global Memory** is `Manual` only: os9exec has no in-memory struct
 corresponding to real System Globals. Its `F$SetSys` answers each `D_*`
-offset it models from its own state — v4.0.0 answered almost none, recent
-builds answer most that programs read — but an answer is not a mechanism:
+offset it models from its own state, which covers most that programs read,
+but an answer is not a mechanism:
 `D_MinPty` and `D_MaxAge` are merely stored and echoed back, and nothing
 schedules by them. The scheduler algorithm below is real OS-9 behavior that
 os9exec does not replicate; it schedules its own way. `Source` (os9exec). Two System Global values are `Source`, confirmed exact
@@ -49,11 +49,9 @@ individual system globals by offset (superuser only for writes; the MSB of
 `d1.w` selects read-vs-write).
 
 A few offsets a process actually reads at run time, and what os9exec answers
-(`Live` (os9exec), as of the freeware-sweep fixes): `D_SPUMem` ($3D8), the
-System Security Module's static storage, is read by every Microware-C start-up
-to detect an SSM -- os9exec has none and returns 0, which is what a machine
-without one shows (before this it fell through to a console "unimplemented
-03D8" line, four per program). `D_Julian` ($30) is today's Julian day.
+(`Live` (os9exec)): `D_SPUMem` ($3D8), the System Security Module's static
+storage, is read by every Microware-C start-up to detect an SSM -- os9exec has
+none and returns 0, which is what a machine without one shows. `D_Julian` ($30) is today's Julian day.
 
 **`D_Second` ($34) counts the seconds LEFT UNTIL midnight — the opposite of
 `F$Time`'s Julian form, which gives seconds since.** The Guru states it twice,
@@ -66,14 +64,13 @@ not this global, so they do not bear on it. Convert with `86400 - D_Second`
 before comparing it to anything stated as seconds since midnight — a process
 descriptor's `P$TimBeg`, or `F$Time`'s `d0`.
 
-Recent os9exec builds answer both from the same clock as `F$Time`/`F$Julian`;
-v4.0.0 answers neither (0, with the unimplemented notice). Builds that
-answered `D_Second` as seconds *since* midnight showed what getting it
-backwards costs: `aprocs` reported every process as roughly 2³² seconds old
+os9exec answers both from the same clock as `F$Time`/`F$Julian`. Getting the
+direction backwards is expensive and easy to recognise: answered as seconds
+*since* midnight, `aprocs` reported every process as roughly 2³² seconds old
 (`1193028:33:46`, a small negative difference wrapped) while Microware's
-`procs -e` said `Age 0:00`. Answered as seconds until, `aprocs` shows
-`0:00:00`. `Live` (os9exec). **If `aprocs` ages every process by about 2³²
-seconds, suspect `D_Second`'s direction before anything else.**
+`procs -e` said `Age 0:00`. `Live` (os9exec). **If `aprocs` ages every process
+by about 2³² seconds, suspect whatever sets `D_Second` — a clock driver, say —
+before anything else.**
 
 Exception vector 0 holds the reset-time initial supervisor stack pointer
 (SSP) value — every subsequent exception dispatch uses this vector to

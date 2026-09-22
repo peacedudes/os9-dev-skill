@@ -237,7 +237,7 @@ and so that a mixed pathlist is read correctly, but not worth writing.
 `Hearsay` (rdoggett, from a real system: "yes real os-9 accepts `../../../..`
 no problem"), so this is OS-9's behaviour and not a runtime indulgence.
 
-`Live` (os9exec, 985e0d8 and later): an RBF image and a host directory agree on
+`Live` (os9exec): an RBF image and a host directory agree on
 `../..`, `../...`, `.../..`, `../......./.././`, `A/..`, `A/B/...`,
 `A/B/C/../../..`, absolute pathlists with mixed runs, and `chd ../..`.
 
@@ -249,18 +249,6 @@ by `pd` lands six up. The control: that climb does **not** reach a file seven
 levels up, which fails `E_PNNF`. So the runs are being *counted* rather than
 merely accepted, a leading `./` and a trailing `/.` contribute zero without
 disturbing the sum, and every run length in between composes.
-
-**Historical note, because earlier text here said otherwise.** os9exec before
-`985e0d8` mis-resolved relative dot-runs **on RBF images only**: the path code
-treated the start of a relative pathlist as the device root, so `../..`
-collapsed to `..` and a leading component was never cancelled (`A/../x` became
-`A/x`). Every spelling in which a dot-run followed another component failed
-`E_PNNF`. Host-directory devices resolved the same pathlists on the host and were
-correct throughout, and absolute pathlists were always correct. **That was an
-emulator defect, not OS-9 behaviour** — if you are reading a claim that `../..`
-silently means `..`, or that the two forms cannot be mixed, it described that
-bug. It is also a clean example of why a result measured on one device type is
-not evidence about the other.
 
 ### No `getcwd`: name the current directory by climbing
 
@@ -299,17 +287,6 @@ sign bit (Technical Manual, "Directory File Format"). **There is no
 terminating NUL**: a 28-character name fills the field, and code that reads
 entries as C strings runs on into the descriptor-sector bytes. End a name at
 the character with bit 7 set. A 29-character name is too long everywhere.
-
-**os9exec got exactly 28 wrong until a recent fix**, `Live` (os9exec). On
-v4.0.0 and builds before the fix, a 28-character `makdir` on an RBF image
-wrote a NUL into the entry's descriptor field: on macOS that killed the
-emulator outright, and elsewhere it could leave an entry that `dir` shows cut
-to 27 and that the full name cannot open. On a host directory those builds
-list every name cut to 27, and only the cut name opens. Fixed builds take
-28 on both kinds of device and refuse 29. So if a 28-character name misbehaves
-on os9exec, suspect the build before the program, and for anything that must
-also run on an old build keep names to 27. Host-directory name matching is
-described in `common/using-os9exec-repl.md`.
 
 ### Priority + aging scheduler
 

@@ -330,8 +330,7 @@ instruction in its privilege-violation handler, as Motorola advised, such a
 program dies at an ordinary-looking instruction with
 `vector=$08 err=#000:108`.
 
-os9exec emulates a 68020: v4.0.0 trapped it, and later builds let user state
-read SR and deliver S clear (`Live` (os9exec), CONF68K t50). Whether
+os9exec emulates a 68020 and lets user state read SR, delivering S clear (`Live` (os9exec), CONF68K t50). Whether
 Microware's own 68010+ kernel emulates it is unrecorded — t50 on real hardware
 would settle it.
 

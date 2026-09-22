@@ -90,7 +90,7 @@ not let a handler take the whole queue at once — each queued signal still
 gets its own entry, after the previous one's `F$RTE`; three queued signals
 enter the routine three times, seeing 3, 2, 1. What the count buys is knowing
 more are coming, so costly work can wait for the entry that sees 1. `Live`
-(os9exec), recent builds only — see `F$Icpt` in `68k/syscall-reference.md`.
+(os9exec); see `F$Icpt` in `68k/syscall-reference.md`.
 
 **Masking:** the mask level (`P$SigLvl` in the process descriptor) suppresses intercept calls while nonzero. `F$SigMask` with d1=1 increments, d1=-1 decrements, **d1=0 clears entirely**. Footgun: 0 "unmasks everything" inside nested code—nest with ±1 always. Overflow/underflow past 255/0 is silently ignored.
 

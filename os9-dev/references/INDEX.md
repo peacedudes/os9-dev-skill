@@ -49,7 +49,7 @@ has bitten a real session.
 | Unsure whether a fault is yours or the system's | run a period-built program that does the same thing on the same disk — it differs from yours only in who compiled it | `common/using-os9exec-repl.md` |
 | Program needs Enter after every key though it called `cbreak()` | `cbreak()` sets a curses flag only; stdio `getchar()` ignores it — read with `getch()` | `c/os9-clib-reference.md` |
 | `Symbol 'popen' unresolved`, after an `illegal pointer/integer combination` warning | `popen`/`pclose` are in no library on the SDK disk — use `os9fork` with an argument vector | `c/os9-clib-reference.md` |
-| An alarm never fires at all, however long you wait | `F$Alarm`'s `d3` is ticks unless **bit 31** is set, which means 256ths — a runtime ignoring that bit reads a huge tick count | `68k/syscall-reference.md` |
+| An alarm never fires at all, however long you wait | `F$Alarm`'s `d3` is ticks unless **bit 31** is set, which means 256ths — code that drops that bit asks for a huge tick count | `68k/syscall-reference.md` |
 | A blocked `I$Read` returns an error instead of resuming after a signal | specified, not a fault — signals 2-31 are deadly to serial and pipe I/O, and the error returned is the signal number | `common/ipc.md` |
 | A program "hangs" while burning CPU on a `getchar()` loop | a signal killed the read and latched `ferror(stdin)`; every later read returns −1 at once until `clearerr` | `c/os9-clib-reference.md` |
 | A ported program times out correctly, yet its signal handler was never entered | the alarm interrupts the blocked read; the handler waits for `check_signal()` | `c/os9-clib-reference.md` |
@@ -82,14 +82,10 @@ has bitten a real session.
 | Output stops at a suspiciously round byte count | a stdio buffer boundary, not a write ceiling — the program stopped writing | `common/using-os9exec-repl.md` |
 | `E_PNNF` (216) on a file you just created and can see on the host | the device is an RBF **image**, a snapshot — the file is not inside it until the image is rebuilt; a host directory would have shown it at once | `common/using-os9exec-repl.md` |
 | An RBF image turns out damaged, with no telling when | two emulator processes had it open at once, each caching its own allocation bitmap — one writer per image; `lsof` before starting a harness | `common/using-os9exec-repl.md` |
-| `E_PNNF` (216) on a relative pathlist containing `../..` or a mixed dot-run, on an RBF image | an os9exec defect before `985e0d8`, not OS-9 — dot-runs compose and may be mixed; host-directory devices were always correct | `common/unix-differences.md` |
 | `^syntax error` and nothing runs, from a batch invocation | a shell option written on the command line — `-nx` belongs on the procedure file's first line | `common/using-os9exec-repl.md` |
 | Only the FIRST command of a batch takes effect, the rest silently ignored | commands fed on host **stdin** need LF endings; only a file passed as an *argument* wants CR-only | `common/using-os9exec-repl.md` |
-| A host file opens under the wrong case, or the wrong one of two similar names | host-directory lookup falls back to a case-insensitive, 27-char-cut, spaces-as-`_` scan and takes the FIRST match | `common/using-os9exec-repl.md` |
-| Files vanish from a device root after a `deldir` that reported `E_DNE` | `deldir` walked a host symlink pointing outside the device, landed in the root, and deleted by relative name — **destructive**, and reads through such a link also return the root's contents | `common/using-os9exec-repl.md` |
+| A host file opens under the wrong case, or the wrong one of two similar names | host-directory lookup falls back to a case-insensitive, 28-char-cut, spaces-as-`_` scan and takes the FIRST match | `common/using-os9exec-repl.md` |
 | `linecount` or any line reader sees 0 lines in a file that plainly has several | a host directory translates nothing: LF endings, and `I$ReadLn` stops only at CR | `common/using-os9exec-repl.md` |
-| `deldir` refuses with `E_DNE` and deletes nothing | a nested tree on a host-native directory — a standing defect; works on a RAM disk | `common/utility-usage.md` |
-| Floating-point results are subtly wrong — `1.0-1.0` nonzero, `0.1` printing as `0.100000000046566` | an os9exec CPU defect before `209b35c` broke soft-float negation; not evidence about OS-9 or Microware's math | `common/using-os9exec-repl.md` |
 | `c68` says `; expected` / `expression with little effect` on correct-looking C | adjacent string literals — nothing in this toolchain joins them, and `cccp2` runs `-traditional` | `c/kandr-vs-ansi.md` |
 | `**** multiple definition ****` on parameter declarations that look right | `ansi2knr` was run on an already-K&R tree and rewrote its own output | `c/kandr-vs-ansi.md` |
 | "Can't find" a command that is plainly present | fork lookups use `chx`, not `PATH` | `common/using-os9exec-repl.md` |
@@ -108,7 +104,7 @@ has bitten a real session.
 | Harness times out with the command visibly working | prompt gate doesn't recognise a sub-program's prompt — use raw keys | both REPL files |
 | Session hangs or dies on a syscall that looked ordinary | `F$SSvc`/`F$IOQu`/`F$NProc` (6809), `F$SysDbg`/`F$RTE` (68k) | both REPL files |
 | Fix has no effect although the rebuild succeeded | besides a stale output file (above): the crashed module is **still resident** and shadows the new one | `basic09/basic09-per-target.md` |
-| `Exception: ... vector=$08 err=#000:108` (E$Violat) at an ordinary-looking instruction, classically `MVSR2.W` / `MOVE SR,<ea>` | the binary was built for a 68000, where reading SR is user-legal; it is privileged from the 68010 on, and the system is not emulating it. os9exec v4.0.0 did this to every RTF Fortran program; later builds do not | `68k/os9-68k-assembly.md`, exception vector table |
+| `Exception: ... vector=$08 err=#000:108` (E$Violat) at an ordinary-looking instruction, classically `MVSR2.W` / `MOVE SR,<ea>` | the binary was built for a 68000, where reading SR is user-legal; it is privileged from the 68010 on, and the system is not emulating it. | `68k/os9-68k-assembly.md`, exception vector table |
 | `Error #001 — Unconditional Abort` printed after output that was correct | `F$Exit` called with `B` never cleared — cosmetic, not a real failure | `6809/syscalls-and-module-format.md` |
 | Breakpoint or examine lands at the wrong address | `sc`'s listing double-applies an offset — never take an address from it | `common/using-os9exec-repl.md` |
 | `-d 2` trace shows a `<<<` return under the wrong call name | a nested call overwrote the per-process current-call field — pair returns to entries by position | `common/using-os9exec-repl.md` |
@@ -160,7 +156,7 @@ Error *codes* (number → meaning) are a different lookup: `common/error-codes.m
 | Question about… | Target | Read |
 |---|---|---|
 | Syntax, types, PROCEDUREs, I/O, operators, functions, error handling, debug mode | all | basic09/basic09-language.md |
-| Numeric widths/ranges/precision per target, INTEGER overflow, hex-constant sign flip, REAL formats and the single-precision-`math` trap, 68k-only commands (SHELL/CHAIN/command-line PARAM), Graphics Interface Module, **calling 68k assembly or C from BASIC09** (worked `psect`/`r68`/`l68` examples) | both | basic09/basic09-per-target.md |
+| Numeric widths/ranges/precision per target, INTEGER overflow, hex-constant sign flip, REAL formats and precision, 68k-only commands (SHELL/CHAIN/command-line PARAM), Graphics Interface Module, **calling 68k assembly or C from BASIC09** (worked `psect`/`r68`/`l68` examples) | both | basic09/basic09-per-target.md |
 | Digest of every trap, one line each with a pointer: porting hazards, fabricated syntax, surprising behavior | all | basic09/gotchas.md |
 | **"BASIC09 ran out of workspace"** — the fix is the shell's `#<size>k` modifier (`basic09 #32k`), not anything inside the language | all | common/os9-tools-and-shell.md |
 | PACK, RunB, packed-module resolution (F$Link/CHX), PARAM argument binding, "Can't install trap handler" triage | all | basic09/pack-and-runb.md |

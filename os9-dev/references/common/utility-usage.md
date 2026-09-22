@@ -88,28 +88,9 @@ for" descriptions: `os9-tools-and-shell.md`.
   file, `-e` zero the freed disk space (secure erase). `del` refuses a
   directory: *"You cannot delete directory files with this utility unless
   their attribute is changed to non-directory"*, `Manual` (*Using
-  Professional OS-9* v2.4). **On a real RBF image os9exec agrees**, `Live`
+  Professional OS-9* v2.4). os9exec agrees on both device types, `Live`
   (os9exec): `del <dir>` gives `E_FNA`/214 whether the directory is empty or
-  not. **On a host-native directory it does not**, `Live` (os9exec): an EMPTY
-  directory with its `d` bit set is removed silently, no error and no prior
-  `attr -nd`; a non-empty one is still refused, with `E_DNE`/238. So on that
-  mount type what protects a directory is being non-empty rather than being a
-  directory. This is an emulator-shim divergence, not an OS-9 behaviour — a
-  host directory has no RBF underneath it (see the host-native-vs-image note
-  in `using-os9exec-repl.md`), and nothing is lost but an empty directory.
-  **Measure `del` semantics on an image, never on a host mount**: an earlier
-  revision of this entry reported the host-native result as a general OS-9
-  hazard, which it is not.
-- **`deldir` near a host symlink pointing outside the device deletes the wrong
-  files** — it `chd`s through the link into the device root and deletes by
-  relative name. `Live` (os9exec); see the host-links passage in
-  `using-os9exec-repl.md` before running it on a host-native device.
-- **`deldir` is broken on a host-native directory when the tree is nested** —
-  `Live` (os9exec), a standing defect rather than a fixed one: `deldir -q` of a
-  directory that contains a subdirectory fails `can't delete 'inner'` with
-  `E_DNE` and removes **nothing**, leaving the tree intact. The same tree on a
-  `mount -r` RAM disk is removed correctly, so it is the host-directory path at
-  fault, not the utility. Flatten first, or do the delete on the host.
+  not.
 - `deldir [<opts>] {<path>}` — recursive; `-f` ignore write protection,
   `-q` no confirmation prompts.
 - `dir [<opts>] {<path>}` — `-e` extended (owner, dates, size, perms),

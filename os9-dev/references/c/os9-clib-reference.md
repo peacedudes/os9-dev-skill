@@ -281,15 +281,6 @@ because the signal has a visible effect that looks like success. Measured `Live`
 (os9exec) on a real terminal, `signal(5, lose)` then `alarm(3)` then blocking in
 `gets()`:
 
-> **Build scope, and it decides whether you see any of this.** These timings were
-> taken on a build that honours `F$Alarm`'s high bit. **On the builds a reader is
-> likely to have, `unix.l`'s `alarm()` never fires at all** — it passes
-> `secs<<8 | $80000000`, bit 31 is ignored, and the alarm comes due about 2³¹
-> ticks away with the call reporting success (`68k/syscall-reference.md`). There,
-> the read is never interrupted and the handler never runs, for a different
-> reason than the one below. Establish which build you are on before concluding
-> anything from a timer that appears dead.
-
 | time | what happened |
 |---|---|
 | 0.0s | blocked in `gets()` |

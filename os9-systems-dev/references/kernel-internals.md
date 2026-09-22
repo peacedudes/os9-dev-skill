@@ -17,10 +17,12 @@ Microware-authoritative. Real hardware or a Microware internal header would
 lift it.
 
 **System Global Memory** is `Manual` only: os9exec has no in-memory struct
-corresponding to real System Globals, and its `F$SetSys` stubs most `D_*`
-variables (including `D_MinPty`/`D_MaxAge`/`D_ActAge`) — so the scheduler
-algorithm below is real OS-9 behavior that os9exec does not replicate; it
-schedules its own way. Two System Global values are `Source`, confirmed exact
+corresponding to real System Globals. Its `F$SetSys` answers each `D_*`
+offset it models from its own state — v4.0.0 answered almost none, recent
+builds answer most that programs read — but an answer is not a mechanism:
+`D_MinPty` and `D_MaxAge` are merely stored and echoed back, and nothing
+schedules by them. The scheduler algorithm below is real OS-9 behavior that
+os9exec does not replicate; it schedules its own way. `Source` (os9exec). Two System Global values are `Source`, confirmed exact
 matches to real OS-9's documented values: the 16-byte minimum allocation unit
 and the 100Hz default tick rate. The **Module Directory** struct shape
 (address / group / size / link-count) is `Source` — structurally confirmed —
@@ -71,8 +73,7 @@ backwards costs: `aprocs` reported every process as roughly 2³² seconds old
 (`1193028:33:46`, a small negative difference wrapped) while Microware's
 `procs -e` said `Age 0:00`. Answered as seconds until, `aprocs` shows
 `0:00:00`. `Live` (os9exec). **If `aprocs` ages every process by about 2³²
-seconds, suspect `D_Second`'s direction before anything else.** Most other
-`D_*` remain stubbed to 0.
+seconds, suspect `D_Second`'s direction before anything else.**
 
 Exception vector 0 holds the reset-time initial supervisor stack pointer
 (SSP) value — every subsequent exception dispatch uses this vector to

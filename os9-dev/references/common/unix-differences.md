@@ -290,44 +290,26 @@ is zero and bytes 29–31 are the LSN of the file's descriptor sector, so readin
 `bash`, and `/h1/CMDS` after `chx /h1/CMDS` at Microware's shell, both on
 RBF images. The collection's `which` does it in `pathof()`.
 
-### A filename is at most 28 characters — and os9exec reaches only 27
+### A filename is at most 28 characters
 
 OS-9 allows 1 to 28 characters in a name (`Manual`: *Using Professional OS-9*
 v2.4, "Rules for Constructing File Names"), which is exactly what an RBF
 directory entry holds — a 28-byte name field whose last character carries the
-sign bit (Technical Manual, "Directory File Format"). A 29-character name is
-too long everywhere.
+sign bit (Technical Manual, "Directory File Format"). **There is no
+terminating NUL**: a 28-character name fills the field, and code that reads
+entries as C strings runs on into the descriptor-sector bytes. End a name at
+the character with bit 7 set. A 29-character name is too long everywhere.
 
-**os9exec stops one short**, `Live` (os9exec), `Flag` against the manual: 27 characters reach a file and 28 do not. `build` accepted a
-28-character name without complaint and the host file appeared under its full
-name, but `dir` listed only the 27-character prefix and opening the full name
-failed `E_PNNF`. The prefix does open it, and is the only handle left. So on
-os9exec two names agreeing for 27 characters are one file — which is how host
-files with long names collide when they are dropped into the tree, silently
-and without either name being wrong. This is the emulator's limit, not
-OS-9's: a 28-character name made on real OS-9 is legal, and is the one this
-runtime mishandles.
-
-The same boundary shows on an RBF image, measured on a fresh `mount -k=360k`
-image and on a host-directory mount:
-
-| | host directory | RBF image |
-|---|---|---|
-| 27 characters | opens | created, listed, opens |
-| 28 characters | full name `E_PNNF`; the **27-char cut name opens it** | **`makdir` succeeds silently**, `dir` shows 27, opening the full name fails |
-| 29+ characters | full name `E_PNNF`; the cut name opens it | `makdir` refuses outright — "can't make" |
-
-On a host directory the cut name is not merely what `dir` displays — it is the
-name that works, and the full one is the name that fails. Two host files sharing
-their first 27 characters are therefore one file as far as OS-9 can reach: both
-list identically and only the first in host order opens. See the host-directory
-lookup rules in `common/using-os9exec-repl.md`.
-
-So under os9exec 28 is the dangerous one: on RBF the directory entry is made
-and reports success, and only the 27-character prefix can ever reach it
-afterwards. A tool that writes a 28-character output file is told nothing and
-cannot reopen what it wrote. **For anything that must also work under
-os9exec, keep names to 27 characters** — one fewer than OS-9 allows.
+**os9exec got exactly 28 wrong until a recent fix**, `Live` (os9exec). On
+v4.0.0 and builds before the fix, a 28-character `makdir` on an RBF image
+wrote a NUL into the entry's descriptor field: on macOS that killed the
+emulator outright, and elsewhere it could leave an entry that `dir` shows cut
+to 27 and that the full name cannot open. On a host directory those builds
+list every name cut to 27, and only the cut name opens. Fixed builds take
+28 on both kinds of device and refuse 29. So if a 28-character name misbehaves
+on os9exec, suspect the build before the program, and for anything that must
+also run on an old build keep names to 27. Host-directory name matching is
+described in `common/using-os9exec-repl.md`.
 
 ### Priority + aging scheduler
 

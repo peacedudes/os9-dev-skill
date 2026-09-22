@@ -831,16 +831,16 @@ Two different things behind the same device names:
 **Name lookup on a host directory is not what OS-9 does**, `Live` (os9exec) and
 `Source` (its own `CaseSens` path lookup). The exact host name is tried first;
 failing that, the directory is scanned and the **first** entry whose *shown* name
-matches wins — where "shown" means cut to 27 characters with spaces rendered as
-`_`, compared **case-insensitively**. Consequences, none of them OS-9 semantics:
+matches wins — where "shown" means cut to 28 characters (27 on v4.0.0 and
+builds until a recent fix) with spaces rendered as `_`, compared **case-insensitively**. Consequences, none of them OS-9 semantics:
 
 - **Case-insensitive even on Linux.** `list /h5/sub/file.txt` opens `Sub/File.txt`
   on a case-sensitive host filesystem. Code that relies on case to distinguish
   two files will not behave here as it does on the host.
-- **A host name longer than 27 characters opens by its cut name**, and its *full*
+- **A host name longer than the cut opens by its cut name**, and its *full*
   name gives `E_PNNF` — the reverse of the intuition that the full name is the
   real one.
-- **Two host names sharing their first 27 characters are indistinguishable**:
+- **Two host names that agree up to the cut are indistinguishable**:
   `dir` lists both identically and only the one earlier in host order can be
   opened. The other is unreachable without renaming it on the host.
 - **A name containing spaces opens by its `_` spelling** — unless a file really
@@ -1104,7 +1104,8 @@ for its buffer writes its NUL there. While the program sits below 16 MB that
 byte is already `$00` and nothing happens; above 16 MB the damaged pointer
 sends `UNLK`/`RTS` into low memory, and the process dies with an illegal
 instruction wherever execution stops — a `PC` that matches nothing in the
-module. A 68000 or 68010 ignores the top address byte, so it never shows
+module. The dump's tell is `SP`: it points into the process's static range but with
+bit 24 cleared, i.e. 16 MB below where it belongs. A 68000 or 68010 ignores the top address byte, so it never shows
 there; a 68020 or later with more than 16 MB shows it, and so does os9exec,
 which emulates a 68020 with a large arena. To reproduce, push the program's
 memory high: `sleep -s 12 #20000k &` at the shell holds 20 MB while you run

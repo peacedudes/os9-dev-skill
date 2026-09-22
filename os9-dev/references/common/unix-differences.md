@@ -262,6 +262,34 @@ silently means `..`, or that the two forms cannot be mixed, it described that
 bug. It is also a clean example of why a result measured on one device type is
 not evidence about the other.
 
+### No `getcwd`: name the current directory by climbing
+
+`getcwd` and `getwd` are in neither `clib.l` nor `unix.l`, `Absent` (this
+SDK's libraries). At the shell `pd` (and `pxd` for the execution directory on
+6809) prints it. From C, work it out from the directory files themselves.
+
+**An RBF directory is a file of 32-byte entries** (`Manual`, Technical Manual,
+"Directory File Format"). Bytes 0–27 hold the name, with the sign bit set on
+its last character. A first byte of 0 marks a deleted or unused entry. Byte 28
+is zero and bytes 29–31 are the LSN of the file's descriptor sector, so reading
+28–31 as one long gives the same number. Every directory is created holding
+`.` and `..`, whose entries give its own and its parent's descriptor LSNs.
+
+1. Open `.` with `S_IREAD | S_IFDIR` for the data directory, or `S_IEXEC |
+   S_IREAD | S_IFDIR` for the execution directory. Execute mode alone cannot be
+   read (`I$Open` in `68k/syscall-reference.md`). Read its `.` entry to get
+   this directory's LSN.
+2. Open the parent (`..`, then `...`, `....`, in the same mode) and look for
+   the entry whose LSN matches the child's. Its name, with the sign bit
+   cleared, is the child's name.
+3. Stop at a directory whose `.` and `..` LSNs are equal: that is the root of
+   the device. `_gs_devn(path, buf)`, given the **path number** of that open
+   directory, returns the device name. Clear any sign bit on it too.
+
+`Live` (os9exec): this gives `/dd/CMDS` for the execution directory under
+`bash`, and `/h1/CMDS` after `chx /h1/CMDS` at Microware's shell, both on
+RBF images. The collection's `which` does it in `pathof()`.
+
 ### A filename is at most 28 characters — and os9exec reaches only 27
 
 OS-9 allows 1 to 28 characters in a name (`Manual`: *Using Professional OS-9*

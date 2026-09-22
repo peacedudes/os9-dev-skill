@@ -65,6 +65,7 @@ has bitten a real session.
 | curses says `Unknown terminal type ''` though `getenv` returns your `TERM` | `getenv` cannot tell the two environment routes apart — pass `@TERM=`/`@TERMCAP=` instead of `setenv` | `c/os9-clib-reference.md` |
 | Bus error in a byte-fill loop (`MOVE.B #$30,(A3)+`) after a write syscall | a float passed to curses `printw` — format with `sprintf`, draw with `addstr` | `c/os9-clib-reference.md` |
 | A ported program calls `fork`, `pipe`, `kill`, `sleep`, `dup` or `wait` | none of them exist in `clib.l`/`unix.l`; `execl` is a CHAIN that never returns | `c/os9-clib-reference.md` |
+| A file opened through the execution directory (`S_IEXEC`) opens fine but every read fails — a module scan matches nothing | execute mode picks the directory and grants no read; open `S_IEXEC \| S_IREAD` | `68k/syscall-reference.md`, `I$Open` |
 | `**** incorrect include file syntax ****` on a line that looks fine | `#include<file.h>` needs a space before the `<` | `c/os9-c-cheatsheet.md` |
 | Your macro is ignored and the library's is still in force, after one `**** redefined macro ****` warning | this `cpp` keeps the FIRST definition on redefinition — `#undef` before redefining any macro | `c/os9-c-cheatsheet.md` |
 | `'vt100': Unknown terminal type` from a termcap file that plainly contains vt100 | a reader that skips any entry whose first field is not two characters — use `d0|vt100:...` | `common/using-os9exec-repl.md` |

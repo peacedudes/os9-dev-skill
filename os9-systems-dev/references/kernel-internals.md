@@ -51,25 +51,28 @@ A few offsets a process actually reads at run time, and what os9exec answers
 System Security Module's static storage, is read by every Microware-C start-up
 to detect an SSM -- os9exec has none and returns 0, which is what a machine
 without one shows (before this it fell through to a console "unimplemented
-03D8" line, four per program). `D_Julian` ($30, today's Julian day) and
-`D_Second` ($34, seconds SINCE midnight -- the OS-9 Guru's "until midnight"
-wording is a transcription slip; the v2.4 TRM's F$Time/F$STime both say since)
-are answered from the same clock as F$Time/F$Julian. The "since midnight"
-reading is corroborated live: `getsys` labels `D_Second` "seconds left until
-midnight" in its own output and then prints 78419 at 21:47, which is seconds
-*since*. Most other `D_*` remain stubbed to 0.
+03D8" line, four per program). `D_Julian` ($30) is today's Julian day.
 
-**But correct globals do not make a process-age monitor correct**, `Flag`.
-Measured: `aprocs` reports every process's age as roughly 2³² seconds
-(`1193026:51:48` — a small negative difference wrapped), while Microware's
-`procs -e` on the same run shows `Age 0:00`. A syscall trace shows `aprocs`
-reading the globals *correctly* — `$30` = 2461297 and `$34` = `$11EEF`, both
-right — before calling `F$GPrDsc`, so the fault is downstream of the globals,
-most likely in the start date/time the process descriptor supplies for it to
-subtract from. Filed against the emulator. **Read this as the caution it is: a
-consumer of a correct value can still be wrong, so verifying the input does not
-verify the output** — and if you are using `aprocs` to reason about process
-ages here, prefer `procs -e`.
+**`D_Second` ($34) counts the seconds LEFT UNTIL midnight — the opposite of
+`F$Time`'s Julian form, which gives seconds since.** The Guru states it twice,
+once with the reason: the tick handler only has to decrement it and test for
+zero to know the day has turned. Two freeware programs written for real
+OS-9 agree: `getsys` labels the field "system time seconds
+left until midnight", and `aprocs` computes process ages on that assumption.
+Microware's v2.4 manuals document `F$Time`/`F$STime`, which are the syscalls,
+not this global, so they do not bear on it. Convert with `86400 - D_Second`
+before comparing it to anything stated as seconds since midnight — a process
+descriptor's `P$TimBeg`, or `F$Time`'s `d0`.
+
+Recent os9exec builds answer both from the same clock as `F$Time`/`F$Julian`;
+v4.0.0 answers neither (0, with the unimplemented notice). Builds that
+answered `D_Second` as seconds *since* midnight showed what getting it
+backwards costs: `aprocs` reported every process as roughly 2³² seconds old
+(`1193028:33:46`, a small negative difference wrapped) while Microware's
+`procs -e` said `Age 0:00`. Answered as seconds until, `aprocs` shows
+`0:00:00`. `Live` (os9exec). **If `aprocs` ages every process by about 2³²
+seconds, suspect `D_Second`'s direction before anything else.** Most other
+`D_*` remain stubbed to 0.
 
 Exception vector 0 holds the reset-time initial supervisor stack pointer
 (SSP) value — every subsequent exception dispatch uses this vector to
@@ -101,6 +104,17 @@ emulator (outside the 68k arena), which has no real header; that process now
 reports `P$PModul`=0 (a header probe there reads the zeroed low page and fails
 cleanly) rather than a wild pointer that bus-errored the monitor (`Live`
 (os9exec)).
+
+**When a process was forked: `P$DatBeg` ($2BC) and `P$TimBeg` ($2C0).** The
+first holds the Julian day number, the second the seconds **since** midnight —
+the same form as `F$Time` with `d0.w=1`, and not the countdown `D_Second` uses.
+`F$AllPrc` stamps them from the system clock when it allocates the descriptor.
+A process that wants its own start time, or the machine's uptime, reads its
+descriptor with `F$GPrDsc` and combines the two with a Julian-mode `F$Time`;
+Microware's `rstatd` works out boot time for `rup` this way (`Live`
+(os9exec), seen in a syscall trace). Offsets and formats come from the Guru
+only (see the authority ceiling above): unconfirmed against Microware, and a
+monitor that turns out wrong should suspect them first.
 
 - **Process descriptor table**: an array of process-descriptor addresses; a
   process's ID is literally its index into this table (a zero entry means

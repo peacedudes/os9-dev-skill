@@ -79,14 +79,18 @@ it is evidence about that runtime and consistent with Microware's own wording,
 not a reading of real hardware.
 
 **Delivery is queued, not dropped:** a signal sent to a process that already
-has one pending is *not* discarded — signals queue and deliver in send
-order. Queued delivery costs roughly **10x** more than unqueued delivery, so
-a hot path that signals heavily pays that multiple on every queued signal.
-The kernel also exposes an undocumented convenience here: on entry to an
-intercept routine, **d0 holds the number of currently-queued signals**
-(including the one just delivered) — a value of 1 means nothing else is
-waiting, so a handler can drain the whole queue in one invocation instead of
-re-entering per signal.
+has one pending is *not* discarded — it joins a FIFO queue and is delivered
+in send order (`Manual`, `F$Send`). Dibble's *OS-9 Insights* (third-party)
+puts a queued send at up to **10x** the cost of an unqueued one, so a hot path
+that signals heavily pays that multiple on every queued signal.
+Insights also records an undocumented convenience: on entry to an intercept
+routine, **d0 holds the number of currently-queued signals** (including the
+one just delivered), so a value of 1 means nothing else is waiting. It does
+not let a handler take the whole queue at once — each queued signal still
+gets its own entry, after the previous one's `F$RTE`; three queued signals
+enter the routine three times, seeing 3, 2, 1. What the count buys is knowing
+more are coming, so costly work can wait for the entry that sees 1. `Live`
+(os9exec), recent builds only — see `F$Icpt` in `68k/syscall-reference.md`.
 
 **Masking:** the mask level (`P$SigLvl` in the process descriptor) suppresses intercept calls while nonzero. `F$SigMask` with d1=1 increments, d1=-1 decrements, **d1=0 clears entirely**. Footgun: 0 "unmasks everything" inside nested code—nest with ±1 always. Overflow/underflow past 255/0 is silently ignored.
 

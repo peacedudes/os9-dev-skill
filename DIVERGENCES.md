@@ -43,8 +43,9 @@ specification; each item is a question for Microware to settle.
   (supervisor state), 6 (sticky) and 7 (sharable) are described.
 - **Signal-queue depth on intercept entry is undocumented.** On entry to an
   intercept routine `d0` holds the number of currently-queued signals,
-  including the one just delivered — useful enough that a handler can drain
-  the queue in one invocation, but stated in no manual we hold.
+  including the one just delivered, so 1 means nothing else is waiting. The
+  source is Dibble's *OS-9 Insights* (third-party); the Technical Manual names
+  only `d1` and `a6`, and no manual we hold states it.
 - **`asm`'s source-line length limit is undocumented** — a real limit between
   132 and 135 characters, whose only symptom is a misleading `bad instr` error
   reported against the *following* line.

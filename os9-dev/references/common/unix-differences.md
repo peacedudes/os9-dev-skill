@@ -262,19 +262,26 @@ silently means `..`, or that the two forms cannot be mixed, it described that
 bug. It is also a clean example of why a result measured on one device type is
 not evidence about the other.
 
-### A filename stops addressing at 27 characters
+### A filename is at most 28 characters — and os9exec reaches only 27
 
-`Live` (os9exec): 27 characters reach a file and 28 do not. `build` accepted a
+OS-9 allows 1 to 28 characters in a name (`Manual`: *Using Professional OS-9*
+v2.4, "Rules for Constructing File Names"), which is exactly what an RBF
+directory entry holds — a 28-byte name field whose last character carries the
+sign bit (Technical Manual, "Directory File Format"). A 29-character name is
+too long everywhere.
+
+**os9exec stops one short**, `Live` (os9exec), `Flag` against the manual: 27 characters reach a file and 28 do not. `build` accepted a
 28-character name without complaint and the host file appeared under its full
 name, but `dir` listed only the 27-character prefix and opening the full name
-failed `E_PNNF`. The prefix does open it, and is the only handle left. So two
-names agreeing for 27 characters are one file as far as OS-9 can tell — which
-is how host files with long names collide when they are dropped into the tree,
-silently and without either name being wrong. Only the boundary this runtime
-enforces was measured; the specified maximum is unconfirmed, `Flag`.
+failed `E_PNNF`. The prefix does open it, and is the only handle left. So on
+os9exec two names agreeing for 27 characters are one file — which is how host
+files with long names collide when they are dropped into the tree, silently
+and without either name being wrong. This is the emulator's limit, not
+OS-9's: a 28-character name made on real OS-9 is legal, and is the one this
+runtime mishandles.
 
-**It is the same boundary on a real RBF image**, `Live` (os9exec), measured
-independently on a fresh `mount -k=360k` image and on a host-directory mount:
+The same boundary shows on an RBF image, measured on a fresh `mount -k=360k`
+image and on a host-directory mount:
 
 | | host directory | RBF image |
 |---|---|---|
@@ -288,11 +295,11 @@ their first 27 characters are therefore one file as far as OS-9 can reach: both
 list identically and only the first in host order opens. See the host-directory
 lookup rules in `common/using-os9exec-repl.md`.
 
-So 28 is the dangerous one: on RBF the directory entry is made and reports
-success, and only the 27-character prefix can ever reach it afterwards. A tool
-that writes a 28-character output file is told nothing and cannot reopen what
-it wrote. Do not read a successful create as a usable name — **check that the
-name you are about to write is 27 characters or fewer**, not 28.
+So under os9exec 28 is the dangerous one: on RBF the directory entry is made
+and reports success, and only the 27-character prefix can ever reach it
+afterwards. A tool that writes a 28-character output file is told nothing and
+cannot reopen what it wrote. **For anything that must also work under
+os9exec, keep names to 27 characters** — one fewer than OS-9 allows.
 
 ### Priority + aging scheduler
 

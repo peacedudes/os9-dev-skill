@@ -363,7 +363,7 @@ gtimeout 60 env OS9DISK=/abs/path/image OS9H1=/abs/workdir OS9STOP=1 \
 
 `/h1` is whatever `OS9H1` names — give it an **absolute path** to the directory
 holding the procedure file, rather than relying on a magic `h1` beside the
-binary, for the reasons under "Launching and disks" above. Four traps, all
+binary, for the reasons under "Launching and disks" above. The traps, all
 `Live` (os9exec), the first two silent:
 
 - **The procedure file must be CR-only.** With LF endings OS-9 sees one
@@ -414,6 +414,11 @@ binary, for the reasons under "Launching and disks" above. Four traps, all
     with `os9exec shell /h6/proc`. Worth knowing because the failing spelling is
     the one a Unix habit reaches for, and its error names syntax rather than the
     option.
+
+- **`sleep` counts ticks unless given `-s`.** `sleep 5` in a procedure file
+  meant to wait for a background server is gone in a twentieth of a second, and
+  the run ends before anything it was waiting for happens. Write `sleep -s 5`.
+  See `sleep` in `utility-usage.md`.
 
 **No two utilities spell "don't ask" the same way**, so the flag cannot be
 guessed: `copy -r`, `deldir -q`, `frestore -s`, `format -r`, `fsave -p`. `del`
@@ -955,11 +960,21 @@ PID 0, gets the documented `E$IPrcID` (224) refusal, ignores the carry, and
 reads its unfilled buffer. It would do the same on real hardware.
 `Live` (os9exec).
 
-**The emulator's own diagnostics share the running program's stderr.** Every
-`# `-prefixed line — the unimplemented-global notice above, `# No more
-memory:` from the allocator, `# /tN is /dev/ttysNNN` from hostterm — goes to
-that path rather than a channel of its own, so it interleaves with guest
-output. `2>/nil` is what separates the two when capturing. `Live` (os9exec).
+**The emulator's own diagnostics share the running program's stderr.** Most
+carry a `# ` prefix — `# No more memory:` from the allocator, and on v4.0.0
+`# /tN is /dev/ttysNNN` from hostterm (later builds name the host device only
+in `idevs`) — but **not all**: the unimplemented-global notice
+above prints bare, as `F$SetSys: unimplemented 0024 (size=80000004)`, so a
+filter keyed on `# ` lets it through. All of them go to that path rather than
+a channel of its own, so they interleave with guest output. `2>/nil` is what
+separates the two when capturing. `Live` (os9exec).
+
+The `-d` syscall trace (below) lands on the same stderr, which matters whenever
+stderr belongs to something else — under a network login it goes down the
+connection to the client. `idbg -o <path>` typed in the guest moves it to a
+file instead, e.g. `idbg -o /h5/trc -d 2` with `OS9H5` naming a scratch
+directory; the file is appended to, and its lines end in CR. `Source`
+(os9exec: `Change_DbgPath`), `Live` (os9exec).
 
 ## Floating point: check the build before judging any FP result
 

@@ -680,6 +680,7 @@ not. `Source`, scanning `clib.l` and `unix.l` for exported symbols:
 | `kill()` | **no** | `F$Send`; `getpid()` *is* present in both libraries |
 | `sleep()` | **no** | `tsleep()` (unix.l), in **ticks** — with **bit 31** set it counts 256ths of a second, the same encoding as `F$Alarm` (`68k/syscall-reference.md`) |
 | `execl()` | unix.l | **but it is a CHAIN, not an exec after a fork** — see below |
+| `getcwd()`/`getwd()` | **no** | read the directory files and climb; see "No `getcwd`" in `common/unix-differences.md` |
 
 **`execl()` replaces your process.** `Live` (os9exec): a program printing
 `BEFORE execl`, calling `execl("/h0/CMDS/echo", "echo", "CHILD-RAN", 0)`, then

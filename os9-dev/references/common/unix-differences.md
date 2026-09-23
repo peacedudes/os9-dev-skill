@@ -96,7 +96,7 @@ Behavior, not just codes, differs:
 
 | Key | Unix | OS-9 |
 |---|---|---|
-| **Ctrl-C** | kills foreground process | Backgrounds it instead (as if `&`), works immediately regardless of process state — `Live` (os9exec) — sends interrupt signal 3; see `using-os9exec-repl.md` |
+| **Ctrl-C** | kills foreground process | Sends interrupt signal 3 to the last process to use the terminal. If the foreground program has not written to the terminal yet, the shell moves it to the background (as if `&`) instead; if it has, it dies unless it intercepts the signal — `Manual`, `Live` (os9exec); see `using-os9exec-repl.md` |
 | **Ctrl-E** | — | The actual kill key — terminates the child outright, `Live` (os9exec) — sends abort signal 2, not the uninterceptable signal 0; see Tier 2's signal table |
 | **Ctrl-A** | move to start of line | Redisplays the previous input line without executing it, cursor at end — back up over it and retype to edit and resubmit; stands in for arrow-key/history recall (symbol `C$Rpet` — "repeat"; see `os9-tools-and-shell.md`) |
 | Flow control | Ctrl-S pause / Ctrl-Q resume | Same (XOFF/XON), **plus** Ctrl-W pauses until any key |

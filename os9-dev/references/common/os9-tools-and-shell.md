@@ -184,7 +184,7 @@ Default assignments — every one remappable per-device via `tmode`/`xmode`:
 | Ctrl-W | Pause output; any key resumes (distinct from page pause below) |
 | Ctrl-S / Ctrl-Q | XOFF/XON flow control, same as Unix. **SCF consumes both — a reading program never sees them**, so a stray `$13` in a byte stream pauses output with nothing in the data and no error to show for it (`xon=`/`xoff=` remap them per path) |
 | ESC (or Ctrl-[) | End-of-file on terminal input; on a blank shell line, exits the shell |
-| Ctrl-C | Interrupt signal (code 3). A program with no intercept handler dies; the shell moves the foreground program to the background |
+| Ctrl-C | Interrupt signal (code 3). A program with no intercept handler dies; but a foreground program that has not yet written to the terminal is moved to the background by the shell instead |
 | Ctrl-E | Abort signal (code 2) — the "actually kill it" key |
 
 Ctrl-C/Ctrl-E work any time, not just at input prompts. Unix-habit

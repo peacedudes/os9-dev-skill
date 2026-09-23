@@ -978,7 +978,13 @@ at that program's bounds checking before it is filed.
 
 ## Stopping a runaway program
 
-- **Ctrl-C**: shell keeps the prompt, child continues in background.
+- **Ctrl-C** depends on whether the child has written to the terminal, as
+  the manual describes (`Manual`, *Using Professional OS-9*; `Live`
+  (os9exec)). One that has not — `sleep -s 20` — is moved to the background:
+  the shell prints `+3` and prompts, and the child runs on. One that has
+  written receives interrupt signal 3 and, with no intercept handler, dies
+  with `Error #000:003 (S_Intrpt) User interrupt`. So Ctrl-C does not stop a
+  silent computation, and does kill a chatty one.
 - **Ctrl-E**: kills the child, immediately, regardless of what the process
   is doing — compute loop, blocked read, or blocked write.
 - **Neither key aims at a process you choose.** Both are delivered to the

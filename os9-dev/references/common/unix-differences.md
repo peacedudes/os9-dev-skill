@@ -276,9 +276,8 @@ is zero and bytes 29–31 are the LSN of the file's descriptor sector, so readin
    the device. `_gs_devn(path, buf)`, given the **path number** of that open
    directory, returns the device name. Clear any sign bit on it too.
 
-`Live` (os9exec): this gives `/dd/CMDS` for the execution directory under
-`bash`, and `/h1/CMDS` after `chx /h1/CMDS` at Microware's shell, both on
-RBF images. The collection's `which` does it in `pathof()`.
+`Live` (os9exec): this gives `/h1/CMDS` after `chx /h1/CMDS` at Microware's
+shell, on an RBF image; it works the same way under a ported shell. The collection's `which` does it in `pathof()`.
 
 ### A filename is at most 28 characters
 

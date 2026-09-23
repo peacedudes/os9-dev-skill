@@ -276,8 +276,8 @@ re-reading it on every access.
     column 0 without advancing and each line is drawn over the last. What you
     *see* is a program that "printed almost nothing", or one missing a few
     characters from the front of a line — overwritten in place by whatever was
-    written next, typically the shell prompt. A `bash# ` prompt eats exactly six
-    characters. **No bytes are lost**, which is why looking for where the
+    written next, typically the shell prompt, which eats as many characters as
+    it is long — two for the shell's `$ `. **No bytes are lost**, which is why looking for where the
     characters went never converges.
 
     **The one-step diagnostic is the CR:LF ratio of the raw byte stream.**

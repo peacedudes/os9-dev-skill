@@ -62,7 +62,7 @@ has bitten a real session.
 | `PC` unresolved at link in a termcap port | it is `PC_` here — and check `BC`/`UP`, which link silently as the wrong type | `c/os9-clib-reference.md` |
 | A flex scanner prints nothing for a named file but works when you pipe into it | `freopen(name,"r",yyin)` before the first `yylex()` — some skeletons leave `yyin` null until then | `c/os9-c-cheatsheet.md` |
 | A variable you exported on the host is ignored inside the emulator | only names starting with `@` cross (`@TERM=vt100`); what a non-crossing one looks like inside defeats a NULL check | `common/using-os9exec-repl.md` |
-| curses says `Unknown terminal type ''` though `getenv` returns your `TERM` | `getenv` cannot tell the two environment routes apart — pass `@TERM=`/`@TERMCAP=` instead of `setenv` | `c/os9-clib-reference.md` |
+| curses says `Unknown terminal type ''` though `getenv` returns your `TERM` | no `TERM` in that process's environment; under os9exec, `getenv` cannot tell the environment routes apart | `c/os9-clib-reference.md`, `common/using-os9exec-repl.md` |
 | Bus error in a byte-fill loop (`MOVE.B #$30,(A3)+`) after a write syscall | a float passed to curses `printw` — format with `sprintf`, draw with `addstr` | `c/os9-clib-reference.md` |
 | A ported program calls `fork`, `pipe`, `kill`, `sleep`, `dup`, `wait` or `getcwd` | none of them exist in `clib.l`/`unix.l`; `execl` is a CHAIN that never returns | `c/os9-clib-reference.md` |
 | A file opened through the execution directory (`S_IEXEC`) opens fine but every read fails — a module scan matches nothing | execute mode picks the directory and grants no read; open `S_IEXEC \| S_IREAD` | `68k/syscall-reference.md`, `I$Open` |
@@ -83,7 +83,7 @@ has bitten a real session.
 | `E_PNNF` (216) on a file you just created and can see on the host | the device is an RBF **image**, a snapshot — the file is not inside it until the image is rebuilt; a host directory would have shown it at once | `common/using-os9exec-repl.md` |
 | An RBF image turns out damaged, with no telling when | two emulator processes had it open at once, each caching its own allocation bitmap — one writer per image; `lsof` before starting a harness | `common/using-os9exec-repl.md` |
 | A procedure file stops partway with no error printed | a command exited with status 1: `-x` aborts on it, and the shell prints nothing for 1 | `common/os9-tools-and-shell.md` |
-| An event-based mutex or wait loop never exits (`while (_ev_wait(id,a,b) != a)`) | os9exec returns the post-increment event value; period code expects the pre-increment one | `68k/syscall-reference.md` |
+| An event-based mutex or wait loop never exits (`while (_ev_wait(id,a,b) != a)`) | `Ev$Wait` returns the value *before* the wait increment; an implementation returning it after (os9exec does) never matches | `68k/syscall-reference.md`, `common/using-os9exec-repl.md` |
 | `^syntax error` and nothing runs, from a batch invocation | a shell option written on the command line — `-nx` belongs on the procedure file's first line | `common/using-os9exec-repl.md` |
 | Only the FIRST command of a batch takes effect, the rest silently ignored | commands fed on host **stdin** need LF endings; only a file passed as an *argument* wants CR-only | `common/using-os9exec-repl.md` |
 | A host file opens under the wrong case, or the wrong one of two similar names | host-directory lookup falls back to a case-insensitive, 28-char-cut, spaces-as-`_` scan and takes the FIRST match | `common/using-os9exec-repl.md` |

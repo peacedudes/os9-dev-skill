@@ -187,8 +187,8 @@ you're in interrupt context and cycles matter.
 **What a wait returns is the event value that satisfied it** — before the
 wait increment is applied, as period code relies on (`while (_ev_wait(id, 0,
 0) != 0);` as a mutex). A wait interrupted by a signal returns a value outside
-the range instead, with no error (`Manual`). os9exec currently returns the
-post-increment value; see `Ev$Wait` in `68k/syscall-reference.md`, `Flag`.
+the range instead, with no error (`Manual`; see `Ev$Wait` in
+`68k/syscall-reference.md`).
 
 **Relative-value variants:** `_os_ev_waitr()`/`_os_ev_setr()` behave like
 `_os_ev_wait()`/`_os_ev_set()` but treat the min/max range and the returned
@@ -313,10 +313,8 @@ extending a file at the same time.
 > The rule above is the manual's (`Manual`: the *Disk File Organization*
 > chapter's "End of File Lock"). Stock NitrOS-9 RBF takes the EOF lock for
 > write-only producers and creators alike and wakes waiters on every write
-> (`Live` (NitrOS-9)). os9exec matches it for a producer that has written,
-> but a creator that has not yet written holds no lock there, so a reader
-> sees EOF at once (`Live` (os9exec); detail in os9-systems-dev
-> `file-managers.md`). **If you read anywhere that NitrOS-9 gates this on
+> (`Live` (NitrOS-9)). (os9exec departs for a creator that has not yet
+> written; see "Where os9exec departs from the manuals" in `common/using-os9exec-repl.md`.) **If you read anywhere that NitrOS-9 gates this on
 > update mode, that describes a patch that was withdrawn, not the shipping
 > module** — a plausible-sounding claim to inherit, since it is what the
 > "writes take no lock" half of the rule implies on its own.

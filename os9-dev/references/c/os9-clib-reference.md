@@ -343,14 +343,15 @@ naming `curses.l` as the referencing file*, that is link order, not a missing
 symbol — `curses.l` both references and defines it, so a single-pass linker has
 already passed the definition. Listing `-l=.../curses.l` **twice** resolves it.
 
-**A curses program needs `TERM` set inside the guest.** `Live` (os9exec): boot
-straight to a shell rather than through a login and `initscr()` fails with
-`Unknown terminal type ''`, because the host's `TERM` does not reach the guest —
-the guest's own login/startup is what normally sets it. The tell is that
-message; a run that shows it has measured nothing about curses behaviour,
-because `initscr()` never succeeded. `setenv TERM vt100` in the guest is the
-ordinary fix; where it is not enough, see "A working `getenv` is not evidence
-a library can see your variable" below.
+**A curses program needs `TERM` set.** `initscr()` reads the terminal type from
+the environment and, without it, fails with `Unknown terminal type ''` — an
+**empty** name, which is the tell. A login normally sets it (`setenv TERM
+<type>` in the user's login procedure); a program started some other way, from a
+boot procedure or a background job, inherits no `TERM` unless one was set. A run
+that shows the message has measured nothing about curses, because `initscr()`
+never succeeded. `Live` (os9exec). Under an emulator there are further routes by
+which a variable can reach or miss a program; see "A working `getenv` is not
+evidence a library can see your variable" in `common/using-os9exec-repl.md`.
 
 ## `termlib`: the pad character is `PC_`, and the error you get hides the real bug
 
@@ -426,53 +427,6 @@ That gives a lighter fix than `sprintf` for a program with many call sites:
 argument after the format and will break any call with a different count. It
 suits a program whose calls are uniform — and where they are not, `sprintf` into
 a buffer and `addstr` it remains the general answer.
-
-### A working `getenv` is not evidence a library can see your variable
-
-Two routes exist into a guest process's environment — the emulator's parameter
-block (`@NAME=VALUE`, see `common/using-os9exec-repl.md`) and the OS-9 shell's
-`setenv` — and **they are not equivalent to every consumer.** `getenv` consults
-both. A library that walks the environment block itself need not.
-
-`Live` (os9exec), one program printing `getenv("TERM")` and then calling
-`initscr()`, so nothing differs but how the variable was created:
-
-| route | `getenv("TERM")` | `initscr()` |
-|---|---|---|
-| `@TERM=vt100` on the host command line, os9exec launching the program itself | `vt100` | `LINES=24 COLS=80` |
-| `@TERM=vt100` on the host command line, program started from a shell procedure | `vt100` | `Unknown terminal type ''`, `LINES=0 COLS=0` |
-| `setenv TERM vt100` in a shell procedure | `vt100` | `Unknown terminal type ''`, `LINES=0 COLS=0` |
-
-Same binary, `getenv` agreeing in every row. The failing cases report an
-**empty** name: curses is not failing to match `vt100`, it never sees a name.
-And the `@` route fails too once Microware's shell is between os9exec and the
-program, so on this rig what decides it is whether the curses program is the
-process os9exec started, not how the variable was created. It is not every
-shell: on the freeware rig, bash's `export TERM=vt100 TERMCAP=/dd/SYS/termcap`
-in `SYS/login` reaches the curses and termcap programs that bash starts.
-
-**This is one rig's curses, not a property of OS-9 curses, `Flag`.** On a second
-rig the same comparison passes on all three routes — `@`-passed, `setenv`, and a
-real `SYS/login` session — so the builds differ. Two candidate explanations for
-the split were tested here and **eliminated**: forking the program by absolute
-path versus by bare name makes no difference, and `TERMCAP` holding a file path
-versus the entry string makes no difference. On the rig that fails, what moves
-it is whether the program is the first process or a shell's child.
-
-**What to take from it regardless of which build you have:**
-
-- **Do not use `getenv` to prove a variable reached a library.** It is the one
-  check that cannot distinguish these routes, which makes it worthless for
-  exactly this fault and reassuring while you chase the wrong thing.
-- **If a terminal library reports an empty name**, try passing the variable as
-  `@TERM=`/`@TERMCAP=` and letting os9exec launch the program directly, with
-  no shell between, before suspecting your termcap. It needs no login session:
-
-```sh
-env '@TERM=vt100' '@TERMCAP=/dd/SYS/termcap' os9exec /h0/CMDS/prog
-```
-
-  `TERMCAP` may hold a path or the entry itself; both work where this works.
 
 ## String Functions (`strings.h`, not `string.h`)
 

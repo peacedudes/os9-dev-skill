@@ -79,9 +79,8 @@ double `3FD3333333333334`. Whether `.1+.2-.3` comes out zero depends on how
   residual is `0.` and the comparison is **equal**, because the literal `.3`
   is stored as `3FD3333333333334`, one unit above the nearest double
   (`3FD3333333333333`).
-- Under `math881`, `3./10.` also comes out as `3FD3333333333334`, so the
-  computed case gives `0.` too. `Flag`: that is os9exec's floating-point
-  path, not a measurement of a real 68881.
+- Under `math881` the computed case is not a measurement of a real 68881:
+  os9exec's 68881 division is one unit off (see "Where os9exec departs from the manuals" in `common/using-os9exec-repl.md`).
 
 At `DIGITS 15`, `1./3.` prints `.333333333333333` under both modules;
 `EXP(1.)` prints `2.71828182845904` under `math` and `2.71828182845905` under

@@ -253,6 +253,53 @@ in-universe** (`setenv` in a shell procedure, or a real login through
 `SYS/login`, which is what exports `TERM`, `TERMCAP`, `USER` and `HOME` on a
 configured disk).
 
+## A working `getenv` is not evidence a library can see your variable
+
+Two routes exist into a guest process's environment — the emulator's parameter
+block (`@NAME=VALUE`, above) and the OS-9 shell's
+`setenv` — and **they are not equivalent to every consumer.** `getenv` consults
+both. A library that walks the environment block itself need not.
+
+`Live` (os9exec), one program printing `getenv("TERM")` and then calling
+`initscr()`, so nothing differs but how the variable was created:
+
+| route | `getenv("TERM")` | `initscr()` |
+|---|---|---|
+| `@TERM=vt100` on the host command line, os9exec launching the program itself | `vt100` | `LINES=24 COLS=80` |
+| `@TERM=vt100` on the host command line, program started from a shell procedure | `vt100` | `Unknown terminal type ''`, `LINES=0 COLS=0` |
+| `setenv TERM vt100` in a shell procedure | `vt100` | `Unknown terminal type ''`, `LINES=0 COLS=0` |
+
+Same binary, `getenv` agreeing in every row. The failing cases report an
+**empty** name: curses is not failing to match `vt100`, it never sees a name.
+And the `@` route fails too once Microware's shell is between os9exec and the
+program, so on this rig what decides it is whether the curses program is the
+process os9exec started, not how the variable was created. It is not every
+shell: on the freeware rig, bash's `export TERM=vt100 TERMCAP=/dd/SYS/termcap`
+in `SYS/login` reaches the curses and termcap programs that bash starts.
+
+**This is one rig's curses, not a property of OS-9 curses, `Flag`.** On a second
+rig the same comparison passes on all three routes — `@`-passed, `setenv`, and a
+real `SYS/login` session — so the builds differ. Two candidate explanations for
+the split were tested here and **eliminated**: forking the program by absolute
+path versus by bare name makes no difference, and `TERMCAP` holding a file path
+versus the entry string makes no difference. On the rig that fails, what moves
+it is whether the program is the first process or a shell's child.
+
+**What to take from it regardless of which build you have:**
+
+- **Do not use `getenv` to prove a variable reached a library.** It is the one
+  check that cannot distinguish these routes, which makes it worthless for
+  exactly this fault and reassuring while you chase the wrong thing.
+- **If a terminal library reports an empty name**, try passing the variable as
+  `@TERM=`/`@TERMCAP=` and letting os9exec launch the program directly, with
+  no shell between, before suspecting your termcap. It needs no login session:
+
+```sh
+env '@TERM=vt100' '@TERMCAP=/dd/SYS/termcap' os9exec /h0/CMDS/prog
+```
+
+  `TERMCAP` may hold a path or the entry itself; both work where this works.
+
 ## Batch-testing binaries
 
 Each candidate can be its own boot program in a fresh instance — no shell
@@ -949,6 +996,46 @@ connection to the client. `idbg -o <path>` typed in the guest moves it to a
 file instead, e.g. `idbg -o /h5/trc -d 2` with `OS9H5` naming a scratch
 directory; the file is appended to, and its lines end in CR. `Source`
 (os9exec: `Change_DbgPath`), `Live` (os9exec).
+
+## Where os9exec departs from the manuals
+
+Measured on os9exec V4.10, each against the Microware manual it contradicts.
+These are facts about the emulator, not about OS-9: the reference pages state
+the manual's behaviour and point here. Code that passes on os9exec but relies
+on one of these will behave differently on real equipment, and vice versa.
+All `Live` (os9exec).
+
+- **`Ev$Wait` returns the value *after* the wait increment.** The manual's
+  contract, and period code, expect the value that satisfied the wait, before
+  it (`68k/syscall-reference.md`). Measured: an event at 0 with increment +1,
+  waited on 0..0, returned 1; a second wait on 1..1 returned 2. A mutex loop
+  such as `while (_ev_wait(id, 0, 0) != 0);` never exits here.
+- **The EOF lock.** The manual says creating a file for sequential output
+  gains it at once, and an access away from the end releases it. On an RBF
+  image neither happens: a reader of a file whose creator has not yet written
+  sees EOF at once, and a writer that moved to offset 0 still held the lock.
+  Detail in os9-systems-dev `file-managers.md`.
+- **`F$CpyMem` range-checks its source.** The manual: "you can view any
+  memory in the system". Here sources `0`, `$100`, `$10000`, `$01000000` and
+  the boot-resident shell's header all gave `E$BPAddr` (210); a module the
+  caller loaded could be read. os9exec models an SPU-protected system.
+- **`F$Link` does not check read permission.** A process running as 3.4
+  linked a module owned by 0.0 with access `$0000`; the manual says the link
+  fails.
+- **The sticky module attribute is not honoured.** A module with attribute
+  `$C0` is freed at link count 0 by `F$UnLink`, like any other.
+- **`F$SigMask` does not ignore overflow.** After 256 increments, 255
+  decrements still left the process masked.
+- **`F$DFork`/`F$DExec`.** The returned register image has SR `$0000`, and
+  edits to the register buffer are ignored: d5 set to `$42` in the buffer did
+  not reach the child.
+- **The 68881 floating-point path is not exact.** With `math881`, BASIC09
+  REAL `5./0.` raises nothing and stores `3FFF FFFF FFFF FFFF` (prints `2.`),
+  where the software `math` module raises `#107`; and division comes out one
+  unit high — BASIC09 `3./10.` gives `3FD3333333333334` and C `-K=2F`
+  `1.0/3.0` gives `3FD5555555555556`, where soft-float is correctly rounded.
+  What a real 68881 does is unmeasured here, `Flag`.
+- **No device descriptor modules** are resident; see the section above.
 
 ## A too-clean emulator makes someone else's bug look like the emulator's
 

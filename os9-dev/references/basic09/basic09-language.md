@@ -620,11 +620,9 @@ goes through the documented "Divide by Zero" path the way you'd expect:**
   continues, and `ON ERROR GOTO` never fires.
 - **REAL ÷ 0** — `Live` (NitrOS-9, os9exec). **6809** raises `Error #045` here too.
   **68k with the software `math` module** raises `Error #000:107 (E_TRAPV)`,
-  and `ON ERROR GOTO` catching it sees `ERR` = **107**. **68k with `math881`
-  under os9exec raises nothing** and stores a finite wrong value (`5./0.`
-  gave the bytes `3FFF FFFF FFFF FFFF`, printing as `2.`). `Flag`: that is
-  the emulator's floating-point path; what a real 68881 system does here is
-  unmeasured.
+  and `ON ERROR GOTO` catching it sees `ERR` = **107**. With `math881` it is
+  unmeasured on real hardware (os9exec's 68881 path is not trustworthy here;
+  see "Where os9exec departs from the manuals" in `common/using-os9exec-repl.md`).
 
 Where an error is raised, it is catchable with `ON ERROR GOTO`, and left
 unhandled it drops into interactive Debug Mode. On 68k, whether one is

@@ -971,8 +971,8 @@ for PID 0, gets the documented `E$IPrcID` (224) refusal and ignores the
 carry, so it reads a buffer nothing filled — `top`'s own bug, which what that
 buffer happens to hold turns into an empty list or worse.
 
-**There are no device descriptor modules.** os9exec mounts `/dd`, `/hN` and
-`/term` without them: `imdir` lists only `OS9exec`, `init`, a built-in
+**There are no device descriptor modules, by design** — os9exec does not
+fake them. It mounts `/dd`, `/hN` and `/term` without them: `imdir` lists only `OS9exec`, `init`, a built-in
 `socket` descriptor and what you have loaded. So anything that *links* a
 descriptor by name to read or change its options fails with
 `Error #000:221 (E_MNF)`, although the device itself works — Microware's own
@@ -1012,7 +1012,6 @@ All `Live` (os9exec).
 - **`F$Link` does not enforce the non-re-entrant rule.** The manual says a
   module that is not re-entrant may be linked by one process at a time
   (`E$ModBsy`); os9exec lets any number link it.
-- **No device descriptor modules** are resident; see the section above.
 
 ## A too-clean emulator makes someone else's bug look like the emulator's
 

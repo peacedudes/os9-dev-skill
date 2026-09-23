@@ -1005,11 +1005,6 @@ the manual's behaviour and point here. Code that passes on os9exec but relies
 on one of these will behave differently on real equipment, and vice versa.
 All `Live` (os9exec).
 
-- **`Ev$Wait` returns the value *after* the wait increment.** The manual's
-  contract, and period code, expect the value that satisfied the wait, before
-  it (`68k/syscall-reference.md`). Measured: an event at 0 with increment +1,
-  waited on 0..0, returned 1; a second wait on 1..1 returned 2. A mutex loop
-  such as `while (_ev_wait(id, 0, 0) != 0);` never exits here.
 - **The EOF lock.** The manual says creating a file for sequential output
   gains it at once, and an access away from the end releases it. On an RBF
   image neither happens: a reader of a file whose creator has not yet written
@@ -1022,8 +1017,6 @@ All `Live` (os9exec).
 - **`F$Link` does not check read permission.** A process running as 3.4
   linked a module owned by 0.0 with access `$0000`; the manual says the link
   fails.
-- **The sticky module attribute is not honoured.** A module with attribute
-  `$C0` is freed at link count 0 by `F$UnLink`, like any other.
 - **`F$SigMask` does not ignore overflow.** After 256 increments, 255
   decrements still left the process masked.
 - **`F$DFork`/`F$DExec`.** The returned register image has SR `$0000`, and

@@ -57,11 +57,11 @@ on TRAP #1–#15 via F$TLink.
 |------|---------|-----------|------------|-------|
 | **F$Link** | Link resident module | d0.w=type/language byte (0=any), (a0)=name | d0.w=type/language, d1.w=attr/rev, **(a0)=updated past the module name**, (a1)=entry, (a2)=header | Increments link count, no disk I/O. Fails if the module's access word does not give the process read permission (`Manual`). `Live` (os9exec) (os9exec departs — see "Where os9exec departs from the manuals" in `common/using-os9exec-repl.md`) |
 | **F$Load** | Load from file | d0.b=access mode, d1.l=memory "color" type (optional — documented in the v2.4 Technical Manual (1994), absent from the 1984 one, so a later addition rather than a disagreement), (a0)=pathname | d0.w=type/language, d1.w=attr/rev, **(a0)=updated beyond the path name**, (a1)=entry (of the *first* module loaded), (a2)=module pointer | Registers every module in the file (a "module group" — resident until the group's combined count is zero), then links. `Live` (os9exec) |
-| **F$UnLink** | Unlink by address | (a2)=header | — | Free at zero unless sticky (bit 6) — sticky needs count −1 or memory pressure (`Manual`). A module that was loaded *and* linked needs one call per link to fully free. `Live` (os9exec) (os9exec departs — see "Where os9exec departs from the manuals" in `common/using-os9exec-repl.md`) |
+| **F$UnLink** | Unlink by address | (a2)=header | — | Free at zero unless sticky (bit 6) — sticky needs count −1 or memory pressure (`Manual`). A module that was loaded *and* linked needs one call per link to fully free. `Live` (os9exec) |
 | **F$UnLoad** | Unlink by name | (a0)=module name | (a0)=updated | `d0.w`=type/language takes part in the lookup, as the manual's input list says: `Live` (os9exec), `d0=$DEAD` gives `E$MNF` and leaves the module loaded, while the module's own type/language or `0` unloads it |
 | **F$SetCRC** | Update module CRC | (a0)=module | — | Recomputes CRC + header parity after in-place modification (data modules); required before saving to disk. Rejects a non-header address with `E$BMID` (205) rather than trusting its input. `Live` (os9exec) |
 | **F$CRC** | Compute CRC | d0.l=count, d1.l=accumulator (init $FFFFFFFF), (a0)=data | d1.l=updated | 24-bit, one's-complemented for storage. Kernel checks once at load/bootstrap, never re-verifies. `Live` (os9exec) |
-| **F$DatMod** | Create/link data module | d0.l=size, d1.w=attr/rev, d2.w=access, d3.w=type/lang, d4.l=color, (a0)=name | d0.w=type, d1.w=attr, (a1)=data, (a2)=header | Named shared memory: creator sizes it, later callers link by name. No kernel synchronization — coordinate with events/signals. `Live` (os9exec) |
+| **F$DatMod** | Create/link data module | d0.l=size, d1.w=attr/rev, d2.w=access, d3.w=type/lang, d4.l=color, (a0)=name — **d3 and d4 are read only if bit 15 of d2 is set**; otherwise the module is type Data, language 0, general memory (the Guru 11.5.4, `Hearsay`-grade third party; the TRM marks both "optional" without saying how) | d0.w=type, d1.w=attr, (a1)=data, (a2)=header | Named shared memory: creator sizes it, later callers link by name. No kernel synchronization — coordinate with events/signals. `Live` (os9exec) |
 
 ## Memory
 
@@ -113,8 +113,8 @@ Ev$Signl=`8`, Ev$Pulse=`9`, Ev$Set=`$0A`, Ev$SetR=`$0B`.
   with the increment not applied. Period code depends on it: TOP's `os9lib`
   (1988) takes a mutex with `while (_ev_wait(id, 0, 0) != 0);` on an event
   created at 0 with wait-increment +1. A bad event ID returns `E$EvntID`
-  immediately. (os9exec departs here; see "Where os9exec departs from the
-  manuals" in `common/using-os9exec-repl.md`.)
+  immediately. `Live` (os9exec): an event at 0 with increment +1, waited on
+  0..0, returns 0; a second wait on 1..1 returns 1.
 - **Ev$Signl**: d0.l=event ID, d1.w=8 — adds the signal-increment to the
   counter, then wakes the first waiting process whose range the value is
   in; with the MS bit of d1 set it wakes every process in range (`Manual`).

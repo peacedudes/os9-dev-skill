@@ -95,7 +95,7 @@ as a complete, unmodified whole hasn't been run start-to-finish.
 
 | Type | Notes |
 |------|-------|
-| BYTE | 0-255, unsigned. Truncates silently on overflow. **Cannot be passed as a procedure parameter** — see Pitfalls. |
+| BYTE | 0-255, unsigned. Truncates silently on overflow. **The manual forbids passing it as a procedure parameter**, and nothing enforces that — see "Procedures & Parameters". |
 | INTEGER | Signed. Faster than REAL (see Control Structures below). Width/range/overflow behavior is architecture-specific — see the per-architecture file. |
 | REAL | Width/range/precision is architecture-specific — see the per-architecture file. |
 | STRING | Declared via `STRING[len]` (max length, default 32 if omitted). Fixed buffer, silently truncates past max. **Terminator is target-specific:** `0x00` (NUL) on **68k** (`Live` (os9exec) — byte-dump: `STRING[8]="XY"` after `"ABCDEFGH"` → `58 59 00 44...`), `$FF` on **6809** (`Manual` — not dumped). A string filling its declared max length has **no** terminator byte at all (`Live` (os9exec): `STRING[3]="XYZ"` → exactly `58 59 5A`). |
@@ -338,13 +338,16 @@ chain). `fact(5)=120`, `fib(10)=55`, both correct.
 **BYTE variables cannot be passed as parameters.** Pass a BYTE array
 instead. **`Manual`-confirmed** — the *BASIC09 Reference Manual*
 (Rev H) parameter-passing section is explicit: parameters "can be of any type
-(EXCEPT variables of type BYTE, but BYTE arrays are O.K.)". So the skill matches
-Microware here; the emulator behaviour below is faithful, not a quirk.
-**This fails silently, not loudly:** `PARAM b: BYTE` is accepted
-with zero error at both edit time and run time, but the passed argument
-is simply discarded — the parameter never gets bound and reads as its
-default/uninitialized value (`Live` (os9exec), 68k). Don't expect a compile or
-runtime error to catch this mistake; it won't.
+(EXCEPT variables of type BYTE, but BYTE arrays are O.K.)". Follow the manual.
+
+**Nothing enforces the rule, and the failure it guards against is silent.**
+`Live` (os9exec), 68k BASIC09 V2.1: `PARAM b: BYTE` is accepted at edit time
+and run time. A BYTE *variable* passed to it arrives intact (42), and a write
+to `b` reaches the caller. Anything else is not converted: the parameter reads
+the **first byte of the argument's storage**. An INTEGER 300 or a literal `7`
+reads as `0` (the high byte of a 4-byte integer), and `$05000000` reads as
+`5`. No error at any point. So the mistake the manual forbids looks like a
+parameter that was never bound.
 
 ## I/O
 
@@ -378,21 +381,15 @@ DATA wraps around when exhausted rather than erroring.
 code and auto-resets to 0 once read; `POS` reports the current print
 column.
 
-**`EOF()` behaves like C's `feof()` — a sticky flag set only by an actual
-failed read, not a live position check.** `Live` (os9exec): reading a 2-line
-sequential file, `EOF(#path)` is still `FALSE` immediately after the last
-successful `READ`; only a further `READ` attempt — which raises
-`Error #000:211 (E$EOF)` — makes it `TRUE`. **Not a position-tracking bug**:
-`SEEK` to anywhere from just-past-end to 1000 bytes into a 6-byte file
-leaves `EOF()` `FALSE` every time. Only an I/O attempt that hits the real
-end sets it, exactly like C's `feof()` after `fseek()`.
-
-Consequence: the naive idiom `WHILE NOT EOF(#path) DO READ #path,x ...
-ENDWHILE` always over-reads on its final iteration. Either catch it with
-`ON ERROR GOTO` or restructure to check `EOF` *after* the read. `E$EOF`
-(211) is a standard OS-9 I/O error code (`common/error-codes.md`), not one
-of BASIC09's own low-numbered errors — `READ`/`WRITE` surface it via `ERR`
-like any other file-manager error.
+**`EOF()` is a position check, not C's sticky `feof()`.** `Live` (os9exec,
+host directory and RBF image): reading a 2-line sequential file, `EOF(#path)`
+is `FALSE` after the first `READ` and `TRUE` straight after the last one.
+`SEEK` to or past the end makes it `TRUE`, and `SEEK #path,0` makes it
+`FALSE` again. So `WHILE NOT EOF(#path) DO READ #path,x ... ENDWHILE` stops
+cleanly after the last record. A `READ` past the end raises
+`Error #000:211 (E$EOF)`. That is a standard OS-9 I/O error code
+(`common/error-codes.md`), not one of BASIC09's own low-numbered errors, and
+`READ`/`WRITE` surface it through `ERR` like any other file-manager error.
 
 **`READ` is context-sensitive.** `READ var_list` (no `#path`) reads the next
 `DATA` items. `READ #path, var` (with `#path`) reads from an open file
@@ -460,8 +457,10 @@ PROCEDURE stockfile
   DIM sp: BYTE; n, slot: INTEGER
 
   CREATE #sp, "stock"
-  blank.tag = "": blank.onhand = 0
-  blank.reorder = 0: blank.price = 0
+  blank.tag = ""
+  blank.onhand = 0
+  blank.reorder = 0
+  blank.price = 0
   ! pre-allocate 50 empty slots
   FOR n = 1 TO 50
     PUT #sp, blank
@@ -554,8 +553,10 @@ error code is unverified.
 are Boolean-only **infix operators** (`a AND b`, operands and result
 TRUE/FALSE). LAND/LOR/LXOR/LNOT are **function calls, not operators** —
 `LAND(a,b)`/`LOR(a,b)`/`LXOR(a,b)`/`LNOT(a)` — operating on integer values
-bit-by-bit. **Writing `6 LAND 3` as if it were infix is a syntax error**
-(`Live` (os9exec): `Error #000:011`) — use `LAND(6,3)`. The `*NOT` member
+bit-by-bit. **Writing `6 LAND 3` as if it were infix is a syntax error** —
+use `LAND(6,3)`. The code it reports depends on where the mistake sits
+(`Live` (os9exec)): `#000:011` in an assignment (`x=6 LAND 3`), `#000:029`
+in a `PRINT`, `#000:037` inside parentheses. The `*NOT` member
 of each family takes one operand, the rest take two. The names invite
 confusion precisely because they look like variants of each other rather
 than a different call shape entirely.
@@ -611,23 +612,29 @@ after each trip.
 goes through the documented "Divide by Zero" path the way you'd expect:**
 
 - **INTEGER ÷ 0** — `Live` (NitrOS-9, os9exec). **6809** raises the documented
-  `Error #045 -- Divide by Zero`. **68k** raises `Error #000:105
-  (E_ZERDIV) zero divide TRAP 5` — the 68000 hardware zero-divide
-  exception (vector 5), dispatched through `F$STrap`, not BASIC09's own
-  documented error 45.
-- **REAL ÷ 0** — `Live` (NitrOS-9, os9exec). **6809** raises `Error #045` here too;
-  **68k** raises `Error #000:107 (E_TRAPV)`, and `ON ERROR GOTO` catching
-  it sees `ERR` = **107**.
+  `Error #045 -- Divide by Zero`. **68k with `math881`** (the module a stock
+  startup loads) raises `Error #000:105 (E_ZERDIV) zero divide TRAP 5` — the
+  68000 hardware zero-divide exception (vector 5), dispatched through
+  `F$STrap`, not BASIC09's own documented error 45. **68k with the software
+  `math` module raises nothing**: `5/0` yields `2147483647`, execution
+  continues, and `ON ERROR GOTO` never fires.
+- **REAL ÷ 0** — `Live` (NitrOS-9, os9exec). **6809** raises `Error #045` here too.
+  **68k with the software `math` module** raises `Error #000:107 (E_TRAPV)`,
+  and `ON ERROR GOTO` catching it sees `ERR` = **107**. **68k with `math881`
+  under os9exec raises nothing** and stores a finite wrong value (`5./0.`
+  gave the bytes `3FFF FFFF FFFF FFFF`, printing as `2.`). `Flag`: that is
+  the emulator's floating-point path; what a real 68881 system does here is
+  unmeasured.
 
-Left unhandled, all four cases drop into interactive Debug Mode. All four
-are catchable with `ON ERROR GOTO`.
+Where an error is raised, it is catchable with `ON ERROR GOTO`, and left
+unhandled it drops into interactive Debug Mode. On 68k, whether one is
+raised at all depends on which math module is loaded.
 
-**Portable code must not test for a specific code.** 6809 reports
-Microware's documented BASIC09 error 45 for both operand types; 68k reports
-the underlying 68000 CPU exception instead — 105 for INTEGER, 107 for REAL.
-Branch on "an error occurred," not on its number, and guard divisors that
-could be zero rather than relying on the trap: catchable is not recovered,
-and nothing happens automatically without a handler.
+**Portable code must not test for a specific code, or rely on the trap.**
+6809 reports Microware's documented BASIC09 error 45 for both operand types;
+68k reports the underlying 68000 CPU exception instead — 105 for INTEGER,
+107 for REAL — when it reports anything. Guard divisors that could be zero:
+a trap is not a recovery, and on 68k there may be no trap.
 
 (An older `os9exec` had four stacked `F$STrap` dispatch bugs that broke
 this dispatch — REAL÷0 killed the process uncatchably and INTEGER÷0 passed
@@ -651,6 +658,14 @@ BASIC09's I-code interpreter does its own runtime checking (array bounds,
 call-nesting depth, arithmetic errors, etc.) that a native machine-code
 compiler typically wouldn't catch — a small performance cost in exchange
 for not crashing on those classes of bug.
+
+## Statement separator
+
+**Several statements share a line with `\`, not `:`.** `Live` (os9exec):
+`a=1 \ b=2` compiles and runs, and `LIST` shows it as `a=1\ b=2`. The
+`:` that most BASICs use is rejected at `LOAD` with `Error #000:011`, the
+caret under the `:`. So code ported from another BASIC fails to load on its
+first multi-statement line.
 
 ## Comments
 

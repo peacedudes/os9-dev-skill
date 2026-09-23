@@ -39,15 +39,15 @@ step the workflow assumes.
 | Form | Entry point of the output module |
 |---|---|
 | `PACK proc1,proc2` | The *first-listed* procedure |
-| `PACK*` (whole workspace) | The *current* procedure (the one `DIR` marks with `*` — usually last loaded/touched) |
+| `PACK*` (whole workspace) | The *first* procedure in workspace order (the top of `DIR`) — **not** the one `DIR` marks with `*`. `Live` (os9exec) |
 
   Both outputs contain every packed procedure's code; only the entry
   differs. If the entry point matters, name the list explicitly.
 
-  **With a list, the entry point and `*` end up on different procedures.**
-  `PACK a,b >target` gives the module entry `a` (first-listed) but leaves `*`
-  on `b` (last-listed). So a following `PACK*` does *not* reproduce the entry
-  point the list form just used — it picks `b`. `Live` (os9exec).
+  **`*` never decides the entry.** `Live` (os9exec): with `first` and
+  `second` loaded in that order, `PACK*` enters at `first` whether `*` sits
+  on `second` (as it does after `LOAD`) or on `first` (after `e first`). Load
+  the source with the entry procedure first, or name the list.
 - **Packing is destructive to the workspace copy — this is why the manual
   says to always `SAVE` first.** `Live` (os9exec). `PACK` does not merely write a
   file; it converts the *in-workspace* procedure too. With `aaa` and `bbb` in
@@ -64,9 +64,9 @@ step the workflow assumes.
      confirmed by it attaching only to the packed procedure and by `LIST aaa`
      afterwards printing **nothing at all** — the manual's "CANNOT be edited or
      debugged", in practice.
-  2. **`*` moves to it** — packing makes that procedure current. This matters
-     for the `PACK*` entry-point rule in the table above: a preceding `PACK`
-     has already changed which procedure "current" means.
+  2. **`*` moves to it** — packing makes that procedure current. That does
+     not change what a later `PACK*` enters at, which is decided by workspace
+     order (table above).
   3. **It grows slightly** (92 -> 96 here; another run 96 -> 100).
 
   **Read that `DIR` raw, and set `tmode pag=0` first.** Both markers above are
@@ -81,11 +81,12 @@ step the workflow assumes.
 
   Consequence: **a second `PACK` of the same procedure in one session fails**
   with BASIC09 error `#000:051` ("Line with Compiler Error") — there is no
-  longer any source structure to run the extra compiler pass over — and it
-  **creates/truncates the output file to 0 bytes before discovering that**, so
-  it will destroy a good module from an earlier `PACK` to the same path. Both
-  the error and the refusal are correct behaviour, not an os9exec defect.
-  Re-pack from a fresh `LOAD` of the saved source instead.
+  longer any source structure to run the extra compiler pass over. When the
+  target already exists, `PACK` first asks `Rewrite?:`; answer `n` and the
+  file is untouched. **Answer `y` and the file is truncated to 0 bytes before
+  the `#051`**, destroying the good module an earlier `PACK` wrote there. In
+  a batch that feeds `basic` its commands, the next input line answers the
+  prompt. Re-pack from a fresh `LOAD` of the saved source instead.
 - **`>pathlist` with a procname list prints a BASIC09 error and still
   works.** `Live` (os9exec): `SAVE proc >target` and `PACK proc >target` print
   `Error #000:043` while writing a correct file. **The codes are BASIC09's
@@ -168,17 +169,21 @@ edit/debug). Per the manual, code under RunB can trap Ctrl-C/Ctrl-Q via
    residency. Invoke by bare name from a CHX where it resolves.
 3. **`RUN <sibling>` inside a running packed module:** resolves via
    **F$Link against the module directory**. Loading a packed group file
-   registers every member procedure as a resident module by name; sibling
-   calls link to those.
+   registers every member procedure as a module by name; sibling calls link
+   to those.
 
 ## Residency contamination (context 3 hazard)
 
-Modules registered by running a packed group file **stay resident after
-the program ends — and after `BYE`** (`mdir` from the shell shows them). A
-later run of a *different* packed file reusing the same procedure names
-resolves sibling `RUN`s against the stale residents, silently changing
-results. For experiments that matter, run in a fresh emulator/system
-instance and audit `mdir` when results look impossible.
+`Live` (os9exec). **Running a packed file leaves nothing behind**: after
+`runb grp`, or `RUN grp` inside `basic` followed by `BYE`, `mdir` shows none
+of its members. **Loading one does**: after `load grp` from the shell, every
+member stays in the module directory until unlinked. A later `runb` of a
+*different* packed file that reuses those procedure names then runs the
+resident copies, entry point included, and never the file you named. With
+`first` and `second` resident from one file, `runb` of a second file defining
+its own `first` and `second` printed the old program's output. Nothing warns.
+Audit `mdir` when results look impossible, and `unlink` stale members or
+start a fresh emulator.
 
 ## Command-line arguments
 

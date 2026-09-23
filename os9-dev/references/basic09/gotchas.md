@@ -76,8 +76,11 @@ Full grammar and the live error codes: `basic09-language.md`.
 
 - **A comment as the literal first line of a file breaks `LOAD` outright on
   6809, but not on 68k** (`Live` (NitrOS-9, os9exec)). A host-authored file starting with
-  `! ...` above `PROCEDURE` loads and compiles cleanly on 68k, the comment
-  silently discarded. The identical file fails on 6809 with `Error #043 --
+  `! ...` above `PROCEDURE` loads on 68k and every procedure in it runs, but
+  the comment is not dropped: `LOAD` prints `Program Rewrite?:` and the
+  workspace gains an extra procedure named `Program` holding the comment as
+  `REM`, listed first; `PACK*` packs it along with the rest. The identical
+  file fails on 6809 with `Error #043 --
   Unknown Procedure`, and the failure is not scoped to one procedure —
   **nothing in the file loads**, including procedures defined after the
   comment. It is genuinely about *position*: the same comment inside a
@@ -86,39 +89,38 @@ Full grammar and the live error codes: `basic09-language.md`.
   whole-file comment is wanted, place it after that line.
 - **No automatic variable initialization** — uninitialized variables hold
   garbage, not zero. `DIM` and initialize explicitly.
-- **BYTE variables cannot be passed as parameters, and this fails silently.**
-  `PARAM b: BYTE` is accepted with no error at edit time or run time, but the
-  argument is simply discarded and the parameter reads as uninitialized. Pass
-  a BYTE array instead. Microware documents the restriction; the silence is
-  faithful, not a quirk.
+- **The manual forbids BYTE parameters, and nothing enforces it.**
+  `PARAM b: BYTE` is accepted with no error at edit time or run time. On 68k a
+  BYTE variable passed to it arrives intact, but an INTEGER or a literal is not
+  converted: the parameter reads the argument's first storage byte, so `7`
+  arrives as `0`. Pass a BYTE array, as the manual says.
+  See `basic09-language.md`.
 - **Division truncates based on the OPERAND types, not the destination's.**
   `r = i / 3` with `i: INTEGER` does truncating INTEGER division first, then
   widens the already-truncated result into the REAL destination. A REAL
   operand (`i / 3.0`) is what forces real division.
 - **A BOOLEAN operand in a numeric expression is a COMPILE-TIME error**
   (`Error #000:067`), not a runtime one — the program never starts.
-- **`EOF(#path)` behaves like C's `feof()`** — a sticky flag set only by an
-  actual failed read, not a live position check. It stays FALSE right after
-  reading the last record, and `SEEK`ing arbitrarily far past the end never
-  sets it. So `WHILE NOT EOF(#path) DO READ ... ENDWHILE` always over-reads on
-  its final iteration and needs `ON ERROR GOTO` to catch it cleanly.
 - **`ON ERROR GOTO` does NOT auto-clear after firing**, despite claims
   otherwise. It stays armed indefinitely until an explicit bare `ON ERROR`.
 - **`TRIM$` strips TRAILING spaces only** — `TRIM$("  hi  ")` is `"  hi"`.
 - **`FIX()` rounds to nearest, it does not truncate** — `FIX(-3.9)` is `-4`.
 - **`RND(n>0)` returns a fractional REAL in `[0,n)`**, not an integer the way
   some other BASICs do. Use `FIX(RND(n))` for a random integer.
-- **Divide-by-zero reports a different code on each target.** 6809 raises
-  Microware's documented `Error #045 -- Divide by Zero` for both INTEGER and
-  REAL. 68k raises the underlying 68000 CPU exception instead — `#000:105`
-  (`E_ZERDIV`) for INTEGER, `#000:107` (`E_TRAPV`) for REAL. All four are
-  catchable and all four drop into Debug Mode if unhandled, so branch on
-  "an error occurred", never on the number.
+- **Divide-by-zero reports a different code on each target, and on 68k it
+  may report nothing.** 6809 raises Microware's documented `Error #045 --
+  Divide by Zero` for both INTEGER and REAL. 68k raises the underlying 68000
+  CPU exception instead — `#000:105` (`E_ZERDIV`) for INTEGER, `#000:107`
+  (`E_TRAPV`) for REAL — but which of them fires depends on the math module
+  loaded, and with software `math` an INTEGER `5/0` quietly yields
+  `2147483647`. Guard divisors; never branch on the number. Details in
+  `basic09-language.md`.
 - **A literal `;` inside a string constant gains a spurious backslash.**
   `PRINT "text; more"` stores and echoes as `text\; more`, in both `LIST`'s
   display and real runtime output — presumably the tokenizer disambiguating
-  from the statement separator. `Live` (NitrOS-9); not tested on 68k. Easy to
-  miss until it shows up in something meant to be exact text.
+  from the statement separator. `Live` (NitrOS-9). Easy to miss until it
+  shows up in something meant to be exact text. 68k BASIC09 V2.1 does not do
+  this: the string lists and prints as `text; more` (`Live` (os9exec)).
 - **Real Y2K-class bug in 68k's `DATE$`.** Any year ≥ 2000 prints a corrupt
   leading year digit (`"<6/07/14"` where `"26/07/14"` was correct) — `Live`
   (os9exec); `Absent` on real 6809 NitrOS-9, so it's the 68k runtime's own
@@ -134,6 +136,6 @@ Full grammar and the live error codes: `basic09-language.md`.
 
 - **`PACK`/`RunB` have their own gotcha set** — output goes to CHX (not
   CHD, unlike `SAVE`), the entry-point rule differs between `PACK a,b` and
-  `PACK*`, only bare names ever resolve, residency from an earlier run can
-  shadow a later one, and the `Can't install trap handler` banner has three
+  `PACK*`, only bare names ever resolve, a packed group you `load`ed shadows
+  a later one reusing its names, and the `Can't install trap handler` banner has three
   distinct causes. All of it: `pack-and-runb.md`.

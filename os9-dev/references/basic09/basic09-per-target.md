@@ -68,11 +68,24 @@ controls both display precision and the precision of transcendental
 calculations.
 
 **68k REAL arithmetic is full double precision too**, `Live` (os9exec), with the
-default `math` module and with `math881` loaded alike: `0.1+0.2-0.3` (computed
-at run time) gives `5.55111512e-017`, and `0.1+0.2 = 0.3` compares **unequal**.
-At `DIGITS 15`, `1./3.` prints `.333333333333333`, `EXP(1.)` prints
-`2.71828182845904` and the residual prints as `0.` because it is below 15
-digits.
+default `math` module and with `math881` loaded alike: `.1+.2` stores the IEEE
+double `3FD3333333333334`. Whether `.1+.2-.3` comes out zero depends on how
+`.3` was produced, which makes it a poor test:
+
+- **Operands computed at run time** (`1./10.`, `2./10.`, `3./10.`) under the
+  software `math` module: the residual is `5.55111512e-017` and `.1+.2 = .3`
+  compares **unequal**, as IEEE double arithmetic predicts.
+- **Operands written as literals** (`.1`, `.2`, `.3`), under either module: the
+  residual is `0.` and the comparison is **equal**, because the literal `.3`
+  is stored as `3FD3333333333334`, one unit above the nearest double
+  (`3FD3333333333333`).
+- Under `math881`, `3./10.` also comes out as `3FD3333333333334`, so the
+  computed case gives `0.` too. `Flag`: that is os9exec's floating-point
+  path, not a measurement of a real 68881.
+
+At `DIGITS 15`, `1./3.` prints `.333333333333333` under both modules;
+`EXP(1.)` prints `2.71828182845904` under `math` and `2.71828182845905` under
+`math881`.
 
 Code relying on accumulated rounding or near-equality behaves differently
 across targets — use tolerance comparisons on REAL, never `=`.
@@ -94,8 +107,9 @@ across targets — use tolerance comparisons on REAL, never `=`.
 
 `Live` (os9exec): 68k `basic` identifies itself as "Microware Basic V2.1", and `RunB`,
 the standalone runtime-only interpreter, exists and works on a real `PACK`ed
-module. A packed module is a *subroutine* module and cannot be run by name
-from the shell — invoke it as `runb <name>`. It resolves through the module
+module. A packed module is a *subroutine* module; `runb <name>` runs it,
+and so does the bare `<name>` from the shell, which recognises I-code and
+forks RunB (see `pack-and-runb.md`). It resolves through the module
 directory (`F$Link`) first, then the *execution* directory (`F$Load`), never
 the data directory. Module-format background: `common/module-format.md`;
 packing mechanics and the resolution rules in full: `pack-and-runb.md`.

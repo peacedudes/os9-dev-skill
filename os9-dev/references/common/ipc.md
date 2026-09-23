@@ -228,12 +228,14 @@ establish one-directional flow between them.
   and may truncate the existing pipe — pass `FAM_NOCREATE` if you specifically
   need "fail, don't clobber" semantics.
 - **`OPEN` on a not-yet-existing named pipe fails outright — `CREATE` is
-  what actually establishes it.** `Live` (os9exec): a process `OPEN`ing a named pipe
-  nobody has ever touched crashes uncaught with `Error #000:216 (E_PNNF)`
-  the moment it's forked, not a clean error the program can catch. If a
-  reader might run before any writer has created the pipe, it must
-  `CREATE` (or otherwise ensure the pipe exists) rather than assume `OPEN`
-  will find/make it.
+  what actually establishes it.** `Live` (os9exec): `OPEN` of a named pipe
+  nobody has created fails with `Error #000:216 (E_PNNF)`, like any missing
+  path. It is an ordinary error: BASIC09's `ON ERROR GOTO` catches it
+  (`ERR` = 216) and C's `open()` returns -1 with `errno` 216. A program
+  without a handler dies of it, which is easy to misread as the pipe
+  mechanism failing. If a reader might run before any writer has created
+  the pipe, it must `CREATE` (or otherwise ensure the pipe exists) rather
+  than assume `OPEN` will find/make it.
 - The shape that *isn't* automatically caught: a process holding the write
   end of one pipe while blocked reading from another, in a cycle with
   another process doing the reverse. Nothing in the pipe mechanism itself
@@ -302,9 +304,13 @@ So two plain appenders to one file do **not** interleave freely; the EOF
 lock is documented as being there precisely to stop two processes
 extending a file at the same time.
 
-> Both reimplementations match this: `Live` (os9exec, NitrOS-9). Stock RBF
-> takes the EOF lock for write-only producers and creators alike and wakes
-> waiters on every write. **If you read anywhere that NitrOS-9 gates this on
+> The rule above is the manual's (`Manual`: the *Disk File Organization*
+> chapter's "End of File Lock"). Stock NitrOS-9 RBF takes the EOF lock for
+> write-only producers and creators alike and wakes waiters on every write
+> (`Live` (NitrOS-9)). os9exec matches it for a producer that has written,
+> but a creator that has not yet written holds no lock there, so a reader
+> sees EOF at once (`Live` (os9exec); detail in os9-systems-dev
+> `file-managers.md`). **If you read anywhere that NitrOS-9 gates this on
 > update mode, that describes a patch that was withdrawn, not the shipping
 > module** — a plausible-sounding claim to inherit, since it is what the
 > "writes take no lock" half of the rule implies on its own.

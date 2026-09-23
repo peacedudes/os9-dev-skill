@@ -281,16 +281,19 @@ every member's combined link count is zero.
   `F$Link`, forcing a fallback to `F$Load`, so execution wrongly depended
   on the current directory. See os9-dev `basic09/pack-and-runb.md` for
   the application-side view.)
-- **`F$Load` reads its file from the *execution* directory, never the
-  *data* directory, and its access mode is a *byte*, `d0.b`, not a word**
-  (both `Live` (os9exec); same facts, application side, in os9-dev's
-  `basic09/pack-and-runb.md` and the F$Load row of `68k/syscall-reference.md`).
-  The point worth adding for kernel/emulator work specifically: both are
-  easy to get wrong when *reimplementing* `F$Load` rather than just calling
-  it — reading the mode as a full word can flip the exec-vs-data-directory
-  decision (a leftover type/language word in the high byte must not leak
-  into the mode check), and resolving the name against the data directory
-  sends the search hunting in the wrong place.
+- **`F$Load`'s access mode is a *byte*, `d0.b`, and it chooses the
+  directory.** The v2.4 Technical Manual: the mode "may be specified as
+  either Exec_ or Read_, causing the file to load from the current execution
+  or data directory, respectively" (`Manual`); bit 7 of `d0.b` only says
+  whether `d1.l` carries a memory colour. `Live` (os9exec): `$01` (`Read_`)
+  resolves a relative name in the data directory; `0`, `$80` and modes with
+  `Exec_` use the execution directory; `$0401` and `$FF01` behave as `$01`.
+  RunB's module lookup searches `chx` (application side in os9-dev's
+  `basic09/pack-and-runb.md`; the F$Load row of `68k/syscall-reference.md`).
+  The point worth adding for kernel/emulator work specifically: reading the
+  mode as a full word flips the decision, because RunB leaves its
+  type/language in the high byte (`Source`: os9exec's F$Load, which masks to
+  `d0.b` for that reason).
 
 ### Header Integrity: Parity and CRC
 

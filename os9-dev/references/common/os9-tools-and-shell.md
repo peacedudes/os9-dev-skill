@@ -80,7 +80,7 @@ wildcard that matches no file.
 
 | Built-in | Effect |
 |---|---|
-| `chd <dir>` / `chx <dir>` | Set current data / execution directory (see `unix-differences.md` for the two-directory model). `chd` with no argument returns to `$HOME` (the `HOME` environment variable, not the password-file data dir — see below); `chx` with no argument is a no-op |
+| `chd <dir>` / `chx <dir>` | Set current data / execution directory (see `unix-differences.md` for the two-directory model). `chd` with no argument returns to `$HOME` (the `HOME` environment variable, not the password-file data dir — see below); `chx` with no argument leaves the execution directory unchanged, and prints `Error #000:214 (E_FNA)` when that directory is on an RBF image |
 | `ex <name>` | Replace this shell with the named program (no new process) |
 | `w` / `wait` | Wait for any child / all children to terminate |
 | `kill <pid>` | Send the kill signal to a process |
@@ -291,4 +291,6 @@ The OS-9 Primer (environment variables, built-ins); The OS-9 Guru §2.1–2.2;
 OS-9 v2.4 Technical Reference Manual; Technical I/O Manual v2.4. The
 `#<size>k` modifier behavior is additionally `Live` (os9exec).
 Bare `chd` (to `$HOME`, the environment variable rather than the
-password-file data directory) and bare `chx` (a no-op) are both `Live` (os9exec).
+password-file data directory) and bare `chx` (no change; `E_FNA` printed when
+the execution directory is on an RBF image, nothing on a host directory) are
+both `Live` (os9exec).

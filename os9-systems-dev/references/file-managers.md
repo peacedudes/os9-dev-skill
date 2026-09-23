@@ -341,10 +341,14 @@ against.
 
 How the two reimplementations do it, if you are modelling one:
 
-- **os9exec** — the EOF lock is its own flag on the path, gained by an access
-  landing at the end of the file through any write-capable path and by a
-  create-for-output, kept until an access that is *not* at the end, dropped at
-  close before the wake. `Live` (os9exec).
+- **os9exec** — the EOF lock is its own flag on the path, gained by a write
+  landing at the end of the file through any write-capable path (write-only
+  or update) and dropped at close before the wake. `Live` (os9exec). Two
+  departures from the manual's description, both `Live` (os9exec) on an RBF
+  image: **creating a file does not gain the lock** — a reader opening a
+  file its creator has not yet written to reads EOF at once instead of
+  sleeping — and **an access away from the end does not release it** (a
+  producer that wrote at EOF and then wrote at offset 0 still held it).
 - **NitrOS-9** — stock 6809 RBF takes it for a write-only producer and a
   write-only creator alike, and wakes waiters on every write. `Live`
   (NitrOS-9). An update-mode gate was patched in and withdrawn, never sent

@@ -93,9 +93,8 @@ has bitten a real session.
 | A batch run stalled, or later procedure lines never executed | either an earlier command failed (`-x` abort-on-error is the default, and the skipping is announced by nothing) or a utility hit an interactive prompt — classically `copy` without `-r` — and read your remaining lines as its answers | `common/using-os9exec-repl.md` |
 | `can't execute "<the name you typed>"` with `E_FNA`/214 | the procedure file is in the execution directory; bare-name procedure lookup resolves against the *data* directory | `common/os9-tools-and-shell.md` |
 | `can't execute "<a word you never typed>"` | you named a data file, and the shell is running its contents as commands — the quoted word came from inside the file | `common/os9-tools-and-shell.md` |
-| A file you just created won't open, or `dir` shows a shorter name than you gave | OS-9 allows 28 characters and a 29th is refused; an older os9exec build cuts names at 27 (and on macOS a 28-character `makdir` can kill it), so there a longer name is reachable only by its prefix | `common/unix-differences.md` |
+| A file you just created won't open, or a long name is refused | OS-9 allows 1 to 28 characters and a 29th is refused everywhere | `common/unix-differences.md` |
 | Compiler reads the whole source as one line | source has LF endings; OS-9 needs CR-only | `common/using-os9exec-repl.md` |
-| Same symptom after editing a file you did not create | it was already CR-only and `flip -m` ran again, collapsing it; `flip -t` first | `common/using-os9exec-repl.md` |
 | `cpp` dies on a `.dat`/data file you never thought of as source | it is `#include`d as C initialisers — the CR rule applies by USE, not by extension | `common/using-os9exec-repl.md` |
 | Program builds and runs but misreads its own data file | LF endings in runtime data: the silent form of the CR rule, nothing reports it | `common/using-os9exec-repl.md` |
 | OS-9's `unshar` says `No shell commands in <file>` | the archive was transported without converting to OS-9 text | `common/using-os9exec-repl.md` |

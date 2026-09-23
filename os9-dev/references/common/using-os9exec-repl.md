@@ -28,9 +28,11 @@ or SDK. A host directory of your own files works identically for basic testing.
     and `OS9HZ` is silently ignored — no device, no complaint. `Live` (os9exec).
   - **Two variables may name the same image, and that is supported.** A
     collection that programs expect at both `/dd` and `/h0` needs only
-    `OS9DISK=<img> OS9H0=<img>`; the emulator says so on the console
-    (`# /h0: using OS9H0='<img>', ignoring '<startPath>/h0'`) and mounts it.
-    `Live` (os9exec). No symlinking or copying required.
+    `OS9DISK=<img> OS9H0=<img>` and mounts it silently. `Live` (os9exec). No
+    symlinking or copying required. (The console line `# /h0: using
+    OS9H0='<img>', ignoring '<startPath>/h0'` means something else: a
+    magic-name `h0` file also exists beside the start path, and the variable
+    won.)
   - **But only ONE PROCESS may have an image open for writing.** One emulator
     mounting the same image as two devices is fine — it is one kernel, with one
     copy of the allocation bitmap. **Two emulator processes sharing one image are
@@ -77,20 +79,13 @@ or SDK. A host directory of your own files works identically for basic testing.
     real host paths and will tell you outright.
 - Launch: `OS9DISK=/abs/path/disk ./os9exec /dd/CMDS/shell`
 - macOS first run: `xattr -d com.apple.quarantine os9exec`
-- **Never write `OS9DISK=./disk`.** A leading `./` silently breaks every
-  ordinary file open while module loading still works: the emulator boots,
-  the boot program runs, but the shell can't exec anything (`not
-  accessible` even for absolute paths) and can't open `/dd/SYS/errmsg` —
-  that boot-time "Unable to open error message file" is the tell. Bare or
-  absolute paths both work. The symptom is indistinguishable from a
-  missing C-library trap handler, so rule this out first.
-  - **`OS9Hx` has the same trap, and its symptom is split down the middle.**
-    `Live` (os9exec): with a relative path the variable falls back to
-    `<startPath>/hx`, and what you then see is **module loading from that device
-    succeeding while opening a file on it fails with `E_BPNAM` (215)** — which
-    reads exactly like a corrupt image and is not one. Same shape as the
-    `OS9DISK` case above, on a different variable. **Always pass an absolute
-    path.**
+- **Pass absolute paths to `OS9DISK` and `OS9Hx`.** `OS9DISK=./dd` works
+  (`Live` (os9exec), a host directory), but a *relative* `OS9Hx` splits down
+  the middle: `Live` (os9exec), with `OS9H2=rel` naming a host directory,
+  **opening a file on `/h2` works while `load /h2/<module>` fails with
+  `E_PNNF` (216)**, which reads like a missing module rather than a path
+  problem. An image named by a bare relative name (`OS9H2=rimg`) gives
+  `E_PNNF` for everything; `./rimg` works. Absolute paths avoid all of it.
   - **Do not "tidy away" an `h0`…`hz` file or symlink** because it looks like a
     leftover of the magic-name scheme. It may be exactly what `OS9H0` names: a
     symlink is a perfectly ordinary target for the variable, and deleting one
@@ -120,12 +115,10 @@ or SDK. A host directory of your own files works identically for basic testing.
 - **But never check OUTPUT behaviour with `-r`**, `Live` (os9exec). Pacing runs
   bytes through a finite FIFO, and that is where output gets lost or reordered;
   `-r` bypasses it, so a truncation bug is invisible under the flag you
-  normally run with. This is not hypothetical: `mount -?` delivered four of its
-  eleven option lines under pacing and all eleven under `-r`, and the missing
-  lines were read as "this build has no `-k` option" — twice, once into a
-  roadmap and once into a retraction of that roadmap entry. If a claim is about
-  what reaches the screen, reproduce it the way a user sees it: no `-r`, and
-  compare against the `-r` run rather than trusting either alone.
+  normally run with. A lost line then reads as a missing feature — "this build
+  has no `-k` option" from a `mount -?` listing that arrived short. If a claim
+  is about what reaches the screen, reproduce it the way a user sees it: no
+  `-r`, and compare against the `-r` run rather than trusting either alone.
 - **`-r` also destroys any animation built from carriage returns**, `Live`
   (os9exec). Removing the pacing removes the only thing that made successive
   frames distinguishable in time, so a program that redraws a line per frame —
@@ -168,7 +161,9 @@ session in your own terminal) and `server` (the DriveWire protocol log).
   its own prompt** (BASIC09's `B:`/`E:`, an editor, a custom login
   prompt): the send times out with zero pane change because the gate
   failed *before* sending. Switch to raw mode. **A program's own raw output
-  can trigger the same desync**, `Live` (os9exec): a bare CR (no LF) written mid-output
+  can trigger the same desync**, `Live` (os9exec): a bare CR (no LF) written by a raw
+  `write()` mid-output (stdio `printf` of `\r` arrives with a LF added, and
+  does not do this)
   repositions the cursor to column 0 without clearing the line, so a genuine
   fresh prompt sits mid-line behind leftover text and the gate — which wants
   the prompt at line-start — times out even though the shell is fine.
@@ -349,15 +344,6 @@ The bare-name boot program proves the execution directory resolves inside the
 image, and the relative open proves the data directory does. A whole test
 harness in the wild drives its RBF image this way.
 
-**This entry previously said the opposite**, tagged `Live`, on the strength of
-one session: that the top-level process's directories were resolved as HOST
-paths, so the boot program never started (`E_PNNF`, or `E_UNIT` from the first
-relative open). It does not reproduce. Either os9exec changed, or that session
-hit the `OS9DISK=./disk` trap documented immediately above — a leading `./`
-breaks every ordinary file open while module loading still works, which
-produces very much this shape of failure. Rule that out first if you ever see
-it again; do not conclude the image cannot be mounted.
-
 ## Batch-driving a whole session: a procedure file, never a pipe
 
 For unattended multi-command work (building an image, populating a disk),
@@ -375,8 +361,11 @@ binary, for the reasons under "Launching and disks" above. The traps, all
 `Live` (os9exec), the first two silent:
 
 - **The procedure file must be CR-only.** With LF endings OS-9 sees one
-  enormous line: the shell echoes the entire file and runs nothing, reporting
-  no error. Generate with `tr '\n' '\r'`.
+  enormous line: **its first command runs with the rest of the file as its
+  arguments** (`makdir A` LF `makdir B` created both directories; any other
+  commands in the file became more directory names). With `-nx` on the first
+  line the shell instead echoes the line and prints `^syntax error`. Generate
+  with `tr '\n' '\r'`.
 - **And commands fed on HOST stdin must be the opposite — LF-terminated.**
   `Live` (os9exec): `./os9exec shell < cmds`, or the same commands through a
   pipe, needs `\n` endings. A CR-only stdin file is echoed as **one line** with
@@ -396,11 +385,12 @@ binary, for the reasons under "Launching and disks" above. The traps, all
   the tidier route — it gives CR-ending control and a named artifact.
 - **A utility that prompts devours the rest of the file.** `copy` onto an
   existing destination reports `Error #000:218` and then asks `Overwrite
-  (yes/no/all/quit)?`. The following procedure lines are read as answers to
-  that prompt instead of being run, and once the file is exhausted it re-prompts
-  without bound until the timeout kills it. The damage is worse than a hang,
-  because a stray `y` in a consumed line answers *yes* and the overwrite
-  happens anyway. Give `copy` an explicit `-r` (`-f` for a write-protected
+  (yes/no/all/quit)?`. `Live` (os9exec): the following procedure lines are
+  read as answers to that prompt instead of being run — one character at a
+  time, re-prompting after each one that is not an answer — and when the file
+  runs out it gives up. Every line after the `copy` is gone without a word,
+  and a stray `y` among them answers *yes*, so the overwrite can happen
+  anyway. Give `copy` an explicit `-r` (`-f` for a write-protected
   destination) so it never asks. Abort-on-error does *not* rescue this case:
   in a procedure file the prompt is reached before the failure can end the run,
   so the error is reported, the overwrite still happens, and the lines that
@@ -489,10 +479,8 @@ Three routes, in order of preference by size:
    inside an RBF image has no host file to touch). `flip -m` → CR-only
    (OS-9), `flip -u` → LF (Unix), `flip -t` reports current state. Best
    route for large sources; the file must end up CR-only or the compiler
-   reads it as one giant line. **`flip -t` before every `-m`** — `Live` (os9exec):
-   running `flip -m` on a file that's already CR-only silently collapses it
-   to a single line (all line-ending bytes vanish). Recoverable with `flip
-   -u` and re-editing, but check state first rather than reflipping blind.
+   reads it as one giant line. `flip -m` on a file that is already CR-only
+   leaves it unchanged, so reflipping is safe.
 
 **tmux eats a trailing semicolon**: `send-keys` treats a final `;` as its
 own separator even with `-l`, so a typed C line arrives without its
@@ -609,11 +597,13 @@ immediately with `**** Can't install trap handler **** / **** cio ****`.
 
 - **Classify by running it, not by reading the binary** — `Live` (os9exec).
   Run each program against an image with `cio`, `csl`, `csl020`, `math` and
-  `math881` removed, and match the banner. Searching the file for the module
-  name `cio` is wrong in *both* directions: `vi_nocio` contains the string
-  and runs without the module, while `cyberwar`, `gnuchess` and `g` do not
-  contain it and need it. Only `cio`/`csl` are fatal — `math`/`math881` are
-  the optional floating-point handlers and referencing one is harmless.
+  `math881` removed, and match the banner, which names the handler that could
+  not be installed (`cio`, `csl`, or a program's own, such as `Graph`).
+  Searching the file for the string `cio` is a proxy that can fail in both
+  directions — a name can appear without the module being needed, and a
+  program can need it without the name appearing where a search looks. Only
+  `cio`/`csl` are fatal — `math`/`math881` are the optional floating-point
+  handlers and referencing one is harmless.
 - A statically linked "cio-free" build of the same utility is noticeably
   larger; prefer it when both exist.
 - **Linking the SDK's `cio` library against a mismatched `cio` module
@@ -923,10 +913,11 @@ appears several times per C program, and 0 is now answered deliberately
 because that is what a machine without an SSM reports — see
 `kernel-internals.md` in `os9-systems-dev`.
 
-**`top` dies, and that is `top`'s own bug rather than the emulator's:** it asks for
-PID 0, gets the documented `E$IPrcID` (224) refusal, ignores the carry, and
-reads its unfilled buffer. It would do the same on real hardware.
-`Live` (os9exec).
+**`top` shows its header and no process rows.** `Live` (os9exec), with
+`@TERM=vt100`: it redraws the header until stopped and lists nothing. It asks
+for PID 0, gets the documented `E$IPrcID` (224) refusal and ignores the
+carry, so it reads a buffer nothing filled — `top`'s own bug, which what that
+buffer happens to hold turns into an empty list or worse.
 
 **There are no device descriptor modules.** os9exec mounts `/dd`, `/hN` and
 `/term` without them: `imdir` lists only `OS9exec`, `init`, a built-in
@@ -1072,11 +1063,6 @@ pushed high, and a copy one character shorter ran 3 of 3.
 with `ident`, which reports the module CRC and the header parity separately; a
 module that reports `Good CRC` and `Good parity` is intact, whatever a
 post-mortem probe of live memory made of it.
-
-**With stdout redirected to a file or a pipe, the dump has been observed
-truncating mid-line** shortly after the `Memory:` line — `Live` (os9exec). A
-captured dump that stops there is an incomplete record, not the whole one — do
-not conclude a section is absent because your capture ends before it.
 
 ## Symbolic debugging (the OS-9 `debug` command)
 

@@ -30,7 +30,7 @@ argument text before the program sees it; quote them to pass literally.
 
 | Modifier | Effect |
 |---|---|
-| `#n` or `#nK` | Raise the process's memory allocation (both forms are kilobytes on 68k). Ignored if smaller than the module-header default; applies to that one command only. C programs use the extra purely as stack. Classic use: `basic09 #32k` when a program blows the default workspace |
+| `#n` or `#nK` | Raise the process's memory allocation (both forms are kilobytes on 68k); applies to that one command only. C programs use the extra purely as stack. Classic use: `basic09 #32k` when a program blows the default workspace. The user manual says a value "smaller than would otherwise be used" is ignored (`Manual`), but Microware's shell under os9exec *adds* it: `#1` took a 23.01k default to 24.01k and `#64` to 87.01k (`Live` (os9exec)), which is what `F$Fork`'s "additional memory size" in `d1` describes. `Flag` |
 
 ### Redirection — `>>` is stderr, and append is `>+`
 
@@ -156,10 +156,11 @@ file rather than the file that was run. A mistyped path landing on a data file
 therefore runs it, and the message points at the content instead of the
 mistake — where Unix would refuse the file outright.
 
-**Line endings are CR (0x0D), and a procedure file with LF endings fails
-silently** — `Live` (os9exec). OS-9 does not treat LF as a terminator, so the whole
-file is *one line*: the shell echoes its entire contents and executes
-nothing, with no error message of any kind. Host-generated procedure files
+**Line endings are CR (0x0D), and a procedure file with LF endings misfires
+quietly** — `Live` (os9exec). OS-9 does not treat LF as a terminator, so the
+whole file is *one line*: its first command runs with the rest of the file as
+arguments (`makdir A` LF `makdir B` made both directories), and nothing else
+in it runs as a command. Host-generated procedure files
 must be converted (`tr '\n' '\r'`, or `flip -m` on the guest) before use.
 
 ## Naming convention: capitalized directories

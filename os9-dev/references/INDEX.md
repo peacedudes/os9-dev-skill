@@ -37,7 +37,6 @@ has bitten a real session.
 | Symptom | Likely cause | Where |
 |---|---|---|
 | Assembles clean, won't run / `ident` shows nothing sane | assembler wrote an object *despite* errors — check the error count | `6809/assembly-and-tools.md` |
-| Rebuild behaves exactly like the old binary | `r68 -O=`/`l68 -o=` didn't overwrite; you ran the stale file | `68k/os9-68k-assembly.md` |
 | Build reports success, no output file where you looked | output goes to the **execution** directory, not the data directory | both assembly files |
 | Assembly "silently succeeded" but nothing works | you redirected the assembler's stdout — errors went with it | `6809/assembly-and-tools.md` |
 | Module runs but its data area is wrong / corrupt scratch | `mod` data size written with `*` (program counter) instead of `.` | `6809/assembly-and-tools.md` |
@@ -103,7 +102,8 @@ has bitten a real session.
 | Program dies immediately with a trap-handler banner | linked against the proprietary `cio`, absent from this disk | `common/using-os9exec-repl.md` |
 | Harness times out with the command visibly working | prompt gate doesn't recognise a sub-program's prompt — use raw keys | both REPL files |
 | Session hangs or dies on a syscall that looked ordinary | `F$SSvc`/`F$IOQu`/`F$NProc` (6809), `F$SysDbg`/`F$RTE` (68k) | both REPL files |
-| Fix has no effect although the rebuild succeeded | besides a stale output file (above): the crashed module is **still resident** and shadows the new one | `basic09/basic09-per-target.md` |
+| Fix has no effect although the rebuild succeeded / rebuild behaves exactly like the old binary | the crashed module is **still resident** and shadows the new one — `mdir`; the output file itself was replaced | `basic09/basic09-per-target.md` |
+| `xmode` (or any tool reading device options) fails `Error #000:221 (E_MNF)` on a device that works | os9exec mounts devices with no descriptor modules; `load` one from `CMDS/BOOTOBJS` | `common/using-os9exec-repl.md` |
 | `Exception: ... vector=$08 err=#000:108` (E$Violat) at an ordinary-looking instruction, classically `MVSR2.W` / `MOVE SR,<ea>` | the binary was built for a 68000, where reading SR is user-legal; it is privileged from the 68010 on, and the system is not emulating it. | `68k/os9-68k-assembly.md`, exception vector table |
 | `Error #001 — Unconditional Abort` printed after output that was correct | `F$Exit` called with `B` never cleared — cosmetic, not a real failure | `6809/syscalls-and-module-format.md` |
 | Breakpoint or examine lands at the wrong address | `sc`'s listing double-applies an offset — never take an address from it | `common/using-os9exec-repl.md` |

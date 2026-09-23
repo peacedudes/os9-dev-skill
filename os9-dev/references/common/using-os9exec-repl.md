@@ -928,6 +928,17 @@ PID 0, gets the documented `E$IPrcID` (224) refusal, ignores the carry, and
 reads its unfilled buffer. It would do the same on real hardware.
 `Live` (os9exec).
 
+**There are no device descriptor modules.** os9exec mounts `/dd`, `/hN` and
+`/term` without them: `imdir` lists only `OS9exec`, `init`, a built-in
+`socket` descriptor and what you have loaded. So anything that *links* a
+descriptor by name to read or change its options fails with
+`Error #000:221 (E_MNF)`, although the device itself works — Microware's own
+`xmode /term` gives `xmode: can't link "term"`, and `link dd` fails the same
+way. `Live` (os9exec). Tools that go through the descriptor rather than an
+open path (`xmode`, and third-party ones such as `dmode`) often exit 221
+with little else said. To inspect a descriptor, `load` one from the SDK's
+`CMDS/BOOTOBJS` (`r0`, `dd_r0` and others); it is then resident and linkable.
+
 **The emulator's own diagnostics share the running program's stderr.** Most
 carry a `# ` prefix — `# No more memory:` from the allocator, for one — but
 **not all**: the unimplemented-global notice

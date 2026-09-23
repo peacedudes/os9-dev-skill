@@ -82,6 +82,8 @@ has bitten a real session.
 | Output stops at a suspiciously round byte count | a stdio buffer boundary, not a write ceiling — the program stopped writing | `common/using-os9exec-repl.md` |
 | `E_PNNF` (216) on a file you just created and can see on the host | the device is an RBF **image**, a snapshot — the file is not inside it until the image is rebuilt; a host directory would have shown it at once | `common/using-os9exec-repl.md` |
 | An RBF image turns out damaged, with no telling when | two emulator processes had it open at once, each caching its own allocation bitmap — one writer per image; `lsof` before starting a harness | `common/using-os9exec-repl.md` |
+| A procedure file stops partway with no error printed | a command exited with status 1: `-x` aborts on it, and the shell prints nothing for 1 | `common/os9-tools-and-shell.md` |
+| An event-based mutex or wait loop never exits (`while (_ev_wait(id,a,b) != a)`) | os9exec returns the post-increment event value; period code expects the pre-increment one | `68k/syscall-reference.md` |
 | `^syntax error` and nothing runs, from a batch invocation | a shell option written on the command line — `-nx` belongs on the procedure file's first line | `common/using-os9exec-repl.md` |
 | Only the FIRST command of a batch takes effect, the rest silently ignored | commands fed on host **stdin** need LF endings; only a file passed as an *argument* wants CR-only | `common/using-os9exec-repl.md` |
 | A host file opens under the wrong case, or the wrong one of two similar names | host-directory lookup falls back to a case-insensitive, 28-char-cut, spaces-as-`_` scan and takes the FIRST match | `common/using-os9exec-repl.md` |

@@ -106,8 +106,20 @@ Ev$Signl=`8`, Ev$Pulse=`9`, Ev$Set=`$0A`, Ev$SetR=`$0B`.
   d3.w=signal-increment → d0.l=event ID. `E$EvBusy` if the name exists.
 - **Ev$Link**: a0=name, d1.w=0 → d0.l=event ID (`E$EvNF` if not created yet).
 - **Ev$Wait**: d0.l=event ID, d1.w=4, d2.l=min, d3.l=max → **blocks** until
-  `min ≤ value ≤ max`, then adds the wait-increment and returns the new value
-  in d1.l. A bad event ID returns `E$EvntID` immediately.
+  `min ≤ value ≤ max`, then adds the wait-increment; returns "actual event
+  value" in d1.l (`Manual`). A bad event ID returns `E$EvntID` immediately.
+  **Which value — before or after the increment — matters, and os9exec
+  differs from period code.** The manual's own signal case says a waiter
+  woken by a signal gets a value "not within the specified range", which only
+  makes sense if a normal wake returns the in-range value, before the
+  increment. Code written for real OS-9 depends on that: TOP's `os9lib`
+  (1988) takes a mutex with `while (_ev_wait(id, 0, 0) != 0);` on an event
+  created with value 0, wait-increment +1 — which terminates only if the
+  pre-increment value comes back. `Live` (os9exec): it returns the
+  post-increment value (an event at 0 with increment +1, waited on 0..0,
+  returned 1; the next wait on 1..1 returned 2), so that loop deadlocks there.
+  `Flag` until the emulator agrees; do not compare the result against the
+  range you waited for.
 - **Ev$Signl**: d0.l=event ID, d1.w=8 — adds the signal-increment to the
   counter, then wakes the first waiting process whose range the value is
   in; with the MS bit of d1 set it wakes every process in range (`Manual`).

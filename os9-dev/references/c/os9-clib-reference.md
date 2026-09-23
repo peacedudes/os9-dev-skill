@@ -445,9 +445,11 @@ both. A library that walks the environment block itself need not.
 
 Same binary, `getenv` agreeing in every row. The failing cases report an
 **empty** name: curses is not failing to match `vt100`, it never sees a name.
-And the `@` route fails too once a shell is between os9exec and the program,
-so what decides it here is whether the curses program is the process os9exec
-started, not how the variable was created.
+And the `@` route fails too once Microware's shell is between os9exec and the
+program, so on this rig what decides it is whether the curses program is the
+process os9exec started, not how the variable was created. It is not every
+shell: on the freeware rig, bash's `export TERM=vt100 TERMCAP=/dd/SYS/termcap`
+in `SYS/login` reaches the curses and termcap programs that bash starts.
 
 **This is one rig's curses, not a property of OS-9 curses, `Flag`.** On a second
 rig the same comparison passes on all three routes — `@`-passed, `setenv`, and a

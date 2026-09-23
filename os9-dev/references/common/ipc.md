@@ -184,6 +184,12 @@ event from an interrupt handler to release a waiting process is a fast,
 direct path — prefer it over routing the same wakeup through a signal when
 you're in interrupt context and cycles matter.
 
+**What a wait returns is the event value that satisfied it** — before the
+wait increment is applied, as period code relies on (`while (_ev_wait(id, 0,
+0) != 0);` as a mutex). A wait interrupted by a signal returns a value outside
+the range instead, with no error (`Manual`). os9exec currently returns the
+post-increment value; see `Ev$Wait` in `68k/syscall-reference.md`, `Flag`.
+
 **Relative-value variants:** `_os_ev_waitr()`/`_os_ev_setr()` behave like
 `_os_ev_wait()`/`_os_ev_set()` but treat the min/max range and the returned
 value as offsets from zero rather than absolute values — convenient for code

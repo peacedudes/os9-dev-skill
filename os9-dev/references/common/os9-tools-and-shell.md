@@ -141,6 +141,7 @@ one-line C programs that do nothing but `exit(n)`:
 | `exit(n)` | What the shell prints |
 |---|---|
 | `0` | nothing |
+| `1` | **nothing — and a procedure file still stops there**, silently: `-x` treats 1 as a failure while the shell prints no message for it (measured with an assembly `F$Exit`) |
 | `2` | `Error #000:002 (S_Abort) User abort (Cmd-'.')` |
 | `255` | `Error #000:255 (E_FORMAT) Device is format protected` |
 

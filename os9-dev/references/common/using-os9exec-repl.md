@@ -957,13 +957,12 @@ return a clean `E$UNKSVC` (208) and change nothing. A program that tests the
 carry survives; one that does not may read 208 as its own failure.
 
 Unmodelled **system globals** answer differently. A `F$GetSys`/`F$SetSys`
-read of an offset os9exec does not keep prints `F$SetSys: unimplemented
-<hex>` on the console and returns 0. Usually harmless, and `getsys` prints a
-page of them. `D_SPUMem` ($3D8) is the one worth recognising: every
-Microware-C start-up reads it to detect a System Security Module, so it
-appears several times per C program, and 0 is now answered deliberately
-because that is what a machine without an SSM reports — see
-`kernel-internals.md` in `os9-systems-dev`.
+read of an offset os9exec does not keep returns 0, silently; the note
+`# F$SetSys: unimplemented <hex>` appears only in the `-d` trace (`Source`,
+os9exec). Usually harmless. `D_SPUMem` ($3D8) is the one worth recognising:
+every Microware-C start-up reads it to detect a System Security Module, and 0
+is answered deliberately because that is what a machine without an SSM
+reports — see `kernel-internals.md` in `os9-systems-dev`.
 
 **`top` shows its header and no process rows.** `Live` (os9exec), with
 `@TERM=vt100`: it redraws the header until stopped and lists nothing. It asks
@@ -982,13 +981,11 @@ open path (`xmode`, and third-party ones such as `dmode`) often exit 221
 with little else said. To inspect a descriptor, `load` one from the SDK's
 `CMDS/BOOTOBJS` (`r0`, `dd_r0` and others); it is then resident and linkable.
 
-**The emulator's own diagnostics share the running program's stderr.** Most
-carry a `# ` prefix — `# No more memory:` from the allocator, for one — but
-**not all**: the unimplemented-global notice
-above prints bare, as `F$SetSys: unimplemented 0024 (size=80000004)`, so a
-filter keyed on `# ` lets it through. All of them go to that path rather than
-a channel of its own, so they interleave with guest output. `2>/nil` is what
-separates the two when capturing. `Live` (os9exec).
+**The emulator's own diagnostics share the running program's stderr.** They
+carry a `# ` prefix — `# No more memory:` from the allocator, for one — and go
+to that path rather than a channel of their own, so they interleave with
+guest output. `2>/nil` is what separates the two when capturing. `Live`
+(os9exec).
 
 The `-d` syscall trace (below) lands on the same stderr, which matters whenever
 stderr belongs to something else — under a network login it goes down the

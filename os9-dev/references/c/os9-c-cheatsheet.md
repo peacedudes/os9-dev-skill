@@ -91,26 +91,25 @@ in this file:
   allocator, which reads `d0` as a byte count while `d0` actually holds the
   `FILE *`. The allocation *succeeds*, so the call appears to return a pointer,
   the `FILE`'s `ptr`/`end` are never updated, the next `putc` takes the slow path
-  again — and **every character leaks a fresh chunk until the arena is gone**,
-  which is what produces a flood of `No more memory !!!`.
+  again — and **every character leaks a fresh chunk until the arena is gone**.
 
   Measured, `Live` (os9exec), from `putchar('x')` four thousand times:
 
-  | Build | x's written | `No more memory !!!` |
+  | Build | x's written | error message |
   |---|---|---|
-  | `-qixm` | **2** | **3920** |
-  | `-qm` | 4002 | 0 |
+  | `-qixm` | **0** | none — the program just ends |
+  | `-qm` | 4000 | none |
 
-  And the syscall trace makes the per-character leak direct rather than inferred:
-  the `-qixm` build issues **4001 `F$SRqMem` calls, one per `putchar`**, each
-  asking for **413,256 bytes**, never returning one, until the 32 MB arena is
-  gone — against just **2 `I$WritLn`**, which is why exactly two characters reach
-  the terminal. That 413,256 *is* the `FILE` pointer read as a byte count, and it
-  was proven to be an address by moving the heap under it and watching the
-  "size" follow.
+  The syscall trace makes the per-character leak direct rather than inferred:
+  the `-qixm` build issues **one `F$SRqMem` per `putchar`**, each asking for the
+  same large "size" (338,312 bytes in this run), never returning one; the first
+  98 succeed, the rest fail `E$NoRAM`, and the program writes nothing at all.
+  That "size" *is* the `FILE` pointer read as a byte count: it was proven to be
+  an address by moving the heap under it and watching the "size" follow, which
+  is also why its value differs from run to run.
 
-  **Do not try to fix it with a bigger buffer.** `-qixm=4k`, `=16k` and `=64k`
-  behave identically, to the same counts. It is not a size problem.
+  **Do not try to fix it with a bigger buffer.** `-qixm=16k` behaves
+  identically. It is not a size problem.
 
   Why the library and not the module is the variable: in the **matched** vintage
   `putc`/`getc` compile to ordinary function calls (`$12`/`$09`) and the buffering
@@ -291,6 +290,12 @@ So treat **511 as a best case observed with nothing else in the file**, not as
 the limit. The working rule is **keep joined logical lines well under 500**, and
 shorter still in a real file with headers.
 
+**A diagnosed line can still hang the build.** `Live` (os9exec): a 600-character
+line alone in `main()` printed `**** source line too long ****` and then the
+`cc` run never returned — no exit status, killed by a 40-second timeout. In an
+unattended build that reads as a hang, not a failure; give every batch compile
+a timeout.
+
 **Do not count on getting a message.** The same over-length condition is reported
 cleanly in some files and kills `cpp` silently in others, and the difference is
 what preceded it. A `cpp` that dies saying nothing is a candidate over-long line
@@ -411,9 +416,13 @@ toolchain): `int`, `long`, and pointers are all 32-bit there, not the
 the default soft-float `math` trap handler or compiled for the 68881 with
 `cc -K=2F` (`-K=2` = target 68020, `F` = 68881; uses the `c68020`/`r68020`
 passes). The runtime-computed `1.0/10.0+2.0/10.0-3.0/10.0` leaves
-`5.5511151231257827e-17` (2⁻⁵⁴, the textbook double result) either way,
-`1.0/3.0` prints `0.3333333333333333` at `%.17g`, and `0.1+0.2 == 0.3` is false —
-so compare with a tolerance, as on any IEEE system. The choice is fixed at
+`5.5511151231257827e-17` (2⁻⁵⁴, the textbook double result) either way, and
+`0.1+0.2 == 0.3` is false — so compare with a tolerance, as on any IEEE system.
+Soft-float gives the correctly rounded `1.0/3.0` (`3FD5555555555555`, printing
+`0.3333333333333333` at `%.17g`); a `-K=2F` build under os9exec gives
+`3FD5555555555556`, one unit high, printing `0.33333333333333339`. `Flag`: that
+is the emulator's 68881 division, which `basic09-per-target.md` also catches
+one unit high under `math881`; a real 68881 is unmeasured. The choice is fixed at
 compile time: `load math881` at run time does not change an already-compiled
 program. See `basic09/basic09-per-target.md` for BASIC09 REAL, which shares the
 soft-float handler.

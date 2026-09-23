@@ -108,11 +108,12 @@ Three more blind spots, each confirmed in the tool's own source (`Source`):
   produced 60 errors, none of them pointing at the real line.
 
 **A macro invocation at the left margin makes it hang — silently and forever.**
-`Live` (os9exec): a file of `ROOM(...)`/`OBJECT(...)` macro calls at the margin,
-with arguments spanning lines, has the same shape as a function header. The tool
-tries to rewrite them, spins at 100% CPU, never exits, and corrupts its output on
-the way — inserting `"\n"` into the middle of words *inside string literals*.
-There is no error and no exit status to test.
+A file of `ROOM(...)`/`OBJECT(...)` macro calls at the margin, with arguments
+spanning lines, has the same shape as a function header, and the tool tries to
+rewrite them. `Live` (os9exec): with an unbalanced `(` inside one of the string
+literals it spun at full CPU and never exited, corrupting string literals on the
+way (commas inside them became `;`). The same shape with balanced parentheses
+converted and exited. There is no error and no exit status to test.
 
 The cause is visible in the source (`Source`): `convert1()` scans with
 `for ( ; end == NULL; p++ )`, switching only on `,` `(` `)`, with **no NUL check
@@ -134,9 +135,9 @@ source.
 
 **Adjacent string literals are not joined.** `"abc" "def"` is ANSI translation
 phase 6 and nothing in this toolchain performs it: `c68` reads two expressions and
-says `; expected` plus `expression with little effect`. **GNU `cccp2` does not
-rescue it** — the driver runs it `-traditional`, which is precisely the mode with
-concatenation disabled. Join them in the source. `Live` (os9exec).
+says `; expected` plus `expression with little effect`. Join them in the source.
+`Live` (os9exec). (The SDK's `gcc2` driver is the exception: it runs `cccp2`
+without `-traditional`, and a `gcc2` build of `"abc" "def"` prints `abcdef`.)
 
 When hunting for them, do not grep for lines beginning with a quote: that counts
 string-array initialisers and comma-separated arguments, both legal K&R, and

@@ -556,6 +556,11 @@ cc /dd/source.c
   bare name (`chd` doesn't affect command search). Run it by full path, or
   put its directory on `PATH`.
 - Source must be CR-only before compiling.
+- **Two emulators compiling in one directory clobber each other.** `cc`
+  names its intermediates after its own process ID (`ctmp.000004.r`), and in
+  a fresh batch run `cc` gets the same PID every time, so parallel runs
+  sharing one data directory overwrite each other's temporaries. `Live`
+  (os9exec). Give each run its own directory, or run them one at a time.
 
 ## BASIC09 interactively
 

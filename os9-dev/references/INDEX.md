@@ -44,6 +44,7 @@ has bitten a real session.
 | Link fails on `I$`/`F$` symbol names | call names aren't defined anywhere — declare them yourself | `68k/os9-68k-assembly.md` |
 | `non-remote data allocation exceeds 64k`, or `value out of range` on a big local | A6-relative addressing spans one 64K window — declare the array `remote` | `c/os9-c-cheatsheet.md` |
 | Program opens a file, reads nothing, and reports on it anyway | the SDK `cio` library's trap-13 selectors hit the `cio` module's memory routine — rebuild trap-free (`-qm`) | `c/os9-c-cheatsheet.md` |
+| A C program builds clean, runs, and writes nothing — no error, no output | a `-qixm` build: every `putchar` leaks an `F$SRqMem` through the same selector mismatch — rebuild `-qm` | `c/os9-c-cheatsheet.md` |
 | A named file reads as empty while the same data via stdin is fine | `open(path, 0)` — POSIX `O_RDONLY` is 0, which on OS-9 requests **no access**; the open succeeds and every read fails | `common/unix-differences.md` |
 | Unsure whether a fault is yours or the system's | run a period-built program that does the same thing on the same disk — it differs from yours only in who compiled it | `common/using-os9exec-repl.md` |
 | Program needs Enter after every key though it called `cbreak()` | `cbreak()` sets a curses flag only; stdio `getchar()` ignores it — read with `getch()` | `c/os9-clib-reference.md` |
@@ -85,7 +86,7 @@ has bitten a real session.
 | Only the FIRST command of a batch takes effect, the rest silently ignored | commands fed on host **stdin** need LF endings; only a file passed as an *argument* wants CR-only | `common/using-os9exec-repl.md` |
 | A host file opens under the wrong case, or the wrong one of two similar names | host-directory lookup falls back to a case-insensitive, 28-char-cut, spaces-as-`_` scan and takes the FIRST match | `common/using-os9exec-repl.md` |
 | `linecount` or any line reader sees 0 lines in a file that plainly has several | a host directory translates nothing: LF endings, and `I$ReadLn` stops only at CR | `common/using-os9exec-repl.md` |
-| `c68` says `; expected` / `expression with little effect` on correct-looking C | adjacent string literals — nothing in this toolchain joins them, and `cccp2` runs `-traditional` | `c/kandr-vs-ansi.md` |
+| `c68` says `; expected` / `expression with little effect` on correct-looking C | adjacent string literals — nothing under `cc` joins them (the `gcc2` driver does) | `c/kandr-vs-ansi.md` |
 | `**** multiple definition ****` on parameter declarations that look right | `ansi2knr` was run on an already-K&R tree and rewrote its own output | `c/kandr-vs-ansi.md` |
 | "Can't find" a command that is plainly present | fork lookups use `chx`, not `PATH` | `common/using-os9exec-repl.md` |
 | Redirect produced error text, or clobbered the file | `>>` is **stderr**; append is `>+`; plain `>` fails if the file exists | `common/os9-tools-and-shell.md` |

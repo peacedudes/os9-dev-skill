@@ -117,7 +117,7 @@ What to take from it:
 | Header | Notes |
 |--------|-------|
 | `<stdio.h>` | File I/O, printf/scanf; defines `FILE`, `stdin`, `stdout`, `stderr` |
-| `<stdlib.h>` | `exit()`, `system()`; limited (no `rand()`, etc.). **Not on Ultra C's default `CDEF` include path** — `Live` (os9exec): `#include <stdlib.h>` fails `cpp` with `can't open /h0/DEFS/stdlib.h (err=216)` under the standard `cc` toolchain; the file exists on-disk only under the gcc2-specific `DEFS/os9lib`/`DEFS/GCC2` trees (reachable with `-I/h0/DEFS/os9lib`). K&R doesn't require a prototype for `exit()`, so dropping the include and declaring nothing works fine |
+| `<stdlib.h>` | `exit()`, `system()`; limited (no `rand()`, etc.). **Not on Ultra C's default `CDEF` include path** — `Live` (os9exec): `#include <stdlib.h>` fails `cpp` with `can't open /h0/DEFS/stdlib.h (err=216)` under the standard `cc` toolchain; the file exists on-disk only under the gcc2-specific `DEFS/os9lib`/`DEFS/GCC2` trees, and `cc` cannot use it: `cc`'s `-I` is not an include path (it selects the `cio` trap handler; `-I/…` gives `unknown flag : -/`), and `-V=/h0/DEFS/os9lib`, the real include-path switch, finds the header only for `c68` to reject its ANSI prototypes (`Live` (os9exec)). K&R doesn't require a prototype for `exit()`, so dropping the include and declaring nothing works fine |
 | `<ctype.h>` | Character classification (macros, K&R-era coverage) |
 | `<setjmp.h>` | `setjmp()`, `longjmp()` |
 | `<time.h>` | OS-9-specific system time (see "File Dates and Time Zones" below) |
@@ -140,8 +140,8 @@ What to take from it:
 | `putc`/`putchar`/`putw`/`puts`/`fputs` | `puts()` appends `\n`; `fputs()` does not. |
 | `printf`/`fprintf`/`sprintf` | **No marker call is needed on 68k** — `Live` (os9exec): `%ld` and `%f` both print correctly with nothing called first (a bare `printf("%f", 3.14159)` gives `3.141590`). The `_pfltinit()`/`_prfloat()` markers some documentation requires before printing a `long`/`double` **don't exist in 68k `clib.l`** at all: calling either fails to *link* (`Symbol '_pfltinit'`/`'_prfloat' unresolved`). They're a 6809-era artifact — with a 16-bit `int` and a proprietary float format a width-disambiguating marker is meaningful, but on 68k, where `int`/`long` are both 32-bit and floats are IEEE, it's dead weight. **6809 behavior unverified (`Manual`) — the markers may genuinely be required there.** |
 | `scanf`/`fscanf`/`sscanf` | Specs: `%d %o %x %u %f %e %g %c %s`, plus `%D %O %X` for long and `[...]` for character-set match. **Every argument must be a pointer** — passing a value instead of `&value` is an easy mistake the compiler won't catch. |
-| `setbuf(FILE *fp, char *buffer)` | Call after `fopen()`, before any I/O. `stderr` is always unbuffered by default. **Do not make `stdout` unbuffered** — passing `NULL` is documented as doing it and the result is corrupt output, not slow output. `Live` (os9exec): after `setbuf(stdout, (char *)NULL)`, `printf("sb3 unbuffered printf %s\n", "ok")` emitted 22 bytes of `0x16`, two of `0x02` and one of `0x01` — each literal run and each conversion written as a byte equal to **its own length**, repeated that many times. Measured across nine programs to both routes, not to `setbuf` alone: `setvbuf(stdout, NULL, _IONBF, 0)` corrupts identically, while a real buffer, `_IOLBF`, the untouched default, and `fprintf` to either stream are all correct, and `putc` on the same stream after the same call writes the right bytes. Pipes, redirection, output size and `fflush` are all innocent. Whether the fault is this C library's or the runtime's is unresolved, `Flag` — the rule for a porter is not to leave `stdout` unbuffered: give it a buffer, or leave the default alone and `fflush()`. Unix programs that do this in `main` (cshar's `unshar`) print garbage until the call is removed. |
-| `write(int path, char *buf, int count)` / `read(int path, char *buf, int count)` | Raw path-based I/O (OS-9 `I$Write`/`I$Read` directly, no `FILE *` or buffering) — the primitive underneath the numbered stdin/stdout/stderr paths (0/1/2). **Do not mix these with `printf`/`fprintf`/other stdio calls on the same path without an explicit `fflush()` in between.** `Live` (os9exec): interleaving a raw `write()` with a buffered `fprintf()` on the same fd doesn't just reorder or drop output — the two calls' bytes physically overlay each other in the shared stdio buffer, corrupting both (e.g. `"raw write with fflush first\n"` came out as `"after writeith fflush first"` when a `printf` followed without a flush). `write()`/`read()` used alone, with no stdio calls sharing the same path, work correctly. |
+| `setbuf(FILE *fp, char *buffer)` | Call after `fopen()`, before any I/O. `stderr` is always unbuffered by default. **Do not make `stdout` unbuffered** — passing `NULL` is documented as doing it and the result is corrupt output, not slow output. `Live` (os9exec): after `setbuf(stdout, (char *)NULL)`, `printf("sb3 unbuffered printf %s\n", "ok")` emitted 22 bytes of `0x16`, two of `0x02` and one of `0x01` — each literal run and each conversion written as a byte equal to **its own length**, repeated that many times. Measured across nine programs to both routes, not to `setbuf` alone: `setvbuf(stdout, NULL, _IONBF, 0)` corrupts identically, while a real buffer, `_IOLBF`, the untouched default, and `fprintf(stderr, …)` are all correct, and `putc` on the same stream after the same call writes the right bytes. `fprintf(stdout, …)` after the same call is corrupted the same way as `printf` (`"fp stdout %s\n"` gave ten `0x0A` bytes, then `02 02 01`). Pipes, redirection, output size and `fflush` are all innocent. Whether the fault is this C library's or the runtime's is unresolved, `Flag` — the rule for a porter is not to leave `stdout` unbuffered: give it a buffer, or leave the default alone and `fflush()`. Unix programs that do this in `main` (cshar's `unshar`) print garbage until the call is removed. |
+| `write(int path, char *buf, int count)` / `read(int path, char *buf, int count)` | Raw path-based I/O (OS-9 `I$Write`/`I$Read` directly, no `FILE *` or buffering) — the primitive underneath the numbered stdin/stdout/stderr paths (0/1/2). **Do not mix these with `printf`/`fprintf`/other stdio calls on the same path without an explicit `fflush()` in between** — the output is reordered: `Live` (os9exec), the raw bytes go out at once and the buffered text follows at the next flush, to a file, a pipe and the console alike. **On a terminal it can also look corrupted when it is not.** A raw `write()` of `"…\n"` ends in a bare CR with no LF (it is `I$Write`, which does no line editing), while `printf`'s line gets CR LF, so the next line overprints the raw one: `"raw write with fflush first\n"` then `printf("after write\n")` reads on screen as `after writeith fflush first`. The bytes in a file are both lines, intact, in write order. |
 
 **`Live` (os9exec)** — the core File I/O behaviors above check
 out: `fwrite("ABCDE",1,5)` returned `5` and `fread(...,1,5)` read back `ABCDE`
@@ -348,7 +348,9 @@ straight to a shell rather than through a login and `initscr()` fails with
 `Unknown terminal type ''`, because the host's `TERM` does not reach the guest —
 the guest's own login/startup is what normally sets it. The tell is that
 message; a run that shows it has measured nothing about curses behaviour,
-because `initscr()` never succeeded. `setenv TERM vt100` in the guest first.
+because `initscr()` never succeeded. `setenv TERM vt100` in the guest is the
+ordinary fix; where it is not enough, see "A working `getenv` is not evidence
+a library can see your variable" below.
 
 ## `termlib`: the pad character is `PC_`, and the error you get hides the real bug
 
@@ -394,16 +396,12 @@ So it is `printw`'s own conversion, not the C library's float formatting and not
 a missing math library.
 
 **The trace is the reason this is worth knowing**, because it does not look like
-a formatting fault. The last syscall is a write, and the PC sits in a runaway
-zero-padding loop:
-
-```
-Executing: -->0005715a: 16fc 0030    MOVE.B #$30,(A3)+     ; $30 is ASCII '0'
-              0005715e: 5385         SUB.L  #$00000001,D5
-```
-
-A reader who sees a byte-fill loop and a write syscall will start auditing their
-own buffers. **The fix is to format with `sprintf` and draw with `addstr`.**
+a formatting fault: the zero padding overwrites memory. One run left the PC in a
+runaway zero-padding loop (`MOVE.B #$30,(A3)+`, `$30` being ASCII `'0'`) after
+a write syscall; another died on a `MOVEA.L` through an address register
+holding `$30303030` — four `'0'` bytes where a pointer had been — with
+`F$SRqMem` as the last syscall. `Live` (os9exec). Either way a reader will start
+auditing their own buffers. **The fix is to format with `sprintf` and draw with `addstr`.**
 
 **Scope: `printw` alone. The rest of the family is fine.** Measured with curses
 genuinely initialised (`LINES=24 COLS=80`), same float, same program:
@@ -441,19 +439,23 @@ both. A library that walks the environment block itself need not.
 
 | route | `getenv("TERM")` | `initscr()` |
 |---|---|---|
-| `@TERM=vt100` on the host command line | `vt100` | `LINES=24 COLS=80` |
+| `@TERM=vt100` on the host command line, os9exec launching the program itself | `vt100` | `LINES=24 COLS=80` |
+| `@TERM=vt100` on the host command line, program started from a shell procedure | `vt100` | `Unknown terminal type ''`, `LINES=0 COLS=0` |
 | `setenv TERM vt100` in a shell procedure | `vt100` | `Unknown terminal type ''`, `LINES=0 COLS=0` |
 
-Same binary, same run, `getenv` agreeing in both. The failing case reports an
+Same binary, `getenv` agreeing in every row. The failing cases report an
 **empty** name: curses is not failing to match `vt100`, it never sees a name.
+And the `@` route fails too once a shell is between os9exec and the program,
+so what decides it here is whether the curses program is the process os9exec
+started, not how the variable was created.
 
 **This is one rig's curses, not a property of OS-9 curses, `Flag`.** On a second
 rig the same comparison passes on all three routes — `@`-passed, `setenv`, and a
 real `SYS/login` session — so the builds differ. Two candidate explanations for
 the split were tested here and **eliminated**: forking the program by absolute
 path versus by bare name makes no difference, and `TERMCAP` holding a file path
-versus the entry string makes no difference. On the rig that fails, the route is
-the only variable that moves it.
+versus the entry string makes no difference. On the rig that fails, what moves
+it is whether the program is the first process or a shell's child.
 
 **What to take from it regardless of which build you have:**
 
@@ -461,7 +463,8 @@ the only variable that moves it.
   check that cannot distinguish these routes, which makes it worthless for
   exactly this fault and reassuring while you chase the wrong thing.
 - **If a terminal library reports an empty name**, try passing the variable as
-  `@TERM=`/`@TERMCAP=` before suspecting your termcap. It needs no login session:
+  `@TERM=`/`@TERMCAP=` and letting os9exec launch the program directly, with
+  no shell between, before suspecting your termcap. It needs no login session:
 
 ```sh
 env '@TERM=vt100' '@TERMCAP=/dd/SYS/termcap' os9exec /h0/CMDS/prog

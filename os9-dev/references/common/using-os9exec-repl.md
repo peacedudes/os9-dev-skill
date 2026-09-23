@@ -1014,14 +1014,9 @@ All `Live` (os9exec).
   memory in the system". Here sources `0`, `$100`, `$10000`, `$01000000` and
   the boot-resident shell's header all gave `E$BPAddr` (210); a module the
   caller loaded could be read. os9exec models an SPU-protected system.
-- **`F$Link` does not check read permission.** A process running as 3.4
-  linked a module owned by 0.0 with access `$0000`; the manual says the link
-  fails.
-- **`F$SigMask` does not ignore overflow.** After 256 increments, 255
-  decrements still left the process masked.
-- **`F$DFork`/`F$DExec`.** The returned register image has SR `$0000`, and
-  edits to the register buffer are ignored: d5 set to `$42` in the buffer did
-  not reach the child.
+- **`F$Link` does not enforce the non-re-entrant rule.** The manual says a
+  module that is not re-entrant may be linked by one process at a time
+  (`E$ModBsy`); os9exec lets any number link it.
 - **The 68881 floating-point path is not exact.** With `math881`, BASIC09
   REAL `5./0.` raises nothing and stores `3FFF FFFF FFFF FFFF` (prints `2.`),
   where the software `math` module raises `#107`; and division comes out one

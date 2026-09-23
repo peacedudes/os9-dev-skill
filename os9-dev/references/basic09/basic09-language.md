@@ -620,9 +620,9 @@ goes through the documented "Divide by Zero" path the way you'd expect:**
   continues, and `ON ERROR GOTO` never fires.
 - **REAL ÷ 0** — `Live` (NitrOS-9, os9exec). **6809** raises `Error #045` here too.
   **68k with the software `math` module** raises `Error #000:107 (E_TRAPV)`,
-  and `ON ERROR GOTO` catching it sees `ERR` = **107**. With `math881` it is
-  unmeasured on real hardware (os9exec's 68881 path is not trustworthy here;
-  see "Where os9exec departs from the manuals" in `common/using-os9exec-repl.md`).
+  and `ON ERROR GOTO` catching it sees `ERR` = **107**. With `math881` it
+  stops with BASIC09's own error **050**, also catchable (`Live` (os9exec));
+  which of the two a real 68881 system reports is unmeasured, `Flag`.
 
 Where an error is raised, it is catchable with `ON ERROR GOTO`, and left
 unhandled it drops into interactive Debug Mode. On 68k, whether one is

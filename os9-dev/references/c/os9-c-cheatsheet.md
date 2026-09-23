@@ -417,8 +417,7 @@ passes). The runtime-computed `1.0/10.0+2.0/10.0-3.0/10.0` leaves
 `5.5511151231257827e-17` (2⁻⁵⁴, the textbook double result) either way, and
 `0.1+0.2 == 0.3` is false — so compare with a tolerance, as on any IEEE system.
 Soft-float gives the correctly rounded `1.0/3.0` (`3FD5555555555555`, printing
-`0.3333333333333333` at `%.17g`). A `-K=2F` result measured on os9exec is not
-evidence about a real 68881 (see "Where os9exec departs from the manuals" in `common/using-os9exec-repl.md`). The choice is fixed at
+`0.3333333333333333` at `%.17g`), and so does a `-K=2F` build. The choice is fixed at
 compile time: `load math881` at run time does not change an already-compiled
 program. See `basic09/basic09-per-target.md` for BASIC09 REAL, which shares the
 soft-float handler.

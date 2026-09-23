@@ -345,10 +345,12 @@ How the two reimplementations do it, if you are modelling one:
   landing at the end of the file through any write-capable path (write-only
   or update) and dropped at close before the wake. `Live` (os9exec). Two
   departures from the manual's description, both `Live` (os9exec) on an RBF
-  image: **creating a file does not gain the lock** — a reader opening a
-  file its creator has not yet written to reads EOF at once instead of
-  sleeping — and **an access away from the end does not release it** (a
-  producer that wrote at EOF and then wrote at offset 0 still held it).
+  image with reader and writer in separate processes: **a file its creator
+  (C `creat()`) has not yet written to reads as EOF at once** instead of
+  holding the reader off, and **bytes a writer appended at EOF before the
+  reader opened are invisible to it** — an 11-byte file extended to 13 read
+  as 11 bytes, then EOF. An access away from the end did release the lock:
+  the reader did not wait.
 - **NitrOS-9** — stock 6809 RBF takes it for a write-only producer and a
   write-only creator alike, and wakes waiters on every write. `Live`
   (NitrOS-9). An update-mode gate was patched in and withdrawn, never sent

@@ -1006,10 +1006,12 @@ on one of these will behave differently on real equipment, and vice versa.
 All `Live` (os9exec).
 
 - **The EOF lock.** The manual says creating a file for sequential output
-  gains it at once, and an access away from the end releases it. On an RBF
-  image neither happens: a reader of a file whose creator has not yet written
-  sees EOF at once, and a writer that moved to offset 0 still held the lock.
-  Detail in os9-systems-dev `file-managers.md`.
+  gains it at once, so a reader waits for the writer. On an RBF image, a
+  reader in another process that opens a file its creator (C `creat()`) has
+  not yet written to reads EOF at once instead. Separately, bytes a writer
+  appends at EOF before a reader opens the file are not seen by that reader:
+  on an 11-byte file extended to 13, the reader got the 11 bytes and then
+  EOF. Detail in os9-systems-dev `file-managers.md`.
 - **`F$CpyMem` range-checks its source.** The manual: "you can view any
   memory in the system". Here sources `0`, `$100`, `$10000`, `$01000000` and
   the boot-resident shell's header all gave `E$BPAddr` (210); a module the
@@ -1017,12 +1019,6 @@ All `Live` (os9exec).
 - **`F$Link` does not enforce the non-re-entrant rule.** The manual says a
   module that is not re-entrant may be linked by one process at a time
   (`E$ModBsy`); os9exec lets any number link it.
-- **The 68881 floating-point path is not exact.** With `math881`, BASIC09
-  REAL `5./0.` raises nothing and stores `3FFF FFFF FFFF FFFF` (prints `2.`),
-  where the software `math` module raises `#107`; and division comes out one
-  unit high — BASIC09 `3./10.` gives `3FD3333333333334` and C `-K=2F`
-  `1.0/3.0` gives `3FD5555555555556`, where soft-float is correctly rounded.
-  What a real 68881 does is unmeasured here, `Flag`.
 - **No device descriptor modules** are resident; see the section above.
 
 ## A too-clean emulator makes someone else's bug look like the emulator's

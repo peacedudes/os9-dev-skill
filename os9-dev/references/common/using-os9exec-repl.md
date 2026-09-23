@@ -1005,13 +1005,6 @@ the manual's behaviour and point here. Code that passes on os9exec but relies
 on one of these will behave differently on real equipment, and vice versa.
 All `Live` (os9exec).
 
-- **The EOF lock.** The manual says creating a file for sequential output
-  gains it at once, so a reader waits for the writer. On an RBF image, a
-  reader in another process that opens a file its creator (C `creat()`) has
-  not yet written to reads EOF at once instead. Separately, bytes a writer
-  appends at EOF before a reader opens the file are not seen by that reader:
-  on an 11-byte file extended to 13, the reader got the 11 bytes and then
-  EOF. Detail in os9-systems-dev `file-managers.md`.
 - **`F$CpyMem` range-checks its source.** The manual: "you can view any
   memory in the system". Here sources `0`, `$100`, `$10000`, `$01000000` and
   the boot-resident shell's header all gave `E$BPAddr` (210); a module the

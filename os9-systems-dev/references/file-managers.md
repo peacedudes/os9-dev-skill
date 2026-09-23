@@ -343,14 +343,16 @@ How the two reimplementations do it, if you are modelling one:
 
 - **os9exec** — the EOF lock is its own flag on the path, gained by a write
   landing at the end of the file through any write-capable path (write-only
-  or update) and dropped at close before the wake. `Live` (os9exec). Two
-  departures from the manual's description, both `Live` (os9exec) on an RBF
-  image with reader and writer in separate processes: **a file its creator
-  (C `creat()`) has not yet written to reads as EOF at once** instead of
-  holding the reader off, and **bytes a writer appended at EOF before the
-  reader opened are invisible to it** — an 11-byte file extended to 13 read
-  as 11 bytes, then EOF. An access away from the end did release the lock:
-  the reader did not wait.
+  or update) and by a create for output, and dropped at close before the
+  wake. `Live` (os9exec), RBF image, reader and writer in separate processes:
+  a reader of a file its creator has not yet written to waits until the first
+  write; a writer that has moved away from the end holds no lock, and a
+  reader then sees every byte already written, including those appended at
+  EOF before it opened. The implementation traps worth knowing if you model
+  this: the creator's lock must survive the path walk's directory locks, and
+  a path joining a file others hold open must take the file's end from the
+  most advanced path, not from disk, because a growing file's end lives in
+  the writer's state until it is flushed.
 - **NitrOS-9** — stock 6809 RBF takes it for a write-only producer and a
   write-only creator alike, and wakes waiters on every write. `Live`
   (NitrOS-9). An update-mode gate was patched in and withdrawn, never sent

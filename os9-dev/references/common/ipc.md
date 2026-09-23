@@ -313,8 +313,7 @@ extending a file at the same time.
 > The rule above is the manual's (`Manual`: the *Disk File Organization*
 > chapter's "End of File Lock"). Stock NitrOS-9 RBF takes the EOF lock for
 > write-only producers and creators alike and wakes waiters on every write
-> (`Live` (NitrOS-9)). (os9exec departs for a creator that has not yet
-> written; see "Where os9exec departs from the manuals" in `common/using-os9exec-repl.md`.) **If you read anywhere that NitrOS-9 gates this on
+> (`Live` (NitrOS-9, os9exec)). **If you read anywhere that NitrOS-9 gates this on
 > update mode, that describes a patch that was withdrawn, not the shipping
 > module** — a plausible-sounding claim to inherit, since it is what the
 > "writes take no lock" half of the rule implies on its own.

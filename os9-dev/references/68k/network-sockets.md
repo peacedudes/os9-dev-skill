@@ -1,10 +1,12 @@
 # OS-9/Internet: Networking and Socket Programming
 
-**`Manual` throughout — nothing in this file has been run.** No claim here is
-reachable at the `Live` (os9exec) tier: the emulator has no network device, and the
-socket library ships with OS-9/Internet rather than the base SDK, so a program
-calling `socket()` fails at *link* time (full detail in the sources note at the
-end). Treat every signature, return value and error code below as unverified.
+**`Manual` throughout — no call in this file has been run from C.** The
+network itself works: `Live` (os9exec), the SDK's own prebuilt `tcprecv` and
+`tcpsend` moved a file over `127.0.0.1` byte-identical, and the disk carries
+`ftp`, `telnet`, `inetd` and their daemons. What is out of reach is *linking*
+the API: a C program calling `socket()` fails at link time (full detail in
+the sources note at the end). Treat every signature, return value and error
+code below as unverified.
 
 **The BSD resemblance is the trap.** This API is a deliberate *subset* of BSD
 sockets, so anything familiar-looking invites filling the gaps from general
@@ -216,10 +218,11 @@ requires re-running `idbgen` and reloading `inetdb` to take effect.
 ---
 
 Sources: OS-9 Internet Software Reference Manual. `Manual` throughout —
-no `Live` (os9exec) tier reachable (no network device support in the emulator).
-The socket API isn't in the base SDK `clib` —
-a C program calling `socket()` fails at *link* time (`Symbol 'socket'
-unresolved`, `l68: error`), because OS-9/Internet ships its own socket
-library that this disk doesn't carry. So nothing here is testable without
-that separate product installed. Error-handling conventions cross-referenced
+no call run from C. `Live` (os9exec): a C program calling `socket()` fails at
+*link* time (`Symbol 'socket' unresolved`, `l68: error`) with `cc`'s default
+libraries, and still does with `LIB/net.l` or `LIB/unet.l` added. The SDK
+disk does carry `LIB/socket.l` and three `netdb*.l` libraries, but they do
+not begin with a ROF's `$DEADFACE` sync word (`socket.l` starts `2D00 D5BC`),
+and `l68` rejects them: `file '/dd/LIB/socket.l' is not a relocatable
+module`. Which linker reads that format is not established here. Error-handling conventions cross-referenced
 against `68k/syscall-reference.md` and `common/ipc.md`.

@@ -16,10 +16,7 @@ worth debugging.
 1. **`I$`/`F$` call names are not symbols** — nothing on the SDK disk defines
    them. `dc.w I$Write` assembles clean and then fails at link. Define them
    as numeric constants in your own source.
-2. **`r68 -O=` and `l68 -o=` do not reliably overwrite** an existing output.
-   A rebuild after an edit silently tests the *old* binary. `del` first, or
-   link to a name you have never used.
-3. **`l68 -o=<name>` sets the module's real internal name**, overriding the
+2. **`l68 -o=<name>` sets the module's real internal name**, overriding the
    source's own `psect` name — so `mdir` shows the `-o=` name, not the one
    you wrote.
 4. **The linker writes to the execution directory**, not your data directory.
@@ -48,7 +45,7 @@ worth debugging.
    `Live` (os9exec).
 
 Two directive traps in the same class: `dc.b "text"` needs double quotes
-(single quotes fail regardless of length), and `ds.b` is not a valid
+(single quotes fail for two or more characters), and `ds.b` is not a valid
 directive — reserve space with an explicit `dc.b 0,0,0,…`. A third, harder to
 place: **a label named `a0`-`a7` or `d0`-`d7` collides with the register
 names**, and the complaint lands on the instruction that *references* the
@@ -60,23 +57,23 @@ duplicate symbol, so it sends you to read the wrong line. `Live` (os9exec).
 - **`cc`** drives `cpp` → `c68` → `o68` → `r68` (assembler) → **`l68`**
   (linker), forking each by bare name via the execution directory (see
   `common/using-os9exec-repl.md`).
-- **`l68`** error taxonomy is diagnostic gold: `file 'x.r' is not a
-  relocatable module` = the object didn't parse (corrupt / not a ROF);
-  `no root psect found` = parsed fine, no entry point. So `l68` on a
-  single `.r` is a cheap integrity check — a healthy object says "no root
-  psect found."
+- **`l68`** error taxonomy — `Live` (os9exec): `file 'x.r' is not a
+  relocatable module` = the input does not start like a ROF (a zeroed sync
+  word, a large text file); `error reading input file` = a truncated ROF;
+  `no root psect found` = nothing supplied an entry point. That last one is
+  **not** a sign of a healthy object: an empty file and a one-line text file
+  both get it, so `l68` on a single `.r` is no integrity check.
 - **`LIB/cstart.r`** — prepended by the C driver at the front of every
   link list; supplies the root psect and the startup code that calls
   `main()`.
 - **`debug`** — symbolic debugger; usage and its two real defects:
   `common/using-os9exec-repl.md`.
-- **`r68 -O=<name>.r` and `l68 -o=<name>` both do not reliably overwrite
-  an existing output file of the same name** — `Live` (os9exec), hit repeatedly
-  across sessions. Re-running either against a stale output can silently
-  leave the old bytes in place (or produce a corrupt mix) while reporting
-  success, so a rebuild after any source edit *looks* clean but tests the
-  old binary. Always `del` the output first, or link to a never-before-
-  used name, before trusting a rerun's result.
+- **`r68 -O=` and `l68 -o=` overwrite an existing output cleanly** —
+  `Live` (os9exec): three rebuilds under one name, longer, shorter and longer
+  again, each ran the new text, on a host directory and on an RBF image. If
+  a rebuild still seems to run old code, look for a **resident copy**
+  (`mdir`) before blaming the file: a module that crashed stays in memory
+  and shadows the rebuilt one (`basic09/basic09-per-target.md`).
 
 ## A complete worked program (`Live` (os9exec))
 
@@ -281,9 +278,10 @@ repeated here. Assembly/module-format-specific additions:
   symbols** — `Live` (os9exec): `dc.w I$Write` assembles clean (`r68` treats an
   unresolved name after `dc.w` as an ordinary external symbol and defers
   to the linker with no warning), but `l68` then fails with `Symbol
-  'I$Write' unresolved`. A whole-disk search of `/h0/DEFS` (`oskdefs.d`,
-  `macros.d`, both the `os9lib` and `GCC2` header trees) for `I$Open`
-  found zero hits. `syscall-reference.md`'s call names must be
+  'I$Write' unresolved`. A search of the SDK's `DEFS` tree (`oskdefs.d`, `macros.d`,
+  both the `os9lib` and `GCC2` header trees) finds `I$Open` only once, in a
+  C comment in `funcs.h` beside `#define I_OPEN (0x84)` — a C constant under
+  another name, not an assemblable symbol. `syscall-reference.md`'s call names must be
   hand-defined as numeric `EQU`/`SET` constants in your own source before
   assembling — they aren't pulled in from anywhere automatically. Numeric
   values confirmed to match the standard published table (source: this
@@ -505,12 +503,13 @@ each says so; treat only the ones marked open as unverified.
   `basic09/basic09-per-target.md` has a second `Live` (os9exec) example of the same
   shape for a `Sbrtn` module.
 - `ds.w`/`ds.l` and other data-definition directive syntax specifics —
-  two now resolved, both `Live` (os9exec): `dc.b 'text'` (single-quoted) fails on
-  `r68` with `*** error - value out of range ***` regardless of string
-  length, `dc.b "text"` (double-quoted) assembles clean — use double
-  quotes for string data. **`ds.b` is not a valid directive on `r68`**
-  (`*** error - bad mnemonic ***`) — reserve space with an explicit
-  comma-separated `dc.b 0,0,0,...` instead.
+  resolved, `Live` (os9exec): `dc.b 'ab'` (single-quoted, two or more
+  characters) fails on `r68` with `*** error - value out of range ***`,
+  while a single character (`dc.b 'x',0`) assembles, as a character
+  constant; `dc.b "text"` (double-quoted) assembles clean — use double
+  quotes for string data. **`ds.b`, `ds.w` and `ds.l` are not valid
+  directives on `r68`** (`*** error - bad mnemonic ***`) — reserve space
+  with an explicit comma-separated `dc.b 0,0,0,...` instead.
 - **Mutable data in a program needs address-register indirect, not a
   PC-relative destination** (`Live` (os9exec)): `move.l d0,x(pc)` /
   `subq.l #1,cnt(pc)` do not work — `(d16,PC)` is a **source-only**
@@ -540,9 +539,11 @@ each says so; treat only the ones marked open as unverified.
   hand-written 68k assembly example (`psect addone,Type_Lang,Attr_Rev,
   0,0,addone` — the 6-operand shape is `name,typelang,attrrev,edition,
   stacksize,entry`) with real `r68`/`l68` invocations. `Live` (os9exec): this same
-  shape works unchanged for `Prgrm` and `Drivr`-type modules too (they
-  share the `M$Exec`/`M$Excpt`/`M$Data`/`M$Stack` header shape), not just
-  the `Sbrtn` it was demonstrated with. **`Live` (os9exec), does NOT generalize to
+  shape assembles and links unchanged for `Prgrm` and `Drivr`-type modules
+  too, not just the `Sbrtn` it was demonstrated with. The headers differ,
+  though: for a `Drivr`, `l68` emits only 12 bytes after `$30` (`M$Exec`
+  then 8 zero bytes; `ident` reports `68000 Dev Drv`, `Exec off $3C`), with
+  no `M$Stack`/`M$IData`/`M$IRefs` — the `Prgrm` extension does not apply. **`Live` (os9exec), does NOT generalize to
   `Devic` (device descriptor) modules**: the 6-operand form
   unconditionally reserves the same 12 bytes of header padding before the
   psect body, but a device descriptor's real extended header

@@ -294,9 +294,10 @@ address + M$Exec; the linker takes it from whichever psect was designated root.
   pointers into DATA (fixed up with the data base). Walked by F$Fork.
 
 **The name string sits immediately after this header, and has no slack** —
-`Live` (os9exec), read off 943 program modules on a real disk: every one had
-`M$Name` = `$48`, i.e. the NUL-terminated name directly after `M$IRefs`, with
-the first instruction right behind it at `$4C`/`$50`/`$52`. So a *longer* name
+`Live` (os9exec), read off the program modules on a real freeware disk: of
+1047 program headers, 1021 had `M$Name` = `$48`, i.e. the NUL-terminated name
+directly after `M$IRefs`, with the first instruction close behind it. Two
+had it at `$4C`, and 24 carried a name appended by the recipe below. So a *longer* name
 cannot be written where the old one is without moving every byte of code.
 
 To rename a module in place: append the new NUL-terminated string after the
@@ -399,11 +400,12 @@ platform-specific real-time-clock handler.
 ## Linker & object-format facts (68k `l68`, 6809 `c.link`)
 
 - **`l68` error taxonomy (`Live` (os9exec)):** `file 'x.r' is not a
-  relocatable module` = the object didn't parse (corrupt / not a ROF);
-  `no root psect found` = parsed fine, just no entry point. So running
-  `l68` on a single object is a cheap integrity check — healthy objects
-  say "no root psect found." When exactly one input out of many is
-  rejected, rebuild that object before theorizing about linker limits.
+  relocatable module` = the input does not start like a ROF (zeroed sync
+  word, a large text file); `error reading input file` = a truncated ROF;
+  `no root psect found` = nothing supplied an entry point — which an empty
+  file and a text file also get, so it says nothing about an object's
+  health. When exactly one input out of many is rejected, rebuild that
+  object before theorizing about linker limits.
 - **ROF header (`Live` (os9exec)):** 0x00 sync longword `$DEADFACE`;
   0x0C–0x11 creation date (year−1900, month, day, hour, minute, second);
   0x1C code size; 0x38 NUL-terminated module name. Decoding two objects'

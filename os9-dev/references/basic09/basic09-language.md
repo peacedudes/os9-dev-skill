@@ -631,7 +631,7 @@ raised at all depends on which math module is loaded.
 **Portable code must not test for a specific code, or rely on the trap.**
 6809 reports Microware's documented BASIC09 error 45 for both operand types;
 68k reports the underlying 68000 CPU exception instead — 105 for INTEGER,
-107 for REAL — when it reports anything. Guard divisors that could be zero:
+107 for REAL (BASIC09's 050 under `math881`) — when it reports anything. Guard divisors that could be zero:
 a trap is not a recovery, and on 68k there may be no trap.
 
 (An older `os9exec` had four stacked `F$STrap` dispatch bugs that broke

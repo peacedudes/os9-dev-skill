@@ -91,6 +91,21 @@ for" descriptions: `os9-tools-and-shell.md`.
   Professional OS-9* v2.4). os9exec agrees on both device types, `Live`
   (os9exec): `del <dir>` gives `E_FNA`/214 whether the directory is empty or
   not.
+
+  **Removing a file whose name starts with `-` or contains `*`/`?`.** RBF
+  accepts such names (a program can create them), and the obvious commands
+  misfire. `Live` (os9exec), Microware's `del` and shell on an RBF image:
+  - A leading `-` is read as an option: `del -y` gives `unknown option 'y'`,
+    and so does `"-y"` (the shell strips the quotes), and so does a `-y` line
+    in a `del -z` list. `./-y` is not a valid pathlist (`E$PNNF`). **Use the
+    full pathlist**: `del /h2/-y` works, because the argument no longer
+    starts with `-`.
+  - A `*` or `?` is expanded by the shell even inside a full pathlist, and
+    **that deletes more than you meant**: `del /h2/*x` removed `*x`, `-x`,
+    `?x` and `ax`. **Double-quote it**: `del "/h2/*x"` removed exactly `*x`.
+    A `del -z` list removed `?x` but silently skipped `*x`.
+  - The shell cannot create a name starting with `-` by redirection: `>-x`
+    is its overwrite redirect, so `echo a >-x` writes a file named `x`.
 - `deldir [<opts>] {<path>}` — recursive; `-f` ignore write protection,
   `-q` no confirmation prompts.
 - `dir [<opts>] {<path>}` — `-e` extended (owner, dates, size, perms),

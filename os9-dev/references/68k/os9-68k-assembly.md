@@ -45,8 +45,9 @@ worth debugging.
    `Live` (os9exec).
 
 Two directive traps in the same class: `dc.b "text"` needs double quotes
-(single quotes fail for two or more characters), and `ds.b` is not a valid
-directive — reserve space with an explicit `dc.b 0,0,0,…`. A third, harder to
+(single quotes fail for two or more characters), and `ds.b` is not valid in
+code — reserve variables in a `vsect` instead, where it is (see "Variables
+live in a `vsect`, addressed from A6" below). A third, harder to
 place: **a label named `a0`-`a7` or `d0`-`d7` collides with the register
 names**, and the complaint lands on the instruction that *references* the
 label — `*** error - illegal addressing mode ***` — not on the label as a
@@ -507,17 +508,47 @@ each says so; treat only the ones marked open as unverified.
   characters) fails on `r68` with `*** error - value out of range ***`,
   while a single character (`dc.b 'x',0`) assembles, as a character
   constant; `dc.b "text"` (double-quoted) assembles clean — use double
-  quotes for string data. **`ds.b`, `ds.w` and `ds.l` are not valid
-  directives on `r68`** (`*** error - bad mnemonic ***`) — reserve space
-  with an explicit comma-separated `dc.b 0,0,0,...` instead.
-- **Mutable data in a program needs address-register indirect, not a
-  PC-relative destination** (`Live` (os9exec)): `move.l d0,x(pc)` /
-  `subq.l #1,cnt(pc)` do not work — `(d16,PC)` is a **source-only**
-  addressing mode on the 68000. Load the address first, write through it:
-  `lea cnt(pc),a1` then `subq.l #1,(a1)`. `os9exec` lets a `Prgrm` module
-  write into its own `dc`-defined storage this way (each process gets its
-  own image), so a scratch counter/flag/saved-ID can sit beside the code
-  with no `vsect`.
+  quotes for string data. **`ds.b`, `ds.w` and `ds.l` are rejected in a
+  code `psect`** (`*** error - bad mnemonic ***`); **`ds.b` inside a
+  `vsect` assembles clean** (`Live` (os9exec)), which is where uninitialised
+  storage belongs.
+- **Never write into the module itself.** `(d16,PC)` is a **source-only**
+  addressing mode on the 68000, so `move.l d0,x(pc)` does not assemble
+  (`Live` (os9exec): `*** error - illegal addressing mode ***`) — and
+  the workaround of `lea x(pc),a1` then writing through `a1` is wrong on OS-9
+  even though it assembles: a module is one shared, re-entrant copy (possibly
+  in ROM) used by every process running it, and a write into it changes the
+  code for all of them and breaks its CRC. Per-process variables go in the
+  data area, below.
+- **Variables live in a `vsect`, addressed from A6 — and A6 is not the
+  start of your data.** At entry A6 is the data area's base **plus
+  `$8000`** (`common/module-format.md`), so a plain `(a6)` or a small
+  `N(a6)` points 32 KB *past* the start: with an ordinary 1-8 KB data area
+  that is beyond its end, in whatever memory comes next, and a write there
+  corrupts another module or process. OS-9 without an SSM does not stop it,
+  and the damage shows up somewhere else entirely — a Microware utility
+  misbehaving later, not your program failing. The correct forms:
+
+  ```
+   vsect
+  count: ds.l 1
+  buf:   ds.b 16
+   ends
+  ...
+   lea    buf(a6),a0       the linker biases vsect offsets for the $8000
+  ```
+
+  `Live` (os9exec): the linked offset of the first `vsect` variable is
+  `-$8000`, and `buf(a6)` reaches the right bytes. An explicit negative
+  constant (`BUF equ -32700`) also works, but the `vsect` keeps the linker in
+  charge of the layout.
+- **Indexing from A6 needs a second register.** Because a `vsect` offset is
+  near `-$8000`, the indexed form `tab(a6,d0.w)` (8-bit displacement) cannot
+  encode it. `Live` (os9exec): **`r68` assembles it with `Errors: 00000`**,
+  and only `l68` objects — `operand size error. The value ($ffff8000) is too
+  large for a byte operand` — **and writes the module anyway**, so a build
+  that checks for an output file passes. Use `lea tab(a6),a1` then
+  `0(a1,d0.w)`.
 - **A trailing colon makes a label externally visible** — `Live` (os9exec),
   confirmed via `l68 -s` and `debug`'s `sc` symbol
   listing. Colon-suffixed labels (`start:`, `sumloop:`) are

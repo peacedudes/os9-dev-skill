@@ -27,6 +27,9 @@ run in the kernel (some user-state, some system-state/privileged).
     bcs.s   fail
 ```
 
+`path0` here is a `vsect` label; a plain `(a6)` is not the start of the data
+area (`68k/os9-68k-assembly.md`).
+
 The `OS9` assembler pseudo-instruction emits the trap+word pair:
 `OS9 I$Close`. A custom trap library is reached the same way via `tcall
 T$Math, T$DMul` (expands to `TRAP #<n>` + `dc.w`), for handlers installed

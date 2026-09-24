@@ -346,8 +346,11 @@ Beyond the lifecycle basics (`os9-mental-model.md`). C wrappers:
 - Link counts can be adjusted artificially (`link`/`unlink` utilities) —
   don't treat them as exact.
 - **a6 bias:** the data-area base register is biased by `$8000` so indexed
-  addressing spans a full 64K; the linker compensates automatically. This
-  is why disassembled code shows data references offset by `$8000`.
+  addressing spans a full 64K; the linker compensates automatically for
+  `vsect` labels. This is why disassembled code shows data references offset
+  by `$8000` — and why a plain `(a6)` in hand-written assembly points 32 KB
+  past the start of the data, usually into someone else's memory. See
+  `68k/os9-68k-assembly.md`.
 
 ## Trap libraries & subroutine modules
 

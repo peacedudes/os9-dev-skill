@@ -194,6 +194,13 @@ for" descriptions: `os9-tools-and-shell.md`.
 - `dump [<opts>] [<path> [<addr>]]` — hex/ASCII; `-m` a resident module,
   `-s` treat offset as a sector number (RBF forensics), `-c` don't
   collapse duplicate lines.
+- `echo [<opts>] [<text>]` — writes its text and a return. **The options are
+  not Unix's**, `Live` (os9exec, from the utility's own `-?`): `-n` puts each
+  word on its own line, `-r` suppresses the final return (Unix `echo -n`),
+  and `-z` reads the text from standard input. **So `-z` anywhere among the
+  words turns a label into a reader**: in a procedure file, `echo step two
+  -z` echoes the *rest of the procedure file* as text and nothing after it
+  runs as a command.
 - `moded [<opts>] [<path>]` — edit a module's option table
   (descriptors); `-d=<path>` field-description file, `-e=<path>` error
   file, `-f=<path>` load modules from file. Follow with `fixmod -u`.

@@ -1008,7 +1008,8 @@ All `Live` (os9exec).
   caller loaded could be read. os9exec models an SPU-protected system.
 - **GetStat SS_Size on a pipe answers `E$UnkSvc`.** The manual reads both
   ways here (`68k/syscall-reference.md`); os9exec takes the reading that
-  lets `less` page piped input to its end.
+  lets `less` page piped input to its end (os9exec's v4.1.0 release notes;
+  not measured here).
 
 ## A too-clean emulator makes someone else's bug look like the emulator's
 

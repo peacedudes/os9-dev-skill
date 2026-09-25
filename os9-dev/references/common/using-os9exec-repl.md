@@ -1073,6 +1073,25 @@ errors and unimplemented syscalls *before* the process dies; `k <pid>`
 kills; `q` quits the emulator. Tracing without stopping: `idbg -o 1`
 (trace to terminal) or `-o /file`, `-d 2` (syscall tracing; `-dh` lists
 mask bits), `-j <pid>`/`-w <pid>` include/exclude a process, `-d 0` off.
+`idbg -d=2 -o=/h5/trc` (the `=` form) works the same. **A bare number is not
+a mask**: `idbg 0002` opens the interactive debug menu (os9exec's release
+notes), which in a procedure file waits for input.
+
+**Finding a stray write: `-W`.** Launching `os9exec -W …` makes a user-state
+write outside the process's own memory — its data area, the blocks it
+requested with `F$SRqMem`, and loaded modules — a bus error, and prints where
+it happened. It is off by default. `Live` (os9exec): a program writing through
+a plain `(a6)` (32 KB past its data; see `68k/os9-68k-assembly.md`) ran to
+completion silently without it, and with it stopped at the write:
+
+```
+# -W: pid=4 wrote 4 bytes at $00059E40, outside its own memory (pc=$00051D96)
+Error #000:102 (E_BUSERR) bus error TRAP 2 occurred
+```
+
+Real OS-9 does this only with an SSM fitted, so this is the tool for "my
+program corrupts something" or "another program fails after mine ran" when
+the hardware you target has none.
 
 **`-d 2`'s `<<<` return lines can name the wrong call.** The entry (`>>>`)
 and return (`<<<`) lines are printed from a single per-process current-call

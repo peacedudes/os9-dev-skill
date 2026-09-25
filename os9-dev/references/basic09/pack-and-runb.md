@@ -75,9 +75,10 @@ step the workflow assumes.
   - A filter matching leading-space-then-name (`^ +[a-z]+` and similar) drops
     every `-` and `*` entry — precisely the marked ones you are looking for,
     so a packed procedure reads as unmarked or missing.
-  - With page pause on, a listing longer than one screen stops and waits; the
-    trailing entries are then swallowed by whatever the harness sends next,
-    so a procedure that is present reads as absent.
+  - With page pause on, a listing longer than one screen stops and waits for
+    a key, and that key is consumed rather than passed to the program
+    (os9exec's release notes), so a harness's next keystroke vanishes and the
+    tail of the listing arrives late or not at all in a capture.
 
   Consequence: **a second `PACK` of the same procedure in one session fails**
   with BASIC09 error `#000:051` ("Line with Compiler Error") — there is no

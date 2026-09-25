@@ -1006,9 +1006,9 @@ All `Live` (os9exec).
   memory in the system". Here sources `0`, `$100`, `$10000`, `$01000000` and
   the boot-resident shell's header all gave `E$BPAddr` (210); a module the
   caller loaded could be read. os9exec models an SPU-protected system.
-- **`F$Link` does not enforce the non-re-entrant rule.** The manual says a
-  module that is not re-entrant may be linked by one process at a time
-  (`E$ModBsy`); os9exec lets any number link it.
+- **GetStat SS_Size on a pipe answers `E$UnkSvc`.** The manual reads both
+  ways here (`68k/syscall-reference.md`); os9exec takes the reading that
+  lets `less` page piped input to its end.
 
 ## A too-clean emulator makes someone else's bug look like the emulator's
 

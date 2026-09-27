@@ -73,6 +73,18 @@ emulation.
 Pick any line from either and test it. You do not need to fix the file — saying
 "I ran this on real hardware and got X" is the whole contribution.
 
+**The quickest check of all needs no reading.** Most `Live` tags here were
+measured under os9exec, and os9exec's own conformance suite, CONF68K, turns its
+readings of the Microware manuals into 113 standalone tests — hand-written
+assembly, no Microware software — shipped as a disk image, `conf68k.dsk`, with
+its releases (https://github.com/peacedudes/os9exec/releases). Put it on a disk
+device of an OS-9/68000 machine, `chd` to it and type `runall`; each test
+prints one `RESULT` line with what it observed and what the manual led it to
+expect. **Send those lines to os9exec's issue tracker**
+(https://github.com/peacedudes/os9exec/issues), not here: the tests are
+os9exec's, and a line that disagrees corrects the emulator first and this
+corpus with it.
+
 ## If you want to send a patch
 
 The same three things apply, plus the conventions that keep the corpus

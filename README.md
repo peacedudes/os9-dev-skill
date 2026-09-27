@@ -166,6 +166,18 @@ project's resource collection and has never been opened for any purpose;
 NitrOS-9's open kernel source is held to cross-check-only use and is never
 extracted at length.
 
+## Related projects
+
+Two sibling projects supplied most of the `Live` (os9exec) evidence here. Neither
+is needed to use the skills.
+
+- **os9exec** (https://github.com/peacedudes/os9exec) — an OS-9/68000 user-level
+  emulator for macOS, Linux and Windows. Its conformance suite, CONF68K, also
+  runs on real OS-9/68000 hardware; `CONTRIBUTING.md` says how to help with it.
+- **A collection of OS-9/68000 freeware**, rebuilt and tested under os9exec,
+  whose porting work found many of the traps recorded here.
+  <!-- PUBLISH: when the collection is public, link it on the line above. -->
+
 ## Working on this
 
 Two gates must be green before anything lands, and a tracked pre-commit hook

@@ -61,7 +61,7 @@ has bitten a real session.
 | `cpp` dies with no diagnostic at all | an over-long joined source line — no fixed limit, earlier content lowers it; keep lines well under 500 and note `#if 0` does not exempt one | `c/os9-c-cheatsheet.md` |
 | `PC` unresolved at link in a termcap port | it is `PC_` here — and check `BC`/`UP`, which link silently as the wrong type | `c/os9-clib-reference.md` |
 | A flex scanner prints nothing for a named file but works when you pipe into it | `freopen(name,"r",yyin)` before the first `yylex()` — some skeletons leave `yyin` null until then | `c/os9-c-cheatsheet.md` |
-| A variable you exported on the host is ignored inside the emulator | only names starting with `@` cross (`@TERM=vt100`); what a non-crossing one looks like inside defeats a NULL check | `common/using-os9exec-repl.md` |
+| A variable you exported on the host is ignored inside os9exec | only names starting with `@` cross (`@TERM=vt100`); what a non-crossing one looks like inside defeats a NULL check | `common/using-os9exec-repl.md` |
 | curses says `Unknown terminal type ''` though `getenv` returns your `TERM` | no `TERM` in that process's environment; under os9exec, `getenv` cannot tell the environment routes apart | `c/os9-clib-reference.md`, `common/using-os9exec-repl.md` |
 | Bus error in a byte-fill loop (`MOVE.B #$30,(A3)+`) after a write syscall | a float passed to curses `printw` — format with `sprintf`, draw with `addstr` | `c/os9-clib-reference.md` |
 | A ported program calls `fork`, `pipe`, `kill`, `sleep`, `dup`, `wait` or `getcwd` | none of them exist in `clib.l`/`unix.l`; `execl` is a CHAIN that never returns | `c/os9-clib-reference.md` |
@@ -104,7 +104,7 @@ has bitten a real session.
 | `cpp` dies on a `.dat`/data file you never thought of as source | it is `#include`d as C initialisers — the CR rule applies by USE, not by extension | `common/using-os9exec-repl.md` |
 | Program builds and runs but misreads its own data file | LF endings in runtime data: the silent form of the CR rule, nothing reports it | `common/using-os9exec-repl.md` |
 | OS-9's `unshar` says `No shell commands in <file>` | the archive was transported without converting to OS-9 text | `common/using-os9exec-repl.md` |
-| Program dies immediately with a trap-handler banner | linked against the proprietary `cio`, absent from this disk | `common/using-os9exec-repl.md` |
+| Program dies immediately with a trap-handler banner | linked against Microware's `cio` trap handler, which this disk lacks | `common/using-os9exec-repl.md` |
 | Harness times out with the command visibly working | prompt gate doesn't recognise a sub-program's prompt — use raw keys | both REPL files |
 | Session hangs or dies on a syscall that looked ordinary | `F$SSvc`/`F$IOQu`/`F$NProc` (6809), `F$SysDbg`/`F$RTE` (68k) | both REPL files |
 | Fix has no effect although the rebuild succeeded / rebuild behaves exactly like the old binary | the crashed module is **still resident** and shadows the new one — `mdir`; the output file itself was replaced | `basic09/basic09-per-target.md` |

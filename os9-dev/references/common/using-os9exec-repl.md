@@ -1120,7 +1120,7 @@ at that program's bounds checking before it is filed.
 - **Ctrl-E**: kills the child, immediately, regardless of what the process
   is doing — compute loop, blocked read, or blocked write. A loop that makes
   no system calls is reached through the clock tick, so under `os9exec -q`
-  (tick off) neither key can take the CPU from it; use `stop` or `idbg`.
+  (tick off) neither key can take the CPU from it.
 - **Neither key aims at a process you choose.** Both are delivered to the
   device's *last writer* (`Source`, os9exec: `lastwritten_pid`), so with two
   processes interleaving output the signal can land on a bystander — the one

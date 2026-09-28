@@ -346,23 +346,20 @@ On **6809** the byte packs rate *and* word length *and* stop bits — that
 encoding is `Manual`, from the Level 2 documentation, and is given in full in
 `6809/utility-usage.md`'s `baud=` row.
 
-For **68k** no manual held here gives the code-to-rate mapping. The table
-below is **os9exec's**, read out of its own source, and is offered only
-because it is the sole mapping available — it is evidence about the emulator,
-not a statement of what OS-9/68000 specifies. Treat it as a starting point to
-confirm against a real system, and do not assume a Microware descriptor built
-elsewhere uses these indexes. `Source` (os9exec):
+For **68k** the mapping is `PD_BAU`'s, `Manual` (Technical I/O Manual v2.4
+p. 3-9; v2.4 Technical Reference Manual p. B-18). Codes are hex:
 
 | Code | bps | Code | bps | Code | bps |
 |---|---|---|---|---|---|
-| 0 | 50 | 8 | 1800 | 16 | 38400 |
-| 1 | 75 | 9 | 2000 | 17–20 | unassigned |
-| 2 | 110 | 10 | 2400 | 21 | 57600 |
-| 3 | 134 | 11 | 3600 | 22 | 115200 |
-| 4 | 150 | 12 | 4800 | | |
-| 5 | 300 | 13 | 7200 | | |
-| 6 | 600 | 14 | 9600 | | |
-| 7 | 1200 | 15 | 19200 | | |
+| 0 | 50 | 6 | 600 | C | 4800 |
+| 1 | 75 | 7 | 1200 | D | 7200 |
+| 2 | 110 | 8 | 1800 | E | 9600 |
+| 3 | 134.5 | 9 | 2000 | F | 19200 |
+| 4 | 150 | A | 2400 | 10 | 38400 |
+| 5 | 300 | B | 3600 | FF | external |
+
+os9exec follows it for `0`–`10` and adds two codes of its own, 21 (`$15`) for
+57600 and 22 (`$16`) for 115200. `Source` (os9exec).
 
 The 6809 encoding is a different scheme over a shorter, differently-numbered
 rate list, so neither target's numbering can be read for the other.

@@ -125,6 +125,15 @@ shared across targets: on 68k the byte is a flat index into a rate table, on
 numbering can be read for the other. Both tables are in the `os9-dev` skill's
 `common/utility-usage.md`, under the `baud=` note.
 
+`PD_PAR`'s bits, `Manual` (Technical I/O Manual v2.4 p. 3-9; v2.4 Technical
+Reference Manual p. B-17): bits 0–1 parity (0 none, 1 odd, 3 even); bits 2–3
+bits per character (0 = 8, 1 = 7, 2 = 6, 3 = 5); bits 4–5 stop bits (0 = 1,
+1 = 1½, 2 = 2); bits 6–7 reserved. SCF copies the byte to `V_TYPE` in the
+driver's static storage for its interrupt routine. `xmode`'s `type=` is this
+value in hex, and its `par=` (odd/even/none), `cs=` (8/7/6/5) and `stop=`
+(1/1.5/2) edit the fields; none takes effect until the device is `iniz`ed
+(*Using Professional OS-9* v2.4, `xmode`).
+
 Device-descriptor offsets, `Source`: `M$Port` (hardware interface port
 address) `$30`, `M$Mode` `$37`, `M$FMgr` (offset to file manager name string)
 `$38`, `M$PDev` (offset to device driver name string) `$3A`, `M$DevCon`

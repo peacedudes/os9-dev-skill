@@ -408,7 +408,10 @@ layer; none of it is evidence about OS-9. os9exec does **not** implement the
 - **Blocked/waiting processes are poll-retried, not event-woken.** A process
   in `pWaitRead`/`pWaitWrite` (a blocked console/pipe read, a parked
   `Ev$Wait`) is re-dispatched by `do_arbitrate` only every Nth round (throttled
-  by `pW_age`); it re-runs the syscall and re-checks. The exception is RBF
+  by `pW_age`); it re-runs the syscall and re-checks. A sleeper is on the same
+  rota but is also checked against its own `wakeUpTick` every round, so an
+  `F$Sleep` ends on time even beside a process computing without calls, where
+  one round is one tick. The exception is RBF
   record/EOF locks, which do an **explicit** wake of a known in-emulator
   waiter. Host-tty readiness is `select()`-driven in `DoWait` (below).
 - **`DoWait()` (`procstuff.c`) is the ONLY code that runs while every process

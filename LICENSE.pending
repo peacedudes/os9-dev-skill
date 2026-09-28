@@ -6,7 +6,9 @@ is lifted. Until then LICENSE governs, and no license is granted.
 To publish, in order:
 
   1. Replace LICENSE with everything below the line, and delete this file.
-  2. Drop the pre-publication banner from the top of README.md.
+  2. Drop the pre-publication banner from the top of README.md and of both
+     SKILL.md files, and the "while the pre-publication notice stands" clause
+     in CONTRIBUTING.md — `git grep -n -i pre-publication` finds them all.
   3. Fill in the repository URL wherever a `PUBLISH:` comment marks it —
      `grep -rn 'PUBLISH:' .` finds them all. The issue tracker is the project's
      only contact channel by choice, so until the URL is real a reader who finds

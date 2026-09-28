@@ -199,6 +199,21 @@ Arguments after the module name bind positionally to the entry procedure's
   b$:STRING`) are a compile error (`#000:011`). Group like `DIM`:
   `PARAM a$, b$: STRING`, one PARAM statement per type.
 
+## Ctrl-C and Ctrl-E under RunB
+
+Under RunB, unlike interactive BASIC09, Ctrl-C and Ctrl-E "can be trapped by
+`ON ERROR GOTO`" (`Manual`, *OS-9 BASIC User Manual*, App. D). `Live`
+(os9exec), packed procedures run from the shell:
+
+- **With a trap armed**, either key jumps to the trap line at once, whether
+  RunB receives the signal directly or the waiting shell forwards it. `ERR`
+  there reads **0**; the manual gives no number, and real hardware has not
+  been checked.
+- **With no trap armed**, the key has no effect on a running loop: the
+  procedure runs to its end and exits normally. So a packed program you may
+  need to stop needs an `ON ERROR GOTO` that ends it, or `kill <pid>` from
+  another shell.
+
 ## `**** Can't install trap handler ****` triage
 
 This banner + `Error #000:216 (E_PNNF)` has several distinct causes:

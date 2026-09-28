@@ -1113,7 +1113,7 @@ at that program's bounds checking before it is filed.
 
 - **Ctrl-C** depends on whether the child has written to the terminal, as
   the manual describes (`Manual`, *Using Professional OS-9*; `Live`
-  (os9exec)). One that has not — `sleep -s 20` — is moved to the background:
+  (os9exec, macOS and Windows 11)). One that has not — `sleep -s 20` — is moved to the background:
   the shell prints `+3` and prompts, and the child runs on. One that has
   written receives interrupt signal 3 and, with no intercept handler, dies
   with `Error #000:003 (S_Intrpt) User interrupt`. So Ctrl-C does not stop a

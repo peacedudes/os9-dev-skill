@@ -1,6 +1,6 @@
 ---
 name: os9-systems-dev
-description: Use when writing — or when explaining how anything works inside — an OS-9/68000 device driver or file manager; OS-9 kernel internal structures (System Globals, Process Descriptor, module directory); the scheduler algorithm and how it picks the next process; exception/IRQ vector handling; how an OS-9 disk boots and what loads in what order (bootstrap, OS9Boot, kernel and module load order); how disk space is allocated; 6809 Level 2 MMU/DAT register internals and per-process address mapping; or extending the os9exec emulator's own kernel-interface layer. Covers understanding these mechanisms, not only authoring them — a bare "how does an OS-9 disk boot" or "where does the kernel keep a process's signal state" belongs here. Not for writing ordinary application programs — see the sibling os9-dev skill for that.
+description: Use when writing — or when explaining how anything works inside — an OS-9/68000 device driver or file manager; OS-9 kernel internal structures (System Globals, Process Descriptor, module directory); the scheduler algorithm and how it picks the next process; exception/IRQ vector handling; how an OS-9 disk boots and what loads in what order (bootstrap, OS9Boot, kernel and module load order); how disk space is allocated; 6809 Level 2 MMU/DAT register internals and per-process address mapping; or extending an emulator's kernel-interface layer, such as os9exec's. Covers understanding these mechanisms, not only authoring them — a bare "how does an OS-9 disk boot" or "where does the kernel keep a process's signal state" belongs here. Not for writing ordinary application programs — see the sibling os9-dev skill for that.
 ---
 
 # OS-9 Systems Development Skill
@@ -16,7 +16,9 @@ The kernel/systems half of OS-9 development — extending OS-9 itself:
 - **Kernel internal structures** — System Globals, Process Descriptor,
   module directory, scheduler data — and the exact scheduler algorithm,
   IRQ vector chaining, exception internals
-- **Extending os9exec itself** where it emulates any of the above
+
+The same material serves anyone extending an emulator's kernel-interface
+layer where it stands in for any of the above.
 
 Writing a program that merely *uses* drivers/file managers through
 ordinary I$/F$ calls is the sibling **`os9-dev`** skill — most OS-9
@@ -65,13 +67,11 @@ Motorola; third-party books are not authoritative however good — the OS-9
 Guru especially. Tag legend: sibling skill's
 `os9-dev/references/CONFIDENCE-TAGS.md` (install both).
 
-**Driver and file-manager entry points cannot be tested on os9exec.** It has
-no module dispatch for them: `I$Attach` (`icalls.c`) never allocates driver
-storage or calls `Init`, device I/O routes through a fixed C table keyed by
-hardcoded path prefixes rather than by executing an installed module, and
-`iniz` has no emulator-side implementation. A correctly-assembled, CRC-valid
-`Drivr` module installs and is never invoked. The toolchain half — assembling
-and linking a `Drivr`/`Devic` module byte-correctly — does work.
+**Driver and file-manager entry points run only on OS-9 itself.** os9exec
+serves device I/O from its own host-side layer rather than by dispatching to
+installed modules, so there a correctly-assembled, CRC-valid `Drivr` module
+installs and is never invoked, and `iniz` does nothing. Assembling and linking
+a `Drivr`/`Devic` module byte-correctly does work under it.
 
 So the files here are mostly `Manual`, with some struct offsets `Source`
 against os9exec's code. Don't read "68k" as "checked" in this skill.

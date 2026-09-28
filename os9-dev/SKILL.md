@@ -1,6 +1,6 @@
 ---
 name: os9-dev
-description: Use when writing, porting, or debugging programs for Microware OS-9 (6809 or 68000) or OS-9000; setting up or troubleshooting the os9exec emulator, its toolchain, or an OS-9 SDK; driving, scripting or bringing up a live NitrOS-9 system on a CoCo/Dragon under XRoar, including the DriveWire/becker-port channel and CoCo screen and keyboard handling; compiling/running/testing BASIC09, C, or 68k assembly programs via os9exec or its REPL; the OS-9 shell and its utilities (redirection, pipes, attr/dir/procs/deldir, procedure files, environment); OS-9 module format (header layout, type/language and attribute bytes, CRC and header parity, ident/fixmod); OS-9 error codes and error paths; or translating between Linux/Unix concepts and OS-9 equivalents (modules, path descriptors, forks/exec).
+description: Use when writing, porting, or debugging programs for Microware OS-9 (6809 or 68000) or OS-9000; compiling, running or testing BASIC09, C, or 68k/6809 assembly programs; the OS-9 shell and its utilities (redirection, pipes, attr/dir/procs/deldir, procedure files, environment); OS-9 module format (header layout, type/language and attribute bytes, CRC and header parity, ident/fixmod); OS-9 error codes and error paths; translating between Linux/Unix concepts and OS-9 equivalents (modules, path descriptors, forks/exec); setting up an OS-9 SDK and toolchain; or, without OS-9 hardware, working under the os9exec emulator or its REPL, or driving, scripting or bringing up a live NitrOS-9 system on a CoCo/Dragon under XRoar, including the DriveWire/becker-port channel and CoCo screen and keyboard handling.
 ---
 
 # OS-9 Development Skill
@@ -68,9 +68,9 @@ the OS-9 Guru especially is excellent and still not Microware speaking.
 
 Claims carry inline confidence tags — legend in
 `references/CONFIDENCE-TAGS.md`. `Flag` means sources disagree. Prefer running
-a claim to asserting it: 68k via os9exec (`common/using-os9exec-repl.md`),
-6809 via NitrOS-9 under XRoar (`6809/using-nitros9-repl.md`). OS-9000 claims:
-punt to the manuals.
+a claim to asserting it — on OS-9 itself where you have it; otherwise 68k via
+os9exec (`common/using-os9exec-repl.md`), 6809 via NitrOS-9 under XRoar
+(`6809/using-nitros9-repl.md`). OS-9000 claims: punt to the manuals.
 
 ## Rules of engagement
 

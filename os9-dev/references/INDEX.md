@@ -93,14 +93,14 @@ has bitten a real session.
 | `linecount` or any line reader sees 0 lines in a file that plainly has several | a host directory translates nothing: LF endings, and `I$ReadLn` stops only at CR | `common/using-os9exec-repl.md` |
 | `c68` says `; expected` / `expression with little effect` on correct-looking C | adjacent string literals — nothing under `cc` joins them (the `gcc2` driver does) | `c/kandr-vs-ansi.md` |
 | `**** multiple definition ****` on parameter declarations that look right | `ansi2knr` was run on an already-K&R tree and rewrote its own output | `c/kandr-vs-ansi.md` |
-| "Can't find" a command that is plainly present | fork lookups use `chx`, not `PATH` | `common/using-os9exec-repl.md` |
+| "Can't find" a command that is plainly present | fork lookups use `chx`, not `PATH` | `common/os9-mental-model.md`, `common/using-os9exec-repl.md` |
 | Redirect produced error text, or clobbered the file | `>>` is **stderr**; append is `>+`; plain `>` fails if the file exists | `common/os9-tools-and-shell.md` |
 | `Wildcard match failed` — the command never ran | a `*`/`?` pattern matched no file, which aborts the command instead of passing through; `?` in a borrowed `$?` idiom does this too | `common/os9-tools-and-shell.md` |
-| A batch run stalled, or later procedure lines never executed | either an earlier command failed (`-x` abort-on-error is the default, and the skipping is announced by nothing) or a utility hit an interactive prompt — classically `copy` without `-r` — and read your remaining lines as its answers | `common/using-os9exec-repl.md` |
+| A batch run stalled, or later procedure lines never executed | either an earlier command failed (`-x` abort-on-error is the default, and the skipping is announced by nothing) or a utility hit an interactive prompt — classically `copy` without `-r` — and read your remaining lines as its answers | `common/os9-tools-and-shell.md`, `common/utility-usage.md`, `common/using-os9exec-repl.md` |
 | `can't execute "<the name you typed>"` with `E_FNA`/214 | the procedure file is in the execution directory; bare-name procedure lookup resolves against the *data* directory | `common/os9-tools-and-shell.md` |
 | `can't execute "<a word you never typed>"` | you named a data file, and the shell is running its contents as commands — the quoted word came from inside the file | `common/os9-tools-and-shell.md` |
 | A file you just created won't open, or a long name is refused | OS-9 allows 1 to 28 characters and a 29th is refused everywhere | `common/unix-differences.md` |
-| Compiler reads the whole source as one line | source has LF endings; OS-9 needs CR-only | `common/using-os9exec-repl.md` |
+| Compiler reads the whole source as one line | source has LF endings; OS-9 needs CR-only | `c/os9-c-cheatsheet.md`, `common/unix-differences.md`, `common/using-os9exec-repl.md` |
 | `cpp` dies on a `.dat`/data file you never thought of as source | it is `#include`d as C initialisers — the CR rule applies by USE, not by extension | `common/using-os9exec-repl.md` |
 | Program builds and runs but misreads its own data file | LF endings in runtime data: the silent form of the CR rule, nothing reports it | `common/using-os9exec-repl.md` |
 | OS-9's `unshar` says `No shell commands in <file>` | the archive was transported without converting to OS-9 text | `common/using-os9exec-repl.md` |
@@ -114,7 +114,7 @@ has bitten a real session.
 | Breakpoint or examine lands at the wrong address | `sc`'s listing double-applies an offset — never take an address from it | `common/using-os9exec-repl.md` |
 | `-d 2` trace shows a `<<<` return under the wrong call name | a nested call overwrote the per-process current-call field — pair returns to entries by position | `common/using-os9exec-repl.md` |
 | `Error #000:043` from BASIC09 — and you can't tell if anything failed | four unrelated causes share this code; two of them mean the operation succeeded | `basic09/pack-and-runb.md` |
-| A listing is short, or something you know exists reads as absent | page pause ate the tail (`tmode pag=0`), or a filter dropped the marked entries | `common/using-os9exec-repl.md` |
+| A listing is short, or something you know exists reads as absent | page pause ate the tail (`tmode pag=0`), or a filter dropped the marked entries | `common/utility-usage.md`, `common/using-os9exec-repl.md` |
 | Output stopped dead, no error, session otherwise alive | a stray `$13` (XOFF) reached the terminal; SCF swallowed it and is holding output until `$11` | `common/os9-tools-and-shell.md` |
 | Ctrl-C/Ctrl-E killed the wrong process | both go to the device's last writer, not a process you name — use `kill <pid>` | `common/using-os9exec-repl.md` |
 | Separate writes run together / output garbled | `I$WritLn` writes **to the first CR** — a buffer without one runs past its end | `common/memory-and-io.md` |

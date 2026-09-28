@@ -11,17 +11,17 @@
 ## Symptom → cause (when you have a failure, not a topic)
 
 The other door into this index: you have a symptom and no idea which topic
-owns it. Each of these has cost real time here, and the first two are the
-expensive ones because nothing is wrong with your code.
+owns it. The last four rows arise only under the os9exec emulator, and they are
+the expensive ones there because nothing is wrong with your code.
 
 | Symptom | Likely cause | Where |
 |---|---|---|
-| A correct, CRC-valid `Drivr`/`FlMgr` installs and is **never called at any entry point** | os9exec has no driver/file-manager dispatch at all — not your bug, and not fixable from the module side | device-drivers.md, file-managers.md |
-| `iniz` appears to do nothing | it has no emulator-side implementation whatsoever | device-drivers.md |
-| Record locking measures nothing; concurrent read-modify-write silently loses updates | you tested on a host directory — locking is RBF-only, so use a `mount -k` image | file-managers.md |
-| Observed scheduling doesn't match the documented priority-aging algorithm | os9exec doesn't implement it; it runs a simpler round-robin | kernel-internals.md |
 | Two different offsets both claim to be the path open count | `PD_CNT` `$03` and `PD_COUNT` are two genuine distinct fields, not a contradiction | file-managers.md |
 | A new terminal device is dead to keypresses — `tsmon` never wakes, nothing errors | the armed `SS_SSig` signal isn't delivered to the *arming process's own* path, only the device's main one | device-drivers.md |
+| Under os9exec, a correct, CRC-valid `Drivr`/`FlMgr` installs and is **never called at any entry point** | os9exec has no driver/file-manager dispatch at all — not your bug, and not fixable from the module side | device-drivers.md, file-managers.md |
+| Under os9exec, `iniz` appears to do nothing | it has no emulator-side implementation | device-drivers.md |
+| Under os9exec, record locking measures nothing; concurrent read-modify-write silently loses updates | you tested on a host directory — locking is RBF-only, so use a `mount -k` image | file-managers.md |
+| Under os9exec, observed scheduling doesn't match the documented priority-aging algorithm | os9exec doesn't implement it; it runs a simpler round-robin | kernel-internals.md |
 
 Module format, syscall catalog, and error codes are shared with
 application-level work and live in the sibling `os9-dev` skill
@@ -46,5 +46,5 @@ behavior largely isn't:
 | Behavior os9exec doesn't emulate — driver and file-manager dispatch, the scheduler algorithm, System Global memory, the Module Directory | `Manual` |
 | `6809-level2-mmu.md` | `Manual` only |
 
-Entry-point calling conventions are **untestable** on os9exec, not merely
-untested — SKILL.md → Verification.
+Entry-point calling conventions are **untestable** under os9exec, not merely
+untested there; they run only on OS-9 itself — SKILL.md → Verification.

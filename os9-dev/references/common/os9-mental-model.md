@@ -98,7 +98,7 @@ module directory (already resident?), then `chx`, then each `PATH` entry,
 then the data directory (as a procedure file) — `Manual` (Microware's *OS-9
 Advanced* training manual). `chd` alone never makes a program findable.
 Prefer `PATH` over moving `chx`; `chx` matters when a tool forks co-located
-sub-tools by bare name (compiler drivers do — see `using-os9exec-repl.md`).
+sub-tools by bare name (compiler drivers do — see `c/os9-c-cheatsheet.md`).
 
 A consequence of that last step, easy to miss: a file found and run this way
 has **all** its modules loaded and the **first** one executed, so the name of

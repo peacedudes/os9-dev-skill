@@ -29,18 +29,18 @@ Unix has one cwd. OS-9 has two:
 when run — running searches `chx`/`PATH`, not `chd`. Like Unix `cd`, `chd`
 with no argument returns to `$HOME` (the `HOME` env var, **not** the
 password-file login data dir); `chx` with no argument leaves the execution
-directory where it was, though from an RBF image it also prints
+directory where it was, though on an RBF device it also prints
 `Error #000:214`
 (`Live` (os9exec) — see `os9-tools-and-shell.md` for the
 test). Full resolution rule, `PATH` guidance, and the
 compiler-driver exception: `os9-mental-model.md`'s "Two current
-directories, not one" section; practical gotchas hitting this live:
+directories, not one" section; under os9exec, its own gotchas:
 `using-os9exec-repl.md`.
 
 ### 2. Lines end with CR, not LF
 
 OS-9's line terminator is CR (0x0D), not LF (0x0A) — the most common
-host↔OS-9 file-boundary bug.
+snag when a file crosses between Unix and OS-9.
 
 - OS-9 C's `\n` **is CR**, not LF — a separate `\e` escape produces a true
   LF when one is genuinely needed.
@@ -49,9 +49,10 @@ host↔OS-9 file-boundary bug.
   spots.
 - RBF/SCF translation behavior: see `os9-mental-model.md`'s "Conventions
   that bite" section.
-- Convert with `flip -m` (host-side files only — can't touch files inside
-  an RBF image; edit those natively with `vi`/`ed`, which already produce
-  correct native line endings). See `using-os9exec-repl.md`.
+- Convert on the Unix side before the file reaches OS-9 (`flip -m`, or
+  `tr '\n' '\r'`), or edit on OS-9 itself with `vi`/`ed`, which already
+  produce correct native line endings. Under os9exec, see
+  `using-os9exec-repl.md`.
 
 ### 3. A program is a *module*, not a flat executable
 
@@ -141,7 +142,7 @@ open paths.
     only *records* the code, leaving your handler to run at the next poll —
     so "handlers run immediately" is true of OS-9 and can be false of the
     library in front of it. Establish which `signal()` was linked before
-    concluding the kernel or the emulator is at fault; see
+    concluding the kernel is at fault; see
     `c/os9-clib-reference.md`.
 - Masking nests with ±1 (`F$SigMask`); clearing to 0 wipes all nesting, not
   just yours. `F$Sleep` auto-unmasks — this is what makes
@@ -239,14 +240,14 @@ and so that a mixed pathlist is read correctly, but not worth writing.
 `Hearsay` (rdoggett, from a real system: "yes real os-9 accepts `../../../..`
 no problem"), so this is OS-9's behaviour and not a runtime indulgence.
 
-`Live` (os9exec): an RBF image and a host directory agree on
+`Live` (os9exec): the rule holds for
 `../..`, `../...`, `.../..`, `../......./.././`, `A/..`, `A/B/...`,
 `A/B/C/../../..`, absolute pathlists with mixed runs, and `chd ../..`.
 
 One measured case is worth quoting in full, because it carries its own control —
 note that it mixes spellings to *exercise* composition, and is evidence rather
 than a model to copy. From seven levels down, `list ./../.../...././SYS/f` opens a file **exactly six levels up**
-— `0+1+2+3+0` — on both device types, and `chd` with the same pathlist followed
+— `0+1+2+3+0` — and `chd` with the same pathlist followed
 by `pd` lands six up. The control: that climb does **not** reach a file seven
 levels up, which fails `E_PNNF`. So the runs are being *counted* rather than
 merely accepted, a leading `./` and a trailing `/.` contribute zero without
@@ -346,7 +347,7 @@ functions for bit manipulation.
 | ELF/executable | OS-9 module | see Tier 1 #3, `module-format.md` |
 | shared library | reentrant module / trap handler | e.g. math via `trap #15` |
 | `dlopen` | `F$Load` by name | |
-| pipe / named pipe | `/pipe` unnamed / `/pipe/<name>` named | default buffer 90 bytes per the manuals, but **os9exec uses 4096** — see `ipc.md` |
+| pipe / named pipe | `/pipe` unnamed / `/pipe/<name>` named | default buffer 90 bytes per the manuals — see `ipc.md` |
 | UID/GID | owner ID / group ID in process descriptor | |
 | `sudo`/root | super-user = group 0 (**68k**; on 6809 it is flat user ID 0 — `6809/syscalls-and-module-format.md`) | |
 | process states | Active / Waiting / Sleeping | |

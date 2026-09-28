@@ -253,9 +253,9 @@ anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
   that points at a line whose label is distinct past character 8. `Source`
   (NitrOS-9 `level1/cmds/asm.asm`, whose own comments read "Arbitrary-length
   labels allowed. (first 8 chars must be unique)" and "First 8 characters of
-  label MUST be unique", with `max symbol length` set to 8), and `Live` (NitrOS-9) — hit while building the 6809 conformance suite.
+  label MUST be unique", with `max symbol length` set to 8), and `Live` (NitrOS-9).
   **`lwasm` does not share this limit**, so cross-assembled source that builds
-  clean on the host can fail on the guest. That asymmetry is invisible until
+  clean on a development host can fail under OS-9's own `asm`. That asymmetry is invisible until
   something rebuilds with the native assembler: keep labels unique within 8
   characters in anything you expect an OS-9 system to reassemble.
 
@@ -272,12 +272,11 @@ anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
 - **`rma`** (20,143 bytes, module name `rma`, identifying itself in listings as
   `Microware OS-9 RMA - V1.1`) — the Relocating Macro Assembler the
   PSECT/VSECT/RLINK section below describes. **`Live` (NitrOS-9): works,
-  including a full `rma` → `rlink` → run multi-file build** (superseding an
-  earlier "hangs indefinitely" claim here, which was four separate silent
-  failure modes — chiefly that **`rma` writes no object file without `-o=`**,
-  and that a label must carry a **trailing colon** to be exported to RLINK).
-  Full recipe and traps: `using-nitros9-repl.md`; working sources in the
-  os9exec repo at `test/6809-live-verification/rma-rlink-build/`.
+  including a full `rma` → `rlink` → run multi-file build** (its silent
+  failure modes are easy to mistake for a hang — chiefly that **`rma` writes
+  no object file without `-o=`**, and that a label must carry a **trailing
+  colon** to be exported to RLINK). Full recipe and traps:
+  `using-nitros9-repl.md`.
   `rma_orig`/`rma.6809` are byte-identical copies; **`rma.6309` is not** — it
   is a different module, name `r63`, 23,591 bytes.
 

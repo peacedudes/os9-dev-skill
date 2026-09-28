@@ -44,13 +44,8 @@ Core facts:
 Type-specific fields begin at 0x30. Offsets are from the v2.4 Technical
 Reference Manual's header figure; per-field sizes are derived from the
 gaps between documented offsets. **`Source`:** every offset in
-this universal-header table matches os9exec's own `modhcom` struct
-(`Source/OS9exec_core/os9defs/module_from_book.h`), which carries
-**compile-time** offset assertions (`offsetof` checks that fail the build
-if any field moves) for all 14 fields plus a `sizeof == 0x030` check — so
-the layout is *continuously enforced*, not verified once. (os9exec breaks
-the `0x20` "reserved" span into `_mident` at `$20` + a 12-byte `_mspare` at
-`$22`.) M$Attr at 0x14 is additionally `Live` (os9exec): real 68k C-runtime startup
+this universal-header table, and the 0x30 total, matches os9exec's
+module-header definition field for field. M$Attr at 0x14 is additionally `Live` (os9exec): real 68k C-runtime startup
 code tests bit 5 of offset 0x14 against the module base.
 
 **Independently confirmed against a second Microware manual:** the
@@ -279,10 +274,8 @@ Compiler-specific values worth isolating:
 | Data init offset | 0x40 | 4 | → data-initialization table | `M$IData` |
 | Pointer init offset | 0x44 | 4 | → pointer-relocation tables | `M$IRefs` |
 
-All 32-bit fields. **`Source`:** all six offsets match os9exec's
-`mod_exec` struct (`Source/OS9exec_core/os9defs/module_from_book.h`) with
-compile-time `offsetof` assertions (`_mexec` $030 through `_midref` $044) plus
-a `sizeof == 0x048` check — the build fails if any move. Entry point = load
+All 32-bit fields. **`Source`:** all six offsets, and the 0x48 total,
+match os9exec's program-module header definition. Entry point = load
 address + M$Exec; the linker takes it from whichever psect was designated root.
 
 - **M$IData table:** entries of (4-byte data-area offset, 4-byte size,

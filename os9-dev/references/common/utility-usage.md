@@ -72,15 +72,14 @@ for" descriptions: `os9-tools-and-shell.md`.
   (`-p` suppresses the per-file listing in that mode), `-b=<size>` use a
   larger transfer buffer (e.g. `-b=20k`; bigger buffers speed up large
   copies — the manual's own examples lean on this), **`-n` don't duplicate
-  the FD from the source, create a fresh one instead**. `Live` (os9exec):
-  `-n` is what you want when copying *out of a host-native directory into
-  an RBF image as a non-super user*. The default duplicates the source's
-  whole file descriptor, including its owner; a host directory has no real
-  OS-9 owner so os9exec synthesises `0.0`, and reproducing that on the
-  destination is an owner change the caller is not entitled to make — the
-  copy prints `E$PERMIT` while still transferring the data, so it looks
-  half-broken and is easy to wave through as noise. `-n` skips FD
-  replication and the error disappears at its source. `Manual` (*Using
+  the FD from the source, create a fresh one instead**. The default
+  duplicates the source's whole file descriptor, including its owner, and
+  reproducing a different owner on the destination is an owner change a non-super
+  user is not entitled to make. `Live` (os9exec): the copy prints
+  `E$PERMIT` while still transferring the data, so it looks half-broken and
+  is easy to wave through as noise. `-n` skips FD replication and the error
+  disappears at its source. (Under os9exec this bites on copies out of a
+  host directory; see `using-os9exec-repl.md`.) `Manual` (*Using
   Professional OS-9* v2.4).
 - `count [<opts>] {<path>}` — `-l` lines, `-w` words, `-c` characters,
   `-b` per-character frequency breakdown.
@@ -88,7 +87,7 @@ for" descriptions: `os9-tools-and-shell.md`.
   file, `-e` zero the freed disk space (secure erase). `del` refuses a
   directory: *"You cannot delete directory files with this utility unless
   their attribute is changed to non-directory"*, `Manual` (*Using
-  Professional OS-9* v2.4). os9exec agrees on both device types, `Live`
+  Professional OS-9* v2.4). `Live`
   (os9exec): `del <dir>` gives `E_FNA`/214 whether the directory is empty or
   not.
 
@@ -131,7 +130,7 @@ for" descriptions: `os9-tools-and-shell.md`.
     move. They do not. Check the **year format** before trusting a column count
     against some other `dir`, though: this one prints a two-digit year
     (`26/08/03`), and a listing showing `126` for 2026 is a different utility
-    (the emulator's own directory header does that) with its own layout.
+    with its own layout.
 - `dsave [<opts>] [<path>]` — emits a copy script for a whole tree; run
   it (or `-e` execute immediately). `-d`/`-d=<date>` copy only newer
   files, `-f`/`-r` force/overwrite via copy's flags, `-i` indent by
@@ -156,7 +155,7 @@ for" descriptions: `os9-tools-and-shell.md`.
 - `tee {<path>}` — copy stdin to stdout plus every named path. **The
   OS-9 heredoc:** `tee >file`, type content, end with the EOF key (ESC
   by default; Ctrl-D after `tmode eof=04`) — quickest way to create a
-  short file anywhere, RBF image or host directory alike.
+  short file anywhere.
 - `cmp [<opts>] <path1> <path2>` — per-mismatch offset/values; `-s` stop
   at first difference, summary only.
 - `grep [<opts>] [<expr>] {<path>}` — `-c` count only, `-l` filenames

@@ -44,7 +44,7 @@ that yours did not have it.
 | `OS-9/68000` | Microware OS-9/68000 (add `+881` where the maths coprocessor matters) |
 | `OS-9000` | Microware OS-9000, itself multi-target — name the target too where it matters |
 | `NitrOS-9` | The open-source 6809/6309 reimplementation |
-| `os9exec` | This project's own 68000 emulator and kernel reimplementation |
+| `os9exec` | The community 68000 emulator and OS-9/68000 kernel reimplementation |
 
 The list is open — name any implementation precisely rather than forcing it
 into an existing bucket. A Microware system and a clone are recorded the same

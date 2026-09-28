@@ -50,7 +50,7 @@ may only record the signal and defer your handler to a `check_signal()` poll,
 in which case the read is still interrupted here exactly as described while the
 handler does not run. The layers disagree without either being wrong; see
 `c/os9-clib-reference.md` before treating a handler that never fires as a
-kernel or emulator fault.
+kernel fault.
 
 For `F$Sleep`/`F$Wait` the wait resumes via a queued call. **For blocked I/O it
 does not**: `Manual` (v2.4 TRM, ch. 4, "Relative Time Alarms") documents aborting
@@ -71,8 +71,8 @@ stated for **serial and pipe** I/O rather than for blocked calls in general.
 
 **The error a killed read returns is the signal number itself**, `Live`
 (os9exec): with signal 5 armed by `F$Alarm` and nothing typed, both
-`read(0,&c,1)` and `readln(0,buf,80)` returned −1 with `errno` = **5**. That
-confirms what the error-code appendix hints at by listing `000:002` KEYBOARD
+`read(0,&c,1)` and `readln(0,buf,80)` returned −1 with `errno` = **5**. The
+error-code appendix points the same way by listing `000:002` KEYBOARD
 QUIT, `000:003` KEYBOARD INTERRUPT and `000:004` MODEM HANGUP as error *numbers*
 — they are signal codes surfacing as errors. Measured on a reimplementation, so
 it is evidence about that runtime and consistent with Microware's own wording,
@@ -199,7 +199,7 @@ that thinks of an event as a signed delta rather than an absolute counter.
 
 ## Pipes
 
-A pipe is a FIFO memory buffer where one writer's output becomes one reader's input. The Pipe File Manager (PIPEMAN) coordinates access via a null driver, buffer size overridable via the `S_ISIZE` option to `_os_create()`. **Default buffer size — an os9exec-vs-manual divergence:** the OS-9 manuals document a **90-byte** default (`Manual`, real PIPEMAN), but **os9exec's default is 4096 bytes** — `Source`: `DEFAULTPIPESZ 4096+SAFETY` in `os9exec_nt.h`, where 90 is os9exec's `MINPIPESZ` (its *minimum*, not its default). `Live` (os9exec): a C program writing 256-byte chunks to a pipe with no reader got exactly **16 chunks = 4096 bytes** accepted before the write failed. Since a C `write()` wraps `I$Write` roughly 1:1, that is the real buffer size and not a language-level batching artifact. On os9exec, don't assume the manual's 90 bytes; it uses 4096. (Real OS-9's own default may well be 90 — this is a clone divergence, neither an oracle.)
+A pipe is a FIFO memory buffer where one writer's output becomes one reader's input. The Pipe File Manager (PIPEMAN) coordinates access via a null driver, buffer size overridable via the `S_ISIZE` option to `_os_create()`. **Default buffer size:** the OS-9 manuals document a **90-byte** default (`Manual`, PIPEMAN). os9exec's default differs; see `common/using-os9exec-repl.md`.
 
 **Unnamed pipes** are created fresh by `I$Open` and shareable only across processes related by `F$Fork` inheritance — how the shell builds pipelines with `!`. Two unrelated processes each opening `/pipe` get two separate, unconnected pipes.
 
@@ -219,16 +219,16 @@ establish one-directional flow between them.
 **Blocking and deadlock:**
 - Writing to a **full named pipe** blocks until space frees (unless the
   writer is interrupted by a signal). `Live` (os9exec): a C writer to a
-  named pipe with no reader blocks once the ~4KB buffer fills; the block is
+  named pipe with no reader blocks once the buffer fills; the block is
   interruptible by Ctrl-C/Ctrl-E (see `common/using-os9exec-repl.md`).
 - For an **unnamed pipe**, a writer that fills the buffer with no reader
   attached gets **`E_WRITE`** rather than blocking. **`Source`+`Live`**
-  (os9exec): `pipefiles.c` returns `E_WRITE` when the pipe is unnamed and its
-  path count is below 2 (nobody else attached); confirmed live — a C writer to
-  an unnamed pipe got `E_WRITE` after 4096 bytes. The stronger *cyclic*
+  (os9exec): the write fails with `E_WRITE` when the pipe is unnamed and its
+  path count is below 2 (nobody else attached); a C writer to an unnamed pipe
+  got `E_WRITE` once the buffer filled. The stronger *cyclic*
   deadlock (several mutually-write-blocked processes sharing one unnamed pipe,
   all detected and one given `E_WRITE`) needs a multi-process setup and is
-  still `Manual` — a dedicated follow-up.
+  `Manual`.
 - **Creating a named pipe that already exists:** the `FAM_NOCREATE` open flag
   makes this fail outright; without it, behavior is file-manager-dependent
   and may truncate the existing pipe — pass `FAM_NOCREATE` if you specifically
@@ -274,8 +274,7 @@ bytes meanwhile just blocks — same wait/wake plumbing as the rest of this
 file, nothing new to learn there.
 
 **Why it's worth knowing, not just trusting:** it's not only a safety net,
-it's a design opportunity most programmers never exploited because it was
-never explained well.
+it's a design opportunity that is easy to overlook.
 - **Lost-update races vanish for free.** Two processes each doing
   "read a record, modify it, write it back" on the same file cannot
   corrupt each other's update — the read's auto-lock plus the write's

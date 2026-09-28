@@ -1,21 +1,24 @@
 # Driving os9exec as an Agent
 
-Operational mechanics for running an OS-9/68k system through the os9exec
-emulator: launching, running programs, editing files, accounts, recovery. The
-6809 equivalent (NitrOS-9 under XRoar) is `6809/using-nitros9-repl.md`.
+When real OS-9/68k equipment is not at hand, the os9exec emulator is one way
+to get an OS-9 environment to work in. This page covers the mechanics of that
+stand-in: launching, running programs, editing files, accounts, recovery. On
+real hardware the OS-9 reference pages apply directly, and where the emulator
+and a Microware manual disagree, the manual is the specification. The 6809
+equivalent (NitrOS-9 under XRoar) is `6809/using-nitros9-repl.md`.
 
-os9exec **is** the CPU plus an OS-9 kernel implementation, not a hardware
-emulator running real firmware — no ROM, no video/keyboard console to bridge
-around. Its stdin/stdout are the OS-9 console, so a plain PTY/pipe harness
+os9exec reimplements the OS-9 kernel interface over an emulated CPU; it is
+not a hardware emulator running real firmware — no ROM, no video/keyboard
+console to bridge around. Its stdin/stdout are the OS-9 console, so a plain PTY/pipe harness
 works directly. It runs on macOS, Linux and Windows — in practice anything
 with a C compiler; the Windows build is a PE cross-compiled with mingw-w64.
 A few *host*-filesystem behaviors differ on Windows
 (NTFS permission mapping, device-alias path resolution) — emulator-platform
 quirks, not OS-9 facts; don't encode them as OS-9 behavior.
 
-Genuine OS-9/68k binaries (Microware's shell, compilers, utilities) are
-proprietary and none ship with the emulator: supply a legally-held disk image
-or SDK. A host directory of your own files works identically for basic testing.
+Microware's own OS-9/68k software (shell, compilers, utilities) is
+proprietary and does not ship with the emulator: supply a legally-held disk
+image or SDK. A host directory of your own files works identically for basic testing.
 
 ## Launching and disks
 
@@ -52,7 +55,9 @@ or SDK. A host directory of your own files works identically for basic testing.
   basic testing. File permission attributes are enforced, and record locking
   works, only on the RBF path — on a host directory locking is deliberately
   absent, so a program that relies on it appears to work and silently
-  doesn't. `mount -k=<size> h0`…`hz` makes a blank image to start from.
+  doesn't: an explicit `SS_Lock` on a host file fails `E$UnkSvc`, on a host
+  directory it reports success, and automatic record and EOF locking simply
+  does not happen. `Source` (os9exec). `mount -k=<size> h0`…`hz` makes a blank image to start from.
   - **The trade is immediacy.** A host directory shows the guest whatever is on
     the host *now*, so an edit is live on the next open. An image is a snapshot:
     **a file you add to the source tree an image is built from does not exist
@@ -95,8 +100,8 @@ or SDK. A host directory of your own files works identically for basic testing.
     beside it is unused.
 - **A device has to answer a *raw* open for `stat()` to work at all.**
   Microware's C library opens the device's identification sector (`/h1@`) and
-  reads 256 bytes before it will describe any file on it — and bash finds
-  commands, and answers `[ -f ]`/`[ -x ]`, through `stat()`. So a device that
+  reads 256 bytes before it will describe any file on it — and a ported
+  `bash` finds commands, and answers `[ -f ]`/`[ -x ]`, through `stat()`. So a device that
   refuses that raw open has no working command lookup even with `PATH`
   correct and the files plainly present. `Source` (os9exec, traced).
 - **Verify which host directory a device maps to before creating host-side
@@ -347,8 +352,7 @@ least a spot-check on a terminal. `Live` (os9exec), all three.
 ## An internal command can BE the boot program — no shell needed
 
 `Live` (os9exec). os9exec's own built-ins run as the boot program, so a disk
-image can be built and populated with no shell, no SDK and no Microware
-software at all:
+image can be built and populated before any shell or SDK is available:
 
 ```
 os9exec mount -k=360k h7      # a real RBF image at <startPath>/h7
@@ -424,8 +428,7 @@ binary, for the reasons under "Launching and disks" above. The traps, all
   file named as an *argument* is read by OS-9 and wants CR; bytes arriving on
   *stdin* cross the host boundary and want LF. Which rule applies is decided by
   how the commands reach the shell, not by what the file is called — so a
-  generator that emits one ending for both uses is wrong half the time, which
-  is how this bites twice in a day.
+  generator that emits one ending for both uses is wrong half the time.
 - Piping the same commands into an interactive `shell` works too (`Live`
   (os9exec)): a redirected or piped host stdin delivers end-of-file, so the
   shell runs the piped commands and then exits. The procedure file is still
@@ -638,6 +641,11 @@ B:bye          → back to the OS-9 shell
   `LOAD` with `Error #043`. See `basic09/gotchas.md`.
 - Packed modules, RunB, PACK output location, `PARAM` argument binding,
   and trap-handler error triage: `basic09/pack-and-runb.md`.
+- **An intermittent `**** Can't install trap handler ****` / `Error #000:216`
+  while `mdir` shows the handler resident** is an emulator-level race,
+  timing-sensitive and historically correlated with baud-rate pacing. Restart
+  the os9exec session; if it recurs, it is os9exec, not your program. The
+  OS-9 causes of that banner are triaged in `basic09/pack-and-runb.md`.
 - A named pipe (`/pipe/<name>`) makes good read-once scratch storage — no
   cleanup needed.
 
@@ -732,7 +740,7 @@ under "Launching and disks" above, and it produces this identical message. Once
 the program is provably reading your file, read on.
 
 **The cause is the entry's first field.** The reader skips a line unless its
-**third byte is `|`** — the archaic two-character alias form, `d0|vt100:...` —
+**third byte is `|`** — the older two-character alias form, `d0|vt100:...` —
 and it skips lines beginning `#` as comments. A modern entry whose first field
 is longer than two characters is skipped outright:
 
@@ -901,6 +909,10 @@ host-side therefore leaves it unreadable to OS-9 line I/O unless you convert it
 (see the CR-rule section above); the device being a plain host directory does not
 buy you host line endings.
 
+**`chx` with no argument prints nothing on a host directory**, where on an
+RBF image it prints `Error #000:214 (E_FNA)`; either way the execution
+directory is unchanged. `Live` (os9exec).
+
 **Host-side modes the emulator chooses**, `Live` (os9exec): `makdir` creates a
 directory at `0700`, and a shell `>` redirect creates a file at `0600`. A
 super-user `I$Create` on a host directory always keeps owner **read**
@@ -951,10 +963,33 @@ child, or where losing the session is acceptable.
 
 ## What os9exec does not implement, and how it says so
 
-A missing call is not a crash. The unimplemented kernel-internal requests —
-named under "Not implemented on os9exec" in `68k/syscall-reference.md` —
-return a clean `E$UNKSVC` (208) and change nothing. A program that tests the
-carry survives; one that does not may read 208 as its own failure.
+A missing call is not a crash. `F$SSpd`, `F$Trans` and `F$UAcct` return a
+clean `E$UNKSVC` (208) and change nothing; `F$SchBit`, `F$AllBit` and
+`F$DelBit` are implemented. `Live` (os9exec). Of the three, only `F$SSpd` is
+one the v2.4 manual itself marks "currently not implemented" (`Manual`). A
+program that tests the carry survives; one that does not may read 208 as its
+own failure.
+
+`F$STime` is accepted and does not touch the host clock. `Live` (os9exec).
+
+**No installed file manager or device driver ever runs.** os9exec serves
+every path from its own host-side layer, dispatched by path prefix; its
+`I$Attach` never allocates driver static storage or calls `Init`, and `iniz`
+is not implemented. A correctly assembled, CRC-valid `FlMgr` or `Drivr`
+therefore loads and is never invoked at any entry point. Module *format* can
+still be built and checked here; entry-point conventions need OS-9 itself.
+`Source` (os9exec).
+
+**The kernel process has no real module.** It runs code built into the
+emulator and reports `P$PModul` = 0, so a monitor that follows that pointer
+to a module header (`devprc -a`, `top`, `sysmon`, `aprocs`) reads the zeroed
+low page, finds no header, and fails cleanly. `Live` (os9exec).
+
+A hand-built trap module with no init data still needs an init table:
+`_midata`/`_midref` at 0 are not read as "no table" — os9exec parses a table
+at that offset unconditionally, so the module needs a real empty one there
+(dOff=0, cnt=0, then two 0-terminators) or the load fails `E$BMID`. `Source`
+(os9exec).
 
 Unmodelled **system globals** answer differently. A `F$GetSys`/`F$SetSys`
 read of an offset os9exec does not keep returns 0, silently; the note
@@ -971,7 +1006,7 @@ carry, so it reads a buffer nothing filled — `top`'s own bug, which what that
 buffer happens to hold turns into an empty list or worse.
 
 **There are no device descriptor modules, by design** — os9exec does not
-fake them. It mounts `/dd`, `/hN` and `/term` without them: `imdir` lists only `OS9exec`, `init`, a built-in
+provide them. It mounts `/dd`, `/hN` and `/term` without them: `imdir` lists only `OS9exec`, `init`, a built-in
 `socket` descriptor and what you have loaded. So anything that *links* a
 descriptor by name to read or change its options fails with
 `Error #000:221 (E_MNF)`, although the device itself works — Microware's own
@@ -996,27 +1031,53 @@ directory; the file is appended to, and its lines end in CR. `Source`
 
 ## Where os9exec departs from the manuals
 
-Measured on os9exec V4.10, each against the Microware manual it contradicts.
-These are facts about the emulator, not about OS-9: the reference pages state
-the manual's behaviour and point here. Code that passes on os9exec but relies
+Known places where os9exec, as a stand-in, behaves differently from the
+Microware manual, each measured on os9exec V4.10 against the manual it
+differs from. These are facts about the emulator, not about OS-9: the manual
+remains the specification, and the reference pages state its behaviour and
+point here. Code that passes on os9exec but relies
 on one of these will behave differently on real equipment, and vice versa.
-All `Live` (os9exec).
+All `Live` (os9exec) unless tagged otherwise.
 
 - **`F$CpyMem` range-checks its source.** The manual: "you can view any
   memory in the system". Here sources `0`, `$100`, `$10000`, `$01000000` and
   the boot-resident shell's header all gave `E$BPAddr` (210); a module the
   caller loaded could be read. os9exec models an SPU-protected system.
 - **GetStat SS_Size on a pipe answers `E$UnkSvc`.** The manual reads both
-  ways here (`68k/syscall-reference.md`); os9exec takes the reading that
-  lets `less` page piped input to its end (os9exec's v4.1.0 release notes;
+  ways here (`68k/syscall-reference.md`); os9exec follows one reading, the
+  one under which `less` pages piped input to its end (os9exec's v4.1.0 release notes;
   not measured here).
+- **The default pipe buffer is 4096 bytes**, where the manual gives 90
+  (`common/ipc.md`); 90 is os9exec's minimum. A C program writing 256-byte
+  chunks to a pipe with no reader had exactly 16 accepted before the write
+  failed. So a named-pipe writer with no reader blocks, and an unnamed-pipe
+  writer gets `E_WRITE`, only after about 4 KB — code that leans on the larger
+  buffer will stall or fail sooner on real equipment.
+- **Console paths do not enforce `E$BMode` (203).** stdin, stdout and stderr
+  share one descriptor, so writing to a console path opened read-only, or the
+  reverse, passes silently. Disk files enforce it both ways, so a working
+  console test says nothing about files.
+- **`F$STrap` installs only vectors 2–8.** The manual makes the FPCP
+  exceptions 48–54 catchable on a 68020/68030 (`68k/os9-68k-assembly.md`), and
+  os9exec emulates a 68020, but a handler registered for them is accepted and
+  never fires.
+- **`F$PrsNam` also accepts `{` and `}`** as element characters, beyond the
+  manual's `A-Z a-z 0-9 . _ $` — a deliberate convenience for MPW shell
+  variables. `Source, Flag`. It is more permissive, so it cannot produce a
+  spurious `E$BNam`.
+- **`F$PErr` with `d0.w=0` prints a named message**, `Error #nnn:nnn (E_NAME)
+  description`, where a stock system prints a bare `ERROR #mmm.nnn` — and in
+  the `E_` spelling, against the `E$` the DEFS declare. A code missing from its
+  table prints `(E_???) <<unknown error code>>`, a useful tell that the number
+  is **not** an OS-9 kernel error; that is how 68k BASIC09's own error 43 was
+  identified.
 
-## A too-clean emulator makes someone else's bug look like the emulator's
+## Zeroed emulator memory can make someone else's bug look like the emulator's
 
 This is the failure mode to hold in mind whenever os9exec looks at fault, and it
 is the mirror of the rule that a `Live` claim is evidence about a
-reimplementation: the emulator can be *too well behaved* to let a third-party bug
-present honestly.
+reimplementation: the emulator's memory is more uniform than a real machine's,
+so a third-party bug may not present the way it would on real hardware.
 
 **os9exec `calloc`s the guest arena** (`Source`: `memstuff.c` allocates
 `emul_base` with `calloc`, and `fcalls.c` carries a comment to the same effect),
@@ -1174,8 +1235,9 @@ them and shows symbol-resolved disassembly. At `dbg:`:
   possibly a full loop iteration, possibly never (dead code after `bra`).
   Ctrl-C recovers to a fresh `dbg:` prompt. Use `gs` for straight-line
   code only; prefer `b <name>` + `g` to navigate.
-- Both defects (`sc` addresses, `gs` stepping) are bugs in the shipped
-  1980s binary, not os9exec.
+- Both behaviours (`sc` addresses, `gs` stepping) are attributed to the
+  `debug` binary itself rather than to os9exec; neither has been checked on
+  real hardware.
 
 ---
 Everything above is `Live` (os9exec) unless tagged otherwise inline —

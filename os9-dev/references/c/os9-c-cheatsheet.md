@@ -8,9 +8,9 @@ available to this project — the 1983-manual column below is `Manual`.
 **Before any of this works you need a running OS-9 system and Microware's
 compiler.** Neither ships with this material: `cc`, `cpp`, `c68`, `o68`, `r68`
 and `l68` are proprietary Microware programs that come from a licensed SDK or
-disk image. Getting from an emulator plus such an image to the shell prompt these
-commands are typed at is covered in `common/using-os9exec-repl.md` — read that
-first if you do not already have a prompt. The commands below assume one.
+disk image. The commands below are typed at the OS-9 shell prompt. Without
+hardware, getting from an emulator plus such an image to that prompt is covered
+in `common/using-os9exec-repl.md`.
 
 
 ```
@@ -75,7 +75,7 @@ in this file:
   not `strchr`/`strrchr`); see `os9-clib-reference.md`.
 - **Link installed programs `-qm` (trap-free), never `-qixm`.** This is the
   costliest trap in the C toolchain, it does not announce itself, and on at least
-  one SDK a `-qixm` build is broken **by construction rather than by choice**.
+  one SDK a `-qixm` build fails **by construction rather than by choice**.
 
   The mechanism, `Source` (both sides disassembled): a cio-linked program reaches
   the C library through `TRAP #13` with a selector word. Two library vintages
@@ -152,7 +152,7 @@ in this file:
 - **Linking against anything beyond the default `CLIB`** (e.g. termcap
   functions `tgetent`/`tgetstr`/`tputs`, which need `termlib.l`) needs an
   explicit extra-library flag — `Live` (os9exec): `cc`'s own documented
-  `-L=<name>` is broken/not forwarded correctly (`l68: error - unknown
+  `-L=<name>` is not forwarded to the linker as expected (`l68: error - unknown
   option -L`). Use lowercase `-l=<full-path-to-file.l>` instead (matches
   `l68`'s own flag, which `cc -?` doesn't fully list — run `l68 -?`
   separately if a flag doesn't seem to exist): `cc -l=/h0/LIB/termlib.l
@@ -164,8 +164,8 @@ in this file:
   this linker`. This means the `l68` you're using and the `cstart.r` it's
   linking against came from different SDK releases — get a matching pair
   (same release's `l68` + `cstart.r`/`clib.l`), don't mix an older
-  compiler pipeline with a newer runtime lib or vice versa. On this
-  project the actual sub-tool names present are `cpp`/`c68`/`c68020`/
+  compiler pipeline with a newer runtime lib or vice versa. On the 68k
+  SDK the sub-tool names are `cpp`/`c68`/`c68020`/
   `o68`/`r68`/`r68020`/`l68`. **Resolved, not an unreconciled SDK variant**:
   the toolchain-components table below listing different names
   (`c.prep`/`c.pass1`/`c.link` etc.) is the separate 6809 toolchain's own
@@ -188,7 +188,7 @@ in this file:
 Each of these is legal C that this preprocessor rejects or quietly mishandles,
 and each was measured `Live` (os9exec) with `cc -qm=16k` against the SDK. They
 surface immediately on Unix code and nowhere on your development host, so when a
-port fails in the preprocessor, check all three before suspecting the code.
+port fails in the preprocessor, check all four before suspecting the code.
 
 ### `#include<file.h>` needs the space
 
@@ -511,7 +511,7 @@ before scripting one.
 | `-O` | Run the optimizer. On 6809 this typically shrinks code ~11%; 68k behavior not documented. |
 | `-P` | Enable profiler (function call-frequency stats) |
 | `-M<n>` / `-M<n>K` | Compile-time memory allocation, in pages or KB (linker ignores requests under 256 bytes) |
-| `-l=<full-path>` | Link extra library. The documented `-L=<file>` flag is broken in `cc` (not forwarded to linker); use lowercase `-l=<full-path-to-file.l>` instead (bare names fail — needs absolute path). |
+| `-l=<full-path>` | Link extra library. The documented `-L=<file>` flag is not forwarded by `cc` to the linker; use lowercase `-l=<full-path-to-file.l>` instead (bare names fail — needs absolute path). |
 | `-C` | Emit source as comments alongside assembler output |
 | `-S` | Suppress stack-checking code — only with time-critical code whose stack usage is fully understood |
 | `-D<id>` | Equivalent to `#define <id>`, for `#ifdef`-controlled compilation |
@@ -596,6 +596,7 @@ summary, if precision matters.)*
 **Sources:** Official Microware C Compiler manual (1983, 6809,
 Radio-Shack/CoCo-branded) and "The OS-9 Primer" (documents the later
 "Ultra C" 68k compiler and its register conventions). 68k data-type
-sizes: `Live` (os9exec), confirmed on a real toolchain, not just documentation. The
+sizes: `Live` (os9exec), measured on the 68k toolchain; the 1983 manual describes
+the 6809 compiler. The
 68K way to call C from BASIC09 (`basic09/basic09-per-target.md`)
 is `Live` (os9exec), not `Manual`.

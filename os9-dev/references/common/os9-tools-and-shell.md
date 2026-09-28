@@ -80,7 +80,7 @@ wildcard that matches no file.
 
 | Built-in | Effect |
 |---|---|
-| `chd <dir>` / `chx <dir>` | Set current data / execution directory (see `unix-differences.md` for the two-directory model). `chd` with no argument returns to `$HOME` (the `HOME` environment variable, not the password-file data dir — see below); `chx` with no argument leaves the execution directory unchanged, and prints `Error #000:214 (E_FNA)` when that directory is on an RBF image |
+| `chd <dir>` / `chx <dir>` | Set current data / execution directory (see `unix-differences.md` for the two-directory model). `chd` with no argument returns to `$HOME` (the `HOME` environment variable, not the password-file data dir — see below); `chx` with no argument leaves the execution directory unchanged, and prints `Error #000:214 (E_FNA)` when that directory is on an RBF device |
 | `ex <name>` | Replace this shell with the named program (no new process) |
 | `w` / `wait` | Wait for any child / all children to terminate |
 | `kill <pid>` | Send the kill signal to a process |
@@ -161,8 +161,8 @@ mistake — where Unix would refuse the file outright.
 quietly** — `Live` (os9exec). OS-9 does not treat LF as a terminator, so the
 whole file is *one line*: its first command runs with the rest of the file as
 arguments (`makdir A` LF `makdir B` made both directories), and nothing else
-in it runs as a command. Host-generated procedure files
-must be converted (`tr '\n' '\r'`, or `flip -m` on the guest) before use.
+in it runs as a command. Procedure files written on a Unix host
+must be converted (`tr '\n' '\r'`, or `flip -m`) before use.
 
 ## Naming convention: capitalized directories
 
@@ -294,5 +294,4 @@ OS-9 v2.4 Technical Reference Manual; Technical I/O Manual v2.4. The
 `#<size>k` modifier behavior is additionally `Live` (os9exec).
 Bare `chd` (to `$HOME`, the environment variable rather than the
 password-file data directory) and bare `chx` (no change; `E_FNA` printed when
-the execution directory is on an RBF image, nothing on a host directory) are
-both `Live` (os9exec).
+the execution directory is on an RBF device) are both `Live` (os9exec).

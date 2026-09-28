@@ -3,12 +3,11 @@
 Baseline `Manual`, cross-referenced across multiple manuals; path-descriptor
 byte offsets are additionally `Source` against os9exec's C.
 
-**The entry-point conventions below are untestable on os9exec**, not merely
-untested — it dispatches every path through a fixed C table keyed by
-hardcoded string matching, with no code anywhere that loads an installed
-file-manager or driver module. A correctly-assembled, byte-verified custom
-file manager installs and is never invoked. Treat this file's entry-point
-conventions as `Manual` indefinitely; same for `device-drivers.md`.
+**The entry-point conventions below are `Manual`**, and stay so short of
+real hardware: os9exec, the 68k runtime available here, never runs an
+installed file manager's code (`os9-dev`'s `common/using-os9exec-repl.md`,
+"What os9exec does not implement"), so they could not be exercised.
+The same holds for `device-drivers.md`.
 
 A file manager sits between application I$ calls and a device driver — the
 layer that understands filesystem or protocol structure (directories,
@@ -17,9 +16,9 @@ transfer. RBF, SCF and SBF are the three standard ones; PIPEMAN is a fourth,
 for pipes. A custom file manager (module type `FlMgr`, code `$0D`) follows
 the same entry-point shape and must be owned by the super-user with the
 system-state attribute bit set, like a driver. `Manual, Flag`: os9exec's
-`load` accepted a custom file manager owned by `0.259` rather than UID 0, so
-either that ownership requirement isn't enforced at load time there, or the
-claim needs a narrower scope.
+`load` accepted a custom file manager owned by `0.259` rather than UID 0 —
+either os9exec does not enforce the requirement at load time, or OS-9 checks
+it somewhere other than `load`.
 
 ## Entry Point Table (13 subroutines)
 
@@ -115,7 +114,7 @@ the whole region via `I$GetStt(SS_Opt)` and modify selected fields via
 `I$SetStt`, subject to write-protection rules the file manager enforces.
 
 SCF field offsets, `Manual` (Technical I/O Manual §3), matching os9exec's
-`struct _sgs`. **Offsets here are relative to the option region**, while the
+SCF option structure. **Offsets here are relative to the option region**, while the
 manual lists the same fields as absolute path-descriptor offsets — each
 manual value is `$80` plus the value here: `PD_DTP` byte 0, `PD_EOR` `$0B`,
 `PD_INT` `$10` (keyboard interrupt char), `PD_QUT` `$11` (keyboard abort),
@@ -355,33 +354,21 @@ How the two reimplementations do it, if you are modelling one:
   the writer's state until it is flushed.
 - **NitrOS-9** — stock 6809 RBF takes it for a write-only producer and a
   write-only creator alike, and wakes waiters on every write. `Live`
-  (NitrOS-9). An update-mode gate was patched in and withdrawn, never sent
-  upstream, so a claim that NitrOS-9 gates this on update mode describes the
-  patch; the mode gate the stock module *does* have is on the read auto-lock,
-  which is correct. Its real remaining RBF defect is a lost update after a
+  (NitrOS-9). The mode gate the stock module *does* have is on the read
+  auto-lock, which is correct. Its real remaining RBF defect is a lost update after a
   parked writer wakes — a matter of retrying the conflict walk, not of mode.
 
 Either way a read-only path takes nothing and only ever waits: the manuals'
 "reads or writes" names the position, not a licence for a follower to lock the
 end, which would have the spooler block the assembler.
 
-**os9exec scope, if you are testing against it:** record locking is
-implemented in **RBF only** (`file_rbf.c`). Its host-directory file manager
-(`fileaccess.c` — what `/dd`, `h0` and `OS9Hx` normally are) has none of it.
-An explicit `SS_Lock` on a host *file* does fail honestly with `E$UnkSvc`
-(the default SetStat table applies); only a host *directory* ignores it and
-reports success. What is missing is the **automatic** locking, and that
-absence is silent — nobody asked, so nobody is told. The two are separate
-file managers with no shared code. This is a deliberate decision,
-not a gap to be filled: a host directory has no counterpart on
-real OS-9, so there is nothing to be faithful to, and a lock could only ever
-be half-true since host tools can change the file behind the emulator. **Test
-locking on a `mount -k` RBF image; on a host directory you will measure
-nothing and concurrent read-modify-write can silently lose updates.**
+Under os9exec, locking exists only on RBF images, not on host directories —
+see `os9-dev`'s `common/using-os9exec-repl.md`.
 
 ### Implementing it — four things that bite
 
-Learned implementing the mechanism on 68k; a 6809 port would hit all four.
+For anyone implementing the mechanism, in a file manager or an emulation of
+one; all four apply on 6809 as on 68k.
 
 1. **Two paths on one file must actually see the same file.** Before locking
    can matter at all, check this: if each path keeps its own copy of the FD
@@ -407,7 +394,7 @@ Learned implementing the mechanism on 68k; a 6809 port would hit all four.
 
 Also: **`SS_Ticks` is only as good as the scheduling under it.** A timeout
 can fire only if the blocked process is re-run while it waits, so on a
-non-preemptive host a blocked reader may never notice its deadline.
+runtime that never preempts, a blocked reader may never notice its deadline.
 
 ### Testing it
 

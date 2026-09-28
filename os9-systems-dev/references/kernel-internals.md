@@ -16,19 +16,20 @@ rest on a third-party foundation — the strongest tier available here, and not
 Microware-authoritative. Real hardware or a Microware internal header would
 lift it.
 
-**System Global Memory** is `Manual` only: os9exec has no in-memory struct
-corresponding to real System Globals. Its `F$SetSys` answers each `D_*`
-offset it models from its own state, which covers most that programs read,
-but an answer is not a mechanism:
+**System Global Memory** is `Manual` only, because there is no source here
+to check it against: os9exec keeps no in-memory System Globals. Its
+`F$SetSys` answers each `D_*` offset it models from its own state, which
+covers most that programs read, but an answer is not a mechanism:
 `D_MinPty` and `D_MaxAge` are merely stored and echoed back, and nothing
-schedules by them. The scheduler algorithm below is real OS-9 behavior that
-os9exec does not replicate; it schedules its own way. `Source` (os9exec). Two System Global values are `Source`, confirmed exact
-matches to real OS-9's documented values: the 16-byte minimum allocation unit
-and the 100Hz default tick rate. The **Module Directory** struct shape
-(address / group / size / link-count) is `Source` — structurally confirmed —
-but os9exec's module-group tracking is a known simplification rather than a
-layout bug: its group field mirrors the module's own address rather than
-tracking true same-file groups.
+schedules by them. The scheduler algorithm below is OS-9's; os9exec schedules
+its own way (see the last section of this file). `Source` (os9exec). Two
+System Global values are also `Source`: os9exec's 16-byte minimum allocation
+unit and 100Hz default tick rate agree with OS-9's documented values. The
+**Module Directory** entry shape (address / group / size / link-count) is
+`Source`, matching os9exec's structure; os9exec simplifies module groups (its
+group field holds the module's own address rather than the first module
+loaded from the same file), so its group behaviour is no evidence about
+OS-9's.
 
 Structures and algorithms below the level any ordinary I$/F$ call exposes —
 relevant if you're inspecting/modifying kernel state directly, writing a
@@ -48,10 +49,10 @@ and the active/waiting/sleeping process queues. `F$SetSys` reads or writes
 individual system globals by offset (superuser only for writes; the MSB of
 `d1.w` selects read-vs-write).
 
-A few offsets a process actually reads at run time, and what os9exec answers
-(`Live` (os9exec)): `D_SPUMem` ($3D8), the System Security Module's static
-storage, is read by every Microware-C start-up to detect an SSM -- os9exec has
-none and returns 0, which is what a machine without one shows. `D_Julian` ($30) is today's Julian day.
+A few offsets a process actually reads at run time: `D_SPUMem` ($3D8), the
+System Security Module's static storage, is read by every Microware-C start-up
+to detect an SSM, and a machine without one shows 0 -- which is what os9exec
+returns (`Live` (os9exec)). `D_Julian` ($30) is today's Julian day.
 
 **`D_Second` ($34) counts the seconds LEFT UNTIL midnight — the opposite of
 `F$Time`'s Julian form, which gives seconds since.** The Guru states it twice,
@@ -64,11 +65,10 @@ not this global, so they do not bear on it. Convert with `86400 - D_Second`
 before comparing it to anything stated as seconds since midnight — a process
 descriptor's `P$TimBeg`, or `F$Time`'s `d0`.
 
-os9exec answers both from the same clock as `F$Time`/`F$Julian`. Getting the
-direction backwards is expensive and easy to recognise: answered as seconds
-*since* midnight, `aprocs` reported every process as roughly 2³² seconds old
-(`1193028:33:46`, a small negative difference wrapped) while Microware's
-`procs -e` said `Age 0:00`. `Live` (os9exec). **If `aprocs` ages every process
+Getting the direction backwards is expensive and easy to recognise: with
+`D_Second` answered as seconds *since* midnight, `aprocs` reported every process as roughly 2³²
+seconds old (`1193028:33:46`, a small negative difference wrapped) while
+Microware's `procs -e` said `Age 0:00`. `Live` (os9exec). **If `aprocs` ages every process
 by about 2³² seconds, suspect whatever sets `D_Second` — a clock driver, say —
 before anything else.**
 
@@ -94,14 +94,11 @@ specific process's descriptor by PID; `F$GPrDBT` retrieves the whole
 process descriptor block table (what the `procs`/`iprocs` utilities use to
 list running processes).
 
-`P$PModul` (the pointer to a process's primary module) must be a valid guest
+`P$PModul` (the pointer to a process's primary module) must be a valid
 address, because a monitor reads the descriptor and follows it to the module
 header to print the module name -- `devprc -a`, `top`, `sysmon` and `aprocs`
-all do. On os9exec the synthetic kernel process runs a module built into the
-emulator (outside the 68k arena), which has no real header; that process now
-reports `P$PModul`=0 (a header probe there reads the zeroed low page and fails
-cleanly) rather than a wild pointer that bus-errored the monitor (`Live`
-(os9exec)).
+all do. (os9exec's kernel process reports 0 here; see `os9-dev`'s
+`common/using-os9exec-repl.md`, "What os9exec does not implement".)
 
 **When a process was forked: `P$DatBeg` ($2BC) and `P$TimBeg` ($2C0).** The
 first holds the Julian day number, the second the seconds **since** midnight —
@@ -215,35 +212,6 @@ half by another process on real hardware. System-state code (kernel calls and
 I/O operations mid-call) is never preempted mid-operation: it must complete or
 voluntarily sleep/yield, to protect kernel data-structure consistency.
 
-### How `os9exec` emulates this (differs from real OS-9) — `Source`, for extending the emulator
-
-The algorithm above is real OS-9. `os9exec` does **not** implement the
-`D_ActAge`/`P$Sched` priority-age machinery; it runs a simpler round-robin in
-`do_arbitrate()` (`procstuff.c`). Facts a future emulator change needs:
-
-- **The OS-9 clock is real host wall-clock time** — `GetSystemTick()`
-  (`funcdispatch.c`) reads `gettimeofday()` on UNIX (`GetTickCount()` on
-  Windows), not a counter incremented by the emulation loop. So blocking the
-  host (`nanosleep`, `select`, a syscall) does **not** stall OS-9 time: on
-  return, ticks/alarms/sleeps reflect the real elapsed interval. This is what
-  makes an idle host-side block safe.
-- **Blocked/waiting processes are poll-retried, not event-woken.** A process
-  in `pWaitRead`/`pWaitWrite` (a blocked console/pipe read, a parked
-  `Ev$Wait`) is re-dispatched by `do_arbitrate` only every Nth round (throttled
-  by `pW_age`, ~`procstuff.c:1229`); it re-runs the syscall and re-checks. The
-  exception is RBF record/EOF locks, which do an **explicit** wake of a known
-  in-emulator waiter — the model the owner wants console reads moved toward
-  (host-tty readiness is now `select()`-driven in `DoWait`, see below).
-- **`DoWait()` (`procstuff.c`) is the ONLY code that runs while every process
-  is blocked/sleeping** (the fully-idle path `do_arbitrate` drops into when
-  nothing is runnable). It is therefore the sole place stdin
-  (`CheckInputBuffers()`) and due alarms (`CheckAlarms()`) get serviced while
-  idle — a recurring root-cause locus: `tsmon` never seeing its first keypress,
-  and an `F$Alarm` never firing during an `F$Sleep`, were both this same gap
-  (something only checked on the TRAP0-dispatch path, never reached while
-  idle). Any new "wake a blocked process from a host event" mechanism must be
-  serviced here too, not only in the syscall dispatcher.
-
 ## Module Directory Internals
 
 The module directory is a kernel-maintained table, one entry per loaded
@@ -271,15 +239,15 @@ every member's combined link count is zero.
   whole-word compare** (`Live` (os9exec)). The requested type/language
   is a word: high byte = type, low byte = language. The kernel matches the
   two bytes **independently**, and a zero in either field means "any"
-  (`MT_ANY` / `ML_ANY`, both 0, in os9exec's `module_from_book.h`). So
+  (`MT_ANY` / `ML_ANY`, both 0, as os9exec names them). So
   `$0200` requests "a *subroutine* module, *any* language" and legitimately
   matches a `$0202` subroutine / BASIC09-I-code module. This is exactly how `RunB` links a packed BASIC09
   procedure without hard-coding its language sub-code — and the reason a
   naïve `requested == actual` full-word comparison is wrong: it rejects the
-  match and the resident module looks "not found." (A concrete symptom this
-  produced under emulation: a *loaded* packed module was invisible to
-  `F$Link`, forcing a fallback to `F$Load`, so execution wrongly depended
-  on the current directory. See os9-dev `basic09/pack-and-runb.md` for
+  match and the resident module looks "not found." (The symptom of such a
+  comparison: a *loaded* packed module is invisible to `F$Link`, RunB falls
+  back to `F$Load`, and execution comes to depend on the current directory.
+  See os9-dev `basic09/pack-and-runb.md` for
   the application-side view.)
 - **`F$Load`'s access mode is a *byte*, `d0.b`, and it chooses the
   directory.** The v2.4 Technical Manual: the mode "may be specified as
@@ -419,6 +387,33 @@ handed is not the same size for every exception. An interrupt service routine, b
 state with no current-process context** — it's servicing the CPU, not
 "running as" any particular process, which is why an ISR has such a
 restrictive register-preservation contract (see `device-drivers.md`).
+
+## os9exec's scheduler and idle loop — for work on the emulator
+
+Everything above describes OS-9. This section describes os9exec's
+implementation instead (`Source` (os9exec)), for anyone extending its kernel
+layer; none of it is evidence about OS-9. os9exec does **not** implement the
+`D_ActAge`/`P$Sched` priority-age machinery; it runs a simpler round-robin in
+`do_arbitrate()` (`procstuff.c`).
+
+- **The OS-9 clock is real host wall-clock time** — `GetSystemTick()`
+  (`funcdispatch.c`) reads `gettimeofday()` on UNIX (`GetTickCount()` on
+  Windows), not a counter incremented by the emulation loop. So blocking the
+  host (`nanosleep`, `select`, a syscall) does **not** stall OS-9 time: on
+  return, ticks/alarms/sleeps reflect the real elapsed interval. This is what
+  makes an idle host-side block safe.
+- **Blocked/waiting processes are poll-retried, not event-woken.** A process
+  in `pWaitRead`/`pWaitWrite` (a blocked console/pipe read, a parked
+  `Ev$Wait`) is re-dispatched by `do_arbitrate` only every Nth round (throttled
+  by `pW_age`); it re-runs the syscall and re-checks. The exception is RBF
+  record/EOF locks, which do an **explicit** wake of a known in-emulator
+  waiter. Host-tty readiness is `select()`-driven in `DoWait` (below).
+- **`DoWait()` (`procstuff.c`) is the ONLY code that runs while every process
+  is blocked/sleeping** (the fully-idle path `do_arbitrate` drops into when
+  nothing is runnable). It is therefore the sole place stdin
+  (`CheckInputBuffers()`) and due alarms (`CheckAlarms()`) get serviced while
+  idle. Any new "wake a blocked process from a host event" mechanism must be
+  serviced here too, not only in the syscall dispatcher.
 
 ---
 

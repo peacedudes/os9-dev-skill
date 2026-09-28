@@ -6,18 +6,15 @@ device-descriptor module figure), which lists every field at exactly these
 offsets — `M$Port` $30, `M$Vector` $34, `M$IRQLvl` $35, `M$Prior` $36,
 `M$Mode` $37, `M$FMgr` $38, `M$PDev` $3A, `M$DevCon` $3C, `M$Opt` $46
 (initialization-table size), `M$DTyp` $48 (device type, first field of the
-init table) — and additionally matches os9exec's `mod_dev` struct, which
-carries a compile-time `offsetof` assertion per field.
+init table) — and os9exec's device-descriptor structure agrees field for
+field.
 
-**The entry-point register conventions below are untestable on os9exec**, not
-merely untested: its `I$Attach` never allocates driver storage or calls
-`Init`, device I/O dispatch uses a fixed internal table keyed by hardcoded
-path-prefix matching rather than executing an installed module's code, and
-`iniz` has no emulator-side implementation. A correctly-assembled, CRC-valid
-`Drivr` module installs and is never invoked at any entry point. The
-toolchain and module-format content here (byte layout, `psect` authoring)
-*can* be built and verified byte-correct there; the register conventions
-cannot, so treat them as `Manual` short of real hardware.
+**The entry-point register conventions below are `Manual`**, short of real
+hardware: os9exec, the 68k runtime available here, never runs an installed
+driver's code (`os9-dev`'s `common/using-os9exec-repl.md`, "What os9exec
+does not implement"), so they could not be exercised. The toolchain and
+module-format content here (byte layout, `psect` authoring) *can* be built and
+verified byte-correct there.
 
 A device driver is an OS-9 module (type `Drivr`, code `$0E`) owned by the
 super-user, with the system-state and re-entrant attribute bits set. Its
@@ -225,8 +222,9 @@ login monitor uses: it arms the signal, sleeps, and **never reads the device
 itself** — so if the path never delivers, the terminal is simply dead to
 keypresses with nothing reporting an error.
 
-Four properties a driver or emulator has to honour (`Source`, os9exec:
-`filestuff.c`'s `SS_SSig` case and `utilstuff.c`'s input path):
+Four properties a driver has to honour. These come from os9exec's
+implementation (`Source`, os9exec: its `SS_SSig` handling and input path)
+rather than from a manual:
 
 - **The signal number arrives in `d2`**, and is recorded per *path*, together
   with the arming process's PID.

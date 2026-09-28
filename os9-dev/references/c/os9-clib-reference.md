@@ -20,7 +20,7 @@ names (`F$xxx`/`I$xxx`).
 
 ## A complete worked program — `Live` (os9exec)
 
-Compiled with `cc` and run on os9exec. It covers the three things a C
+Compiled with `cc` and run. It covers the three things a C
 program does on OS-9 that a Unix habit gets wrong: path I/O, `errno`
 carrying OS-9 codes, and process creation through `os9fork()` rather than
 `fork()`/`exec()`.
@@ -138,9 +138,9 @@ What to take from it:
 | `fseek`/`rewind`/`ftell` | `fseek` place: 0=start, 1=current, 2=end. |
 | `getc`/`getchar`/`getw`/`gets`/`fgets` | `getc()` **auto-selects** `read()` (raw/binary) vs `readln()` (line-edited terminal) based on file type — override with `_SCF`/`_RBF` flags before the first read if you need to force one. `gets()` replaces the trailing `\n` with a null. |
 | `putc`/`putchar`/`putw`/`puts`/`fputs` | `puts()` appends `\n`; `fputs()` does not. |
-| `printf`/`fprintf`/`sprintf` | **No marker call is needed on 68k** — `Live` (os9exec): `%ld` and `%f` both print correctly with nothing called first (a bare `printf("%f", 3.14159)` gives `3.141590`). The `_pfltinit()`/`_prfloat()` markers some documentation requires before printing a `long`/`double` **don't exist in 68k `clib.l`** at all: calling either fails to *link* (`Symbol '_pfltinit'`/`'_prfloat' unresolved`). They're a 6809-era artifact — with a 16-bit `int` and a proprietary float format a width-disambiguating marker is meaningful, but on 68k, where `int`/`long` are both 32-bit and floats are IEEE, it's dead weight. **6809 behavior unverified (`Manual`) — the markers may genuinely be required there.** |
+| `printf`/`fprintf`/`sprintf` | **No marker call is needed on 68k** — `Live` (os9exec): `%ld` and `%f` both print correctly with nothing called first (a bare `printf("%f", 3.14159)` gives `3.141590`). The `_pfltinit()`/`_prfloat()` markers some documentation requires before printing a `long`/`double` **don't exist in 68k `clib.l`** at all: calling either fails to *link* (`Symbol '_pfltinit'`/`'_prfloat' unresolved`). They're a 6809-era artifact — with a 16-bit `int` and a proprietary float format a width-disambiguating marker is meaningful, but on 68k, where `int`/`long` are both 32-bit and floats are IEEE, there is nothing for it to disambiguate. **6809 behavior unverified (`Manual`) — the markers may genuinely be required there.** |
 | `scanf`/`fscanf`/`sscanf` | Specs: `%d %o %x %u %f %e %g %c %s`, plus `%D %O %X` for long and `[...]` for character-set match. **Every argument must be a pointer** — passing a value instead of `&value` is an easy mistake the compiler won't catch. |
-| `setbuf(FILE *fp, char *buffer)` | Call after `fopen()`, before any I/O. `stderr` is always unbuffered by default. **Do not make `stdout` unbuffered** — passing `NULL` is documented as doing it and the result is corrupt output, not slow output. `Live` (os9exec): after `setbuf(stdout, (char *)NULL)`, `printf("sb3 unbuffered printf %s\n", "ok")` emitted 22 bytes of `0x16`, two of `0x02` and one of `0x01` — each literal run and each conversion written as a byte equal to **its own length**, repeated that many times. Measured across nine programs to both routes, not to `setbuf` alone: `setvbuf(stdout, NULL, _IONBF, 0)` corrupts identically, while a real buffer, `_IOLBF`, the untouched default, and `fprintf(stderr, …)` are all correct, and `putc` on the same stream after the same call writes the right bytes. `fprintf(stdout, …)` after the same call is corrupted the same way as `printf` (`"fp stdout %s\n"` gave ten `0x0A` bytes, then `02 02 01`). Pipes, redirection, output size and `fflush` are all innocent. Whether the fault is this C library's or the runtime's is unresolved, `Flag` — the rule for a porter is not to leave `stdout` unbuffered: give it a buffer, or leave the default alone and `fflush()`. Unix programs that do this in `main` (cshar's `unshar`) print garbage until the call is removed. |
+| `setbuf(FILE *fp, char *buffer)` | Call after `fopen()`, before any I/O. `stderr` is always unbuffered by default. **Do not make `stdout` unbuffered** — passing `NULL` is documented as doing it, and the measured result is corrupt output, not slow output. `Live` (os9exec): after `setbuf(stdout, (char *)NULL)`, `printf("sb3 unbuffered printf %s\n", "ok")` emitted 22 bytes of `0x16`, two of `0x02` and one of `0x01` — each literal run and each conversion written as a byte equal to **its own length**, repeated that many times. Measured across nine programs to both routes, not to `setbuf` alone: `setvbuf(stdout, NULL, _IONBF, 0)` corrupts identically, while a real buffer, `_IOLBF`, the untouched default, and `fprintf(stderr, …)` are all correct, and `putc` on the same stream after the same call writes the right bytes. `fprintf(stdout, …)` after the same call is corrupted the same way as `printf` (`"fp stdout %s\n"` gave ten `0x0A` bytes, then `02 02 01`). Pipes, redirection, output size and `fflush` are all innocent. Whether the fault lies in the C library or in the emulator it was measured on is unresolved, `Flag` — the rule for a porter is not to leave `stdout` unbuffered: give it a buffer, or leave the default alone and `fflush()`. Unix programs that do this in `main` (cshar's `unshar`) print garbage until the call is removed. |
 | `write(int path, char *buf, int count)` / `read(int path, char *buf, int count)` | Raw path-based I/O (OS-9 `I$Write`/`I$Read` directly, no `FILE *` or buffering) — the primitive underneath the numbered stdin/stdout/stderr paths (0/1/2). **Do not mix these with `printf`/`fprintf`/other stdio calls on the same path without an explicit `fflush()` in between** — the output is reordered: `Live` (os9exec), the raw bytes go out at once and the buffered text follows at the next flush, to a file, a pipe and the console alike. **On a terminal it can also look corrupted when it is not.** A raw `write()` of `"…\n"` ends in a bare CR with no LF (it is `I$Write`, which does no line editing), while `printf`'s line gets CR LF, so the next line overprints the raw one: `"raw write with fflush first\n"` then `printf("after write\n")` reads on screen as `after writeith fflush first`. The bytes in a file are both lines, intact, in write order. |
 
 **`Live` (os9exec)** — the core File I/O behaviors above check
@@ -176,7 +176,7 @@ is a bug here, and it is a bug that hides from the obvious test.
 evaluated once. **When `_IOLBF` is set it is evaluated twice** — once to ask
 whether it is a newline, once to store it. The usual licence for `putc` to
 evaluate its argument repeatedly covers the *stream*, not the character, so this
-is a real defect rather than a hazard you were warned about.
+is a genuine departure from that convention rather than a hazard you were warned about.
 
 The stream argument is multiply evaluated too, unconditionally — `putc(c,
 *fpp++)` is broken on any stream, and `getc(p)` evaluates `(p)` several times
@@ -303,7 +303,7 @@ Microware's own `intercept()` does run the handler: measured, it ran for a
 self-sent signal.
 
 So when a ported program's timers appear dead, establish **which `signal()` it
-linked** before suspecting the kernel or the emulator. The two have the same name
+linked** before suspecting the kernel. The two have the same name
 and different semantics, which is the whole difficulty.
 
 ## Single-key input: `cbreak()` does not make the terminal raw
@@ -439,9 +439,9 @@ a buffer and `addstr` it remains the general answer.
 **No bounds checking** — caller must ensure buffers are large enough. No `strstr()`.
 
 **`Live` (os9exec) — actual 68k `clib.l` symbol availability** (each
-link-tested on os9exec): `strcmp`/`strncmp`/`strlen`/`malloc`/`free`/`atoi`
+link-tested): `strcmp`/`strncmp`/`strlen`/`malloc`/`free`/`atoi`
 link and work. **Memory functions are ANSI, not BSD:** `memcpy`/`memset` link;
-`bcopy`/`bzero` are **absent** (`Symbol unresolved`) — an inconsistency with the
+`bcopy`/`bzero` are **absent** (`Symbol unresolved`) — a contrast with the
 BSD-style *string-search* names (`index`/`rindex`, no `strchr`) just above.
 Also **absent** (unresolved at link): `strchr`/`strrchr` (use `index`/`rindex`),
 `strtol` (use `atoi`), `strdup`, `strstr`. Reach for the name the library
@@ -456,7 +456,7 @@ tolower toascii`. Domain guaranteed for ASCII only (-1 to 127).
 only lowercase to `_toupper` and uppercase to `_tolower`, or result is
 undefined.
 
-**Gotcha: no `isgraph()`** — this K&R-era header lacks ANSI additions.
+**Gotcha: no `isgraph()`** — this K&R-era header predates the ANSI additions.
 Calling `isgraph()` fails at *link* time (unresolved symbol), not compile
 time. Implement as `isascii(c) && isprint(c) && c != ' '`.
 
@@ -522,8 +522,8 @@ memory (`malloc`/`sbrk` pool) → I/O buffers (256 bytes per open file) →
 uninitialized data → initialized data → kernel/registers. The global
 `memend` marks the heap's upper bound. (Some 6809-era documentation adds a
 "direct page" region here for small, directly-addressed variables — that's
-a 6809 hardware feature with no 68000 equivalent; don't expect it on our
-target.)
+a 6809 hardware feature with no 68000 equivalent; don't expect it on
+68000.)
 
 **Compile-time sizing:** the linker adds 4KB by default for data/stack/
 parameters/buffers — override with `-m=<n>` (`-m=2` = 512 bytes, `-m=10k`
@@ -533,7 +533,7 @@ parameters/buffers — override with `-m=<n>` (`-m=2` = 512 bytes, `-m=10k`
 
 | Function | Notes |
 |---|---|
-| `os9fork(char *modname, int paramsize, char *paramptr, int type, int lang, int datasize)` | Not a standard C function — direct OS-9 process creation. `type`=1 is "program". `lang`=1 is native object code for whatever CPU the running system is (the module header's `M$Lang` field) — on a 6809 system that's 6809 object code (code 4 there is C I-code instead); on 68k, code 1 is 68K object code. It's not a single cross-architecture enum where one number always means "6809." Returns child PID or -1. Parent does **not** automatically wait — pair with `wait()`. **`modname` resolution — `Live` (os9exec)**: a bare name (no leading `/`) resolves via the exec-directory search, same as `F$Fork`/Shell — confirmed forking `"childprg68k"` by bare name, correct child PID and exit status returned (needs the target module actually present in the current exec directory, which tripped up the first attempt here purely on directory placement, not a real resolution-rule question). **`datasize` sizing — `Source`-confirmed**: `os9exec`'s `F$Fork` implementation (`procstuff.c`) calls the same `prepData()` used for `F$TLink`'s trap-handler memory, with `datasize` (plus `paramsize`) simply *added* to the module's own declared `_mdata`+`_mstack` — it is headroom on top of the module's own requirement, not a replacement absolute total. A `4096`-byte guess "worked" because it's headroom added to whatever the module already needs, not because 4096 is itself the right number for any particular program. **Arity is deliberately unprototyped, `Flag` — and the one fixed prototype is the outlier.** The six-parameter form above is what was exercised here. Three separate Microware-derived `stdlib.h` copies (the SDK's `os9lib` tree and two archived ones) decline to commit: they declare bare `os9fork(), os9forkc(),` — K&R empty parens, any arity — and carry the only full signature **commented out**, as `(char *, char *, int, int, short, short, short, ...)`: **variadic**, and differently typed from the GCC2 tree's fixed seven-parameter `(const char*, int, const char*, short, short, int, short)` (`os9forkc` there takes eight). All three copies are character-identical, so they are one original rather than three witnesses. Read that as the Microware side documenting a variadic call and refusing to prototype it, with GCC2 having re-derived a fixed prototype for it — so a GCC2 arity is not corroboration. **Which arity the library actually implements is unmeasured**; pass arguments the way working period code does rather than trusting any header, and see the `system()` note below. |
+| `os9fork(char *modname, int paramsize, char *paramptr, int type, int lang, int datasize)` | Not a standard C function — direct OS-9 process creation. `type`=1 is "program". `lang`=1 is native object code for whatever CPU the running system is (the module header's `M$Lang` field) — on a 6809 system that's 6809 object code (code 4 there is C I-code instead); on 68k, code 1 is 68K object code. It's not a single cross-architecture enum where one number always means "6809." Returns child PID or -1. Parent does **not** automatically wait — pair with `wait()`. **`modname` resolution — `Live` (os9exec)**: a bare name (no leading `/`) resolves via the exec-directory search, same as `F$Fork`/Shell — confirmed forking `"childprg68k"` by bare name, correct child PID and exit status returned (the target module must actually be present in the current execution directory). **`datasize` is headroom, not a total**: `F$Fork` takes it as *extra* memory (`68k/syscall-reference.md`), and it (plus `paramsize`) is *added* to the module's own declared `_mdata`+`_mstack` — `Source` (os9exec's `F$Fork`). So a figure such as 4096 bytes succeeds because it is added to whatever the module already needs, not because 4096 is itself the right number for any particular program. **Arity is deliberately unprototyped, `Flag` — and the one fixed prototype is the outlier.** The six-parameter form above is what was exercised here. Three separate Microware-derived `stdlib.h` copies (the SDK's `os9lib` tree and two archived ones) decline to commit: they declare bare `os9fork(), os9forkc(),` — K&R empty parens, any arity — and carry the only full signature **commented out**, as `(char *, char *, int, int, short, short, short, ...)`: **variadic**, and differently typed from the GCC2 tree's fixed seven-parameter `(const char*, int, const char*, short, short, int, short)` (`os9forkc` there takes eight). All three copies are character-identical, so they are one original rather than three witnesses. Read that as the Microware side documenting a variadic call and declining to prototype it, with GCC2 having re-derived a fixed prototype for it — so a GCC2 arity is not corroboration. **Which arity the library actually implements is unmeasured**; pass arguments the way working period code does rather than trusting any header, and see the `system()` note below. |
 | `exit`/`_exit` | `exit()` flushes stdio buffers first; `_exit()` doesn't. |
 | `wait(int *status)` | Waits for a child to terminate. |
 | `setpr(pid, priority)` | Priority 0–255. |
@@ -543,7 +543,7 @@ parameters/buffers — override with `-m=<n>` (`-m=2` = 512 bytes, `-m=10k`
 
 ### `system()` may launch nothing, and the return value will not tell you
 
-**`system()` is environment-dependent here — verify it before relying on it.**
+**`system()` depends on its environment — verify it before relying on it.**
 `Live` (os9exec), one binary built with the SDK's `cc` and run unchanged in two
 environments:
 
@@ -639,7 +639,7 @@ printing `AFTER` produced `BEFORE execl` and `CHILD-RAN` and **never printed
 in the child will, transcribed literally, terminate the parent.
 
 **Why, and how to get the other behaviour.** `os9exec()` takes its process-
-creating function as its first argument (see the `os9exec()` entry below), and
+creating function as its first argument (see the `os9exec()` entry above), and
 `chain`/`chainc` are the chaining counterparts of `os9fork`/`os9forkc` —
 `Source`, declared beside them in `os9lib/stdlib.h` in the same unprototyped
 style, with `chain` exported by `clib.l` and `chainc` by `unix.l`. A `unixlib`
@@ -760,5 +760,5 @@ memory:** whatever's left after static/stack allocation feeds the
 manuals cover both the 6809 and 68k compilers and sometimes blend them
 without marking which architecture a detail applies to (e.g. `int` size,
 "direct page" memory — the latter is always 6809). When in doubt on a
-foundational claim, verify live on a 68k toolchain rather than trust a
-single passage.
+foundational claim, check it against a 68k-specific source, or measure it
+on a 68k system, rather than trust a single passage.

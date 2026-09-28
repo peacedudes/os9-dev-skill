@@ -67,8 +67,8 @@ duplicate symbol, so it sends you to read the wrong line. `Live` (os9exec).
 - **`LIB/cstart.r`** — prepended by the C driver at the front of every
   link list; supplies the root psect and the startup code that calls
   `main()`.
-- **`debug`** — symbolic debugger; usage and its two real defects:
-  `common/using-os9exec-repl.md`.
+- **`debug`** — symbolic debugger; usage, and two known faults (`sc`
+  addresses, `gs` stepping): `common/using-os9exec-repl.md`.
 - **`r68 -O=` and `l68 -o=` overwrite an existing output cleanly** —
   `Live` (os9exec): three rebuilds under one name, longer, shorter and longer
   again, each ran the new text, on a host directory and on an RBF image. If
@@ -285,9 +285,9 @@ repeated here. Assembly/module-format-specific additions:
   another name, not an assemblable symbol. `syscall-reference.md`'s call names must be
   hand-defined as numeric `EQU`/`SET` constants in your own source before
   assembling — they aren't pulled in from anywhere automatically. Numeric
-  values confirmed to match the standard published table (source: this
-  project's own `Source/OS9exec_core/os9funcs.h`, its own
-  reimplementation, not proprietary Microware material): `I$Open=$84,
+  values match the standard published table (cross-checked against
+  os9exec's call-number header, an independent reimplementation rather than
+  Microware material): `I$Open=$84,
   I$Read=$89, I$Write=$8A, I$Close=$8F, F$Exit=$06`.
 - If a program executes any `TRAP #1`-`#15` for which no handler has
   been installed, the kernel calls the module's own default trap-entry
@@ -329,9 +329,9 @@ instruction in its privilege-violation handler, as Motorola advised, such a
 program dies at an ordinary-looking instruction with
 `vector=$08 err=#000:108`.
 
-os9exec emulates a 68020 and lets user state read SR, delivering S clear (`Live` (os9exec), CONF68K t50). Whether
-Microware's own 68010+ kernel emulates it is unrecorded — t50 on real hardware
-would settle it.
+Whether Microware's 68010+ kernels emulate it is unrecorded; CONF68K t50 run
+on real hardware would settle it. os9exec emulates a 68020 and lets user state
+read SR, delivering S clear (`Live` (os9exec), CONF68K t50).
 
 `MOVE CCR,<ea>` is the 68010+ user-legal way to read the flags, and is not a
 68000 instruction at all.
@@ -367,9 +367,8 @@ illegal instruction, zero divide, CHK, TRAPV, privilege violation, line 1010 and
 line 1111 (2–8, 10, 11), plus seven FPCP exceptions (48–54). So the wide range
 is not wrong and the narrow list is not a contradiction — one is the group, the
 other is the catchable part of it. The manual adds that not all catchable vectors
-apply to every CPU: 48–54 are 68020/68030 only. os9exec installs just 2–8, so a
-handler registered for the FPCP exceptions is accepted there and never fires
-(`Live` (os9exec)).
+apply to every CPU: 48–54 are 68020/68030 only. (os9exec departs here: see
+"Where os9exec departs from the manuals" in `common/using-os9exec-repl.md`.)
 
 An IRQ service routine invoked by kernel interrupt polling receives
 `(a2)` = driver static storage, `(a3)` = device port address, `(a6)` =
@@ -414,23 +413,23 @@ facts a program can rely on:
 
 **Undefined at entry — never read before you write them: `A0`, `A2`, `A4`,
 `D4`, `D7`.** A program that dereferences one is relying on luck: real
-hardware leaves whatever happened to be there, and os9exec deliberately fills
-them with sentinel patterns (`$AAAAAAA0+n` in address registers, `$DDDDDDD0+n`
-in data registers) so the mistake surfaces — under os9exec an out-of-arena
-access through such a register now raises a real 68k **bus error** rather than
-being silently swallowed. (This is exactly the `pwrstat` utility's latent bug:
-`MOVEA.L $4C(A0),A0` with `A0` still holding its `$AAAAAAAx` sentinel.)
+hardware leaves whatever happened to be there. os9exec fills them with
+sentinel patterns (`$AAAAAAA0+n` in address registers, `$DDDDDDD0+n` in data
+registers) so the mistake surfaces: an out-of-arena access through such a
+register raises a 68k **bus error**. (The `pwrstat` utility has exactly this
+latent fault: `MOVEA.L $4C(A0),A0` with `A0` still holding its `$AAAAAAAx`
+sentinel.)
 
 Slot assignments for the *informational* registers (which datum is in D2 vs
-D5, etc.) vary between manual passages; **`Live` (os9exec)-resolved** via a debugger
+D5, etc.) vary between manual passages; **measured `Live` (os9exec)** via a debugger
 register dump of a forked program: **D2 = priority (`$80` = 128, the default), D3 = # inherited paths
 (`3` = stdin/out/err), D5 = param-area size, D6 = total memory** — exactly the
 order the table above lists. The same dump confirmed the rest Live: **D0 = the
 PID**, **D1 = packed owner** (`0` for a `0.0` super-user), and every
 **undefined** register holding its sentinel — **D4=`DDDDDDD4`, D7=`DDDDDDD7`,
 A0=`AAAAAAA0`, A2=`AAAAAAA2`, A4=`AAAAAAA4`** (the `$DDDDDDDn`/`$AAAAAAAn`
-fill). The defined-vs-undefined split is also `Source` (os9exec's own
-`prepFork` register setup).
+fill). The defined-vs-undefined split is also `Source` (os9exec's fork
+register setup).
 
 **`A5`'s actual content, `Live` (os9exec)**: a NUL-terminated string holding
 exactly the typed command-line tail (e.g. `"hello"` for one argument —

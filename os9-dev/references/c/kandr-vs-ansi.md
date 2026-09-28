@@ -2,8 +2,8 @@
 
 The Microware OS-9 C compiler is a **K&R-era implementation**. Modern ANSI C
 will often fail to compile. Most of these are just "this is K&R C" facts —
-the two that actually bite in practice (and are genuinely OS-9-specific, not
-just old-C-history) are the function-definition syntax you need to write
+the two that actually bite in practice (and are specific to this compiler, not
+general K&R background) are the function-definition syntax you need to write
 anything at all, and the `\n` escape sequence, which is called out
 separately below.
 
@@ -202,4 +202,4 @@ This matters because the commonest 1980s C read loop is
 which is a latent bug on any compiler where `char` is unsigned, and is NOT one
 here. Do not reach for it as an explanation when a K&R program reads past end
 of file on OS-9 — it will not be the cause, and it is an easy theory to spend
-an hour on. (It was, on `cdiff`.)
+an hour on.

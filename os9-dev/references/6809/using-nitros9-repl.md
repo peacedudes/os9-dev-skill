@@ -1,13 +1,17 @@
 # Driving a live NitrOS-9 (6809) system
 
-Operating a text-driven harness against NitrOS-9 on an emulated CoCo3. The
-68k equivalent (os9exec) is `common/using-os9exec-repl.md`; seeing the actual
+When a real CoCo or Dragon is not at hand, NitrOS-9 (the community-maintained
+descendant of Microware's OS-9 Level 1 and Level 2 for the 6809) running on
+an emulated CoCo3 is one way to get a 6809 OS-9 system to work in. This page
+covers operating a text-driven harness against that stand-in; where it and a
+Microware manual disagree, the manual is the specification. The 68k
+equivalent (os9exec) is `common/using-os9exec-repl.md`; seeing the actual
 display is `6809/reading-the-coco-screen.md`.
 
 ## Why 6809 needs a bridge
 
-XRoar is a real CoCo3 hardware emulator running real ROM firmware — no
-software-CPU-plus-kernel shortcut — and its console is a video+keyboard GUI,
+XRoar is a real CoCo3 hardware emulator running real ROM firmware, and its
+console is a video+keyboard GUI,
 not stdio. A plain PTY/pipe harness has nothing to attach to, so a text-channel
 bridge is mandatory. The established one is **DriveWire over XRoar's built-in
 becker port** (`-cart-becker -becker-port <port>`), which tunnels the DriveWire
@@ -226,7 +230,7 @@ means *its* tools, not a directory you will find beside this file.
   first `$18` after connecting produces no echo and does not clear the line;
   every subsequent one works and echoes BS-space-BS per character. Independent
   of how the byte was produced — a literal Ctrl-X and a translated Shift-Left
-  behave identically — so it is a session/SCF quirk, not a bridge bug. Budget
+  behave identically — so it belongs to the guest session, not the bridge. Budget
   one throwaway Ctrl-X after connecting, and do not diagnose a key-mapping
   change on the strength of its first delete-line.
 - **`WHAT?` from the shell after typing punctuation is not lost characters.**
@@ -439,7 +443,7 @@ Register details for all of them: `6809/syscalls-and-module-format.md`. Test
 these only where losing the session is acceptable, or from a forked child so
 the blast radius is the child rather than your shell.
 
-## `rma` + `rlink` work — the "indefinite hang" was four silent traps
+## `rma` + `rlink` work — an apparent hang is one of four silent traps
 
 **`rma` does not hang** (`Live` (NitrOS-9)) — four silent traps account for
 every apparent hang, and each is listed below. A full
@@ -454,8 +458,8 @@ attr prog e pe pr
 prog                     ->  RMA-RLINK-OK
 ```
 
-The old report was not fabricated — every one of its symptoms is reproducible
-— but each is a silent failure, not a hang. Four independent traps, any of
+Every symptom that looks like a hang is reproducible, and each is a silent
+failure rather than a hang. Four independent traps, any of
 which leaves you staring at a prompt with nothing to show:
 
 1. **`rma` writes no object file unless you pass `-o=`.** It runs, prints
@@ -491,8 +495,8 @@ byte-identical (module `rma`, 20,143 bytes, CRC `$F83DD9`). `rma.6309` is a
 
 `asm` remains a fine choice for ordinary single-file `MOD`/`EMOD` assembly, and
 is simpler. Modern NitrOS-9 builds with **lwasm** rather than the vintage
-`rma`/`rlink` pair, so cross-assembling on the host stays a valid route — but
-it is now a preference, not a workaround for a broken guest toolchain.
+`rma`/`rlink` pair, so cross-assembling on the host stays a valid route — a
+matter of preference, since the guest toolchain works.
 
 Related shell facts found alongside: `rma <file> #8k` gives an immediate
 `WHAT?` from the shell before `rma` starts, though `dir #32k` accepts the same

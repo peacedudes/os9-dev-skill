@@ -30,7 +30,7 @@ Full per-target detail: `basic09-per-target.md`.
 - **`PEEK`/`POKE` and `ADDR` are not portable** — the two targets have
   entirely different address spaces and memory layouts. Treat any code using
   them as target-specific; use `OPEN`/`READ`/`WRITE` for portable I/O.
-- **6809 mis-parses numeric command-line `PARAM`s.** A supplied numeric
+- **6809 does not convert numeric command-line `PARAM`s.** A supplied numeric
   argument lands in the INTEGER as its raw ASCII bytes (`progname 42` →
   `13362`). `STRING` params are fine; 68k parses correctly.
 
@@ -75,7 +75,7 @@ Full grammar and the live error codes: `basic09-language.md`.
 ## Behavior that surprises
 
 - **A comment as the literal first line of a file breaks `LOAD` outright on
-  6809, but not on 68k** (`Live` (NitrOS-9, os9exec)). A host-authored file starting with
+  6809, but not on 68k** (`Live` (NitrOS-9, os9exec)). A source file starting with
   `! ...` above `PROCEDURE` loads on 68k and every procedure in it runs, but
   the comment is not dropped: `LOAD` prints `Program Rewrite?:` and the
   workspace gains an extra procedure named `Program` holding the comment as
@@ -121,10 +121,10 @@ Full grammar and the live error codes: `basic09-language.md`.
   from the statement separator. `Live` (NitrOS-9). Easy to miss until it
   shows up in something meant to be exact text. 68k BASIC09 V2.1 does not do
   this: the string lists and prints as `text; more` (`Live` (os9exec)).
-- **Real Y2K-class bug in 68k's `DATE$`.** Any year ≥ 2000 prints a corrupt
+- **Year-2000 fault in 68k's `DATE$`.** Any year ≥ 2000 prints a corrupt
   leading year digit (`"<6/07/14"` where `"26/07/14"` was correct) — `Live`
-  (os9exec); `Absent` on real 6809 NitrOS-9, so it's the 68k runtime's own
-  formatting, not shared logic. Don't trust the 68k year field.
+  (os9exec); `Absent` on real 6809 NitrOS-9, so the fault lies on the 68k
+  side, not in logic shared with 6809. Don't trust the 68k year field.
 - **BOOLEAN prints mixed case, contrary to the manual.** `PRINT USING`'s `B`
   format is documented by Microware as printing `"TRUE"`/`"FALSE"`, but every
   runtime tested prints `"True    "`/`"False   "` (correct 8-char field
@@ -137,5 +137,5 @@ Full grammar and the live error codes: `basic09-language.md`.
 - **`PACK`/`RunB` have their own gotcha set** — output goes to CHX (not
   CHD, unlike `SAVE`), the entry-point rule differs between `PACK a,b` and
   `PACK*`, only bare names ever resolve, a packed group you `load`ed shadows
-  a later one reusing its names, and the `Can't install trap handler` banner has three
+  a later one reusing its names, and the `Can't install trap handler` banner has several
   distinct causes. All of it: `pack-and-runb.md`.

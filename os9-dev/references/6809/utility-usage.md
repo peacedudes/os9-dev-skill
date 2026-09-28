@@ -61,7 +61,7 @@ layer underneath it.
 - `deldir <path>` — recursively deletes a directory and everything under
   it. Prompts `l` (list contents via `dir` first), `d` (delete), `q`
   (cancel) — **once per directory**, so a nested tree asks more than once
-  and a harness must answer each. Processes nested directories bottom-up;
+  and a script driving it must answer each. Processes nested directories bottom-up;
   aborts on the first missing write permission. Internally invokes `dir` and
   `attr`, so both must be reachable from the current execution directory.
   Recursion re-confirmed `Live` (NitrOS-9 V3.3.0): a directory holding both
@@ -514,7 +514,7 @@ decimal for counts (`null=`, `pag=`, `tabs=`).
 - **`format`'s density letters** (`-sd`/`-dd` vs. bare `S`/`D`) remain
   `Manual, Flag`: the vintage sources disagree, and NitrOS-9's own `format`
   uses no dash-prefixed density letters at all, so this may be a
-  vintage-Microware-only detail that cannot be settled on the emulator
+  vintage-Microware-only detail that cannot be settled on the systems
   available here. See the `format` entry above.
 
 ---

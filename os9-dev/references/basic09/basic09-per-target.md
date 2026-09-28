@@ -135,7 +135,7 @@ the 6809-era *BASIC09 Reference Manual* (Rev H). That is a 68k-manual-only
   force string interpretation. A missing parameter errors only if the code
   actually uses it; extra parameters are ignored.
   **The mechanism exists on 6809 too (`Live` (NitrOS-9)), but numeric `PARAM`s are
-  broken there.** A `PACK`ed module invoked bare (`progname 42`) correctly
+  not converted there.** A `PACK`ed module invoked bare (`progname 42`) correctly
   detects a *missing* argument (`Error #056 -- Parameter Error`), proving the
   shell-to-`PARAM` plumbing is present — but a *supplied* numeric argument is
   never decimal-parsed. Its raw ASCII bytes land in the `INTEGER` variable's
@@ -213,8 +213,9 @@ r68 -O=addone.r addone.a
 l68 -o=addonemod addone.r
 ```
 
-`file` reports a genuine `OS9/68K module: re-entrant machine language
-subroutine`. Called with `n=41`, `RUN addonemod(n)` then `PRINT n` prints
+The result is a re-entrant machine-language subroutine module (a host's
+`file` command reports `OS9/68K module: re-entrant machine language
+subroutine`). Called with `n=41`, `RUN addonemod(n)` then `PRINT n` prints
 **`42`** — proving the whole documented mechanism, not just absence of a
 crash: `D1` genuinely holds the first parameter's address, the write through
 it genuinely propagates back to BASIC09's variable, and `RUN`/`JSR`/`RTS`
@@ -316,7 +317,7 @@ nonzero use count. The *next* `RUN` of that name resolves via `F$Link`
 (reusing the resident copy) rather than `F$Load` (reading the rebuilt file),
 so a fix that is genuinely on disk and correctly relinked still crashes
 identically. `unlink <modname>` doesn't reliably clear it — a dangling link
-from the aborted process can survive — but a full `os9exec` restart does. If
+from the aborted process can survive — but a reboot does. If
 a crash looks unchanged after a fix you know is correct, check `Last
 syscall:` in the crash dump before doubting the fix: `F$Link` means you're
 running stale bytes, `F$Load` means it's fresh.

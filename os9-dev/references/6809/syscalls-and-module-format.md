@@ -107,13 +107,13 @@ flat IDs 0-4. Compare the **whole 16-bit value** against 0 on 6809.
 
 This is the same shape as the `attr` set/clear inversion: both entries are
 right for their own target, and the trap is carrying one target's model
-across. For os9exec (68k) read the 68k manuals — 6809 is an earlier
+across. For 68k work read the 68k manuals — 6809 is an earlier
 evolutionary stage, not a fuller description of the same design.
 
 **Consequence when a 68k tool builds a disk a 6809 will read** (`Live`
 (os9exec, NitrOS-9)): the on-disk owner field is two bytes on both targets, so the
 bytes travel fine — but the two targets *interpret* them differently.
-os9exec stamping account `1.7` writes `$0107`; the same file on 6809 is
+A 68k system stamping account `1.7` writes `$0107`; the same file on 6809 is
 owned by flat user **263**. Neither reading is zero, so a non-privileged
 owner stays non-privileged and public permission bits still govern, which
 is usually all that matters. Two things do bite:
@@ -266,7 +266,7 @@ fair game, and two of them are shown below.
 The last two are reachable if the call is fenced rather than avoided:
 
 - **`I$SetStt`** — `I$GetStt` first to save the setting, set, confirm,
-  restore, re-confirm. A wedged terminal then costs only a REPL restart.
+  restore, re-confirm. A wedged terminal then costs only a session restart.
 - **`F$Chain`** — confine the blast radius to a child. The parent forks a
   child; the child prints a marker, chains to a module that fails, then prints
   a second marker; the parent `F$Wait`s — the wait status is what the parent

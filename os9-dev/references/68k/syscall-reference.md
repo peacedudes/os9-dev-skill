@@ -11,8 +11,9 @@ Chapter 16 system-mode requests (`F$Move`, `F$SLink`, `F$SSvc`, `F$SetSys`,
 `F$GPrDsc`/`F$GPrDBT`, …) are kernel-internal and belong to the
 `os9-systems-dev` skill — deliberately absent here, not overlooked.
 
-Verify against a primary manual before coding against exact register slots on
-anything not tagged `Live` (os9exec).
+Verify exact register slots against a primary manual before coding against
+them; entries tagged `Live` (os9exec) have at least been exercised on an
+implementation.
 
 ## Calling convention
 
@@ -46,7 +47,7 @@ on TRAP #1–#15 via F$TLink.
 | Call | Purpose | Key inputs | Key outputs | Notes |
 |------|---------|-----------|------------|-------|
 | **F$Fork** | Create process | d0.w=module type (0=any), d1.l=extra stack/mem, d2.l=param size, d3.w=# I/O paths, d4.w=priority, (a0)=module name, (a1)=params | d0.w=child PID, (a0)=updated past the module name | Child inherits priority, open paths, user/group ID, current dirs, environment — never memory. `Live` (os9exec); contract confirmed against the *OS-9/68000 Operating System Technical Manual* (1984) ch. 14 |
-| **F$Chain** | Replace current program | as F$Fork | doesn't return | Fork+Exit in one: reuses the caller's process descriptor and PID, preserves open paths. **A failed chain kills the caller** — the caller's image is torn down (unlink, free) *before* the new name is resolved, so a bad name lands on an already-gutted process with nothing left to return an error to. The caller simply exits with status `E$MNF` (221); the line you see is the *parent shell* reporting that status, and under a parent that is not a shell nothing prints at all (`Live` (os9exec)). Faithful to the contract on both os9exec and NitrOS-9 (`fchain.asm`) — do not flag it as a bug. `Live` (os9exec); NitrOS-9 side is `Source` (`fchain.asm`), not run |
+| **F$Chain** | Replace current program | as F$Fork | doesn't return | Fork+Exit in one: reuses the caller's process descriptor and PID, preserves open paths. **A failed chain kills the caller** — the caller's image is torn down (unlink, free) *before* the new name is resolved, so a bad name lands on an already-gutted process with nothing left to return an error to. The caller simply exits with status `E$MNF` (221); the line you see is the *parent shell* reporting that status, and under a parent that is not a shell nothing prints at all (`Live` (os9exec)). This is the contract, not a fault; NitrOS-9 (`fchain.asm`) does the same. `Live` (os9exec); NitrOS-9 side is `Source` (`fchain.asm`), not run |
 | **F$Exit** | Terminate | d1.w=status | — | Closes paths. Auto-unlinks only the *primary* module and trap handlers — anything else you linked/loaded leaks unless unlinked first. `Live` (os9exec) |
 | **F$Wait** | Wait for child | — | d0.w=child PID, d1.w=status | Also reclaims the dead child's process descriptor; forking without matching waits can fill the process table. `Live` (os9exec) |
 | **F$SPrior** | Set priority | d0.w=PID, d1.w=priority (0=min, 65535=max) | — | Same-user rule; superuser (group 0) can set any. Shell: `setpr`. `Live` (os9exec) |
@@ -74,7 +75,7 @@ on TRAP #1–#15 via F$TLink.
 | **F$SysID** | Get system identification | Pre-3.0 form: (a0)/(a1)/(a2)=80-byte buffers for the version, copyright and author-names strings, 0=not wanted | d0.l=licensee, d1.l=serial (both 1 by default), d2.l=MPU in use, d3.l=MPU the kernel was built for (Motorola part numbers), d4–d7=0 | **Not in the v2.4 manual**: "implemented but not documented" before v3.0 (OS-9 Insights ed. 3, App. A), the register form above being the OS-9 Guru's 11.5.16 (`Hearsay`-grade third party, but confirmed by period code: hc_utils `sysid.c` passes exactly these registers). v3.0 redefined it around a parameter block after OS-9000's `_os_SysID()`; that layout is not documented in anything available here. `Live` (os9exec): the pre-3.0 form, answering 68020/68020, 1/1, and its own strings (CONF68K t54). |
 | **F$SRqMem** | Request system memory | d0.l=size (rounded up to 16 bytes; `$FFFFFFFF`=request the largest available block) | d0.l=actual size, (a2)=block pointer | `Live` (os9exec) |
 | **F$SRtMem** | Return system memory | d0.l=size, (a2)=block pointer | — | Must pass back exactly the size `F$SRqMem` returned, or the block silently isn't freed. `Live` (os9exec) |
-| **F$SRqCMem** | Request colored system memory | d0.l=size, d1.l=color | d0.l=actual size, (a2)=block pointer | Shares `F$SRqMem`'s handler on os9exec; the color parameter is accepted but never read, so it has no effect there. `Live` (os9exec) |
+| **F$SRqCMem** | Request colored system memory | d0.l=size, d1.l=color | d0.l=actual size, (a2)=block pointer | os9exec accepts the color but does not act on it. `Live` (os9exec) |
 | **F$CpyMem** | Copy memory across a process boundary | d0.w=PID of external memory's owner, d1.l=count, (a0)=source, (a1)=destination | — | "You can view any memory in the system with F$CpyMem" (`Manual`) — it is the way to examine modules and system memory from user state. The DESTINATION is what is checked: a write only into the caller's own memory, else `E$BPAddr`. `Live` (os9exec) (os9exec departs — see "Where os9exec departs from the manuals" in `common/using-os9exec-repl.md`) |
 
 ## I/O
@@ -196,11 +197,9 @@ including an indefinite `F$Sleep(0)`.
 | **F$TLink** | Install trap handler | d0.w=trap 1–15, d1.l=memory override, (a0)=module name → **(a0)=updated past module name**, (a1)=entry, (a2)=header. **Passing (a0)=0, or a name string whose first byte is 0, *unlinks* the handler on that vector** (manual, ch. 14). Links a TrapLib, allocates private static storage, runs its init. Max 15 per process (one per vector); a `tcall` before install can lazily self-install via the module's M$Excpt entry. `(a0)` must be a module *name*, resolved via the same exec-directory search as `F$Link`/`F$Load`, not a bare filename in the data directory. `Live` (os9exec) |
 | **F$Sema** | Kernel binary semaphore | OS-9 **v3.0+** only — absent on the v2.4 baseline documented here |
 
-os9exec detail worth knowing when hand-building a trap module: `_midata`/
-`_midref` at 0 are **not** read as "no init table" — `prepData` parses a table
-at that offset unconditionally, so a module with no init data needs a real
-empty table there (dOff=0, cnt=0, then two 0-terminators) or the load fails
-`E$BMID`.
+A trap module with no init data, hand-built for os9exec, needs an empty
+init table: see "What os9exec does not implement" in
+`common/using-os9exec-repl.md`.
 
 ## Time
 
@@ -212,8 +211,7 @@ packed field layout inside `d0.l`/`d1.l` is not decoded here; only the
 register-slot convention is confirmed.
 
 **F$STime** (d0.l=time, d1.l=date — the input-side mirror of `F$Time`'s
-output shape). `Live` (os9exec). On os9exec's modern macOS/Linux/Windows builds it does
-not touch the host clock at all.
+output shape). `Live` (os9exec).
 
 **F$Julian** (d0.l=time as `00hhmmss`, d1.l=date packed as
 `(year:16)(month:8)(day:8)` — **not** decimal-digit "yyyymmdd" despite that
@@ -251,28 +249,21 @@ invalid": a blank ahead of the name terminates a zero-length element rather than
 being stepped over. `Live` (os9exec). The reason it is worth stating separately
 is where the consequence appears — a pathname built with an off-by-one slice,
 `" bench.f"`, produced **`E$FNA` (214) from the open** on an RBF device
-(`E$BPNam` (215) on a host directory), not a name-parse diagnostic. So a leading blank reads as a *permission* failure on a file that is
+(under os9exec, `E$BPNam` (215) on a host directory), not a name-parse diagnostic. So a leading blank reads as a *permission* failure on a file that is
 present and readable, some distance from the code that built the string. Compare
 the 6809 entry, which *does* skip trailing spaces; neither line skips leading
 ones, and `I$Open` separately skips **trailing** spaces (see its row above).
 
-One os9exec divergence: it additionally accepts `{` and `}` as element
-characters (a deliberate MPW-shell-variable convenience, per its own source
-comment). `Source, Flag` against the manual's character set. It makes os9exec
-*more* permissive, so it cannot produce a spurious `E$BNam`.
-
-On the error path os9exec returns `E$BNam` with `d0.b`/`a1` untouched, so the
-caller reads back its own pre-call values. **That conforms** — the 68k ERROR
-OUTPUT specifies carry + `d1.w` and nothing else. `Source`.
+On the error path the 68k ERROR OUTPUT specifies carry + `d1.w` and nothing
+else, so read nothing else back after `E$BNam`. (os9exec leaves `d0.b`/`a1`
+holding the caller's pre-call values, which conforms. `Source`.)
 
 **Do not import the 6809 entry's fuller contract here.** The 6809 System
 Programmer's Manual describes this primitive with a trailing comma/space skip
 and a meaningful error-path pointer; the 68k line is an *evolution* of that
-design, not the same implementation, and the 68k TRM specifies neither. Treating
-the 6809 text as the 68k spec was tried: bolting the skip onto os9exec's
-`F$PrsNam` broke **42 of 148** suite tests, because 68k callers — the shell
-included — rely on `a1` pointing *at* the terminator, exactly as the 68k manual
-says. For os9exec, read 68k manuals.
+design, not the same implementation, and the 68k TRM specifies neither. 68k
+callers — the shell included — rely on `a1` pointing *at* the terminator,
+exactly as the 68k manual says, so adding the 6809 skip would break them.
 
 **F$PErr** (d0.w=path to an **error-message file**, 0=none; d1.w=error code):
 writes an error message to the **standard error path**. `d0.w` is *not* a mode
@@ -283,14 +274,10 @@ of that line after the number (continuation lines begin with a space); with
 `ERROR #mmm.nnn`. Numbers `000:000`–`063:255` are reserved for the OS.
 `Manual`.
 
-`Live` (os9exec) confirms both halves: the line honours `>>` redirection, and
-a `d0.w` path open on `/dd/SYS/errmsg` prints that file's text. One difference
-to recognise in captures from os9exec: with `d0.w=0` it prints its own
-built-in `Error #nnn:nnn (E_NAME) description` — `E_` spelling, against the
-`E$` the DEFS declare — where a stock system prints a bare number. Useful tell: a code missing from
-its table prints `(E_???) <<unknown error code>>`, which marks the number as
-**not** an OS-9 kernel error; that is how 68k BASIC09's own error 43 was
-identified.
+`Live` (os9exec): the line honours `>>` redirection, and a `d0.w` path open
+on `/dd/SYS/errmsg` prints that file's text. With `d0.w=0` os9exec prints a
+named message rather than a bare number: see "Where os9exec departs from the
+manuals" in `common/using-os9exec-repl.md`.
 
 ## Debugger support
 
@@ -301,16 +288,11 @@ identified.
 | **F$DExit** | Kill debuggee | Resources survive for post-mortem examination. `Live` (os9exec) |
 | **F$SysDbg** | Enter ROM debugger | Used by `break` (superuser, console); halts everything |
 
-## Not implemented on os9exec
-
-**F$SSpd, F$Trans, F$UAcct** — all three route to a shared unimplemented
-handler. Calling any is a clean, safe `E$UNKSVC` (208): no crash, no side
-effect. `Live` (os9exec). (`F$SchBit`, `F$AllBit` and `F$DelBit` are
-implemented, and pass os9exec's own conformance tests.) F$SSpd is the one Microware's own v2.4 manual marks
-"currently not implemented" (`Manual`), so 208 is the conformant answer
-there, not a gap.
-
 ## Notes
+
+- **F$SSpd** is marked "currently not implemented" in the v2.4 manual
+  (`Manual`). os9exec also leaves `F$Trans` and `F$UAcct` unimplemented: see
+  "What os9exec does not implement" in `common/using-os9exec-repl.md`.
 
 - Signal 0 = kill (`kill` command; `kill 0` broadcasts within your
   user/group).

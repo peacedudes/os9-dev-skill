@@ -497,8 +497,8 @@ against the manual's grammar (`Manual`); `Live` (os9exec) end to end:
 
 Justify `j`: `<` left, `>` right, `^` center. **The `^` resolves an OCR
 ambiguity**: the manual's own text rendered this symbol as a garbled
-"°" (degree sign), illegible as transcribed. `Live` (os9exec) to
-settle it: `'%'` is a runtime syntax error (`Error #000:063`); `'^'`
+"°" (degree sign), illegible as transcribed. Tested live to
+identify it (`Live` (os9exec)): `'%'` is a runtime syntax error (`Error #000:063`); `'^'`
 compiles and genuinely centers — confirmed by exact byte capture, not
 eyeballing: `"HI"` in an 8-wide `S8^` field produces `"   HI   "` (3
 spaces each side). Control specs — `Tn` jumps to column `n`, `Xn` skips
@@ -580,7 +580,7 @@ the wrong shape is a syntax error, not a wrong answer.
 | `MOD` | Remainder. **Call shape unresolved** — `Manual, Flag`, see the operator note above |
 | `RND(0)` / `RND(n>0)` / `RND(n<0)` | Random 0-1 / random 0-n / reseed with `ABS(n)` as the new seed. **`RND(n>0)` returns a REAL in `[0,n)`, NOT necessarily an integer** — `Live` (os9exec): `RND(5)` returned `1.75959429`, a fractional value. Don't assume `RND(n)` gives a random integer 0..n-1 the way it does in some other BASICs; use `FIX(RND(n))` for that. **Reseeding is fully deterministic** (`Live` (os9exec)): calling `RND(-42)` then three `RND(0)` calls, twice in a row, produces the exact same 3-value sequence both times — useful for reproducible test data. |
 | `LEN`/`MID$`/`LEFT$`/`RIGHT$`/`STR$`/`VAL`/`CHR$`/`ASC` | String functions |
-| `DATE$` | Current date/time as `"YY/MM/DD HH:MM:SS"`. **Y2K-class bug on 68k** (`Live` (os9exec)): for years ≥ 2000 the year's tens digit is corrupt (`"<6/07/14"` where `"26/07/14"` was correct — first byte reads ASCII 60 `'<'`, a +10 offset from the un-reduced year value). `Absent` on real 6809 NitrOS-9 — the bug is specific to the 68k BASIC09 runtime's own formatting. Don't trust the 68k year field past 1999. Details: `gotchas.md` |
+| `DATE$` | Current date/time as `"YY/MM/DD HH:MM:SS"`. **Y2K-class fault on 68k** (`Live` (os9exec)): for years ≥ 2000 the year's tens digit is corrupt (`"<6/07/14"` where `"26/07/14"` was correct — first byte reads ASCII 60 `'<'`, a +10 offset from the un-reduced year value). `Absent` on real 6809 NitrOS-9 — the fault lies on the 68k side, not in logic shared with 6809. Don't trust the 68k year field past 1999. Details: `gotchas.md` |
 | `TRIM$(str$)` | Removes **trailing** spaces only — leading/embedded spaces are untouched, matching both manuals' description of the function. `Live` (os9exec): `TRIM$("  hi  ")` = `"  hi"` (2 leading spaces survive). |
 | `PEEK(address)` / `POKE address, value` | Direct memory access — not portable across targets, see `gotchas.md` |
 | `LAND(a,b)`/`LOR(a,b)`/`LXOR(a,b)`/`LNOT(a)` | **Function calls, not infix operators** — see above |
@@ -633,10 +633,6 @@ raised at all depends on which math module is loaded.
 68k reports the underlying 68000 CPU exception instead — 105 for INTEGER,
 107 for REAL (BASIC09's 050 under `math881`) — when it reports anything. Guard divisors that could be zero:
 a trap is not a recovery, and on 68k there may be no trap.
-
-(An older `os9exec` had four stacked `F$STrap` dispatch bugs that broke
-this dispatch — REAL÷0 killed the process uncatchably and INTEGER÷0 passed
-silently. Fixed. If you see either symptom, update the emulator.)
 
 ## Debug Mode
 

@@ -110,7 +110,7 @@ step the workflow assumes.
   **`PACK` prints it exactly twice, however many procedures the list names** —
   two errors is not two failed procedures, and the count carries no
   information. Verify the file rather than trusting the message. **Error 51 here means
-  something different and is NOT this bug** — see "Packing is destructive to
+  something different and is NOT this spurious message** — see "Packing is destructive to
   the workspace copy" above; a `#000:051` from `PACK` means you are re-packing
   an already-packed procedure, and it **truncates the target to 0 bytes**
   before failing. **`Live` (NitrOS-9): real NitrOS-9 BASIC09
@@ -184,7 +184,7 @@ resident copies, entry point included, and never the file you named. With
 `first` and `second` resident from one file, `runb` of a second file defining
 its own `first` and `second` printed the old program's output. Nothing warns.
 Audit `mdir` when results look impossible, and `unlink` stale members or
-start a fresh emulator.
+reboot.
 
 ## Command-line arguments
 
@@ -217,18 +217,16 @@ This banner + `Error #000:216 (E_PNNF)` has several distinct causes:
    binary linked against the proprietary `cio` handler dies with this
    banner on any disk lacking it — see `common/using-os9exec-repl.md` for
    classifying and rebuilding cio-locked binaries.
-3. **os9exec-specific intermittent failure** where `mdir` shows the module
-   *is* resident: an emulator-level race (timing-sensitive, historically
-   correlated with baud-rate pacing). Restart the emulator session; if it
-   recurs, it's an os9exec bug, not your program.
+3. Under os9exec only, an intermittent failure with the module resident:
+   `common/using-os9exec-repl.md`.
 
-The mechanism behind all three: installing a trap handler resolves the
+The mechanism behind the first two: installing a trap handler resolves the
 handler module via the same F$Link-then-F$Load(CHX) path as everything
 else; when that fails, the requesting module prints its own "can't
 install" banner and aborts.
 
 ---
 Sources: BASIC09 Reference Manual (Rev H) and OS-9 BASIC User Manual
-(Rev G) for PACK/RunB semantics and the RUN search order; everything
-marked `Live` was confirmed by direct experiment on os9exec
-(OS-9/68k v2.4 environment).
+(Rev G) for PACK/RunB semantics and the RUN search order; each `Live`
+claim was observed by direct experiment on the implementation its tag names
+(os9exec's OS-9/68k v2.4 environment for 68k, NitrOS-9 for 6809).

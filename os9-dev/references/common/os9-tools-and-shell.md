@@ -162,7 +162,7 @@ quietly** — `Live` (os9exec). OS-9 does not treat LF as a terminator, so the
 whole file is *one line*: its first command runs with the rest of the file as
 arguments (`makdir A` LF `makdir B` made both directories), and nothing else
 in it runs as a command. Procedure files written on a Unix host
-must be converted (`tr '\n' '\r'`, or `flip -m`) before use.
+must be converted (`tr '\n' '\r'`, or `flip -m` where installed) before use.
 
 ## Naming convention: capitalized directories
 

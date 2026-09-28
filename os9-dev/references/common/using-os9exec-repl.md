@@ -530,12 +530,13 @@ Three routes, in order of preference by size:
    is visible to `getenv` and invisible to curses
    (`c/os9-clib-reference.md`). Basic loop: `i`,
    type, ESC, `:wq`.
-3. **Host-side editing + `flip`** — host-native directories only (a file
-   inside an RBF image has no host file to touch). `flip -m` → CR-only
-   (OS-9), `flip -u` → LF (Unix), `flip -t` reports current state. Best
-   route for large sources; the file must end up CR-only or the compiler
-   reads it as one giant line. `flip -m` on a file that is already CR-only
-   leaves it unchanged, so reflipping is safe.
+3. **Host-side editing + conversion** — host-native directories only (a
+   file inside an RBF image has no host file to touch). `tr '\n' '\r' < in >
+   out` makes a Unix file CR-only, and is on every Unix host; `tr '\r' '\n'`
+   goes back. Best route for large sources; the file must end up CR-only or
+   the compiler reads it as one giant line. `Live` (os9exec). The third-party
+   `flip` does the same where installed (`flip -m` to CR, `-u` to LF, `-t`
+   reports the current state), and is safe to rerun on an already-CR file.
 
 **tmux eats a trailing semicolon**: `send-keys` treats a final `;` as its
 own separator even with `-l`, so a typed C line arrives without its
@@ -635,7 +636,7 @@ B:bye          → back to the OS-9 shell
 - **Memory:** `basic #32k` (the shell's `#<size>k` modifier — see
   `os9-tools-and-shell.md`) fixes load/run failures caused by the small
   default allocation. Reach for it before suspecting the program.
-- **Loading host-authored source:** write plain BASIC09 text, `flip -m`,
+- **Loading host-authored source:** write plain BASIC09 text, convert it with `tr '\n' '\r'`,
   place it where OS-9 sees it, then `B: LOAD <exact-filename>` and `RUN
   <procedure-name>` (from the file's PROCEDURE line — need not match the
   filename). `LOAD` compiles plain source directly and does a **literal

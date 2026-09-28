@@ -49,9 +49,9 @@ snag when a file crosses between Unix and OS-9.
   spots.
 - RBF/SCF translation behavior: see `os9-mental-model.md`'s "Conventions
   that bite" section.
-- Convert on the Unix side before the file reaches OS-9 (`flip -m`, or
-  `tr '\n' '\r'`), or edit on OS-9 itself with `vi`/`ed`, which already
-  produce correct native line endings. Under os9exec, see
+- Convert on the Unix side before the file reaches OS-9 (`tr '\n' '\r'`, or
+  `flip -m` where installed), or edit on OS-9 itself with `vi`/`ed`, which
+  already produce correct native line endings. Under os9exec, see
   `using-os9exec-repl.md`.
 
 ### 3. A program is a *module*, not a flat executable

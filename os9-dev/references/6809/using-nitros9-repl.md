@@ -338,7 +338,7 @@ means *its* tools, not a directory you will find beside this file.
 ## Authoring a BASIC09 program on the disk
 
 The disk is a real IDE image, not a host-native directory, so the 68k trick of
-editing host-side and `flip -m`-ing into place doesn't apply — there is no
+editing host-side and converting into place doesn't apply — there is no
 host file to touch. Two routes:
 
 **BASIC09's own editor**, usually least work for a short program: raw-key `e

@@ -167,7 +167,7 @@ embedding it.
 - [ ] Check every `\n` — CR here, not LF
 - [ ] No direct struct assignment — use `strass()` instead
 - [ ] `<strings.h>`, not `<string.h>`
-- [ ] Source files need CR-only line endings before compiling (`flip -m`)
+- [ ] Source files need CR-only line endings before compiling (`tr '\n' '\r' < in > out` on a Unix host)
 - [ ] Assume string literals are read-only
 - [ ] Count **two** shapes: the declarations (`ansi2knr` never converts them)
       and the definitions whose return type shares a line with the name (it

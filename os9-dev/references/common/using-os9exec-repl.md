@@ -1118,9 +1118,13 @@ at that program's bounds checking before it is filed.
   written receives interrupt signal 3 and, with no intercept handler, dies
   with `Error #000:003 (S_Intrpt) User interrupt`. So Ctrl-C does not stop a
   silent computation, and does kill a chatty one.
-- **Ctrl-E**: kills the child, immediately, regardless of what the process
-  is doing — compute loop, blocked read, or blocked write. `Live` (os9exec,
-  macOS and Windows 11, on a loop with no system calls). A loop that makes
+- **Ctrl-E** sends abort signal 2, which kills a child that has no
+  intercept handler, whatever it is doing — compute loop, blocked read, or
+  blocked write. `Live` (os9exec, macOS and Windows 11, on a loop with no
+  system calls). A program that installs a handler receives the signal
+  instead and decides for itself: RunB is one, and its manual makes Ctrl-C
+  and Ctrl-E trappable by `ON ERROR GOTO` (`Manual`, *OS-9 BASIC User
+  Manual*, App. D). A loop that makes
   no system calls is reached through the clock tick, so under `os9exec -q`
   (tick off) neither key can take the CPU from it.
 - **Neither key aims at a process you choose.** Both are delivered to the

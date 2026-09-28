@@ -117,6 +117,7 @@ has bitten a real session.
 | A listing is short, or something you know exists reads as absent | page pause ate the tail (`tmode pag=0`), or a filter dropped the marked entries | `common/utility-usage.md`, `common/using-os9exec-repl.md` |
 | Output stopped dead, no error, session otherwise alive | a stray `$13` (XOFF) reached the terminal; SCF swallowed it and is holding output until `$11` | `common/os9-tools-and-shell.md` |
 | Ctrl-C/Ctrl-E killed the wrong process | both go to the device's last writer, not a process you name — use `kill <pid>` | `common/using-os9exec-repl.md` |
+| Ctrl-C or Ctrl-E does nothing to a running packed BASIC09 program | RunB turns the key into an error only when an `ON ERROR GOTO` trap is armed; with none, the loop runs on | `basic09/pack-and-runb.md` |
 | Separate writes run together / output garbled | `I$WritLn` writes **to the first CR** — a buffer without one runs past its end | `common/memory-and-io.md` |
 | A console line stops ending on Enter, or a read returns fewer bytes than asked | on SCF the terminator is **PD_EOR**, not literally CR — `tmode eor=` or a program's SS_Opt moved it. Set to zero, I$Read runs to its full count (the raw-input idiom); the manual warns I$ReadLn then ends only on EOF or error | `common/memory-and-io.md` |
 | BASIC09 `E`, bare `E` or `LOAD` fails `#248 - Media Full`, `0 free` workspace at any `#nk` | a stray second CR in the boot autotype reached the guest — restart it | `6809/using-nitros9-repl.md` |

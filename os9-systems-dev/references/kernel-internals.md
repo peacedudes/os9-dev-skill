@@ -211,6 +211,9 @@ mean anything, and it is why a read-modify-write cycle can genuinely be cut in
 half by another process on real hardware. System-state code (kernel calls and
 I/O operations mid-call) is never preempted mid-operation: it must complete or
 voluntarily sleep/yield, to protect kernel data-structure consistency.
+`Manual` (v2.4 Technical Reference Manual: "User-state routines are
+time-sliced", p. 2-2; the tick, the two-tick slice and pre-emptive task
+switching, p. 2-27; the system-state exception, p. 2-28).
 
 ## Module Directory Internals
 

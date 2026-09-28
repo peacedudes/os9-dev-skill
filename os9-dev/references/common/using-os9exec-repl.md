@@ -12,9 +12,17 @@ not a hardware emulator running real firmware — no ROM, no video/keyboard
 console to bridge around. Its stdin/stdout are the OS-9 console, so a plain PTY/pipe harness
 works directly. It runs on macOS, Linux and Windows — in practice anything
 with a C compiler; the Windows build is a PE cross-compiled with mingw-w64.
-A few *host*-filesystem behaviors differ on Windows
-(NTFS permission mapping, device-alias path resolution) — emulator-platform
-quirks, not OS-9 facts; don't encode them as OS-9 behavior.
+The Windows build is the narrower one. A few *host*-filesystem behaviors
+differ there (NTFS permission mapping, device-alias path resolution), and it
+lacks several things the Unix builds have: every socket path open returns
+`E$Unit`, there is no system tick (so no pre-emption; a Windows run behaves
+like a `-q` run on Unix), `/tN` host terminals cannot bind, and the idle wait
+polls at 1 ms rather than sleeping. `Source` (os9exec). These are
+emulator-platform facts, not OS-9 facts; don't encode them as OS-9 behavior.
+
+The CPU core is a 68020 with a 68881, and `F$SysID` reports 68020; the
+`D_MPUTyp` system global, however, always answers 68040. Code that branches on
+`D_MPUTyp` takes its 68040 path here. `Source` (os9exec).
 
 Microware's own OS-9/68k software (shell, compilers, utilities) is
 proprietary and does not ship with the emulator: supply a legally-held disk

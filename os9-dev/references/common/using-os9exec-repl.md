@@ -684,7 +684,7 @@ matches wins - where "shown" means cut to 28 characters with spaces rendered as 
 nothing converts LF, and `I$ReadLn` ends only at CR, so a three-line LF file
 reads as a single line - `linecount` reports **0 lines** for it. Editing a file
 host-side therefore leaves it unreadable to OS-9 line I/O unless you convert it
-(see the CR-rule section above); the device being a plain host directory does not
+(see "Creating and editing files" above); the device being a plain host directory does not
 buy you host line endings.
 
 **`chx` with no argument prints nothing on a host directory**, where on an

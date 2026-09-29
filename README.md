@@ -6,7 +6,11 @@
 > [NOTICE](NOTICE) credits the sources and is in force regardless.
 
 Two reference collections for working with Microware OS-9 - the real one, on
-6809 and 68000. They are documentation, not a toolchain: plain Markdown with
+6809 and 68000. OS-9 put a modular, multitasking, real-time operating system
+into the 64K of an 8-bit 6809, carried the same design to the 68000, and is
+still sold today for embedded work - industrial control, automotive and
+medical instruments - where it is prized for starting "instant on" from reset.
+These files are written in that spirit. They are documentation, not a toolchain: plain Markdown with
 nothing to build, readable by a person or by any coding agent, and [Claude
 Code](https://claude.com/claude-code) can additionally load them as skills.
 **Doing the work they describe needs an emulator and a Microware SDK that this

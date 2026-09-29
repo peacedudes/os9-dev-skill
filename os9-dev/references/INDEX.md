@@ -58,7 +58,7 @@ has bitten a real session.
 | A shipped binary misbehaves in ways the source beside it cannot explain | they may be different editions - compare the binary's usage text against the source before debugging further | `common/using-os9exec-repl.md` |
 | Output is right in a file and wrong on screen or through a pipe - dropped characters, or a stray NUL byte | `putchar`/`putc` evaluate their argument twice when the stream is line-buffered - `putchar(*p++)` | `c/os9-clib-reference.md` |
 | `**** macro arguments required ****` naming a library function you never called directly | an object-like macro expanding to a function-like macro name - give the wrapper parameters | `c/os9-c-cheatsheet.md` |
-| `cpp` dies with no diagnostic at all | an over-long joined source line - no fixed limit, earlier content lowers it; keep lines well under 500 and note `#if 0` does not exempt one | `c/os9-c-cheatsheet.md` |
+| `cpp` dies with no diagnostic at all | an over-long joined source line - no fixed limit, earlier content lowers it; keep lines well under 500 and note `#if 0` does not exempt one. If lines are short, an `#include`d data file still has LF endings (the `.dat` row below) | `c/os9-c-cheatsheet.md`, `common/unix-differences.md` |
 | `PC` unresolved at link in a termcap port | it is `PC_` here - and check `BC`/`UP`, which link silently as the wrong type | `c/os9-clib-reference.md` |
 | A flex scanner prints nothing for a named file but works when you pipe into it | `freopen(name,"r",yyin)` before the first `yylex()` - some skeletons leave `yyin` null until then | `c/os9-c-cheatsheet.md` |
 | A variable you exported on the host is ignored inside os9exec | only names starting with `@` cross (`@TERM=vt100`); what a non-crossing one looks like inside defeats a NULL check | `common/using-os9exec-repl.md` |
@@ -101,7 +101,7 @@ has bitten a real session.
 | `can't execute "<a word you never typed>"` | you named a data file, and the shell is running its contents as commands - the quoted word came from inside the file | `common/os9-tools-and-shell.md` |
 | A file you just created won't open, or a long name is refused | OS-9 allows 1 to 28 characters and a 29th is refused everywhere | `common/unix-differences.md` |
 | Compiler reads the whole source as one line | source has LF endings; OS-9 needs CR-only | `c/os9-c-cheatsheet.md`, `common/unix-differences.md`, `common/using-os9exec-repl.md` |
-| `cpp` dies on a `.dat`/data file you never thought of as source | it is `#include`d as C initialisers - the CR rule applies by USE, not by extension | `common/unix-differences.md` |
+| `cpp` still dies after every `.c` and `.h` was converted to CR, or dies on a `.dat`/data file you never thought of as source | it is `#include`d as C initialisers - the CR rule applies by USE, not by extension | `common/unix-differences.md` |
 | Program builds and runs but misreads its own data file | LF endings in runtime data: the silent form of the CR rule, nothing reports it | `common/unix-differences.md` |
 | OS-9's `unshar` says `No shell commands in <file>` | the archive was transported without converting to OS-9 text | `common/unix-differences.md` |
 | Program dies immediately with a trap-handler banner | linked against Microware's `cio` trap handler, which this disk lacks | `c/os9-c-cheatsheet.md` |
@@ -117,6 +117,7 @@ has bitten a real session.
 | A listing is short, or something you know exists reads as absent | page pause ate the tail (`tmode pag=0`), or a filter dropped the marked entries | `common/utility-usage.md`, `common/using-os9exec-repl.md` |
 | Output stopped dead, no error, session otherwise alive | a stray `$13` (XOFF) reached the terminal; SCF swallowed it and is holding output until `$11` | `common/os9-tools-and-shell.md` |
 | Ctrl-C/Ctrl-E killed the wrong process | both go to the device's last writer, not a process you name - use `kill <pid>` | `common/using-os9exec-repl.md` |
+| Environment variables set before `login` are gone afterwards | a login starts fresh and inherits nothing - set them in the account's `.login` | `common/os9-tools-and-shell.md` |
 | Ctrl-C or Ctrl-E does nothing to a running packed BASIC09 program | RunB turns the key into an error only when an `ON ERROR GOTO` trap is armed; with none, the loop runs on | `basic09/pack-and-runb.md` |
 | Separate writes run together / output garbled | `I$WritLn` writes **to the first CR** - a buffer without one runs past its end | `common/memory-and-io.md` |
 | A console line stops ending on Enter, or a read returns fewer bytes than asked | on SCF the terminator is **PD_EOR**, not literally CR - `tmode eor=` or a program's SS_Opt moved it. Set to zero, I$Read runs to its full count (the raw-input idiom); the manual warns I$ReadLn then ends only on EOF or error | `common/memory-and-io.md` |

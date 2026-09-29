@@ -30,6 +30,10 @@ dead, orphaned, or free to copy. That matters more here than in the sibling
 skill: kernel internals are exactly where someone is tempted to go looking
 for original source, and none of it is ours to reproduce.
 
+The internals here were built to be small, predictable and real-time, and
+they have proved remarkably durable. A structure that looks unusual usually
+exists for one of those reasons - find it before judging the structure.
+
 ## Core mental model
 
 - Drivers and file managers are ordinary OS-9 modules (shared mechanics:

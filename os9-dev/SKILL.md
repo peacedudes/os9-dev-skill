@@ -19,6 +19,14 @@ binaries are somebody's property today. This is what the provenance rules
 below exist for, and it applies to the v2.4-era and 6809 systems documented
 here as much as to the current line.
 
+**Meet it on its own terms.** OS-9 brought a modular, multitasking, real-time
+design - reentrant, position-independent modules, one shared copy of each
+program, a whole system that can run from ROM - to machines with 64K of
+memory, then carried the same design to the 68000 and beyond, where it is
+still in service. Its conventions differ from Unix because they were chosen
+for that job. Explain them as design, and understand a surprise before
+calling it a defect.
+
 ## Core mental model (read fully every time)
 
 - OS-9 is modular, position-independent, ROMable. Programs are **modules** -

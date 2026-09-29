@@ -179,7 +179,7 @@ evaluate its argument repeatedly covers the *stream*, not the character, so this
 is a genuine departure from that convention rather than a hazard you were warned about.
 
 The stream argument is multiply evaluated too, unconditionally - `putc(c,
-*fpp++)` is broken on any stream, and `getc(p)` evaluates `(p)` several times
+*fpp++)` is unsafe on any stream, and `getc(p)` evaluates `(p)` several times
 for the same reason.
 
 **Which streams are line-buffered is the whole problem.** `Live` (os9exec), one

@@ -100,15 +100,27 @@ routing is what keeps an answer tied to the right file and its confidence tags.
 **An agent that loads skills** - each of the two directories is a standard
 skill folder: a `SKILL.md` whose YAML header carries `name` and `description`,
 with `references/` beside it. Claude Code and other agents that read that
-layout can load them on demand when a task matches. For Claude Code:
+layout can load them on demand when a task matches.
+
+In Claude Code the repository is also a plugin marketplace, so both skills
+install together with two commands and nothing to link:
+
+```
+/plugin marketplace add peacedudes/os9-dev-skill
+/plugin install os9@os9-dev-skill
+```
+
+They then appear as `os9:os9-dev` and `os9:os9-systems-dev`. To use a checkout
+instead, link or copy the two folders into your skills directory:
 
 ```sh
 ln -s "$PWD/os9-dev"         ~/.claude/skills/os9-dev
 ln -s "$PWD/os9-systems-dev" ~/.claude/skills/os9-systems-dev
 ```
 
-Another agent's skills directory takes the same two folders; copying in place
-of symlinking works equally well. Install both, since they cite each other.
+Another agent's skills directory takes the same two folders. Install both,
+since they cite each other.
+
 Where no skill loader exists, the YAML header is harmless to ignore.
 
 ## Scope
@@ -244,6 +256,7 @@ os9-systems-dev/
   SKILL.md  SOURCES.md  references/
 AGENTS.md               entry point for any agent
 CLAUDE.md               the same, imported for Claude Code
+.claude-plugin/         Claude Code plugin and marketplace manifests
 NOTICE                  attribution: Microware and every other source
 CONTRIBUTING.md         how to send a correction, and what gets declined
 DIVERGENCES.md          where a runtime disagrees with a manual

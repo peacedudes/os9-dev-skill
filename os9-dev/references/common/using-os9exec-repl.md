@@ -811,7 +811,7 @@ directory; the file is appended to, and its lines end in CR. `Source`
 
 Known places where os9exec, as a stand-in, behaves differently from the
 Microware manual, each measured on os9exec V4.10 against the manual it
-differs from. These are facts about the emulator, not about OS-9: the manual
+differs from; V4.11 changes none of them. These are facts about the emulator, not about OS-9: the manual
 remains the specification, and the reference pages state its behaviour and
 point here. Code that passes on os9exec but relies
 on one of these will behave differently on real equipment, and vice versa.

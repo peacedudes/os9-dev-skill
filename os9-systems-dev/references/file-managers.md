@@ -408,6 +408,8 @@ one; all four apply on 6809 as on 68k.
 Also: **`SS_Ticks` is only as good as the scheduling under it.** A timeout
 can fire only if the blocked process is re-run while it waits, so on a
 runtime that never preempts, a blocked reader may never notice its deadline.
+os9exec re-runs a lock waiter when its `SS_Ticks` deadline comes due, from the
+scheduler and from its idle wait alike. `Source` (os9exec).
 
 ### Testing it
 

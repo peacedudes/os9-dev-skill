@@ -54,6 +54,51 @@ snag when a file crosses between Unix and OS-9.
   already produce correct native line endings. Under os9exec, see
   `using-os9exec-repl.md`.
 
+**The CR rule fails differently depending on what the file is FOR.**
+That OS-9 text is CR-terminated is easy to remember. What catches people is
+that an LF file announces itself in three different ways, and only the first
+is obvious. `Live` (os9exec), all three:
+
+1. **Source (`.c`, `.h`) - loud, but not always in the same way.** The whole
+   file is one line, and what that does depends on how long the file is.
+   Reported for real sources: `**** source line too long ****` from `cpp`, on
+   every file at once - hard to miss, easy to misread as a defect in the code.
+   Measured on a *short* LF file, `cpp` said **nothing at all** and the
+   failure surfaced at link time as `Symbol 'main' unresolved`, referenced by
+   `cstart_a` - because with everything on one line the leading `#include`
+   directive swallows the rest of it, so no `main` is ever compiled. That form
+   is the more misleading of the two: it points at your entry point, not at
+   your line endings. A long enough one-line file has also been seen to hang
+   `cpp` outright rather than diagnose anything. `Live` (os9exec). **A silent
+   `cpp` death is not diagnostic of line endings on its own** - an over-long
+   *logical* line kills it the same way, including one you believed you had
+   disabled inside `#if 0` (`c/os9-c-cheatsheet.md`). Both are the same
+   underlying limit reached from opposite directions; check line endings first
+   because it is cheaper, then the line.
+2. **Data read at run time - silent.** The program builds, starts, and reads
+   records that are not delimited the way it expects. A word list, a
+   dictionary, a grammar, a score file. Nothing reports anything.
+3. **Data `#include`d as source - the trap.** Files that are data by name and
+   extension but source by use: `monop` keeps its board, properties and cards
+   in `.dat` files that `monop.def` pulls in as C initialisers, so an LF
+   `.dat` kills the *build*, with `cpp` dying exactly as it would on a `.c`.
+   Convert "the source" and leave "the data" alone and you have broken the
+   build in a file you are not looking at.
+
+**The handling that avoids all three: unpack on OS-9 itself.** A
+well-stocked disk carries `unshar`, `tar`, `ar`, `lha`, `gzip`, `compress`,
+`unzip`, `zip`, `arc` and `zoo`; every file an OS-9 tool writes is
+CR-terminated by construction, whatever its extension or role. `Live`
+(os9exec), verified by extracting one archive both ways - the disk's own `unshar` produced files
+byte-identical to a host-side unpack, without the conversion step that can be
+got wrong.
+
+That leaves exactly one host-side step, and it is transport: a **text** archive
+has to arrive on the disk as OS-9 text. Skip it and OS-9's `unshar` cannot read
+it either - it answers `No shell commands in <file>`, which is not an obvious
+way of saying "wrong line endings". Binary archives (`.lzh`, `.Z`, `.tar`)
+transport unconverted; converting one corrupts it.
+
 ### 3. A program is a *module*, not a flat executable
 
 Header + body + CRC, position-independent, no fixed load address, no

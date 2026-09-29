@@ -30,8 +30,12 @@ on it.
 **What it covers:** the early OS-9 line, from the 6809 (Level One and Level
 Two) up to OS-9/68000 at version 2.4. It has nothing specific to OS-9000, to
 later OS-9 releases, or to Microware's other products such as MAUI, and
-networking is covered only in outline. For those, Microware's own
-documentation is the place to go.
+networking is covered only in outline. CD-RTOS, the OS-9 inside the Philips
+CD-i player, is OS-9, and what applies to OS-9/68000 applies to it; but CD-i
+itself, the "Green Book" hardware and software standard, is not covered. Nor
+is every machine OS-9 ran on: the Tandy Color Computer and Dragon get some
+hardware notes, and other machine-specific details are largely absent. For
+those, Microware's own documentation is the place to go.
 
 This reference comes from OS-9's users, not from Microware. Microware isn't
 responsible for it and doesn't endorse it, and anything it says about OS-9 is

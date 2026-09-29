@@ -21,6 +21,9 @@ They are siblings and cross-reference each other; keep both.
 **Scope:** the early OS-9 line - 6809 Level One and Level Two, and OS-9/68000
 up to version 2.4. Nothing here covers OS-9000, later OS-9 releases, or other
 Microware products such as MAUI, and networking is covered only in outline.
+CD-RTOS is OS-9 and the 68000 material applies to it, but CD-i itself (the
+Green Book standard) is not covered, and hardware-specific detail beyond some
+CoCo/Dragon notes is largely absent.
 For those, say so and point to Microware's documentation rather than answering
 from these files.
 

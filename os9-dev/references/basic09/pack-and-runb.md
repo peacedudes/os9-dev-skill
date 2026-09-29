@@ -159,6 +159,12 @@ edit/debug). Per the manual, code under RunB can trap Ctrl-C/Ctrl-Q via
    module link/load (`Manual` order).
 2. **From the OS-9 shell** — `runb <name>`, or the bare name (the shell
    auto-detects BASIC I-code and forks RunB with the name as argument).
+   It is the **shell** that does this, not the kernel: `Manual` on both
+   targets (*Using Professional OS-9* v2.4, "Running Compiled Intermediate
+   Code Programs" and the `shell` entry; the 6809 *OS-9 Operating System
+   User's Guide* §4.8). `F$Fork`/`F$Chain` require object code (68k TRM
+   `F$Fork`, p. 1-30), so a program forking a packed module by name gets no
+   such help and must fork RunB itself.
    Either way the module resolves via OS-9's standard order: **F$Link
    (already resident?) then F$Load, which searches only CHX** — not
    `PATH`. Bare-name invocation additionally needs RunB itself resolvable

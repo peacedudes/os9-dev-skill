@@ -47,7 +47,7 @@ simply start when given one, are largely absent from that 609. So "545 of 609"
 is *of the programs that answered something*, not of everything on the disk, and
 the true proportion of programs honouring `-?` across a whole disk is lower.
 
-<!-- PUBLISH: when the collection is public, name it and link it here. -->
+The collection is **osk-freeware**: https://github.com/peacedudes/osk-freeware
 
 ## Primary sources by file
 

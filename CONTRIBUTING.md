@@ -10,8 +10,7 @@ project. It was built for a purpose, it reached a usable state, and it may sit
 untouched for long stretches. Corrections may be merged promptly, slowly, or
 not at all. Nothing here is a commitment to respond, and a quiet repository is
 the expected steady state rather than a sign something went wrong. If that makes
-forking the better route for you, check [LICENSE](LICENSE) for whether that is
-permitted yet - while the pre-publication notice stands, it is not.
+forking the better route for you, [LICENSE](LICENSE) (MIT) permits it.
 
 ## The most useful thing you can send
 
@@ -39,7 +38,7 @@ that says only *what* usually cannot.
 there is deliberately no email address here, and the author is not reachable
 through OS-9 forums or mailing lists.
 
-<!-- PUBLISH: put the repository URL on the line below. -->
+Issues: https://github.com/peacedudes/os9-dev-skill/issues
 
 If you are holding a copy that arrived as a zip or a folder rather than a
 checkout, it travelled without its link. The repository is public; search for its

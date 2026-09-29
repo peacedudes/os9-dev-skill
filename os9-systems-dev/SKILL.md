@@ -5,9 +5,6 @@ description: Use when writing - or when explaining how anything works inside - a
 
 # OS-9 Systems Development Skill
 
-> **Pre-publication - not for distribution.** Circulated privately for review;
-> no license is granted yet. See `LICENSE` at the repo root.
-
 The kernel/systems half of OS-9 development - extending OS-9 itself:
 
 - **Device drivers** (Init/Read/Write/GetStat/SetStat/Term entry points,

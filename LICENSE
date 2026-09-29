@@ -1,46 +1,21 @@
-PRE-PUBLICATION — NOT FOR DISTRIBUTION
+MIT License
 
-Status: unreleased. No license is granted at this time.
+Copyright (c) 2026 Robert Doggett
 
-Copyright (c) 2026 Robert Doggett. All rights reserved.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-This material is circulated privately, for review only. While this notice
-stands it may not be redistributed, republished, mirrored, posted publicly,
-or incorporated into another work, in whole or in part.
-
-
-WHY THERE IS NO LICENSE YET
-
-These documents describe Microware OS-9, which is not a historical curiosity:
-it remains a commercial product, still sold and still ported to new
-processors, with an active rights holder.
-
-The material here was assembled from publicly published documentation and
-from original testing against emulators, and was written specifically to
-avoid reproducing Microware's proprietary text or code — the prose is
-original, no worked code examples are preserved verbatim, and no file mirrors
-a source's structure. README.md and each skill's SOURCES.md set out that
-chain in detail, including the material that was deliberately left unread.
-
-Care taken in good faith is still not the same as terms agreed. What may
-properly be published, and under what license, is Microware's to weigh in on
-first. This notice stands until they have had that opportunity.
-
-A license file will replace this notice after review by Microware. The intended
-terms are staged in LICENSE.pending -- the MIT License, chosen to be as
-permissive as is reasonable while keeping credit attached to every copy.
-
-Attribution does not wait on any of this: NOTICE credits Microware Systems
-Corporation, the licensee publishers, Motorola, the third-party authors, the
-community reimplementations this material was tested against, and the
-preservation archives that kept the documentation alive. It is in force now and
-is unaffected by whatever license follows.
-
-
-IF YOU HAVE BEEN GIVEN A COPY
-
-Read it, use it, and say what you think of it. Please do not redistribute it
-or post it publicly. If anything here misstates OS-9, or reads to you as
-going further than it should with Microware's material, say so — that is
-what this review period is for.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

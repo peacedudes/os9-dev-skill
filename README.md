@@ -1,10 +1,5 @@
 # OS-9 development skills
 
-> **Pre-publication - not for distribution.** Circulated privately for review;
-> no license is granted yet. See [LICENSE](LICENSE) for why, and
-> [LICENSE.pending](LICENSE.pending) for the terms intended to replace it.
-> [NOTICE](NOTICE) credits the sources and is in force regardless.
-
 A working reference for programming **Microware OS-9** on the 6809 and the
 68000, written to be read by a person or handed to an AI coding assistant.
 BASIC09, Microware C, 68000 and 6809 assembly, the shell and its utilities,
@@ -154,9 +149,11 @@ deliberately left out, is in each skill's `SOURCES.md`.
 - **os9exec** (https://github.com/peacedudes/os9exec) - an OS-9/68000
   emulator for macOS, Linux and Windows. Its conformance suite, CONF68K, also
   runs on real OS-9/68000 hardware; `CONTRIBUTING.md` says how to help with it.
-- **A collection of OS-9/68000 freeware**, rebuilt and tested under os9exec,
-  whose porting work found many of the traps recorded here.
-  <!-- PUBLISH: when the collection is public, link it on the line above. -->
+- **osk-freeware** (https://github.com/peacedudes/osk-freeware) - over a thousand programs written for
+  OS-9/68000 by the people who ran it, rebuilt and tested under os9exec; its
+  porting work found many of the traps recorded here. Try it live in a
+  browser at https://peacedudes.github.io/osk-freeware/try/, or browse the
+  catalogue at https://peacedudes.github.io/osk-freeware/.
 
 ## Layout
 

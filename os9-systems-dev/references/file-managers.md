@@ -335,10 +335,9 @@ designing around deliberately rather than merely tolerating as a safety net
     Technical Reference Manual p. 7-9); its `SS_Lock` entry locks from the
     file pointer, or the whole file for `$FFFFFFFF`, and says nothing about
     the path's mode (p. 2-25). Released programs rely on that: the OS-9 port
-    of nethack whole-file-locks its log through a write-only path. `Live`
-    (os9exec) differs - it refuses a lock on a non-update path; see `os9-dev`'s
-    `common/using-os9exec-repl.md`, "Where os9exec departs from the manuals".
-    A *release* (`SS_Lock` of 0) is always allowed.
+    of nethack whole-file-locks its log through a write-only path, and
+    os9exec accepts an explicit lock from a path in any mode (`Source`
+    (os9exec)). A *release* (`SS_Lock` of 0) is always allowed.
 - A lock is released by the next read, the next write, a path close, or an
   explicit `SS_Lock` SetStat. A zero-byte read or write drops every lock that
   path holds - record, EOF, or whole-file. `seek()` never affects locking.

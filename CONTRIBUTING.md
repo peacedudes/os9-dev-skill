@@ -75,7 +75,7 @@ Pick any line from either and test it. You do not need to fix the file - saying
 
 **The quickest check of all needs no reading.** Most `Live` tags here were
 measured under os9exec, and os9exec's own conformance suite, CONF68K, turns its
-readings of the Microware manuals into 115 standalone tests - hand-written
+readings of the Microware manuals into 116 standalone tests - hand-written
 assembly, no Microware software - shipped as a disk image, `conf68k.dsk`, with
 its releases (https://github.com/peacedudes/os9exec/releases). Put it on a disk
 device of an OS-9/68000 machine and follow the disk's own readme. A run ends

@@ -516,7 +516,7 @@ cc /dd/source.c
 
 - `cc` forks its sub-tools (`cpp`, `c68`, `o68`, `r68`, `l68`) by bare
   name, which resolves against the **execution directory, not PATH** (see
-  below). Keep `chx` parked at the shared command directory via `.login`.
+  `os9-mental-model.md`). Keep `chx` parked at the shared command directory via `.login`.
 - `cc: cannot execute the pre-processor` usually means the sub-tools
   aren't loaded/reachable - `load` them in the startup file rather than
   patching `chx` around it.
@@ -620,18 +620,8 @@ described in `os9-tools-and-shell.md`, "Accounts and login". Under os9exec:
 
 ## Fork lookups use chx, not PATH
 
-When a program forks another by bare name (`F$Fork`), the kernel resolves
-against the caller's **execution directory** - `PATH` is purely the
-shell's interactive search list. Classic symptom: `deldir` forks `pd` and
-dies with "can't determine current directory" despite a perfect `PATH`.
-Fix `chx`, not `PATH`, whenever "command X can't find helper Y."
-
-**Some disks' `sh` cannot fork an absolute pathname at all** - the workaround is
-`load` the module first, then fork it by bare name. That is a property of the
-shell on a given disk rather than of the emulator: `Live` (os9exec), one disk
-requires it while another forks bare names and absolute paths alike. Worth
-trying before concluding a program is unrunnable, and worth not mistaking for an
-emulator difference when two setups disagree.
+The rule, the `deldir`-forks-`pd` symptom and the disks whose `sh` cannot fork
+an absolute pathname: `os9-mental-model.md`, "Two current directories, not one".
 (os9exec detail: the top-level process's chx comes from `OS9CMDS`,
 default `$OS9DISK/CMDS`, interpreted as a *host* path - set chx from
 inside OS-9 or via startup/`.login` instead.)

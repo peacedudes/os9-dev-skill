@@ -57,7 +57,7 @@ duplicate symbol, so it sends you to read the wrong line. `Live` (os9exec).
 
 - **`cc`** drives `cpp` -> `c68` -> `o68` -> `r68` (assembler) -> **`l68`**
   (linker), forking each by bare name via the execution directory (see
-  `common/using-os9exec-repl.md`).
+  `common/os9-mental-model.md`).
 - **`l68`** error taxonomy - `Live` (os9exec): `file 'x.r' is not a
   relocatable module` = the input does not start like a ROF (a zeroed sync
   word, a large text file); `error reading input file` = a truncated ROF;

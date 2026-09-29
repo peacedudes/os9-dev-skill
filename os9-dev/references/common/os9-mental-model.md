@@ -100,6 +100,20 @@ Advanced* training manual). `chd` alone never makes a program findable.
 Prefer `PATH` over moving `chx`; `chx` matters when a tool forks co-located
 sub-tools by bare name (compiler drivers do - see `c/os9-c-cheatsheet.md`).
 
+**Fork lookups use `chx`, not `PATH`.** When a program forks another by bare
+name (`F$Fork`), the kernel resolves against the caller's **execution
+directory** - `PATH` is purely the shell's interactive search list. Classic
+symptom, `Live` (os9exec): `deldir` forks `pd` and dies with "can't determine
+current directory" despite a perfect `PATH`. Fix `chx`, not `PATH`, whenever
+"command X can't find helper Y."
+
+**Some disks' `sh` cannot fork an absolute pathname at all** - the workaround is
+`load` the module first, then fork it by bare name. That is a property of the
+shell on a given disk rather than of the emulator: `Live` (os9exec), one disk
+requires it while another forks bare names and absolute paths alike. Worth
+trying before concluding a program is unrunnable, and worth not mistaking for an
+emulator difference when two setups disagree.
+
 A consequence of that last step, easy to miss: a file found and run this way
 has **all** its modules loaded and the **first** one executed, so the name of
 the file need not be the name of the module that actually runs - `Manual` (the

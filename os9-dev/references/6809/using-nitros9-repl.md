@@ -282,8 +282,8 @@ means *its* tools, not a directory you will find beside this file.
   inherit. `login` also prints `SYS/MOTD`.
 - **No `.login` means no `PATH`, so `chx` elsewhere strips you of every
   utility.** `Live` (NitrOS-9). Fork lookups resolve against the execution
-  directory (`common/using-os9exec-repl.md`, "Fork lookups use chx, not
-  PATH"), and on 6809 nothing sets `PATH` for a logged-in account. So the
+  directory (`common/os9-mental-model.md`, "Two current directories, not
+  one"), and on 6809 nothing sets `PATH` for a logged-in account. So the
   moment you `chx` to your own directory - running programs off a
   DriveWire-mounted image, say - `procs`, `runb` and the rest become
   unreachable, and the failure reads as "my disk is broken" rather than "my

@@ -147,7 +147,7 @@ Error *codes* (number -> meaning) are a different lookup: `common/error-codes.md
 
 | Question about... | Read |
 |---|---|
-| General concepts: modules, link counts, process model, scheduler (priority+aging), two current directories (chd/chx), I/O layering (file manager / driver / descriptor), CR line endings, big-endian | common/os9-mental-model.md |
+| General concepts: modules, link counts, process model, scheduler (priority+aging), two current directories (chd/chx; fork lookups use chx, not PATH), I/O layering (file manager / driver / descriptor), CR line endings, big-endian | common/os9-mental-model.md |
 | "How do I do `<Linux thing>` in OS-9?", Unix-habit traps, K&R-not-ANSI, mknod/directory-open surprises, signal contract vs Unix | common/unix-differences.md |
 | Shell syntax (`;` `&` `!` separators, `<` `>` `>>` redirection, `#nk` memory modifier), wildcards, built-ins (chd/chx/ex/profile/setenv/set), PROMPT, procedure files, accounts/login/`.login`/`SYS/password`, control keys and line editing (Ctrl-A recall, Ctrl-W pause, ESC=EOF), page pause, the standard utility catalog (attr...xmode) | common/os9-tools-and-shell.md |
 | Per-command **syntax and options** for every v2.4 utility (dir -e, copy -w, del -f, load -d, dsave/fsave/frestore flags, format/os9gen, fixmod -u, grep/pr/qsort/tr, tape...), the `-z`/`-x`/`-b=` conventions, `tee >file` heredoc, full tmode/xmode parameter table (eof=, abort=, quit=, pag=, baud...), the 68k baud code table and what `tmode baud=` really writes, `kermit` flag traps (`l`, `i`-not-`8`) | common/utility-usage.md |
@@ -155,7 +155,7 @@ Error *codes* (number -> meaning) are a different lookup: `common/error-codes.md
 | Memory allocation (first-fit/buddy, colored memory, 32-segment limit, malloc/_srqmem/_lmalloc, edata/end), device descriptors (M$Mode/M$DevCon/M$Opt), path descriptors (PD_OPT, PD_COUNT), I$Attach matching, device static storage, I$ call behavior table, device naming (/dd /h0 /term /nil), fork-time memory regions | common/memory-and-io.md |
 | Signals (codes, masking, queuing, intercept), alarms (guard/ticker patterns), events (the one sync primitive), pipes (named vs unnamed, 90-byte default, EOF/deadlock rules), **record locking** (RBF's automatic read/write byte-range locks, EOF lock, lost-update-race-for-free design pattern), data-module IPC patterns, reentrancy in system state | common/ipc.md |
 | `Error #NNN:MMM` format, full E$ table 000-255, BASIC09-internal errors 10-80, errno/ERR conventions, cross-manual discrepancies | common/error-codes.md |
-| Driving the os9exec emulator/REPL as an agent: launch/OS9DISK gotchas, gated-vs-raw send, grep -a, editing files (vi/tee/tr), compiling C end-to-end, the BASIC09 trap-handler race, booting as superuser vs tsmon, chx-vs-PATH fork rule, RBF image vs host directory, symlink quirks, stopping runaways, idbg, the OS-9 `debug` command (sc/gs defects) | common/using-os9exec-repl.md |
+| Driving the os9exec emulator/REPL as an agent: launch/OS9DISK gotchas, gated-vs-raw send, grep -a, editing files (vi/tee/tr), compiling C end-to-end, the BASIC09 trap-handler race, booting as superuser vs tsmon, top-level chx from `OS9CMDS`, RBF image vs host directory, symlink quirks, stopping runaways, idbg, the OS-9 `debug` command (sc/gs defects) | common/using-os9exec-repl.md |
 
 ## BASIC09 (same language on both targets - read basic09-language.md first)
 

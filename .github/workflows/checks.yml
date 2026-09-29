@@ -10,7 +10,7 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Consistency checker
         run: python3 tools/check_doc_consistency.py
       - name: Checker tests

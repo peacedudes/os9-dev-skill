@@ -485,7 +485,7 @@ Three routes, in order of preference by size:
    `Unknown terminal type`, two further causes sit behind that one message, and
    the quotes tell them apart: a **named** type means the entry was not matched,
    so suspect the reader that skips any entry lacking a two-character first
-   field (below); an **empty** `''` means the name never reached the library at
+   field (`c/os9-clib-reference.md`); an **empty** `''` means the name never reached the library at
    all - check the `@` prefix above, and note that a `setenv`-created variable
    is visible to `getenv` and invisible to curses
    (`c/os9-clib-reference.md`). Basic loop: `i`,
@@ -588,65 +588,13 @@ before you spend an evening on the wrong question.
 
 ## When `vt100` is right and the program still says "Unknown terminal type"
 
-A family of ported programs carries its own termcap reader, and **it will not
-look at a modern termcap entry** - so a correct `TERM` and a termcap file that
-plainly contains `vt100` are not enough, and the `TERM=vt100` advice above does
-not rescue it. Identify the family from the binary:
-
-```sh
-strings -a <program> | grep -E '/dd/sys/termcap|%s/sys/termcap'
-```
-
-Both strings together mean this reader. With `TERMCAP` unset it tries
-`/dd/sys/termcap` then `$HOME/sys/termcap`; set to a path it opens that; set to
-anything not starting with `/` it treats the value itself as the entry.
-
 **First rule out the file you think it is reading.** A device you did not
 configure falls back to another tree, so a termcap you corrected under `OS9H0`
 is not what a program opening `/dd/sys/termcap` sees - that trap is described
 under "Launching and disks" above, and it produces this identical message. Once
-the program is provably reading your file, read on.
-
-**The cause is the entry's first field.** The reader skips a line unless its
-**third byte is `|`** - the older two-character alias form, `d0|vt100:...` -
-and it skips lines beginning `#` as comments. A modern entry whose first field
-is longer than two characters is skipped outright:
-
-```
-xterm-256color|xterm|vt100|xterm with 256 colors:     skipped: byte 2 is 'e'
-d0|vt100:bs:co#80:li#24:cl=\E[H\E[J:...              matched
-```
-
-`vt100` present only as a later alias is never reached, because the line
-carrying it is discarded before any alias is examined.
-
-**The fix is to give the entry a two-character alias.** `Live` (os9exec): with
-`TERMCAP` pointing at a file holding `d0|vt100:...`, two programs of this family
-that had answered `'vt100': Unknown terminal type` against a stock termcap both
-got past `tgetent` - one drew its screen correctly, the other proceeded into
-terminal setup and failed there for an unrelated reason. Same file, same
-programs, only the first field changed.
-
-**The alternative is to put the entry in `TERMCAP` directly**, which needs no
-termcap file at all and is the better answer when you do not own the file:
-
-```sh
-TERMCAP='vt100|dec vt100:bs:co#80:li#24:cl=\E[H\E[J:...'
-```
-
-The value is used as the entry, so the two-character alias is not required on
-this route - the first field is only read when scanning lines of a file.
-
-Two hazards, both measured `Live` (os9exec) in one build, and both on the string
-route rather than the file route:
-
-- **The copy that reads the value stops only on a carriage return** - no length
-  limit and no NUL check. An environment variable is NUL-terminated, so that
-  build runs away through memory until it dies. A program that aborts *after*
-  you supply a working `TERMCAP` string may be failing this way; give that one a
-  file instead, where the line's terminator stops the copy.
-- **The destination is a 128-byte buffer** while the line buffer is 256, so an
-  entry over about 127 bytes overruns it. Keep entries short on either route.
+the program is provably reading your file, the termcap reader
+itself is the suspect: see `c/os9-clib-reference.md`, "A termcap reader that
+skips modern entries".
 
 ## Discovering what's installed
 

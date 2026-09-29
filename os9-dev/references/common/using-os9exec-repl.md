@@ -598,12 +598,10 @@ skips modern entries".
 
 ## Discovering what's installed
 
-Ask the running system, never assume: `dir /dd/CMDS` (core set), look for
-freeware/toolchain subdirectories (their separation from core CMDS is
-usually deliberate - name collisions), `ident`/`attr <name>` for what a
-thing is, `mdir` for what's loaded, and `imdir` (an os9exec built-in, not
-an OS-9 command) for the emulator's own view of loaded modules - useful to
-confirm a trap handler actually installed.
+Ask the running system (`os9-tools-and-shell.md`, "Discovering what's
+installed"); in addition, `imdir` (an os9exec built-in, not an OS-9 command)
+gives the emulator's own view of loaded modules - useful to confirm a trap
+handler actually installed.
 
 ## Accounts: don't stay superuser
 

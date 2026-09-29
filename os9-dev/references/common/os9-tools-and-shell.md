@@ -302,6 +302,13 @@ but it also means a script or harness must not assume ESC is still EOF.
   screen until a key is pressed. Lines longer than the screen width wrap
   without being counted, so the pause point drifts on wrapped output.
 
+## Discovering what's installed
+
+Ask the running system, never assume: `dir /dd/CMDS` (core set), look for
+freeware/toolchain subdirectories (their separation from core CMDS is
+usually deliberate - name collisions), `ident`/`attr <name>` for what a
+thing is, and `mdir` for what's loaded. `Live` (os9exec).
+
 ## Standard utility set
 
 Names below are the Professional OS-9 v2.4 (68k) set; most exist on 6809 as

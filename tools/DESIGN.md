@@ -1,8 +1,7 @@
 # Skill-doc consistency checker - design
 
-Repo: `~/Developer/os9/os9-dev-skill` (os9-dev + os9-systems-dev; symlinked
-into `~/.claude/skills/`). Entry: `check_doc_consistency.py`. Run from the
-repo root:
+Covers both skills, os9-dev and os9-systems-dev. Entry:
+`check_doc_consistency.py`. Run from the repo root:
 
 ```
 python3 tools/check_doc_consistency.py            # scan both skills' references/
@@ -113,7 +112,7 @@ but never bind across clause punctuation (`,;:()`), so a later clause's
 4. **Cross-reference integrity** - an `INDEX.md` row naming a `.md` file that
    doesn't exist. Scoped to `INDEX.md` only: prose elsewhere in the corpus
    routinely names files that live in a different repo entirely (dogfood
-   reports under `os9exec-git_code/test/`, that repo's gitignored
+   reports under os9exec's `test/`, that repo's gitignored
    `ROADMAP.md`) and scanning them would false-positive on legitimate
    cross-repo mentions - exactly the "fragile general-prose claim-matching"
    this checker deliberately avoids. Resolution is **by basename**: `INDEX.md`

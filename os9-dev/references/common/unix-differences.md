@@ -282,7 +282,7 @@ cannot walk off the top of a device.
 **`../..` is also accepted** - it is two one-level components and lands in the
 same place. Worth knowing so that borrowed Unix code is not suspected wrongly,
 and so that a mixed pathlist is read correctly, but not worth writing.
-`Hearsay` (rdoggett, from a real system: "yes real os-9 accepts `../../../..`
+`Hearsay` (the author, from a real system: "yes real os-9 accepts `../../../..`
 no problem"), so this is OS-9's behaviour and not a runtime indulgence.
 
 `Live` (os9exec): the rule holds for

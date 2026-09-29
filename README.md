@@ -25,8 +25,13 @@ Its documentation was thorough and well made, but it is now scattered across
 decades of manuals, editions and scans. These files gather what a programmer
 needs into one place, and every claim says where it came from - a Microware
 manual, or a program actually run - so you can tell at a glance how far to lean
-on it. They cover the classic line, the v2.4-era 68000 system and 6809 Level
-Two; the current releases are documented by Microware itself.
+on it.
+
+**What it covers:** the early OS-9 line, from the 6809 (Level One and Level
+Two) up to OS-9/68000 at version 2.4. It has nothing specific to OS-9000, to
+later OS-9 releases, or to Microware's other products such as MAUI, and
+networking is covered only in outline. For those, Microware's own
+documentation is the place to go.
 
 This reference comes from OS-9's users, not from Microware. Microware isn't
 responsible for it and doesn't endorse it, and anything it says about OS-9 is

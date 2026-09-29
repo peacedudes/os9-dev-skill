@@ -236,7 +236,7 @@ This banner + `Error #000:216 (E_PNNF)` has several distinct causes:
    `load cio`, no flag, once per session.
 2. **`cio`/`csl` genuinely not resident** (check `mdir`): `load cio`. A
    binary linked against the proprietary `cio` handler dies with this
-   banner on any disk lacking it - see `common/using-os9exec-repl.md` for
+   banner on any disk lacking it - see `c/os9-c-cheatsheet.md` for
    classifying and rebuilding cio-locked binaries.
 3. Under os9exec only, an intermittent failure with the module resident:
    `common/using-os9exec-repl.md`.

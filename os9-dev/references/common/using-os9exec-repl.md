@@ -548,36 +548,7 @@ The line editor, workspace and `LOAD` mechanics are in
 
 ## The cio trap handler divides archived binaries
 
-Most archived OS-9/68k programs were linked against Microware's
-proprietary `cio` C-I/O trap handler; on a disk without it they die
-immediately with `**** Can't install trap handler **** / **** cio ****`.
-
-- **Classify by running it, not by reading the binary** - `Live` (os9exec).
-  Run each program against an image with `cio`, `csl`, `csl020`, `math` and
-  `math881` removed, and match the banner, which names the handler that could
-  not be installed (`cio`, `csl`, or a program's own, such as `Graph`).
-  Searching the file for the string `cio` is a proxy that can fail in both
-  directions - a name can appear without the module being needed, and a
-  program can need it without the name appearing where a search looks. Only
-  `cio`/`csl` are fatal - `math`/`math881` are the optional floating-point
-  handlers and referencing one is harmless.
-- A statically linked "cio-free" build of the same utility is noticeably
-  larger; prefer it when both exist.
-- **Linking the SDK's `cio` library against a mismatched `cio` module
-  silently corrupts I/O** rather than failing - the selector numbers differ.
-  Build trap-free (`-qm`) for anything installed; see the `cio` selector
-  pitfall in `c/os9-c-cheatsheet.md`.
-- Escape hatch: anything compiled with a public compiler plus a POSIX
-  wrapper header set that calls syscalls directly needs no trap handler.
-- **The same banner also means "present but not reachable."** A trap
-  handler's companion module is found through the module directory and then
-  the current execution directory, so moving `chx` off the directory holding
-  `cio` stops every `cio`-linked program with the identical
-  `**** Can't install trap handler **** cio ****` - `chx /dd/CMDS/GCC2`, to
-  reach a compiler driver by bare name, does exactly this. `load /dd/CMDS/cio`
-  first cures it. A module on another *device* instead fails with a generic
-  Path-Not-Found though the file exists. `Live` (os9exec). Check `chx` before
-  concluding the module is absent or the binary is built for the wrong CPU.
+See `c/os9-c-cheatsheet.md`, "The `cio` trap handler divides archived binaries".
 
 ## Existing freeware is a development resource, not just software to run
 

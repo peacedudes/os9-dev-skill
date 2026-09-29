@@ -104,7 +104,7 @@ has bitten a real session.
 | `cpp` dies on a `.dat`/data file you never thought of as source | it is `#include`d as C initialisers - the CR rule applies by USE, not by extension | `common/unix-differences.md` |
 | Program builds and runs but misreads its own data file | LF endings in runtime data: the silent form of the CR rule, nothing reports it | `common/unix-differences.md` |
 | OS-9's `unshar` says `No shell commands in <file>` | the archive was transported without converting to OS-9 text | `common/unix-differences.md` |
-| Program dies immediately with a trap-handler banner | linked against Microware's `cio` trap handler, which this disk lacks | `common/using-os9exec-repl.md` |
+| Program dies immediately with a trap-handler banner | linked against Microware's `cio` trap handler, which this disk lacks | `c/os9-c-cheatsheet.md` |
 | Harness times out with the command visibly working | prompt gate doesn't recognise a sub-program's prompt - use raw keys | both REPL files |
 | Session hangs or dies on a syscall that looked ordinary | `F$SSvc`/`F$IOQu`/`F$NProc` (6809), `F$SysDbg`/`F$RTE` (68k) | both REPL files |
 | Fix has no effect although the rebuild succeeded / rebuild behaves exactly like the old binary | the crashed module is **still resident** and shadows the new one - `mdir`; the output file itself was replaced | `basic09/basic09-per-target.md` |
@@ -155,7 +155,7 @@ Error *codes* (number -> meaning) are a different lookup: `common/error-codes.md
 | Memory allocation (first-fit/buddy, colored memory, 32-segment limit, malloc/_srqmem/_lmalloc, edata/end), device descriptors (M$Mode/M$DevCon/M$Opt), path descriptors (PD_OPT, PD_COUNT), I$Attach matching, device static storage, I$ call behavior table, device naming (/dd /h0 /term /nil), fork-time memory regions | common/memory-and-io.md |
 | Signals (codes, masking, queuing, intercept), alarms (guard/ticker patterns), events (the one sync primitive), pipes (named vs unnamed, 90-byte default, EOF/deadlock rules), **record locking** (RBF's automatic read/write byte-range locks, EOF lock, lost-update-race-for-free design pattern), data-module IPC patterns, reentrancy in system state | common/ipc.md |
 | `Error #NNN:MMM` format, full E$ table 000-255, BASIC09-internal errors 10-80, errno/ERR conventions, cross-manual discrepancies | common/error-codes.md |
-| Driving the os9exec emulator/REPL as an agent: launch/OS9DISK gotchas, gated-vs-raw send, grep -a, editing files (vi/tee/tr), compiling C end-to-end, the BASIC09 trap-handler race, cio trap-handler triage, accounts/login/.login, chx-vs-PATH fork rule, RBF image vs host directory, symlink quirks, stopping runaways, idbg, the OS-9 `debug` command (sc/gs defects) | common/using-os9exec-repl.md |
+| Driving the os9exec emulator/REPL as an agent: launch/OS9DISK gotchas, gated-vs-raw send, grep -a, editing files (vi/tee/tr), compiling C end-to-end, the BASIC09 trap-handler race, accounts/login/.login, chx-vs-PATH fork rule, RBF image vs host directory, symlink quirks, stopping runaways, idbg, the OS-9 `debug` command (sc/gs defects) | common/using-os9exec-repl.md |
 
 ## BASIC09 (same language on both targets - read basic09-language.md first)
 
@@ -172,7 +172,7 @@ Error *codes* (number -> meaning) are a different lookup: `common/error-codes.md
 | Question about... | Read |
 |---|---|
 | K&R vs ANSI constructs, prototypes, missing headers | c/kandr-vs-ansi.md |
-| `cc` invocation, CLIB/CDEF, compiler quirks, calling C from BASIC09 (6809 c-link) | c/os9-c-cheatsheet.md |
+| `cc` invocation, CLIB/CDEF, compiler quirks, `cio` trap-handler triage of archived binaries, calling C from BASIC09 (6809 c-link) | c/os9-c-cheatsheet.md |
 | Standard library behavior (stdio/strings/malloc/os9fork) | c/os9-clib-reference.md |
 
 ## 68k

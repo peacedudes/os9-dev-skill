@@ -89,7 +89,8 @@ emulator first and this corpus with it.
 ## If you want to send a patch
 
 The same three things apply, plus the conventions that keep the corpus
-trustworthy. Both gates must pass, and a tracked pre-commit hook enforces them:
+trustworthy. Both gates must pass: a tracked pre-commit hook enforces them
+locally, and the same checks run on every pull request.
 
 ```sh
 git config core.hooksPath tools/hooks     # re-run after a fresh clone

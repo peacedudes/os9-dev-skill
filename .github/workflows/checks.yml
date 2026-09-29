@@ -1,0 +1,23 @@
+# The same gates the pre-commit hook runs, for every push and pull request.
+# Standard library only: nothing to install.
+name: checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Consistency checker
+        run: python3 tools/check_doc_consistency.py
+      - name: Checker tests
+        run: python3 tools/tests/test_check.py
+      - name: Claim-coupling tests
+        run: python3 tools/tests/test_claim_coupling.py
+      - name: Plugin manifests are valid JSON
+        run: |
+          python3 -m json.tool .claude-plugin/plugin.json > /dev/null
+          python3 -m json.tool .claude-plugin/marketplace.json > /dev/null

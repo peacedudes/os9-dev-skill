@@ -537,40 +537,14 @@ cc /dd/source.c
 
 ## BASIC09 interactively
 
-```
-basic          -> B: (system mode)
-B:e test       -> edit mode, * / E: prompt
-E: print "hi"  -> LEADING SPACE required - see below
-E:q            -> back to B:
-B:run test
-B:bye          -> back to the OS-9 shell
-```
+The line editor, workspace and `LOAD` mechanics are in
+`basic09/basic09-language.md`, "Working at the prompts". One os9exec-only trap:
 
-- **In the line editor, a leading space means "insert this line."**
-  Without it the text is parsed as an editor command and usually fails
-  with `What?` - easy to misread as a BASIC09 syntax error. `list` works
-  from `B:`, not inside the editor.
-- **Memory:** `basic #32k` (the shell's `#<size>k` modifier - see
-  `os9-tools-and-shell.md`) fixes load/run failures caused by the small
-  default allocation. Reach for it before suspecting the program.
-- **Loading host-authored source:** write plain BASIC09 text, convert it with `tr '\n' '\r'`,
-  place it where OS-9 sees it, then `B: LOAD <exact-filename>` and `RUN
-  <procedure-name>` (from the file's PROCEDURE line - need not match the
-  filename). `LOAD` compiles plain source directly and does a **literal
-  name match** - no extension inference (OS-9 convention is no extension at
-  all; `LOAD qt` will not find `qt.bas`).
-- **Don't start the file with a `!` comment above PROCEDURE** if the same
-  source might ever run on 6809 - fine on 68k, but 6809 fails the whole
-  `LOAD` with `Error #043`. See `basic09/gotchas.md`.
-- Packed modules, RunB, PACK output location, `PARAM` argument binding,
-  and trap-handler error triage: `basic09/pack-and-runb.md`.
 - **An intermittent `**** Can't install trap handler ****` / `Error #000:216`
   while `mdir` shows the handler resident** is an emulator-level race,
   timing-sensitive and historically correlated with baud-rate pacing. Restart
   the os9exec session; if it recurs, it is os9exec, not your program. The
   OS-9 causes of that banner are triaged in `basic09/pack-and-runb.md`.
-- A named pipe (`/pipe/<name>`) makes good read-once scratch storage - no
-  cleanup needed.
 
 ## The cio trap handler divides archived binaries
 

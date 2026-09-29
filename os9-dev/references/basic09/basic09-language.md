@@ -50,6 +50,41 @@ own print statement cannot affect a caller's counters). Procedures talk to
 each other only through parameters,
 invoked with `RUN`.
 
+### Working at the prompts
+
+`Live` (os9exec), a whole session:
+
+```
+basic          -> B: (system mode)
+B:e test       -> edit mode, * / E: prompt
+E: print "hi"  -> LEADING SPACE required - see below
+E:q            -> back to B:
+B:run test
+B:bye          -> back to the OS-9 shell
+```
+
+- **In the line editor, a leading space means "insert this line."**
+  Without it the text is parsed as an editor command and usually fails
+  with `What?` - easy to misread as a BASIC09 syntax error. `list` works
+  from `B:`, not inside the editor. `Live` (os9exec).
+- **Memory:** `basic #32k` (the shell's `#<size>k` modifier - see
+  `common/os9-tools-and-shell.md`) fixes load/run failures caused by the small
+  default allocation. Reach for it before suspecting the program. `Live`
+  (os9exec).
+- **Loading host-authored source:** write plain BASIC09 text, convert it with `tr '\n' '\r'`,
+  place it where OS-9 sees it, then `B: LOAD <exact-filename>` and `RUN
+  <procedure-name>` (from the file's PROCEDURE line - need not match the
+  filename). `LOAD` compiles plain source directly and does a **literal
+  name match** - no extension inference (OS-9 convention is no extension at
+  all; `LOAD qt` will not find `qt.bas`). `Live` (os9exec).
+- **Don't start the file with a `!` comment above PROCEDURE** if the same
+  source might ever run on 6809 - fine on 68k, but 6809 fails the whole
+  `LOAD` with `Error #043`. See `gotchas.md`.
+- Packed modules, RunB, PACK output location, `PARAM` argument binding,
+  and trap-handler error triage: `pack-and-runb.md`.
+- A named pipe (`/pipe/<name>`) makes good read-once scratch storage - no
+  cleanup needed. `Live` (os9exec).
+
 ## One Complete Example
 
 `[clean-room]` - original, not copied from any manual.

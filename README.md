@@ -81,26 +81,35 @@ the rarest and most valuable thing this project can receive.
 
 Put the folder anywhere your agent can read files. There is nothing to build.
 
-**Any agent** — point it at [`AGENTS.md`](AGENTS.md), which says what the two
-collections cover and how to route within them. The material is written to be
-**opened on demand rather than read whole**: together the files run to roughly
-12,000 lines, which is worth keeping out of a context window until it is
-needed. Each collection's `references/INDEX.md` maps *topic to file* and,
-separately, *symptom to cause* — when something has already failed and you
-don't know which topic owns it, the symptom table is the faster door.
+**Any agent that can read files** — point it at [`AGENTS.md`](AGENTS.md), which
+says what the two collections cover and how to route within them. The material
+is written to be **opened on demand rather than read whole**: together the
+files run to roughly 13,000 lines, which is worth keeping out of a context
+window until it is needed. Each collection's `references/INDEX.md` maps *topic
+to file* and, separately, *symptom to cause* — when something has already
+failed and you don't know which topic owns it, the symptom table is the faster
+door.
 
-**Claude Code**, additionally — expose the two directories as skills, so they
-load themselves when a task matches:
+**A chat assistant that cannot open files**, only accept attachments — attach
+`os9-dev/SKILL.md` and `os9-dev/references/INDEX.md` (or the `os9-systems-dev`
+pair for driver and kernel work), describe the task, and ask which reference
+files it needs; then attach those. Two or three files usually settle a
+question. Pasting everything at once works less well than it sounds: the
+routing is what keeps an answer tied to the right file and its confidence tags.
+
+**An agent that loads skills** — each of the two directories is a standard
+skill folder: a `SKILL.md` whose YAML header carries `name` and `description`,
+with `references/` beside it. Claude Code and other agents that read that
+layout can load them on demand when a task matches. For Claude Code:
 
 ```sh
 ln -s "$PWD/os9-dev"         ~/.claude/skills/os9-dev
 ln -s "$PWD/os9-systems-dev" ~/.claude/skills/os9-systems-dev
 ```
 
-Copying in place of symlinking works equally well. That step is specific to one
-runtime and is entirely optional — every other agent just reads the files. The
-YAML header on the two `SKILL.md` files is metadata for that runtime; it is
-harmless to ignore.
+Another agent's skills directory takes the same two folders; copying in place
+of symlinking works equally well. Install both, since they cite each other.
+Where no skill loader exists, the YAML header is harmless to ignore.
 
 ## Scope
 
@@ -234,6 +243,7 @@ os9-dev/
 os9-systems-dev/
   SKILL.md  SOURCES.md  references/
 AGENTS.md               entry point for any agent
+CLAUDE.md               the same, imported for Claude Code
 NOTICE                  attribution: Microware and every other source
 CONTRIBUTING.md         how to send a correction, and what gets declined
 DIVERGENCES.md          where a runtime disagrees with a manual

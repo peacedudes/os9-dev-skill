@@ -33,6 +33,15 @@ They are siblings and cross-reference each other; keep both.
    itself:** where a runtime and a Microware manual disagree, the manual is the
    specification and the runtime is the candidate defect.
 
+4. Resolve paths the way the files write them. Inside a skill, a reference
+   such as `common/ipc.md` is relative to that skill's `references/`
+   directory; a reference into the other skill names it (`os9-dev`'s
+   `common/module-format.md`).
+5. Answer specifics from the files, not from memory. If a file cannot be
+   opened, say which claim went unchecked rather than filling the gap —
+   widely repeated claims about OS-9 are often wrong, and these files exist to
+   correct them.
+
 `SOURCE-AUTHORITY.md` (root) says what counts as Microware's word;
 `DIVERGENCES.md` (root) lists where a runtime disagrees with a manual. Both are
 review material rather than part of either installed skill.

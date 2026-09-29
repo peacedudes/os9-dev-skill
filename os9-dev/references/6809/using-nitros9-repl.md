@@ -273,7 +273,7 @@ means *its* tools, not a directory you will find beside this file.
   error actually indicates there. Establish which identity you hold before
   reading anything into a 214.
 - **`.login` is 68k-only** (`Live` (os9exec); on 68k it sets `PATH`/`TERM`/`chx`/`chd` -
-  `common/using-os9exec-repl.md`). Nothing on 6809 reads one: not `login`, not
+  `common/os9-tools-and-shell.md`, "Accounts and login"). Nothing on 6809 reads one: not `login`, not
   any shell on the disk. Per-user setup is the `SYS/password` fields instead -
   `name,password,uid,priority,execdir,datadir,program`. `datadir` is the
   login-time working directory, `execdir` is command search, and **`program`

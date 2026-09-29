@@ -608,41 +608,15 @@ confirm a trap handler actually installed.
 ## Accounts: don't stay superuser
 
 Booting straight into `shell` runs as group 0 (superuser - `procs` shows
-`Grp.Usr 0.0`). Fine for a smoke test; for real work use the login mechanism:
+`Grp.Usr 0.0`). Fine for a smoke test; for real work use the login mechanism,
+described in `os9-tools-and-shell.md`, "Accounts and login". Under os9exec:
 
 - Via a tsmon boot you land at `User name?:` - send just the account name
-  (`login` is already running). At a shell prompt, `login <user>` works
-  too (empty-password accounts skip the password prompt; an account with
-  an empty password that still prompts wants a bare Enter).
+  (`login` is already running).
 - **Never use `login` as os9exec's boot program** - it prints the banner
   then exits the emulator with no error. Boot to a shell or tsmon first.
-- Login authenticates against `/dd/SYS/password` (comma-separated:
-  user, password, group.user, priority, initial execution dir, initial
-  data dir, initial program) and forks a genuinely separate process under
-  that identity. Exit with `logout` (not `bye` - that's BASIC09's).
-- A fresh login inherits nothing: without a `.login` in the account's data
-  directory setting `PATH` and `TERM`, even `procs` fails and `vi`
-  misbehaves. A custom prompt set at login also breaks a harness's gated
-  send - switch to raw keys.
-- **Per-account layout that works**: a personal execution directory
-  *inside* the shared `CMDS` (e.g. `/dd/CMDS/ALICE`) plus a personal home
-  elsewhere (e.g. `/dd/USR/ALICE`), with `.login`:
-
-  ```
-  chx /dd/CMDS
-  chd /dd/USR/ALICE
-  setenv PATH .:ALICE:SHARE
-  ```
-
-  **Park `chx` at the shared CMDS.** `PATH` entries resolve relative to
-  `chx`, so pointing it at a personal directory breaks ordinary interactive
-  command lookup, not just compiler sub-tool forking - `Live` (os9exec), `basic #32k`
-  fails with `Error #000:216 (E_PNNF)` right after such a `chx`. `chx` is a
-  per-session identity set once at login, not a scratch variable; to make a
-  directory runnable, extend `PATH` instead.
-- Tradeoff: with `chx` at shared CMDS, compilers *default* their output
-  there - name outputs explicitly (`cc -F=ALICE/<name>`). And `copy prog
-  ALICE/prog` resolves against `chd`, not `chx` - install with a full path.
+- A custom prompt set at login breaks a harness's gated send - switch to raw
+  keys.
 
 ## Fork lookups use chx, not PATH
 

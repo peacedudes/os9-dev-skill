@@ -1003,26 +1003,7 @@ post-mortem probe of live memory made of it.
 
 ## Symbolic debugging (the OS-9 `debug` command)
 
-`cc -g file.c` emits `file.dbg`/`file.stb`; `debug /dd/prog` auto-loads
-them and shows symbol-resolved disassembly. At `dbg:`:
-
-- `b <name>` set breakpoint by symbol - **reliable**; `g` run to it.
-- `sc` (bare) lists code symbols; `sd`/`sm` data symbols / symbol modules.
-  **Never take an address from `sc`'s listing**: it double-applies
-  relocation (error grows with the symbol's offset), so addresses land
-  inside unrelated functions. Verify any address with `di <addr>` - a
-  function entry should look like a prologue. (`sc <module>` with an
-  argument fails even for valid names; use bare `sc`.)
-- `.` registers; `di <addr> [n]` disassemble without executing; `q` quit.
-- **`gs` is not single-step**: it runs to the *fall-through* address of
-  the current instruction. It steps over `bsr`/`jsr`, and on a taken
-  branch the child runs until the fall-through is reached by accident -
-  possibly a full loop iteration, possibly never (dead code after `bra`).
-  Ctrl-C recovers to a fresh `dbg:` prompt. Use `gs` for straight-line
-  code only; prefer `b <name>` + `g` to navigate.
-- Both behaviours (`sc` addresses, `gs` stepping) are attributed to the
-  `debug` binary itself rather than to os9exec; neither has been checked on
-  real hardware.
+See `68k/os9-68k-assembly.md`, "Symbolic debugging (the OS-9 `debug` command)".
 
 ---
 Everything above is `Live` (os9exec) unless tagged otherwise inline -

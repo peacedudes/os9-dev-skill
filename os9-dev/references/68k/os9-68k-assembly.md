@@ -68,13 +68,36 @@ duplicate symbol, so it sends you to read the wrong line. `Live` (os9exec).
   link list; supplies the root psect and the startup code that calls
   `main()`.
 - **`debug`** - symbolic debugger; usage, and two known faults (`sc`
-  addresses, `gs` stepping): `common/using-os9exec-repl.md`.
+  addresses, `gs` stepping): "Symbolic debugging" below.
 - **`r68 -O=` and `l68 -o=` overwrite an existing output cleanly** -
   `Live` (os9exec): three rebuilds under one name, longer, shorter and longer
   again, each ran the new text, on a host directory and on an RBF image. If
   a rebuild still seems to run old code, look for a **resident copy**
   (`mdir`) before blaming the file: a module that crashed stays in memory
   and shadows the rebuilt one (`basic09/basic09-per-target.md`).
+
+## Symbolic debugging (the OS-9 `debug` command)
+
+`Live` (os9exec). `cc -g file.c` emits `file.dbg`/`file.stb`; `debug /dd/prog`
+auto-loads them and shows symbol-resolved disassembly. At `dbg:`:
+
+- `b <name>` set breakpoint by symbol - **reliable**; `g` run to it.
+- `sc` (bare) lists code symbols; `sd`/`sm` data symbols / symbol modules.
+  **Never take an address from `sc`'s listing**: it double-applies
+  relocation (error grows with the symbol's offset), so addresses land
+  inside unrelated functions. Verify any address with `di <addr>` - a
+  function entry should look like a prologue. (`sc <module>` with an
+  argument fails even for valid names; use bare `sc`.)
+- `.` registers; `di <addr> [n]` disassemble without executing; `q` quit.
+- **`gs` is not single-step**: it runs to the *fall-through* address of
+  the current instruction. It steps over `bsr`/`jsr`, and on a taken
+  branch the child runs until the fall-through is reached by accident -
+  possibly a full loop iteration, possibly never (dead code after `bra`).
+  Ctrl-C recovers to a fresh `dbg:` prompt. Use `gs` for straight-line
+  code only; prefer `b <name>` + `g` to navigate.
+- Both behaviours (`sc` addresses, `gs` stepping) are attributed to the
+  `debug` binary itself rather than to os9exec; neither has been checked on
+  real hardware.
 
 ## A complete worked program (`Live` (os9exec))
 
@@ -597,8 +620,8 @@ each says so; treat only the ones marked open as unverified.
   `syscall-reference.md` (this directory)
 - Device driver/file manager authoring (entry-point skeletons, static
   storage layout, `F$IRQ` wrapper patterns): sibling `os9-systems-dev` skill
-- Compiler/linker toolchain and the `debug` command:
-  `c/os9-c-cheatsheet.md` and `common/using-os9exec-repl.md`
+- Compiler/linker toolchain: `c/os9-c-cheatsheet.md`; the `debug` command:
+  "Symbolic debugging" above
 
 Sources: The OS-9 Guru (68000-specific chapters); OS-9 v2.4 Technical
 Reference Manual (module format, exception vectors, TRAP conventions);

@@ -111,7 +111,7 @@ has bitten a real session.
 | `xmode` (or any tool reading device options) fails `Error #000:221 (E_MNF)` on a device that works | os9exec mounts devices with no descriptor modules; `load` one from `CMDS/BOOTOBJS` | `common/using-os9exec-repl.md` |
 | `Exception: ... vector=$08 err=#000:108` (E$Violat) at an ordinary-looking instruction, classically `MVSR2.W` / `MOVE SR,<ea>` | the binary was built for a 68000, where reading SR is user-legal; it is privileged from the 68010 on, and the system is not emulating it. | `68k/os9-68k-assembly.md`, exception vector table |
 | `Error #001 - Unconditional Abort` printed after output that was correct | `F$Exit` called with `B` never cleared - cosmetic, not a real failure | `6809/syscalls-and-module-format.md` |
-| Breakpoint or examine lands at the wrong address | `sc`'s listing double-applies an offset - never take an address from it | `common/using-os9exec-repl.md` |
+| Breakpoint or examine lands at the wrong address | `sc`'s listing double-applies an offset - never take an address from it | `68k/os9-68k-assembly.md` |
 | `-d 2` trace shows a `<<<` return under the wrong call name | a nested call overwrote the per-process current-call field - pair returns to entries by position | `common/using-os9exec-repl.md` |
 | `Error #000:043` from BASIC09 - and you can't tell if anything failed | four unrelated causes share this code; two of them mean the operation succeeded | `basic09/pack-and-runb.md` |
 | A listing is short, or something you know exists reads as absent | page pause ate the tail (`tmode pag=0`), or a filter dropped the marked entries | `common/utility-usage.md`, `common/using-os9exec-repl.md` |
@@ -155,7 +155,7 @@ Error *codes* (number -> meaning) are a different lookup: `common/error-codes.md
 | Memory allocation (first-fit/buddy, colored memory, 32-segment limit, malloc/_srqmem/_lmalloc, edata/end), device descriptors (M$Mode/M$DevCon/M$Opt), path descriptors (PD_OPT, PD_COUNT), I$Attach matching, device static storage, I$ call behavior table, device naming (/dd /h0 /term /nil), fork-time memory regions | common/memory-and-io.md |
 | Signals (codes, masking, queuing, intercept), alarms (guard/ticker patterns), events (the one sync primitive), pipes (named vs unnamed, 90-byte default, EOF/deadlock rules), **record locking** (RBF's automatic read/write byte-range locks, EOF lock, lost-update-race-for-free design pattern), data-module IPC patterns, reentrancy in system state | common/ipc.md |
 | `Error #NNN:MMM` format, full E$ table 000-255, BASIC09-internal errors 10-80, errno/ERR conventions, cross-manual discrepancies | common/error-codes.md |
-| Driving the os9exec emulator/REPL as an agent: launch/OS9DISK gotchas, gated-vs-raw send, grep -a, editing files (vi/tee/tr), compiling C end-to-end, the BASIC09 trap-handler race, booting as superuser vs tsmon, top-level chx from `OS9CMDS`, RBF image vs host directory, symlink quirks, stopping runaways, idbg, the OS-9 `debug` command (sc/gs defects) | common/using-os9exec-repl.md |
+| Driving the os9exec emulator/REPL as an agent: launch/OS9DISK gotchas, gated-vs-raw send, grep -a, editing files (vi/tee/tr), compiling C end-to-end, the BASIC09 trap-handler race, booting as superuser vs tsmon, top-level chx from `OS9CMDS`, RBF image vs host directory, symlink quirks, stopping runaways, idbg | common/using-os9exec-repl.md |
 
 ## BASIC09 (same language on both targets - read basic09-language.md first)
 
@@ -180,7 +180,7 @@ Error *codes* (number -> meaning) are a different lookup: `common/error-codes.md
 | Question about... | Read |
 |---|---|
 | F$/I$ syscall catalog, TRAP #0 convention, register contracts, F$Event/F$Alarm subfunctions, debugger-support calls (F$DFork/F$DExec) | 68k/syscall-reference.md |
-| Assembly: register conventions, program-entry register state, embedded asm, exception vectors, TRAP mnemonics, `r68`/`l68` gotchas | 68k/os9-68k-assembly.md |
+| Assembly: register conventions, program-entry register state, embedded asm, exception vectors, TRAP mnemonics, `r68`/`l68` gotchas, the OS-9 `debug` command (sc/gs defects) | 68k/os9-68k-assembly.md |
 | **Working `psect` syntax for a hand-written 68k module** (the assembly file flags this as a manual gap; the only live-verified example lives here) | basic09/basic09-per-target.md |
 | TCP/IP sockets, SOCKMAN/IFMAN/mbuf, hosts/inetdb config, ifgen/ipconfig/routed, ftp | 68k/network-sockets.md |
 

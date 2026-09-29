@@ -67,7 +67,8 @@ for" descriptions: `os9-tools-and-shell.md`.
   overwrite write-protected destinations, `-r` overwrite existing (**without
   it an existing destination is not a failure but an interactive `Overwrite
   (yes/no/all/quit)?` prompt after `Error #000:218`, which swallows the rest
-  of an unattended script** - `Live` (os9exec), see `using-os9exec-repl.md`), `-v`
+  of an unattended script** - `Live` (os9exec), see `os9-tools-and-shell.md`,
+  "Procedure files"), `-v`
   verify result, `-w=<dir>` copy multiple sources *into* a directory
   (`-p` suppresses the per-file listing in that mode), `-b=<size>` use a
   larger transfer buffer (e.g. `-b=20k`; bigger buffers speed up large

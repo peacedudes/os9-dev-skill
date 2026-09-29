@@ -413,16 +413,14 @@ gtimeout 60 env OS9DISK=/abs/path/image OS9H1=/abs/workdir OS9STOP=1 \
 
 `/h1` is whatever `OS9H1` names - give it an **absolute path** to the directory
 holding the procedure file, rather than relying on a magic `h1` beside the
-binary, for the reasons under "Launching and disks" above. The traps, all
-`Live` (os9exec), the first two silent:
+binary, for the reasons under "Launching and disks" above.
 
-- **The procedure file must be CR-only.** With LF endings OS-9 sees one
-  enormous line: **its first command runs with the rest of the file as its
-  arguments** (`makdir A` LF `makdir B` created both directories; any other
-  commands in the file became more directory names). With `-nx` on the first
-  line the shell instead echoes the line and prints `^syntax error`. Generate
-  with `tr '\n' '\r'`.
-- **And commands fed on HOST stdin must be the opposite - LF-terminated.**
+The OS-9 side - CR-only endings, silent `-x` abort, where `-nx` goes, prompting
+utilities, `sleep` ticks - is in `os9-tools-and-shell.md`, "Procedure files".
+What the host boundary adds:
+
+- **Commands fed on HOST stdin must be the opposite of a procedure file -
+  LF-terminated.**
   `Live` (os9exec): `./os9exec shell < cmds`, or the same commands through a
   pipe, needs `\n` endings. A CR-only stdin file is echoed as **one line** with
   only the first command taking effect - typically surfacing as a complaint from
@@ -438,44 +436,6 @@ binary, for the reasons under "Launching and disks" above. The traps, all
   (os9exec)): a redirected or piped host stdin delivers end-of-file, so the
   shell runs the piped commands and then exits. The procedure file is still
   the tidier route - it gives CR-ending control and a named artifact.
-- **A utility that prompts devours the rest of the file.** `copy` onto an
-  existing destination reports `Error #000:218` and then asks `Overwrite
-  (yes/no/all/quit)?`. `Live` (os9exec): the following procedure lines are
-  read as answers to that prompt instead of being run - one character at a
-  time, re-prompting after each one that is not an answer - and when the file
-  runs out it gives up. Every line after the `copy` is gone without a word,
-  and a stray `y` among them answers *yes*, so the overwrite can happen
-  anyway. Give `copy` an explicit `-r` (`-f` for a write-protected
-  destination) so it never asks. Abort-on-error does *not* rescue this case:
-  in a procedure file the prompt is reached before the failure can end the run,
-  so the error is reported, the overwrite still happens, and the lines that
-  answered it are gone.
-
-- **The first failure ends the run, and nothing announces that it did.** The
-  shell's `-x` (abort on error) is on by default, so a procedure file stops at
-  its first failing command: that command's own error prints, the remaining
-  lines never execute, and the run then exits looking exactly like a completed
-  one. A four-line file whose second command failed produced line one's output,
-  the error, and nothing further. Use `-nx` when a batch must finish regardless -
-  and never read "no further errors" as "the rest ran".
-  - **`-nx` goes on the first line of the procedure file, not on the command
-    line.** `Live` (os9exec): `os9exec shell -nx /h6/proc` prints
-    `^syntax error` and runs nothing at all - the shell is parsing `-nx` as the
-    thing to execute. Put `-nx` as the file's own first line and invoke it plainly
-    with `os9exec shell /h6/proc`. Worth knowing because the failing spelling is
-    the one a Unix habit reaches for, and its error names syntax rather than the
-    option.
-
-- **`sleep` counts ticks unless given `-s`.** `sleep 5` in a procedure file
-  meant to wait for a background server is gone in a twentieth of a second, and
-  the run ends before anything it was waiting for happens. Write `sleep -s 5`.
-  See `sleep` in `utility-usage.md`.
-
-**No two utilities spell "don't ask" the same way**, so the flag cannot be
-guessed: `copy -r`, `deldir -q`, `frestore -s`, `format -r`, `fsave -p`. `del`
-is the one that inverts the default - it never asks unless `-p` opts in. Look
-the flag up in `utility-usage.md` (which carries each one's own tag) before
-putting any of these in a procedure file.
 
 ## Stamping non-super ownership on an RBF image
 

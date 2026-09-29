@@ -129,10 +129,20 @@ by granting it `e`; do set `pr` (and `pe` only if a module) when someone
 else must run it. Not separately confirmed on 6809, though the mechanism is
 kernel-level rather than port-specific.
 
-**A procedure file stops at its first failing command** - `-x` abort-on-error
-is the default, and nothing reports that the remaining lines were skipped
-(`Live` (os9exec); `-nx` to run on regardless, and see
-`using-os9exec-repl.md`).
+**A procedure file stops at its first failing command, and nothing announces
+that it did.** The shell's `-x` (abort on error) is on by default, so that
+command's own error prints, the remaining lines never execute, and the run then
+exits looking exactly like a completed one. `Live` (os9exec): a four-line file
+whose second command failed produced line one's output, the error, and nothing
+further. Use `-nx` when a batch must finish regardless - and never read "no
+further errors" as "the rest ran".
+
+**`-nx` goes on the first line of the procedure file, not on the command
+line.** `Live` (os9exec): `shell -nx /h6/proc` prints `^syntax error` and runs
+nothing at all - the shell is parsing `-nx` as the thing to execute. Put `-nx`
+as the file's own first line and invoke it plainly with `shell /h6/proc`. Worth
+knowing because the failing spelling is the one a Unix habit reaches for, and
+its error names syntax rather than the option.
 
 **And "failing" means any non-zero exit status, reported through the error
 table as though it were an error code.** `Live` (os9exec), measured with
@@ -160,9 +170,36 @@ mistake - where Unix would refuse the file outright.
 **Line endings are CR (0x0D), and a procedure file with LF endings misfires
 quietly** - `Live` (os9exec). OS-9 does not treat LF as a terminator, so the
 whole file is *one line*: its first command runs with the rest of the file as
-arguments (`makdir A` LF `makdir B` made both directories), and nothing else
-in it runs as a command. Procedure files written on a Unix host
-must be converted (`tr '\n' '\r'`, or `flip -m` where installed) before use.
+arguments (`makdir A` LF `makdir B` made both directories; any other commands
+in the file became more directory names), and nothing else in it runs as a
+command. With `-nx` on the first line the shell instead echoes the line and
+prints `^syntax error`. Procedure files written on a Unix host must be
+converted (`tr '\n' '\r'`, or `flip -m` where installed) before use.
+
+### Unattended procedure files: prompts and waits
+
+- **A utility that prompts devours the rest of the file.** `copy` onto an
+  existing destination reports `Error #000:218` and then asks `Overwrite
+  (yes/no/all/quit)?`. `Live` (os9exec): the following procedure lines are
+  read as answers to that prompt instead of being run - one character at a
+  time, re-prompting after each one that is not an answer - and when the file
+  runs out it gives up. Every line after the `copy` is gone without a word,
+  and a stray `y` among them answers *yes*, so the overwrite can happen
+  anyway. Give `copy` an explicit `-r` (`-f` for a write-protected
+  destination) so it never asks. Abort-on-error does *not* rescue this case:
+  in a procedure file the prompt is reached before the failure can end the run,
+  so the error is reported, the overwrite still happens, and the lines that
+  answered it are gone.
+- **`sleep` counts ticks unless given `-s`.** `Live` (os9exec): `sleep 5` in a
+  procedure file meant to wait for a background server is gone in a twentieth
+  of a second, and the run ends before anything it was waiting for happens.
+  Write `sleep -s 5`. See `sleep` in `utility-usage.md`.
+
+**No two utilities spell "don't ask" the same way**, so the flag cannot be
+guessed: `copy -r`, `deldir -q`, `frestore -s`, `format -r`, `fsave -p`. `del`
+is the one that inverts the default - it never asks unless `-p` opts in. Look
+the flag up in `utility-usage.md` (which carries each one's own tag) before
+putting any of these in a procedure file.
 
 ## Naming convention: capitalized directories
 

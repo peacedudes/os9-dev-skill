@@ -330,10 +330,15 @@ designing around deliberately rather than merely tolerating as a safety net
     holds the ghost just as an update-mode one does. This is the correction
     below: there is no way for a sequential writer to opt *out* of being
     followed by choosing its open mode.
-  - *explicit `SS_Lock`*: **update mode too**, same rule - a path that cannot
-    modify what it read has nothing to protect, and allowing it a lock would
-    hand it a way to hold up writers, the very lockout this design avoids. A
-    *release* is always allowed; it can only let something go.
+  - *explicit `SS_Lock`*: **no mode restriction is stated.** The manual's
+    update-mode rule governs the automatic lock a read takes (`Manual`, v2.4
+    Technical Reference Manual p. 7-9); its `SS_Lock` entry locks from the
+    file pointer, or the whole file for `$FFFFFFFF`, and says nothing about
+    the path's mode (p. 2-25). Released programs rely on that: the OS-9 port
+    of nethack whole-file-locks its log through a write-only path. `Live`
+    (os9exec) differs - it refuses a lock on a non-update path; see `os9-dev`'s
+    `common/using-os9exec-repl.md`, "Where os9exec departs from the manuals".
+    A *release* (`SS_Lock` of 0) is always allowed.
 - A lock is released by the next read, the next write, a path close, or an
   explicit `SS_Lock` SetStat. A zero-byte read or write drops every lock that
   path holds - record, EOF, or whole-file. `seek()` never affects locking.

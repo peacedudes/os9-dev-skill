@@ -831,6 +831,11 @@ All `Live` (os9exec) unless tagged otherwise.
   failed. So a named-pipe writer with no reader blocks, and an unnamed-pipe
   writer gets `E_WRITE`, only after about 4 KB - code that leans on the larger
   buffer will stall or fail sooner on real equipment.
+- **An explicit `SS_Lock` on a path not opened for update is refused with
+  `E$FNA`.** The manual's `SS_Lock` entry states no mode restriction (the
+  update-mode rule covers only the automatic lock a read takes), and the OS-9
+  port of nethack locks its logfile through a write-only path at every quit:
+  under os9exec it retries for about 75 s before giving up.
 - **Console paths do not enforce `E$BMode` (203).** stdin, stdout and stderr
   share one descriptor, so writing to a console path opened read-only, or the
   reverse, passes silently. Disk files enforce it both ways, so a working

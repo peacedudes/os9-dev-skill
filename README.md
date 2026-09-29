@@ -1,16 +1,16 @@
 # OS-9 development skills
 
-> **Pre-publication — not for distribution.** Circulated privately for review;
+> **Pre-publication - not for distribution.** Circulated privately for review;
 > no license is granted yet. See [LICENSE](LICENSE) for why, and
 > [LICENSE.pending](LICENSE.pending) for the terms intended to replace it.
 > [NOTICE](NOTICE) credits the sources and is in force regardless.
 
-Two reference collections for working with Microware OS-9 — the real one, on
+Two reference collections for working with Microware OS-9 - the real one, on
 6809 and 68000. They are documentation, not a toolchain: plain Markdown with
 nothing to build, readable by a person or by any coding agent, and [Claude
 Code](https://claude.com/claude-code) can additionally load them as skills.
 **Doing the work they describe needs an emulator and a Microware SDK that this
-repository cannot supply** — see What you will need, below.
+repository cannot supply** - see What you will need, below.
 
 | Skill | Covers |
 |---|---|
@@ -24,14 +24,14 @@ They are siblings and cross-reference each other; keep both.
 Routing by what you are trying to do. If you are a person rather than an agent,
 read `os9-dev/SKILL.md` first, then the `INDEX.md` beside it.
 
-| If you want to… | Read |
+| If you want to... | Read |
 |---|---|
-| Port or write a **C** program | `os9-dev/references/c/kandr-vs-ansi.md` — the porting checklist — then `c/os9-c-cheatsheet.md` |
+| Port or write a **C** program | `os9-dev/references/c/kandr-vs-ansi.md` - the porting checklist - then `c/os9-c-cheatsheet.md` |
 | Test on OS-9/68000 **without the hardware** | `os9-dev/references/common/using-os9exec-repl.md` (the os9exec emulator) |
-| Drive **NitrOS-9 on a CoCo or Dragon** — XRoar, DriveWire, a scriptable shell | `os9-dev/references/6809/using-nitros9-repl.md` |
+| Drive **NitrOS-9 on a CoCo or Dragon** - XRoar, DriveWire, a scriptable shell | `os9-dev/references/6809/using-nitros9-repl.md` |
 | Write **68k or 6809 assembly** | `os9-dev/references/68k/os9-68k-assembly.md`, or `6809/assembly-and-tools.md` |
 | Work in **BASIC09** | `os9-dev/references/basic09/basic09-language.md` |
-| Understand an **error or a symptom** you already hit | the symptom table in `os9-dev/references/INDEX.md` — it maps symptom to cause, which is the faster door once something has failed |
+| Understand an **error or a symptom** you already hit | the symptom table in `os9-dev/references/INDEX.md` - it maps symptom to cause, which is the faster door once something has failed |
 | Write a **driver, file manager or kernel** code | `os9-systems-dev/SKILL.md` |
 | Know **how OS-9 differs from Unix** | `os9-dev/references/common/unix-differences.md` |
 
@@ -60,11 +60,11 @@ endorsed by or affiliated with any rights holder, and it certainly contains
 mistakes.
 
 You are not asked to take it on trust. Every claim carries a tag saying what
-backs it — see [Confidence](#confidence) below, and read the tag on the line you
+backs it - see [Confidence](#confidence) below, and read the tag on the line you
 are about to rely on. The known limits, stated up front rather than buried:
 
 - **Nothing here has been checked against real OS-9 hardware.** Not one claim.
-- **`Live` means an emulator** — a community reimplementation, not a
+- **`Live` means an emulator** - a community reimplementation, not a
   specification. Where a runtime and a manual disagree, the manual is treated as
   authoritative and the runtime as the candidate defect.
 - **Open `Flag`s mark genuinely unresolved questions**, where sources contradict
@@ -73,7 +73,7 @@ are about to rely on. The known limits, stated up front rather than buried:
 - **Coverage follows what could be verified.** Silence on a topic means untested
   here, not absent from OS-9.
 
-Found an error? [Corrections are wanted](CONTRIBUTING.md) — including a bare
+Found an error? [Corrections are wanted](CONTRIBUTING.md) - including a bare
 "this line is wrong, here is what I saw instead". Reports from real hardware are
 the rarest and most valuable thing this project can receive.
 
@@ -81,23 +81,23 @@ the rarest and most valuable thing this project can receive.
 
 Put the folder anywhere your agent can read files. There is nothing to build.
 
-**Any agent that can read files** — point it at [`AGENTS.md`](AGENTS.md), which
+**Any agent that can read files** - point it at [`AGENTS.md`](AGENTS.md), which
 says what the two collections cover and how to route within them. The material
 is written to be **opened on demand rather than read whole**: together the
 files run to roughly 13,000 lines, which is worth keeping out of a context
 window until it is needed. Each collection's `references/INDEX.md` maps *topic
-to file* and, separately, *symptom to cause* — when something has already
+to file* and, separately, *symptom to cause* - when something has already
 failed and you don't know which topic owns it, the symptom table is the faster
 door.
 
-**A chat assistant that cannot open files**, only accept attachments — attach
+**A chat assistant that cannot open files**, only accept attachments - attach
 `os9-dev/SKILL.md` and `os9-dev/references/INDEX.md` (or the `os9-systems-dev`
 pair for driver and kernel work), describe the task, and ask which reference
 files it needs; then attach those. Two or three files usually settle a
 question. Pasting everything at once works less well than it sounds: the
 routing is what keeps an answer tied to the right file and its confidence tags.
 
-**An agent that loads skills** — each of the two directories is a standard
+**An agent that loads skills** - each of the two directories is a standard
 skill folder: a `SKILL.md` whose YAML header carries `name` and `description`,
 with `references/` beside it. Claude Code and other agents that read that
 layout can load them on demand when a task matches. For Claude Code:
@@ -113,10 +113,10 @@ Where no skill loader exists, the YAML header is harmless to ignore.
 
 ## Scope
 
-OS-9 is a living product — Microware still sells and supports it, and its
+OS-9 is a living product - Microware still sells and supports it, and its
 current documentation is Microware's to publish. These skills document the older end of
-the line — the v2.4-era 68000 system
-and 6809 Level 2 — whose documentation was never centralized and now
+the line - the v2.4-era 68000 system
+and 6809 Level 2 - whose documentation was never centralized and now
 circulates through preservation archives: manuals in varying states of OCR,
 editions of the same book that don't quite agree, and files whose names
 misdescribe their contents.
@@ -128,7 +128,7 @@ file. Where two manuals disagree, both readings are recorded and marked
 
 ## Confidence
 
-Claims were not only read but **run** — 68k programs under the
+Claims were not only read but **run** - 68k programs under the
 [os9exec](https://github.com/peacedudes/os9exec) emulator, 6809 programs on
 NitrOS-9 under XRoar. Every claim carries an inline tag:
 
@@ -138,7 +138,7 @@ NitrOS-9 under XRoar. Every claim carries an inline tag:
 | `Manual` | Cross-referenced across published manuals. Not run. |
 | `Source` | Checked against real source code, but not run for this claim. |
 | `Live` | Actually run and observed. |
-| `Absent` | Searched for and confirmed not to exist — not merely unchecked. |
+| `Absent` | Searched for and confirmed not to exist - not merely unchecked. |
 | `Flag` | Sources disagree; unresolved. |
 
 **A `Live` claim is evidence about a reimplementation, never about OS-9
@@ -148,7 +148,7 @@ the manual is the specification and the runtime is the candidate defect; the
 claim records both readings rather than resolving in favour of whichever one
 happened to run. Only Microware, or real hardware, settles those.
 `DIVERGENCES.md` collects the handful worth raising directly.
-`SOURCE-AUTHORITY.md` says what counts as Microware's word — several excellent
+`SOURCE-AUTHORITY.md` says what counts as Microware's word - several excellent
 books do not.
 
 The 68000 material has been through a thorough live-verification pass and is
@@ -164,12 +164,12 @@ The line was drawn conservatively at every step.
 
 All source material is public-domain or freely-published Microware/Tandy
 documentation, or historical-preservation archives. **No proprietary Microware
-source code was used anywhere in this chain.** Facts are stated as facts — a
-register contract, an error number, a struct offset — but the prose around
+source code was used anywhere in this chain.** Facts are stated as facts - a
+register contract, an error number, a struct offset - but the prose around
 them is written here rather than borrowed: no manual text reproduced at
 length, no worked code example kept verbatim, no file mirroring a source's
-chapter structure. Short quotations do appear — a clause or a sentence, each
-attributed to chapter and page — where the manual's exact wording *is* the
+chapter structure. Short quotations do appear - a clause or a sentence, each
+attributed to chapter and page - where the manual's exact wording *is* the
 evidence: what it specifies on a disputed point, or one of its own errors
 preserved so the citation can be checked.
 
@@ -184,7 +184,7 @@ extracted at length.
 Two sibling projects supplied most of the `Live` (os9exec) evidence here. Neither
 is needed to use the skills.
 
-- **os9exec** (https://github.com/peacedudes/os9exec) — an OS-9/68000 user-level
+- **os9exec** (https://github.com/peacedudes/os9exec) - an OS-9/68000 user-level
   emulator for macOS, Linux and Windows. Its conformance suite, CONF68K, also
   runs on real OS-9/68000 hardware; `CONTRIBUTING.md` says how to help with it.
 - **A collection of OS-9/68000 freeware**, rebuilt and tested under os9exec,
@@ -213,10 +213,10 @@ symbol absent from the error-code table.
 Conventions worth knowing before editing a reference file:
 
 - **Every claim carries a confidence tag**, and a `Live` tag always names the
-  implementation it ran on — `Live` (os9exec), not a bare `Live`.
+  implementation it ran on - `Live` (os9exec), not a bare `Live`.
 - **Reference files carry no dates, hashes, host paths or narrative** about
   their own history. A correction states the rule positively and puts its
-  provenance in the tag and the `Sources` footer — never in a story about what
+  provenance in the tag and the `Sources` footer - never in a story about what
   the file used to say.
 - **Cross-check before you correct.** Anything that looks like a contradiction
   gets checked against the skill's own `Live` claims, and against a manual or a
@@ -252,11 +252,11 @@ tools/                  the checker, its tests, the pre-commit hook, make-bundle
 ```
 
 **Shared content lives in `os9-dev`, which stands alone.** Anything both
-skills need — the confidence tags, the provenance rules — belongs there.
+skills need - the confidence tags, the provenance rules - belongs there.
 `os9-systems-dev` may depend on `os9-dev` and cite its files by path;
 `os9-dev` never depends on the sibling, and points at it only to mark
 something as out of scope. Always name the skill when citing across the
-split — a bare filename won't resolve from the other skill's directory.
+split - a bare filename won't resolve from the other skill's directory.
 
 `DIVERGENCES.md` and `SOURCE-AUTHORITY.md` are review material rather than part
 of either collection; nothing under `os9-dev/` or `os9-systems-dev/` may

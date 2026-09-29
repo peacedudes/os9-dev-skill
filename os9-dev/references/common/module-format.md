@@ -15,17 +15,17 @@ Core facts:
 - **Reentrancy:** one module copy serves all processes; each reaches its
   own data through a6 (linker convention). Data modules are the deliberate
   non-reentrant exception.
-- **C string literals** live in the shared read-only TEXT section — except
+- **C string literals** live in the shared read-only TEXT section - except
   `char array[] = "..."` which gets per-process DATA storage and is safely
   mutable.
 - The assembler `info` directive places strings in the module's
   information area (version, copyright); C reaches it via `#asm`.
 
-## Universal header (68k) — 48 bytes, offsets 0x00–0x2F (`modhcom` in `module.h`)
+## Universal header (68k) - 48 bytes, offsets 0x00-0x2F (`modhcom` in `module.h`)
 
 | Field | Offset | Size | Value/Purpose | Symbol |
 |-------|--------|------|---------------|--------|
-| Sync word | 0x00 | 2 | `$4AFC` — an illegal 68000 instruction, so coldstart can scan ROM for it word-by-word at near-zero cost, running parity/CRC checks only on hits | `M$ID` |
+| Sync word | 0x00 | 2 | `$4AFC` - an illegal 68000 instruction, so coldstart can scan ROM for it word-by-word at near-zero cost, running parity/CRC checks only on hits | `M$ID` |
 | System revision | 0x02 | 2 | Header format revision | `M$SysRev` |
 | Module size | 0x04 | 4 | Total bytes, header through CRC | `M$Size` |
 | Owner | 0x08 | 4 | Creator group.user ID | `M$Owner` |
@@ -38,7 +38,7 @@ Core facts:
 | Edition | 0x16 | 2 | Human-facing version counter (don't confuse with M$Revs) | `M$Edit` |
 | Usage offset | 0x18 | 4 | Offset to usage/comment string | `M$Usage` |
 | Symbol table offset | 0x1C | 4 | Offset to symbol table if present | `M$Symbol` |
-| Reserved | 0x20 | 14 | — | — |
+| Reserved | 0x20 | 14 | - | - |
 | Header parity | 0x2E | 2 | Integrity check over the header words | `M$Parity` |
 
 Type-specific fields begin at 0x30. Offsets are from the v2.4 Technical
@@ -52,7 +52,7 @@ code tests bit 5 of offset 0x14 against the module base.
 *OS-9/68000 Technical Manual*'s own header figure (ch. 1) lists the same
 offsets. One OCR trap in that scan, called out so it isn't mistaken for a
 conflict: it prints `M$Parity` at `$28`. That is a scan error (8-for-E, the
-same misread that turns I$SetStt's `$8E` into `$BE` in the 6809 manuals) —
+same misread that turns I$SetStt's `$8E` into `$BE` in the 6809 manuals) -
 `M$Parity` is the header's last word at **`$2E`**, confirmed by both the v2.4
 Technical Reference (`$2E M$Parity`) and the fixed 48-byte header size. Trust
 `0x2E`.
@@ -61,19 +61,19 @@ Technical Reference (`$2E M$Parity`) and the fixed 48-byte header size. Trust
 
 | Code | Symbol | Meaning |
 |---|---|---|
-| 0 | — | wildcard |
+| 0 | - | wildcard |
 | 1 | Prgrm | program |
 | 2 | Sbrtn | subroutine module |
 | 3 | Multi | multi-module |
 | 4 | Data | data module |
-| 5 | CSDData | — |
-| 6–10 | — | reserved |
+| 5 | CSDData | - |
+| 6-10 | - | reserved |
 | 11 | TrapLib | user trap library |
 | 12 | Systm | system component |
 | 13 | FlMgr | file manager |
 | 14 | Drivr | device driver |
 | 15 | Devic | device descriptor |
-| 16–255 | — | user-definable |
+| 16-255 | - | user-definable |
 
 The kernel validates type against use: forking a non-`Prgrm` module returns
 `E_NEMOD`.
@@ -82,14 +82,14 @@ The kernel validates type against use: forking a non-`Prgrm` module returns
 
 | Code | Symbol | Meaning |
 |---|---|---|
-| 0 | — | wildcard |
+| 0 | - | wildcard |
 | 1 | Objct | 68000 machine language |
 | 2 | ICode | compiled BASIC09 I-code |
 | 3 | PCode | Pascal |
 | 4 | CCode | C |
 | 5 | CblCode | COBOL |
 | 6 | FrtnCode | Fortran |
-| 7–15 / 16–255 | — | reserved / user-definable |
+| 7-15 / 16-255 | - | reserved / user-definable |
 
 The language code tells the kernel/shell which runtime, if any, must
 interpret the module (this is how typing a packed BASIC09 module's name
@@ -99,18 +99,18 @@ launches RunB).
 
 | Bit | Meaning |
 |---|---|
-| 7 | Sharable/reentrant — clear limits the module to one simultaneous link (one open path, for a descriptor) |
-| 6 | Sticky — survives link count 0; removed at count −1 or under memory pressure |
-| 5 | Supervisor state — module runs in 68000 supervisor mode (set on all OS components) |
+| 7 | Sharable/reentrant - clear limits the module to one simultaneous link (one open path, for a descriptor) |
+| 6 | Sticky - survives link count 0; removed at count -1 or under memory pressure |
+| 5 | Supervisor state - module runs in 68000 supervisor mode (set on all OS components) |
 
-Bits 0–4 undocumented in the surveyed manuals.
+Bits 0-4 undocumented in the surveyed manuals.
 
 ### Permissions (M$Accs) and security
 
-Low 12 bits: owner rwx (bits 0–2), group rwx (4–6), public rwx (8–10);
+Low 12 bits: owner rwx (bits 0-2), group rwx (4-6), public rwx (8-10);
 bits 3/7/11 reserved. Read/execute gate load/link/fork; write matters only
 with memory-protection hardware. Group 0 (superuser) bypasses permission
-checks entirely; everyone else is evaluated against exactly one field —
+checks entirely; everyone else is evaluated against exactly one field -
 owner, group, or public, by best identity match. A superuser-owned program
 can hand a narrow capability to ordinary callers, covering setuid-style
 needs without a separate mechanism. I/O-system modules (file managers,
@@ -120,17 +120,17 @@ to load it.
 
 ### Header parity
 
-XOR of all prior header words, one's-complemented — so folding *every*
+XOR of all prior header words, one's-complemented - so folding *every*
 header word including M$Parity yields `$FFFF` on an intact header. Checked
 on every link; mismatch = `E_BMHP`. Protects the header only (the body may
 legitimately change post-load, e.g. breakpoints). Cross-manual notes: some
 v2.4-era sources describe a refined scheme that also rotates the
 accumulator right by (word mod 16) per word (v2.2 reportedly summed low 16
 bits instead); OS-9 Insights states the verification result as `0`, which
-is inconsistent with "complement of XOR" — `$FFFF` is treated as
+is inconsistent with "complement of XOR" - `$FFFF` is treated as
 authoritative here. This parity is unrelated to the module CRC.
 
-## Reading a real module — `Live` (os9exec)
+## Reading a real module - `Live` (os9exec)
 
 The tables above are easier to trust once you have seen them in bytes. This
 is a small hand-written assembly program (the worked example in
@@ -156,17 +156,17 @@ Mapped onto the universal header table:
 | `0001` @ `$02` | `M$SysRev` | header format revision 1 |
 | `0000 01c6` @ `$04` | `M$Size` | 454 bytes, header through CRC |
 | `0000 0103` @ `$08` | `M$Owner` | group 0, user 259 |
-| `0000 0048` @ `$0C` | `M$Name` | name lives at `$48` — and `$48` does hold `exfio1` |
+| `0000 0048` @ `$0C` | `M$Name` | name lives at `$48` - and `$48` does hold `exfio1` |
 | `0555` @ `$10` | `M$Accs` | read+exec for owner/group/public |
 | `01` `01` @ `$12` | `M$Type`/`M$Lang` | Program / 68000 object code |
 | `80` `01` @ `$14` | `M$Attr`/`M$Revs` | sharable (bit 7), revision 1 |
 | `31da` @ `$2E` | `M$Parity` | the header's last word |
-| `0000 0050` @ `$30` | `M$Exec` | entry at `$50` — where the code starts |
+| `0000 0050` @ `$30` | `M$Exec` | entry at `$50` - where the code starts |
 | `0000 0400` @ `$3C` | `M$Stack` | 1024 bytes |
 
 The type/language and attribute/revision words are exactly what the source's
 `psect` line asked for, and the entry offset lands on real code: `41fa` at
-`$50` is `LEA (d16,PC),A0` — the program's first instruction.
+`$50` is `LEA (d16,PC),A0` - the program's first instruction.
 
 `ident` decodes the same bytes for you:
 
@@ -183,16 +183,16 @@ Stack size:      $400        #1024
 ```
 
 **A module's registered name is the one in its header, not its filename.**
-Copying this file to `exgood1` and loading it still put `exfio1` in `mdir` —
+Copying this file to `exgood1` and loading it still put `exfio1` in `mdir` -
 worth knowing before hunting for a module under the name you saved it as.
 
-**But `argv[0]` is the FILENAME, not the module name** — `Live` (os9exec).
+**But `argv[0]` is the FILENAME, not the module name** - `Live` (os9exec).
 This matters because a family of Unix ports switches
 behaviour on `argv[0]`: elvis ships one small wrapper binary copied under
-several names, and it reads the LAST LETTER of `argv[0]` (`w` → `-R`
-read-only, `t` → `-i` input mode, anything else → plain vi). The same bytes
+several names, and it reads the LAST LETTER of `argv[0]` (`w` -> `-R`
+read-only, `t` -> `-i` input mode, anything else -> plain vi). The same bytes
 under a name ending `w` opened `[READONLY]`; under a name ending `s` they
-opened plain; under a name ending `t` they opened in insert mode — while the
+opened plain; under a name ending `t` they opened in insert mode - while the
 module name in the header stayed the same throughout. So:
 
 - renaming a module does **not** change how such a program behaves, and
@@ -205,7 +205,7 @@ module name once a module is resident, whatever path you type, so the loser
 becomes unreachable and nothing warns. Check both when a program under a new
 name misbehaves.
 
-### What each integrity check actually covers — `Live` (os9exec)
+### What each integrity check actually covers - `Live` (os9exec)
 
 Flipping a single bit in a copy of the module, then re-running `ident`,
 locates the boundary between the two checks precisely:
@@ -216,7 +216,7 @@ locates the boundary between the two checks precisely:
 | `$3F` | `M$Stack`, in the type-specific fields | Good parity, **Bad CRC** |
 | `$60` | program code | Good parity, **Bad CRC** |
 
-So "protects the header only" means the **universal** header — the words
+So "protects the header only" means the **universal** header - the words
 before `M$Parity` at `$2E`. The type-specific fields from `$30` on are
 covered by the module CRC alone, exactly like the code. A corrupt
 `M$Stack` or `M$Exec` therefore passes the parity check.
@@ -228,19 +228,19 @@ read a successful parity check as "the header is intact."
 ## 6809 header divergence (do not blend with 68k values)
 
 The 6809 header is a different, shorter layout (9 bytes, sync `$87,$CD`,
-16-bit fields) — full byte layout in `6809/syscalls-and-module-format.md`.
+16-bit fields) - full byte layout in `6809/syscalls-and-module-format.md`.
 Compiler-specific values worth isolating:
 
 - **The 6809 type/language byte is `(type << 4) | language`, a single
-  byte** — so a 6809 C program reads `$11`, not `$04`. `Manual` (the *OS-9
+  byte** - so a 6809 C program reads `$11`, not `$04`. `Manual` (the *OS-9
   System Programmer's Manual* §4.2.1: "the module type is coded into the
   four most significant bits of byte 6", listing `$10` Prgrm, `$20` Sbrtn,
   `$40` Data, language in the low nibble) and `Live` (NitrOS-9) via `ident` on real
-  modules — `dir` and `copy` (native 6809 object programs) read `$11`,
+  modules - `dir` and `copy` (native 6809 object programs) read `$11`,
   `basic09`'s own `BFX` reads `$21` (Sbrtn + object), and a freshly
   `PACK`ed procedure reads `$22` (Sbrtn + BASIC09 I-code) with `At/Rv $81`
-  (reentrant, rev 1). `$04` would decode as type nibble 0 — not a valid
-  module type at all — with language 4, which
+  (reentrant, rev 1). `$04` would decode as type nibble 0 - not a valid
+  module type at all - with language 4, which
   `6809/syscalls-and-module-format.md` marks reserved and unimplemented.
   **Scope:** the encoding and the native-object value are `Live` (NitrOS-9); no 6809
   C-compiled module was available to `ident`, so `$11` for that compiler's
@@ -248,11 +248,11 @@ Compiler-specific values worth isolating:
   observation. It agrees with `c/os9-clib-reference.md`'s `os9fork()` entry
   (`lang == 1`). These are compiler-specific values, not general constants.
 - `os9fork()`/`chain()` on 6809 want `lang == 1` (6809 machine code).
-  Numerically equal to 68k's Objct=1 but a mutually incompatible format —
+  Numerically equal to 68k's Objct=1 but a mutually incompatible format -
   never merge the two facts.
 - Pointer initializers are fixed up at load time via two tables (data-text
   and data-data reference tables) that startup walks after copying
-  initializer data — the 6809 counterpart of 68k M$IData/M$IRefs, solved
+  initializer data - the 6809 counterpart of 68k M$IData/M$IRefs, solved
   differently.
 - The 6809 RMA assembler organizes source as PSECT (code) / VSECT (data,
   optionally direct-page) / CSECT (offset counter); PSECT carries the
@@ -271,22 +271,22 @@ Compiler-specific values worth isolating:
 | Trap entry offset | 0x34 | 4 | Default handler for an unhandled TRAP (lazy binding, below) | `M$Excpt` |
 | Min data space | 0x38 | 4 | Required data-area size | `M$Mem` |
 | Min stack | 0x3C | 4 | Linker's assumed max stack depth; default 3K, linker option overrides. Fork memory = M$Stack + M$Mem + parameter size + caller extra | `M$Stack` |
-| Data init offset | 0x40 | 4 | → data-initialization table | `M$IData` |
-| Pointer init offset | 0x44 | 4 | → pointer-relocation tables | `M$IRefs` |
+| Data init offset | 0x40 | 4 | -> data-initialization table | `M$IData` |
+| Pointer init offset | 0x44 | 4 | -> pointer-relocation tables | `M$IRefs` |
 
 All 32-bit fields. **`Source`:** all six offsets, and the 0x48 total,
 match os9exec's program-module header definition. Entry point = load
 address + M$Exec; the linker takes it from whichever psect was designated root.
 
 - **M$IData table:** entries of (4-byte data-area offset, 4-byte size,
-  literal bytes); the kernel copies them into the fresh data area at fork —
+  literal bytes); the kernel copies them into the fresh data area at fork -
   this is how C static initializers work. Linker vsect values land here.
 - **M$IRefs tables:** two sub-tables, each (MSW-of-offset word, count
   word, count× LSW offsets, zero terminator). First table marks data slots
   holding pointers into TEXT (fixed up with the module base), second marks
   pointers into DATA (fixed up with the data base). Walked by F$Fork.
 
-**The name string sits immediately after this header, and has no slack** —
+**The name string sits immediately after this header, and has no slack** -
 `Live` (os9exec), read off the program modules on a real freeware disk: of
 1047 program headers, 1021 had `M$Name` = `$48`, i.e. the NUL-terminated name
 directly after `M$IRefs`, with the first instruction close behind it. Two
@@ -300,7 +300,7 @@ and the CRC. Nothing already in the module moves, so `M$Exec` and both tables
 above stay valid. `fixmod` alone will not do it, because `M$Size` changes.
 Keep the module an even number of bytes; every one measured was.
 
-Do this when two files answer to one module name — see the `argv[0]` note
+Do this when two files answer to one module name - see the `argv[0]` note
 under "Reading a real module", which is the other half of the same problem.
 
 ## Module CRC
@@ -308,12 +308,12 @@ under "Reading a real module", which is the other half of the same problem.
 24-bit trailer over everything from header start up to (not including) the
 CRC field; accumulator initialized all-ones, result one's-complemented for
 storage. Sources describe the init as `$FFFFFF` (3-byte view) or
-`$FFFFFFFF` (`F$CRC`'s d1.l) — not a conflict, only the low 24 bits
+`$FFFFFFFF` (`F$CRC`'s d1.l) - not a conflict, only the low 24 bits
 participate. The linker pads the body with one zero byte before the CRC
 when the length would be odd (68000 even-alignment). A valid module's full
 accumulation *including* the CRC bytes lands on `$800FE3`.
 
-- Kernel validates via F$CRC before directory entry — mismatch means not
+- Kernel validates via F$CRC before directory entry - mismatch means not
   loaded (`E_BMCRC`; `fixmod` repairs a hand-patched module). Checked once
   at load/bootstrap, never re-verified afterward.
 - Time-critical code should pre-load modules rather than eat a CRC-checked
@@ -327,27 +327,27 @@ Beyond the lifecycle basics (`os9-mental-model.md`). C wrappers:
 `modlink()` = F$Link, `modload()` = F$Load, `munlink()` = F$UnLink.
 
 - **Type check on fork/chain:** a resident name whose type/language doesn't
-  match the request returns `E_NEMOD` — no silent substitution; only if no
+  match the request returns `E_NEMOD` - no silent substitution; only if no
   resident match is the name tried as a file path.
 - **Revision substitution:** loading a module whose name/type/language
-  match a resident one compares M$Revs — higher revision replaces the
+  match a resident one compares M$Revs - higher revision replaces the
   directory entry immediately; running processes keep the old bytes.
 - **Module groups:** all modules loaded from one file share one contiguous
   allocation and free only when the group's combined link count hits zero.
 - **Module files:** a file may hold any number of concatenated modules;
   to RBF it's an ordinary file.
-- Link counts can be adjusted artificially (`link`/`unlink` utilities) —
+- Link counts can be adjusted artificially (`link`/`unlink` utilities) -
   don't treat them as exact.
 - **a6 bias:** the data-area base register is biased by `$8000` so indexed
   addressing spans a full 64K; the linker compensates automatically for
   `vsect` labels. This is why disassembled code shows data references offset
-  by `$8000` — and why a plain `(a6)` in hand-written assembly points 32 KB
+  by `$8000` - and why a plain `(a6)` in hand-written assembly points 32 KB
   past the start of the data, usually into someone else's memory. See
   `68k/os9-68k-assembly.md`.
 
 ## Trap libraries & subroutine modules
 
-A **TrapLib** (type 11) exposes subroutines reached via `TRAP #1`–`#15` +
+A **TrapLib** (type 11) exposes subroutines reached via `TRAP #1`-`#15` +
 function word instead of linked addresses. Three entry points: execution,
 initialization (run at F$TLink), termination (reserved, unimplemented in
 this era). Installation (`F$TLink`) links the module, allocates *private
@@ -356,7 +356,7 @@ per-client static storage*, runs init; max 15 trap links per process.
 M$Excpt entry, which installs the handler and re-executes the call (zero
 M$Excpt aborts instead).
 
-**Subroutine modules** (type 2) by contrast have no static storage —
+**Subroutine modules** (type 2) by contrast have no static storage -
 routines are reached through an index table of offsets, state passed by
 parameter; they run in the *caller's* CPU state, while a trap module runs
 in the state its own attributes declare. No limit on subroutine links.
@@ -375,9 +375,9 @@ use; baking it into `OS9Boot` is generally not recommended.
 Named shared memory (`F$DatMod`; C: `_os_datmod()`/`_os_mkmodule()`):
 creator sets size and
 attributes, data area arrives zeroed with a valid CRC; later processes
-link by name. Allowed to be non-reentrant/mutable — that's the point. No
+link by name. Allowed to be non-reentrant/mutable - that's the point. No
 kernel synchronization; pair with events/signals (`common/ipc.md`).
-**Gotcha:** an in-place-modified data module has a stale CRC — call
+**Gotcha:** an in-place-modified data module has a stale CRC - call
 `F$SetCRC` (C: `_setcrc()`) before saving it to disk (or `fixmod` the
 file) or it won't reload. `dump` can inspect one directly.
 
@@ -385,10 +385,10 @@ file) or it won't reload. `dump` can inspect one directly.
 
 Coldstart scans ROM (and the boot file) word-by-word for `$4AFC`; each hit
 gets a parity check, size read, and CRC check, and survivors enter the
-module directory — this is how ROMed modules (including user ones)
+module directory - this is how ROMed modules (including user ones)
 auto-register at boot. Then the kernel links the **INIT module** (a
 configuration table: initial table sizes, system device names, kernel
-customization modules whose init functions are called at startup — new
+customization modules whose init functions are called at startup - new
 system calls can be added without rebuilding the kernel), initializes its
 tables, and forks the first program. The **Clock module** is the
 platform-specific real-time-clock handler.
@@ -398,18 +398,18 @@ platform-specific real-time-clock handler.
 - **`l68` error taxonomy (`Live` (os9exec)):** `file 'x.r' is not a
   relocatable module` = the input does not start like a ROF (zeroed sync
   word, a large text file); `error reading input file` = a truncated ROF;
-  `no root psect found` = nothing supplied an entry point — which an empty
+  `no root psect found` = nothing supplied an entry point - which an empty
   file and a text file also get, so it says nothing about an object's
   health. When exactly one input out of many is rejected, rebuild that
   object before theorizing about linker limits.
 - **ROF header (`Live` (os9exec)):** 0x00 sync longword `$DEADFACE`;
-  0x0C–0x11 creation date (year−1900, month, day, hour, minute, second);
+  0x0C-0x11 creation date (year-1900, month, day, hour, minute, second);
   0x1C code size; 0x38 NUL-terminated module name. Decoding two objects'
   timestamps settles "were these built by different compiler
   generations?" instantly.
 - **RMA library merge order (6809):** `c.link` resolves externals
   first-found in merge order, so if library proc A calls library proc B,
-  B's ROF must be merged *after* A's — intra-library references must all
+  B's ROF must be merged *after* A's - intra-library references must all
   point forward. A property of this single-pass linker, not necessarily
   of any 68k linker.
 
@@ -417,7 +417,7 @@ platform-specific real-time-clock handler.
 
 `mdir` (resident modules; `-e` adds address/size/owner/type/links),
 `ident` (header decode + CRC check; also reads S-record files),
-`binex`/`exbin` (module ↔ S-record, validates as a side effect), `dump`
+`binex`/`exbin` (module <-> S-record, validates as a side effect), `dump`
 (raw bytes), `fixmod` (recompute CRC/parity). Reach for these before
 deeper debugging when a module won't load.
 

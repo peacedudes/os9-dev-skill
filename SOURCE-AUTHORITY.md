@@ -6,7 +6,7 @@ source in the corpus, is it Microware speaking, or is it someone else's
 reading of Microware?**
 
 **The rule:** for divergence work (`DIVERGENCES.md`), only
-Microware-published documentation counts as authoritative — including documentation published under licence by Tandy /
+Microware-published documentation counts as authoritative - including documentation published under licence by Tandy /
 Radio Shack, Dragon Data, and Motorola, which are Microware's own manuals
 carrying a licensee's imprint. Third-party books are **not** authoritative,
 however good they are. The OS-9 Guru in particular is an excellent book and is
@@ -16,9 +16,9 @@ still not Microware's word.
 NitrOS-9 are **reverse-engineered reimplementations by the user community**.
 Neither is a specification. Both have had real errors. Where a runtime and a
 Microware manual disagree, the manual is the specification and the runtime is
-the candidate defect — see `os9-dev/references/CONFIDENCE-TAGS.md`.
+the candidate defect - see `os9-dev/references/CONFIDENCE-TAGS.md`.
 
-## Filenames in this corpus are unreliable — classify by title page
+## Filenames in this corpus are unreliable - classify by title page
 
 Four files carry third-party-sounding names but are **genuine Microware
 manuals**. Anyone applying the "Microware only" rule by filename would wrongly
@@ -35,10 +35,10 @@ And two are misleading in the other direction:
 
 | Filename | Reality |
 |---|---|
-| `6809/OS-9_Quick_Reference_1982.txt` | Copyright **1992** by F. G. Swygert — a third-party quick reference, not a 1982 document |
+| `6809/OS-9_Quick_Reference_1982.txt` | Copyright **1992** by F. G. Swygert - a third-party quick reference, not a 1982 document |
 | `6809/OS-9_Quick_Reference_1st_Farna_CoCo.txt` | Professional OS-9/**68000** documentation, not CoCo/6809 material despite the filename |
 
-## Authoritative — Microware, or Microware under licensee imprint
+## Authoritative - Microware, or Microware under licensee imprint
 
 **68000 / OS-9/68k**
 
@@ -54,8 +54,8 @@ And two are misleading in the other direction:
 | `Using_Professional_OS-9_v2.4.txt` | Microware 1991 |
 | `os9insights_ed2.txt` | Copyright Microware 1992 |
 | `os9insights_ed3.txt` | Copyright Microware 1988, 1992, 1994 |
-| `Enhanced_OS-9_68K_MVME_Guide.txt` | Microware 2000 — **v3.2 era, outside this project's v2.4 scope** |
-| `Enhanced_OS-9_68K_Release_Notes.txt` | Microware 2000 — same caveat |
+| `Enhanced_OS-9_68K_MVME_Guide.txt` | Microware 2000 - **v3.2 era, outside this project's v2.4 scope** |
+| `Enhanced_OS-9_68K_Release_Notes.txt` | Microware 2000 - same caveat |
 
 **6809 / OS-9 Level One and Two**
 
@@ -86,15 +86,15 @@ And two are misleading in the other direction:
 
 | Source | Rights holder / date |
 |---|---|
-| `Microware_Training_OS-9_Starter.txt` | Microware 1994 — official training material |
-| `Microware_Training_OS-9_Intermediate.txt` | Microware — official training material |
-| `Microware_Training_OS-9_Advanced.txt` | Microware — official training material |
+| `Microware_Training_OS-9_Starter.txt` | Microware 1994 - official training material |
+| `Microware_Training_OS-9_Intermediate.txt` | Microware - official training material |
+| `Microware_Training_OS-9_Advanced.txt` | Microware - official training material |
 | `OS-9_Internet_Software_Reference_Manual.txt` | Microware 1992 |
 
 ## Not authoritative for divergence purposes
 
 Good sources, several of them excellent, but not Microware speaking. Useful as
-corroboration or as a pointer to go find the real passage — never as the
+corroboration or as a pointer to go find the real passage - never as the
 authority a divergence is scored against.
 
 | Source | Who |
@@ -103,19 +103,19 @@ authority a divergence is scored against.
 | `Mastering_OS-9_on_the_Tandy_Color_Computer_1995.txt` | FARNA Systems 1995 |
 | `Mastering_OS-9_on_the_Tandy_Color_Computer_3.txt` | Paul K. Ward / F. G. Swygert |
 | `OS-9_Level_Two_and_the_Tandy_Color_Computer_3_Alexander.txt` | Alexander / Honaker 1992-94 |
-| `OS-9_Quick_Reference_1982.txt` | F. G. Swygert 1992 (misnamed — see above) |
+| `OS-9_Quick_Reference_1982.txt` | F. G. Swygert 1992 (misnamed - see above) |
 | `OS-9_Quick_Reference_1st_Farna_CoCo.txt` | FARNA 1994 (and 68k content, not 6809) |
 | `OS-9_Quick_Reference_2nd_Farna_CoCo.txt` | FARNA 1994 |
 | `O-FLEX_..._Gimix.txt` | FHL Inc. 1983 |
 | `OS-9_GMX_III_Support_ROM_User_Manual_RevC.txt` | GIMIX 1983 |
 | `OS9_68000_V2.4_System_Requirements.txt` | Peripheral Technology (board vendor) |
-| `OS-9_Processors_Hardware_Support.txt` | RadiSys 2006 marketing data sheet — no technical content |
-| `Motorola_M68000_Programmers_Reference_Manual.txt` | Motorola 1992 — **authoritative for the CPU, not for OS-9** |
+| `OS-9_Processors_Hardware_Support.txt` | RadiSys 2006 marketing data sheet - no technical content |
+| `Motorola_M68000_Programmers_Reference_Manual.txt` | Motorola 1992 - **authoritative for the CPU, not for OS-9** |
 
 ## Judgment calls, recorded so they can be challenged
 
 - **`os9insights` (ed2/ed3) and `OS-9_Primer` are copyright Microware Systems
-  Corporation**, so by the rule above they are authoritative — even though both
+  Corporation**, so by the rule above they are authoritative - even though both
   are books in form. They are not third-party books; the rights holder is
   Microware. Treated as authoritative here.
 - **Motorola's own M68000 Programmer's Reference Manual** is authoritative for
@@ -133,6 +133,6 @@ manual carrying it may simply never have been in reach.
 
 The third-party Guru and FARNA references are cited more
 often than any single Microware manual. That reflects how the corpus was
-assembled — the third-party books are better indexed and far easier to search
-than OCR'd manual scans — rather than a judgment about authority, which the
+assembled - the third-party books are better indexed and far easier to search
+than OCR'd manual scans - rather than a judgment about authority, which the
 rule at the top of this file settles the other way.

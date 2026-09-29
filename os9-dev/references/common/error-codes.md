@@ -14,7 +14,7 @@ Example: `Error #000:216 (E_PNNF)` is class 000, code 216, symbolic name
 `E$PNNF` (Path Name Not Found).
 
 **The same error has two spellings, and only one of them is printed.** Source
-and `DEFS` files declare `E$PNNF`; the runtime prints `E_PNNF` — `Live`
+and `DEFS` files declare `E$PNNF`; the runtime prints `E_PNNF` - `Live`
 (os9exec), seen for `E_PNNF`, `E_CEF` and `E_DNE`. The tables below use the
 `E$` form throughout, so searching for a name exactly as the machine printed it
 will miss every row: substitute `$` for `_` before looking it up.
@@ -35,28 +35,28 @@ BCS.S ErrorHandler   ; branch if carry set (error)
 Device drivers use the same carry/`d1.w` convention on 68k: upon return
 from any driver subroutine (via `RTS`), the carry bit signals
 success/failure and `d1.w` holds the error code. For IRQ service routines,
-this convention is modified — IRQ only uses the carry bit to signal
+this convention is modified - IRQ only uses the carry bit to signal
 whether the interrupt was serviced; no caller is waiting for an error code
 in `d1.w`. **6809: same carry-flag convention, but the error code lands in
-`B` instead of `d1.w`** — see `6809/syscalls-and-module-format.md`'s
+`B` instead of `d1.w`** - see `6809/syscalls-and-module-format.md`'s
 Register Set and Calling Convention section.
 
 ### Errors in C and BASIC09
 
-C system calls don't use the carry/`d1.w` convention directly — the C
+C system calls don't use the carry/`d1.w` convention directly - the C
 runtime translates it. A failing system call returns `-1`, and the specific
 error code is left in the predefined variable `errno` (declared via
-`<errno.h>`). `errno` is **not cleared on success** — it only ever holds the
+`<errno.h>`). `errno` is **not cleared on success** - it only ever holds the
 value from the most recently *failed* call. Check the call's own return
 value first; only consult `errno` once failure is confirmed.
 
 BASIC09 exposes the same information through the `ERR` function, which
 returns the most recent error code and **resets to zero as soon as it's
 read**. Codes above 80 are OS-9/system errors (the table below); codes
-10–80 are BASIC09-internal (1–9 are unused/reserved — not documented as
+10-80 are BASIC09-internal (1-9 are unused/reserved - not documented as
 meaning anything).
 
-### BASIC09-internal errors (codes 10–80)
+### BASIC09-internal errors (codes 10-80)
 
 | Code | Meaning | Code | Meaning |
 |---|---|---|---|
@@ -97,12 +97,12 @@ meaning anything).
 | 44 | Multiply-defined procedure | 80 | Print buffer overflow |
 | 45 | Divide by zero | | |
 
-`Manual` — this table is confirmed word-for-word identical across three
+`Manual` - this table is confirmed word-for-word identical across three
 independent BASIC09 Reference Manual editions (Rev F/1983 Dragon Data
 edition, Rev G/Tandy edition, Rev H/Microware unbranded edition); see
-this file's Sources line. `Live` example codes hit in practice: `000:027` (syntax error — e.g. from `BASE0` typed without
+this file's Sources line. `Live` example codes hit in practice: `000:027` (syntax error - e.g. from `BASE0` typed without
 the required space, see `basic09/basic09-language.md`), `000:055`
-(subscript out of range — e.g. indexing a `DIM`'d array past its
+(subscript out of range - e.g. indexing a `DIM`'d array past its
 allocated bound), and `000:011` (e.g. from writing
 `LAND`/`LOR`/`LXOR`/`LNOT` as infix operators instead of function calls).
 
@@ -114,35 +114,35 @@ discrepancies** further down; those notes are not optional footnotes, they
 record a genuine disagreement between two manual editions that was
 deliberately not resolved.
 
-### 000:001 – 000:067 — Process, terminal, and math-trap errors
+### 000:001 - 000:067 - Process, terminal, and math-trap errors
 
-Nothing between 004 and 064 appears in either primary source — the gap below
+Nothing between 004 and 064 appears in either primary source - the gap below
 is the manuals' own, not a transcription loss.
 
 | Code | Symbolic name | Meaning | Cause |
 |---|---|---|---|
-| 000:001 | — | Process aborted | The process has aborted |
-| 000:002 | — | Keyboard quit | Control-E (abort signal) sent to the process. The shell also prints this row for a **child that merely exited with status 2** — as `Error #000:002 (S_Abort) User abort (Cmd-'.')`, a name the table does not define — because an exit status is rendered through this table as if it were an error code. `Live` (os9exec); see `os9-tools-and-shell.md` |
-| 000:003 | — | Keyboard interrupt | Control-C (interrupt signal) sent to the process |
-| 000:004 | — | Modem hangup | Device driver detected loss of data carrier |
+| 000:001 | - | Process aborted | The process has aborted |
+| 000:002 | - | Keyboard quit | Control-E (abort signal) sent to the process. The shell also prints this row for a **child that merely exited with status 2** - as `Error #000:002 (S_Abort) User abort (Cmd-'.')`, a name the table does not define - because an exit status is rendered through this table as if it were an error code. `Live` (os9exec); see `os9-tools-and-shell.md` |
+| 000:003 | - | Keyboard interrupt | Control-C (interrupt signal) sent to the process |
+| 000:004 | - | Modem hangup | Device driver detected loss of data carrier |
 | 000:064 | E$IllFnc § | Illegal function code | Math trap handler received an invalid function code |
 | 000:065 | E$FmtErr | Format error | Math trap handler format error |
 | 000:066 | E$NotNum | Number not found | Math trap handler could not find the number |
 | 000:067 | E$IllArg | Illegal argument | Math trap handler received an illegal argument |
 
-### 000:102 – 000:158 — Processor exception errors (68k-specific)
+### 000:102 - 000:158 - Processor exception errors (68k-specific)
 
 **This section is 68000-CPU-specific**, not a shared cross-architecture
 table: the codes map 1:1 to 68k's own hardware exception vector table
-(`68k/os9-68k-assembly.md`'s Exception vector table — code = vector + 100),
+(`68k/os9-68k-assembly.md`'s Exception vector table - code = vector + 100),
 and several entries name 68000-family instructions/coprocessors with no
 6809 counterpart (`CHK`/`CHK2`, `TRAPV`/`TRAPcc`/`FTRAPcc`, FPCP, PMMU).
 6809 has no `F$STrap` call at all (absent from
 `6809/syscalls-and-module-format.md`'s syscall tables) and no confirmed
-equivalent numbered error range in the sources surveyed here — its
+equivalent numbered error range in the sources surveyed here - its
 arithmetic-error handling instead happens earlier, inside the BASIC09
 I-code interpreter's own runtime checks (e.g. `Error #045 -- Divide by
-Zero`, an ordinary catchable BASIC09 error, not a CPU-trap dispatch — see
+Zero`, an ordinary catchable BASIC09 error, not a CPU-trap dispatch - see
 `basic09/gotchas.md`'s divide-by-zero entry). A process can install its
 own 68k handler via `F$STrap`.
 
@@ -158,11 +158,11 @@ own 68k handler via `F$STrap`.
 | 000:109 | E$Trace | Uninitialized trace | Uninitialized trace exception |
 | 000:110 | E$1010 | A-Line emulator trap | 1010-line emulator exception |
 | 000:111 | E$1111 | F-Line emulator trap | 1111-line emulator exception |
-| 000:113 | — | Coprocessor protocol violation | Coprocessor protocol violation |
-| 000:114 | — | Format error (exception) | Format error exception |
-| 000:115 | — | Uninitialized interrupt | Uninitialized interrupt occurred |
-| 000:124 | — | Spurious interrupt † | Spurious interrupt occurred |
-| 000:133–000:147 | E$Trap | Uninitialized user TRAP 1–15 † | User executed a TRAP #1–#15 instruction with no handler installed |
+| 000:113 | - | Coprocessor protocol violation | Coprocessor protocol violation |
+| 000:114 | - | Format error (exception) | Format error exception |
+| 000:115 | - | Uninitialized interrupt | Uninitialized interrupt occurred |
+| 000:124 | - | Spurious interrupt † | Spurious interrupt occurred |
+| 000:133-000:147 | E$Trap | Uninitialized user TRAP 1-15 † | User executed a TRAP #1-#15 instruction with no handler installed |
 | 000:148 | E$FPUnordC | FPCP unordered condition | FPCP branch/set on unordered condition |
 | 000:149 | E$FPInxact | FPCP inexact result | FPCP inexact result |
 | 000:150 | E$FPDivZer | FPCP divide by zero | FPCP divide by zero |
@@ -170,12 +170,12 @@ own 68k handler via `F$STrap`.
 | 000:152 | E$FPOprErr | FPCP operand error | FPCP invalid operand |
 | 000:153 | E$FPOverFl | FPCP overflow | FPCP overflow error |
 | 000:154 | E$FPNotNum | FPCP NAN signaled | Not-a-Number signaled |
-| 000:155 | — | FPCP unimplemented data type | Unsupported floating-point data type |
-| 000:156 | — | PMMU configuration error | PMMU configuration error |
-| 000:157 | — | PMMU illegal operation | Illegal PMMU operation |
-| 000:158 | — | PMMU access level violation | PMMU access-level violation |
+| 000:155 | - | FPCP unimplemented data type | Unsupported floating-point data type |
+| 000:156 | - | PMMU configuration error | PMMU configuration error |
+| 000:157 | - | PMMU illegal operation | Illegal PMMU operation |
+| 000:158 | - | PMMU access level violation | PMMU access-level violation |
 
-### 000:164 – 000:176 — Miscellaneous errors (continued)
+### 000:164 - 000:176 - Miscellaneous errors (continued)
 
 | Code | Symbolic name | Meaning | Cause |
 |---|---|---|---|
@@ -183,7 +183,7 @@ own 68k handler via `F$STrap`.
 | 000:165 | E$Differ | Different arguments | `F$ChkNam` arguments do not match |
 | 000:166 | E$StkOvf | Stack overflow | `F$ChkNam` pattern string is too complex |
 | 000:167 | E$EvntID | Illegal event ID | Invalid or illegal event ID number |
-| 000:168 | E$EvNF | Event name not found | Link/delete failed — name not in the event table |
+| 000:168 | E$EvNF | Event name not found | Link/delete failed - name not in the event table |
 | 000:169 | E$EvBusy | Event busy | Delete attempted on an event with nonzero link count, or create attempted on an already-existing named event |
 | 000:170 | E$EvParm | Impossible event parameter | Invalid parameters passed to `F$Event` |
 | 000:171 | E$Damage | System damage | Corruption detected in a kernel data structure |
@@ -193,16 +193,16 @@ own 68k handler via `F$STrap`.
 | 000:175 | E$Hardware | Hardware damage detected | Driver failed to detect a correct hardware response |
 | 000:176 | E$SectSize | Invalid sector size | RBF sector size must be a binary multiple of 256, up to 32768 bytes |
 
-### 000:200 – 000:239 — Operating system errors
+### 000:200 - 000:239 - Operating system errors
 
 Generated by the kernel or file managers.
 
 | Code | Symbolic name | Meaning | Cause |
 |---|---|---|---|
-| 000:200 | E$PthFul | Path table full | More than 32 I/O paths opened at once, or no contiguous memory to expand the table. **The symbol is `E$PthFul`**, confirmed by the *OS-9/68000 Technical Manual* (`000:200 E$PthFul PATH TABLE FULL`) and the 6809 *System Programmer's Manual* (`$C8 200 E$PthFul`), and matching every call's own error list (`I$Open`/`I$Attach` document `E$PthFul` for this condition). The *v2.4 Technical Reference Manual*'s error appendix instead prints `E$BPNum` here — the same symbol it correctly gives 201 — which is a typo in that one edition, not two codes sharing a name |
+| 000:200 | E$PthFul | Path table full | More than 32 I/O paths opened at once, or no contiguous memory to expand the table. **The symbol is `E$PthFul`**, confirmed by the *OS-9/68000 Technical Manual* (`000:200 E$PthFul PATH TABLE FULL`) and the 6809 *System Programmer's Manual* (`$C8 200 E$PthFul`), and matching every call's own error list (`I$Open`/`I$Attach` document `E$PthFul` for this condition). The *v2.4 Technical Reference Manual*'s error appendix instead prints `E$BPNum` here - the same symbol it correctly gives 201 - which is a typo in that one edition, not two codes sharing a name |
 | 000:201 | E$BPNum | Illegal path number | Path number out of range, or no open path by that number |
 | 000:202 | E$Poll | Interrupt polling table full | Too many IRQ devices for the system INIT module's limit |
-| 000:203 | E$BMode | Illegal mode | I/O function attempted that the device/file can't perform (e.g. reading an output-only file). `Live` (os9exec): enforced on disk files both ways — writing to a path opened read-only, or reading one opened write-only, returns 203. os9exec's console paths do not enforce it; see `common/using-os9exec-repl.md` |
+| 000:203 | E$BMode | Illegal mode | I/O function attempted that the device/file can't perform (e.g. reading an output-only file). `Live` (os9exec): enforced on disk files both ways - writing to a path opened read-only, or reading one opened write-only, returns 203. os9exec's console paths do not enforce it; see `common/using-os9exec-repl.md` |
 | 000:204 | E$DevOvf | Device table full | Device table exhausted (INIT module sets the max) |
 | 000:205 | E$BMID | Illegal module header | Module sync code is incorrect |
 | 000:206 | E$DirFul | Module directory full | Not enough memory, or memory too fragmented |
@@ -212,16 +212,16 @@ Generated by the kernel or file managers.
 | 000:210 | E$BPAddr | Boundary error | Invalid block address in a deallocation request, or memory not previously assigned |
 | 000:211 | E$EOF | End of file | EOF encountered on a read |
 | 000:212 | E$VctBsy | Vector busy | IRQ vector already in use by another device |
-| 000:213 | E$NES | Non-existing segment | Disk file segment not found — possibly a damaged file structure |
-| 000:214 | E$FNA | File not accessible | Open attempted without correct access permissions — check attributes and owner ID |
+| 000:213 | E$NES | Non-existing segment | Disk file segment not found - possibly a damaged file structure |
+| 000:214 | E$FNA | File not accessible | Open attempted without correct access permissions - check attributes and owner ID |
 | 000:215 | E$BPNam | Bad path name | Syntax error in the pathlist (illegal character, etc.) |
-| 000:216 | E$PNNF | Path name not found | Pathlist not found — misspelling or wrong directory |
+| 000:216 | E$PNNF | Path name not found | Pathlist not found - misspelling or wrong directory |
 | 000:217 | E$SLF | Segment list full | File too fragmented to expand further; copying the file/disk can help |
 | 000:218 | E$CEF | File already exists | Create attempted with a name already in the current directory |
 | 000:219 | E$IBA | Illegal block address | Invalid pointer/block size, or damaged device file structure |
 | 000:220 | E$HangUp | Telephone data carrier lost | Modem lost carrier |
 | 000:221 | E$MNF | Module not found | Not in the module directory, or its header was modified/corrupted |
-| 000:222 | E$NoClk | No clock | Request needs the system clock, but no clock is running — use `SETIME` |
+| 000:222 | E$NoClk | No clock | Request needs the system clock, but no clock is running - use `SETIME` |
 | 000:223 | E$DelSP | Suicide attempt | Process requested deallocation of the memory holding its own stack |
 | 000:224 | E$IPrcID | Illegal process number | Process ID is non-existent or not accessible to the caller |
 | 000:225 | E$Param | Bad parameter ‡ | Service request passed an illegal or impossible parameter |
@@ -231,8 +231,8 @@ Generated by the kernel or file managers.
 | 000:229 | E$PrcFul | Process table full | Too many running processes, or no contiguous memory to expand the table |
 | 000:230 | E$IForkP | Illegal fork parameter area | Invalid parameters passed to a fork call |
 | 000:231 | E$KwnMod | Known module | Install attempted on a module already resident in memory |
-| 000:232 | E$BMCRC | Incorrect module CRC | Bad CRC value — regenerate with `FIXMOD` |
-| 000:233 | E$USigP / E$Signal | Unprocessed signal pending / signal error | An unprocessed signal is pending. **Renamed across releases** (`Source`, os9exec): `E$USigP` in OS-9 before 2.2, `E$Signal` from 2.2 on — same code 233. os9exec returns it from `F$Send` as the pre-2.2 `E_USIGP` |
+| 000:232 | E$BMCRC | Incorrect module CRC | Bad CRC value - regenerate with `FIXMOD` |
+| 000:233 | E$USigP / E$Signal | Unprocessed signal pending / signal error | An unprocessed signal is pending. **Renamed across releases** (`Source`, os9exec): `E$USigP` in OS-9 before 2.2, `E$Signal` from 2.2 on - same code 233. os9exec returns it from `F$Send` as the pre-2.2 `E_USIGP` |
 | 000:234 | E$NEMod | Non-executable module | Attempted execution of a module that isn't type program/object |
 | 000:235 | E$BNam | Bad name | Syntax error in the specified name |
 | 000:236 | E$BMHP | Bad module header parity | Module header parity error |
@@ -240,7 +240,7 @@ Generated by the kernel or file managers.
 | 000:238 | E$DNE | Directory not empty | Attempted to strip the directory attribute from a non-empty directory (`Live` (os9exec): `attr <dir> -nd`). `del` aimed at a directory, empty or not, gets `E$FNA` (214) instead (`Live` (os9exec)); use `deldir` |
 | 000:239 | E$NoTask | No task number available | A new task was requested but every task number is taken |
 
-### 000:240 – 000:255 — I/O errors
+### 000:240 - 000:255 - I/O errors
 
 Generated by device drivers or file managers.
 
@@ -257,7 +257,7 @@ Generated by device drivers or file managers.
 | 000:248 | E$Full | Media full | Insufficient free space on the media |
 | 000:249 | E$BTyp | Wrong type | Media incompatible with the drive (e.g. double-side disk in a single-side drive) |
 | 000:250 | E$DevBsy | Device busy | Non-sharable device already in use |
-| 000:251 | E$DIDC | Disk ID change | Media changed with open files — RBF's disk ID in the path descriptor no longer matches the driver's current disk ID |
+| 000:251 | E$DIDC | Disk ID change | Media changed with open files - RBF's disk ID in the path descriptor no longer matches the driver's current disk ID |
 | 000:252 | E$Lock | Record locked out | Another process holds the record, or a timed lock wait expired |
 | 000:253 | E$Share | Non-sharable file busy | Single-user file/device (attribute bit, or opened single-user) already in use by another process. Also the classic "can't delete a file that's currently open": the Technical Manual's `I$Delete` says the file "may not already be open" (`Manual`). `Live` (os9exec): a delete refuses with 253 whether the other path holds the file for writing or only for reading, and the file stays intact. NitrOS-9 was seen to refuse the writer case (`Live` (NitrOS-9)) |
 | 000:254 | E$DeadLk | I/O deadlock | Two processes each hold one of two disk areas the other needs |
@@ -265,43 +265,43 @@ Generated by device drivers or file managers.
 
 ## Known cross-manual discrepancies
 
-`Manual, Flag`. The two primary sources — the **OS-9 v2.4 Technical
+`Manual, Flag`. The two primary sources - the **OS-9 v2.4 Technical
 Reference Manual** and the independent **OS-9/68000 Operating System
-Technical Manual (July 1985, Revision S)** — were cross-checked card by
+Technical Manual (July 1985, Revision S)** - were cross-checked card by
 card. Almost everything agrees.
 
 **Whole-table check:** every code+symbol pair here was diffed against the
-v2.4 manual's error appendix — **87 shared codes, zero symbol mismatches**.
+v2.4 manual's error appendix - **87 shared codes, zero symbol mismatches**.
 The one apparent conflict (000:200) resolves in Microware's favour and
 against that appendix: it prints `E$BPNum` for both 200 and 201, but 200 is
 `E$PthFul` in two other Microware manuals and in every call's own error list,
 so the appendix has a typo (corrected in the table above). This confirms the
-list is Microware-sourced end to end — any word-level overlap with third-party quick
+list is Microware-sourced end to end - any word-level overlap with third-party quick
 references is just the shared standard codes, not a dependency on them.
 
 Three edition-level disagreements remain, and rather than silently pick a
 winner, both readings are recorded for each:
 
 - **† Uninitialized user TRAP range.** The v2.4 manual gives
-  **000:133–000:147** (`E$Trap`) for uninitialized user TRAP #1–#15. The 1985
-  manual instead gives **000:124–000:138** (`E$Trap`) for uninitialized user
-  TRAP #0–#14 — a different base offset *and* a different trap-numbering
+  **000:133-000:147** (`E$Trap`) for uninitialized user TRAP #1-#15. The 1985
+  manual instead gives **000:124-000:138** (`E$Trap`) for uninitialized user
+  TRAP #0-#14 - a different base offset *and* a different trap-numbering
   convention (0-based vs. 1-based). Note this also means the 1985 numbering
-  overlaps 000:124, which the v2.4 manual assigns to "spurious interrupt" —
+  overlaps 000:124, which the v2.4 manual assigns to "spurious interrupt" -
   the two editions are not reconcilable by a simple off-by-one; treat both
   ranges as edition-specific and confirm against the actual kernel/INIT
   build you're targeting rather than assuming either table is authoritative.
 - **‡ 000:225 (E$Param) specificity.** The v2.4 manual describes 000:225
-  generically as "bad parameter — an illegal or impossible parameter was
+  generically as "bad parameter - an illegal or impossible parameter was
   passed to a service request." The 1985 manual gives a narrower, concrete
   case for the same code: an impossible vector number passed to the IRQ
-  polling system. These aren't contradictory — the 1985 description reads as
-  one specific instance of the general v2.4 case — but the 1985 manual
+  polling system. These aren't contradictory - the 1985 description reads as
+  one specific instance of the general v2.4 case - but the 1985 manual
   presents it as *the* meaning rather than *an* example, so both phrasings
   are preserved here rather than merging them into one.
 - **§ 000:064 symbol spelling.** The v2.4 manual spells this symbol
   `E$IllFnc`; the 1985 manual spells it `E$IllFno` for the identical code
-  and meaning. Both are recorded rather than picking one — treat this as a
+  and meaning. Both are recorded rather than picking one - treat this as a
   spelling variant across editions, not two different error conditions.
 
 ## Other error-handling behavior worth knowing
@@ -316,7 +316,7 @@ winner, both readings are recorded for each:
   freed immediately instead of waiting for a `F$Wait` that will never come.
 - **Pipe writes behave differently named vs. unnamed.** On an *unnamed*
   pipe, if every writer hits a full pipe, `I$Write` returns `E$Write` to each
-  of them. On a *named* pipe, there is no `E$Write` in that situation — the
+  of them. On a *named* pipe, there is no `E$Write` in that situation - the
   writer instead sleeps until a reader opens the pipe and drains it. This
   difference is what lets a named pipe double as a self-destructing
   temporary RAM-disk file (non-empty, no paths open).
@@ -333,11 +333,11 @@ winner, both readings are recorded for each:
 ---
 
 **Sources:** OS-9 v2.4 Technical Reference Manual, Error Codes section
-(000:001–000:255, page B-28 for the low range) and "Write/WritLn" (p. 4-13); OS-9/68000 Operating System
+(000:001-000:255, page B-28 for the low range) and "Write/WritLn" (p. 4-13); OS-9/68000 Operating System
 Technical Manual (July 1985, Revision S), Appendix C, "Error Codes" and
 §14-12 "F$Exit"; OS-9 C Compiler manual, "Introduction to C System Calls"
 (p. 3-1) and "Run-Time Arithmetic Error Handling" (p. 1-8); BASIC09 Reference
 Manual (Rev H), Functions section (p. 8-5); BASIC09 Reference Manual, Appendix
-C "Error Codes" — cross-confirmed word-for-word identical across the Rev F
+C "Error Codes" - cross-confirmed word-for-word identical across the Rev F
 (Dragon Data, 1983, p. 113-114), Rev G (Tandy), and Rev H editions; Technical
 I/O Manual v2.4, "Driver Module Format" (p. 1-23).

@@ -5,14 +5,14 @@ Baseline `Manual`, cross-referenced across multiple manuals.
 **Authority ceiling on the Process Descriptor offsets.** The field *offsets*
 here are not published in any authoritative Microware manual in this corpus:
 the 68k manuals describe the process descriptor only in prose (state,
-priority, paths, memory list), and the one `P$` offset table that exists — in
-the 6809 *System Programmer's Manual* — is the 6809 descriptor, a different
+priority, paths, memory list), and the one `P$` offset table that exists - in
+the 6809 *System Programmer's Manual* - is the 6809 descriptor, a different
 and smaller layout. These offsets trace to the Guru book (Dayan;
 third-party, so not Microware's word) as reflected in os9exec's
 reconstructed `procid` struct, against which they are `Source`-confirmed
 byte-for-byte. Microware manuals and the Guru corroborate the field *names
 and semantics* (`P$SigLvl`, `P$Signal`, `P$State`), but the numeric offsets
-rest on a third-party foundation — the strongest tier available here, and not
+rest on a third-party foundation - the strongest tier available here, and not
 Microware-authoritative. Real hardware or a Microware internal header would
 lift it.
 
@@ -31,19 +31,19 @@ group field holds the module's own address rather than the first module
 loaded from the same file), so its group behaviour is no evidence about
 OS-9's.
 
-Structures and algorithms below the level any ordinary I$/F$ call exposes —
+Structures and algorithms below the level any ordinary I$/F$ call exposes -
 relevant if you're inspecting/modifying kernel state directly, writing a
 `Procs`-style utility, or working on `os9exec`'s own emulation of the
 kernel. OS-9 ships two kernel variants per processor: a standard kernel
 with full development facilities, and a smaller/faster "atomic" kernel
 aimed at embedded systems that trade away development conveniences for
-execution speed — the internals below apply to both unless noted.
+execution speed - the internals below apply to both unless noted.
 
 ## System Global Memory (~8KB, resident at RAM base)
 
 Contains, roughly in order: the exception dump table (64 bytes, one entry
 per hardware exception, populated when one fires), the `D_*`-prefixed
-system global variables (`D_MinPty`, `D_MaxAge`, etc. — see below), the
+system global variables (`D_MinPty`, `D_MaxAge`, etc. - see below), the
 process descriptor table, the path descriptor table, the module directory,
 and the active/waiting/sleeping process queues. `F$SetSys` reads or writes
 individual system globals by offset (superuser only for writes; the MSB of
@@ -54,7 +54,7 @@ System Security Module's static storage, is read by every Microware-C start-up
 to detect an SSM, and a machine without one shows 0 -- which is what os9exec
 returns (`Live` (os9exec)). `D_Julian` ($30) is today's Julian day.
 
-**`D_Second` ($34) counts the seconds LEFT UNTIL midnight — the opposite of
+**`D_Second` ($34) counts the seconds LEFT UNTIL midnight - the opposite of
 `F$Time`'s Julian form, which gives seconds since.** The Guru states it twice,
 once with the reason: the tick handler only has to decrement it and test for
 zero to know the day has turned. Two freeware programs written for real
@@ -62,18 +62,18 @@ OS-9 agree: `getsys` labels the field "system time seconds
 left until midnight", and `aprocs` computes process ages on that assumption.
 Microware's v2.4 manuals document `F$Time`/`F$STime`, which are the syscalls,
 not this global, so they do not bear on it. Convert with `86400 - D_Second`
-before comparing it to anything stated as seconds since midnight — a process
+before comparing it to anything stated as seconds since midnight - a process
 descriptor's `P$TimBeg`, or `F$Time`'s `d0`.
 
 Getting the direction backwards is expensive and easy to recognise: with
 `D_Second` answered as seconds *since* midnight, `aprocs` reported every process as roughly 2³²
 seconds old (`1193028:33:46`, a small negative difference wrapped) while
 Microware's `procs -e` said `Age 0:00`. `Live` (os9exec). **If `aprocs` ages every process
-by about 2³² seconds, suspect whatever sets `D_Second` — a clock driver, say —
+by about 2³² seconds, suspect whatever sets `D_Second` - a clock driver, say -
 before anything else.**
 
 Exception vector 0 holds the reset-time initial supervisor stack pointer
-(SSP) value — every subsequent exception dispatch uses this vector to
+(SSP) value - every subsequent exception dispatch uses this vector to
 relocate the base address of system global storage, which is why at least
 4K of RAM must exist both below and above it. Vector 1 holds the reset
 initial PC (the coldstart entry point); after startup its only remaining
@@ -101,7 +101,7 @@ all do. (os9exec's kernel process reports 0 here; see `os9-dev`'s
 `common/using-os9exec-repl.md`, "What os9exec does not implement".)
 
 **When a process was forked: `P$DatBeg` ($2BC) and `P$TimBeg` ($2C0).** The
-first holds the Julian day number, the second the seconds **since** midnight —
+first holds the Julian day number, the second the seconds **since** midnight -
 the same form as `F$Time` with `d0.w=1`, and not the countdown `D_Second` uses.
 `F$AllPrc` stamps them from the system clock when it allocates the descriptor.
 A process that wants its own start time, or the machine's uptime, reads its
@@ -114,7 +114,7 @@ monitor that turns out wrong should suspect them first.
 - **Process descriptor table**: an array of process-descriptor addresses; a
   process's ID is literally its index into this table (a zero entry means
   that ID is unused/free). The table starts small and the kernel doubles
-  its size whenever it fills — so a PID's numeric value can vary run to
+  its size whenever it fills - so a PID's numeric value can vary run to
   run and should never be hardcoded.
 - **Memory-area ceiling**: a process may dynamically hold at most 32
   separate memory areas total, counting its initial static storage and
@@ -133,41 +133,41 @@ Tracks the path number, access mode, current file manager and driver in
 use, and file-manager/device-specific option fields. See
 `file-managers.md` in this skill for the detailed three-section layout
 (universal section / file-manager-specific section / 128-byte option
-area) and the `PD_COUNT` share-counter mechanics — this is the same
+area) and the `PD_COUNT` share-counter mechanics - this is the same
 structure, described there from the file-manager author's side of the
 same fence.
 
 ## The Scheduler Algorithm
 
-**This section is OS-9/68000.** OS-9/6809 schedules differently — it really
+**This section is OS-9/68000.** OS-9/6809 schedules differently - it really
 does age each queued process individually, via a per-descriptor `P$Age` field
 (`Source`, NitrOS-9 `faproc.asm`; see the `F$AProc` row in the `os9-dev`
 skill's `6809/syscalls-and-module-format.md`). The two are not versions of one
 description, so neither account should be used to "correct" the other.
 
 On 68k, OS-9 implements priority-plus-age scheduling through a single
-**system-wide** counter — **not** a value ticked up on each waiting
+**system-wide** counter - **not** a value ticked up on each waiting
 process individually (a misreading that is easy to arrive at, not least
 because it *is* how 6809 works). The
 System Globals field `D_ActAge` ("system age") is a 32-bit value,
 initialized to `$7FFF0000`, and the kernel **decrements it by one** at the
-start of every `F$AProc` call — i.e., every time *any* process is inserted
+start of every `F$AProc` call - i.e., every time *any* process is inserted
 into the active queue (a fresh fork, a signal delivery, a satisfied wait
 condition, or the current process being re-queued when its time slice
 expires). When a process is inserted, the kernel computes a **scheduling
-constant** — ordinarily `priority + (the just-decremented) D_ActAge` — and
+constant** - ordinarily `priority + (the just-decremented) D_ActAge` - and
 stores it in the process descriptor's `P$Sched` field; the active queue
 stays sorted by this value, with the highest constant at the head. Once
-set, a process's own `P$Sched` is **not** recalculated while it waits —
+set, a process's own `P$Sched` is **not** recalculated while it waits -
 only new insertions consume the next (lower) system-age value, which is
 what makes a process that has been waiting through many other insertions
 look progressively more favorable relative to newer arrivals at the same
 priority. (The literal per-process increment does happen in one specific
 case: if `D_ActAge` itself decrements below zero, it resets to
 `$7FFF0000` and every process currently in the active queue has its
-scheduling constant recalculated at that point — not on every ordinary
-insertion.) A separate, purely informational "age" value — `P$Sched` minus
-the current `D_ActAge` — is computed on demand by `F$GPrDsc` for tools like
+scheduling constant recalculated at that point - not on every ordinary
+insertion.) A separate, purely informational "age" value - `P$Sched` minus
+the current `D_ActAge` - is computed on demand by `F$GPrDsc` for tools like
 `procs`; it plays no role in scheduling itself and is clamped to `-1`
 (`$FFFF`) if the computed value looks unreasonable (over 10000).
 
@@ -176,12 +176,12 @@ Two system globals tune this behavior:
 - **`D_MaxAge`** (writable by superuser via `F$SetSys`, normally zero)
   defines a **priority threshold, not an age cap**: a process whose
   priority is at or above it gets its scheduling constant computed as
-  `priority + $80000000` instead of `priority + D_ActAge` — a value the
+  `priority + $80000000` instead of `priority + D_ActAge` - a value the
   aging counter never touches, so members of this upper tier are ordered
   strictly by raw priority among themselves, with no aging effect at all.
   As a whole, this upper tier preempts and completely starves every
   process below the threshold for as long as any upper-tier process stays
-  active — a genuinely active high-priority workload monopolizes the CPU
+  active - a genuinely active high-priority workload monopolizes the CPU
   rather than "waiting its turn" against lower tiers. Setting `D_MaxAge` to
   1 pushes essentially every process into the upper tier, producing strict
   priority-only scheduling with aging effectively switched off system-wide.
@@ -193,7 +193,7 @@ Two system globals tune this behavior:
   runs. Raising it temporarily creates a frozen tier, useful for critical
   real-time sections (often used by `F$SSpd` to implement process
   suspension by making a process unreachable to the scheduler). **Setting
-  `D_MinPty` above every task's priority halts the system** — the kernel
+  `D_MinPty` above every task's priority halts the system** - the kernel
   becomes locked in an idle-wait state waiting for an interrupt that will
   never free it; only hardware reset recovers. Restore `D_MinPty`
   immediately after your critical section finishes.
@@ -202,11 +202,11 @@ Processes with equal priority rotate time slices among themselves (round-robin a
 that level). The real-time clock (typically 100Hz on 68k systems, but
 configurable) drives timeslicing; one time slice spans **two clock ticks (~20ms)**
 rather than one. A process that preempts a lower-priority one doesn't start
-its own fresh slice — it gets only whatever was left of the preempted
+its own fresh slice - it gets only whatever was left of the preempted
 process's slice, with the clock continuing from where it stood.
 
 **User state is preempted; system state is not.** User code is interrupted by
-the clock when its slice expires — that is what makes the timeslicing above
+the clock when its slice expires - that is what makes the timeslicing above
 mean anything, and it is why a read-modify-write cycle can genuinely be cut in
 half by another process on real hardware. System-state code (kernel calls and
 I/O operations mid-call) is never preempted mid-operation: it must complete or
@@ -220,7 +220,7 @@ switching, p. 2-27; the system-state exception, p. 2-28).
 The module directory is a kernel-maintained table, one entry per loaded
 module, tracking: the module's memory address, a **link count**, a
 **group identifier** (the memory address of the first module loaded from
-the same file — see "module groups" below), and a parity check value.
+the same file - see "module groups" below), and a parity check value.
 Lookup compares a requested name against each candidate module header's own
 name field (see `os9-dev`'s `common/module-format.md` for the header layout
 itself).
@@ -231,21 +231,21 @@ module-group membership, revision-driven (`M$Revs`) substitution, and the
 `E_NEMOD` type/language-mismatch behavior on fork/chain are the same facts
 documented from the application side in `os9-dev`'s `common/module-format.md`
 ("Module directory mechanics") and `common/os9-mental-model.md`
-("Module directory lifecycle") — not restated here. One reasoning
+("Module directory lifecycle") - not restated here. One reasoning
 detail worth adding at the kernel level: **module groups exist because
-merged modules in one file aren't necessarily page-aligned individually**
-— keeping the group intact keeps the underlying contiguous memory block
+merged modules in one file aren't necessarily page-aligned individually** -
+keeping the group intact keeps the underlying contiguous memory block
 valid for the memory manager, which is why the group only frees once
 every member's combined link count is zero.
 
-- **Type/language matching is per-*field*, with 0 = wildcard — not a
+- **Type/language matching is per-*field*, with 0 = wildcard - not a
   whole-word compare** (`Live` (os9exec)). The requested type/language
   is a word: high byte = type, low byte = language. The kernel matches the
   two bytes **independently**, and a zero in either field means "any"
   (`MT_ANY` / `ML_ANY`, both 0, as os9exec names them). So
   `$0200` requests "a *subroutine* module, *any* language" and legitimately
   matches a `$0202` subroutine / BASIC09-I-code module. This is exactly how `RunB` links a packed BASIC09
-  procedure without hard-coding its language sub-code — and the reason a
+  procedure without hard-coding its language sub-code - and the reason a
   naïve `requested == actual` full-word comparison is wrong: it rejects the
   match and the resident module looks "not found." (The symptom of such a
   comparison: a *loaded* packed module is invisible to `F$Link`, RunB falls
@@ -276,7 +276,7 @@ Two independent checks protect a module, checked at different times:
   time; mismatch returns `E$BMHP`.
 - **Module CRC**: 24-bit CRC over the entire module body (header through the
   byte before the CRC field), computed once when first entered into the directory
-  (ROM coldstart scan or RAM load) and **not re-verified on subsequent use** —
+  (ROM coldstart scan or RAM load) and **not re-verified on subsequent use** -
   an in-memory module can theoretically drift from its on-disk state without
   detection. Where the body's length would leave the total odd, the linker pads
   it with a single zero byte before the CRC field (68000 instructions require
@@ -285,10 +285,10 @@ Two independent checks protect a module, checked at different times:
 ### Boot-Time Module Discovery
 
 On reset/coldstart, the kernel scans ROM (and the boot file) word-by-word
-for the sync bytes `$4AFC` — deliberately an illegal 68000 instruction, so
+for the sync bytes `$4AFC` - deliberately an illegal 68000 instruction, so
 scanning is cheap and unambiguous. On a hit, it verifies header parity,
-reads the module's size from the header, computes its CRC, and — if both
-checks pass — enters it into the module directory. This is how every ROMed
+reads the module's size from the header, computes its CRC, and - if both
+checks pass - enters it into the module directory. This is how every ROMed
 module (system and user-supplied alike) ends up automatically linked and
 already present in the directory before user code ever runs. Only after
 this population phase does coldstart link the INIT configuration module,
@@ -310,18 +310,18 @@ process that links to the module, for setup), **`TrapEnt`** (the actual
 handler invoked on each `tcall`), and **`TrapTerm`** (reserved for per-link
 teardown; not implemented in this era's OS-9 releases). Assembly code
 normally reaches a trap handler through the `tcall` macro: it accepts a
-pair of word-sized arguments — trap vector number (1-15) and a
-function-selector word — expanding to the appropriate `TRAP` instruction.
+pair of word-sized arguments - trap vector number (1-15) and a
+function-selector word - expanding to the appropriate `TRAP` instruction.
 
 **Lazy binding**: a `tcall` made before `F$TLink` has installed the target
-handler checks the module's `M$Excpt` (default trap entry) offset — zero
+handler checks the module's `M$Excpt` (default trap entry) offset - zero
 aborts the call, non-zero jumps to that exception routine, which installs
 the handler and re-executes the original `tcall`. This lets a program defer
 a trap handler's linkage until it's actually needed at runtime.
 
 ## Memory Allocation Internals
 
-- **Minimum allocation unit**: 16 bytes — the smallest chunk OS-9's
+- **Minimum allocation unit**: 16 bytes - the smallest chunk OS-9's
   free-list bookkeeping can track; every free region is linked via a
   16-byte controlling structure at its start.
 - **Minimum *allocatable block* size** is larger and depends on whether
@@ -329,7 +329,7 @@ a trap handler's linkage until it's actually needed at runtime.
   matches the MMU page size (e.g. 4K), since the kernel grabs whole
   physical pages and subdivides them internally; without inter-task memory
   protection it defaults to 256 bytes instead. Either way this is larger
-  than the 16-byte logical unit above — the kernel manages free fragments
+  than the 16-byte logical unit above - the kernel manages free fragments
   *within* these larger blocks to avoid wasting a whole block/page on a
   small request.
 - **First-fit strategy**: the allocator takes the first free block large enough
@@ -347,14 +347,14 @@ a trap handler's linkage until it's actually needed at runtime.
   from a user buffer require explicit address translation (DMA hardware does not
   respect virtual-to-physical mappings). OS-9 provides translation services; a
   driver on such a system must not pass raw user virtual addresses to the controller.
-- OS-9 does not require an MMU for basic operation — register-indirect
+- OS-9 does not require an MMU for basic operation - register-indirect
   addressing provides process isolation without it. A System Security Module
   optionally adds an MMU for memory *protection* on top of that baseline.
 
 ## Exception and Interrupt Vector Layout
 
 - Vector 0/1: reset SSP/PC (see System Global Memory above).
-- Vectors 2-5: CPU hardware error exceptions — bus error (`T_BUSERR`,
+- Vectors 2-5: CPU hardware error exceptions - bus error (`T_BUSERR`,
   access to non-existent/privileged memory), address error (`T_ADDERR`,
   misaligned access), illegal instruction (`T_ILLINS`), zero divide
   (`T_ZERDIV`). All dispatch through `F$STrap` and are fatal to the
@@ -374,24 +374,24 @@ a trap handler's linkage until it's actually needed at runtime.
   via `F$IRQ`; multiple devices may share one.
 
 Hardware error exceptions are normally fatal to the offending process
-unless it installed a handler via `F$STrap` — the handler runs in user
+unless it installed a handler via `F$STrap` - the handler runs in user
 state with registers already stacked, and must either fix up and continue
 or terminate. `F$STrap` takes a handler stack and a service table pairing
 exception vectors with handler routines; the installable set is the CPU
 error/trap group (bus and address error, illegal instruction, zero-divide,
 CHK, TRAPV, privilege, plus the line-emulator and co-processor traps). It is
-one of the least-travelled parts of the ABI — ordinary code tests an operand
-before dividing rather than catching the hardware trap — so its handler-entry
+one of the least-travelled parts of the ABI - ordinary code tests an operand
+before dividing rather than catching the hardware trap - so its handler-entry
 conventions were thinly documented from the start. One 68k subtlety a resuming
 handler must respect: **bus and address errors push a longer CPU exception
-frame** than the other vectors (they add fault-address and status-word fields —
+frame** than the other vectors (they add fault-address and status-word fields -
 roughly 8 extra bytes on the 68010 and later), so the saved state a handler is
 handed is not the same size for every exception. An interrupt service routine, by contrast, runs in **system
-state with no current-process context** — it's servicing the CPU, not
+state with no current-process context** - it's servicing the CPU, not
 "running as" any particular process, which is why an ISR has such a
 restrictive register-preservation contract (see `device-drivers.md`).
 
-## os9exec's scheduler and idle loop — for work on the emulator
+## os9exec's scheduler and idle loop - for work on the emulator
 
 Everything above describes OS-9. This section describes os9exec's
 implementation instead (`Source` (os9exec)), for anyone extending its kernel
@@ -399,7 +399,7 @@ layer; none of it is evidence about OS-9. os9exec does **not** implement the
 `D_ActAge`/`P$Sched` priority-age machinery; it runs a simpler round-robin in
 `do_arbitrate()` (`procstuff.c`).
 
-- **The OS-9 clock is real host wall-clock time** — `GetSystemTick()`
+- **The OS-9 clock is real host wall-clock time** - `GetSystemTick()`
   (`funcdispatch.c`) reads `gettimeofday()` on UNIX (`GetTickCount()` on
   Windows), not a counter incremented by the emulation loop. So blocking the
   host (`nanosleep`, `select`, a syscall) does **not** stall OS-9 time: on
@@ -426,11 +426,11 @@ layer; none of it is evidence about OS-9. os9exec does **not** implement the
 **Sources:** An independent 1985-era OS-9/68000 technical manual (primary
 for the scheduler algorithm and vector layout);
 The OS-9 Guru (module directory, memory allocation, process
-descriptor internals — including the detailed
+descriptor internals - including the detailed
 `F$AProc`/`D_ActAge`/`P$Sched` scheduler walkthrough behind the
 system-wide-counter description above); cross-checked against OS-9
 Insights (editions 2-3) and the OS-9 v2.4 Technical Reference Manual. (The
 rejected per-process
-"age by one on each arrival" description conflicts with that walkthrough —
+"age by one on each arrival" description conflicts with that walkthrough -
 the real mechanism is a single decrementing system-wide counter plus
 a per-process scheduling constant fixed at insertion time).

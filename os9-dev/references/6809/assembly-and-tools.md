@@ -12,17 +12,17 @@ Six facts that decide whether your first build works. All are detailed
 below; they are collected here because each one bites *before* you have
 any output to debug.
 
-1. **You cannot `use /dd/defs/os9defs.a` with `asm`** — it is RMA source and
+1. **You cannot `use /dd/defs/os9defs.a` with `asm`** - it is RMA source and
    produces a cascade of `bad instr`. Define the constants you need yourself.
-2. **There is no `OS9` macro either** — the raw form is `swi2` followed by a
+2. **There is no `OS9` macro either** - the raw form is `swi2` followed by a
    one-byte `fcb` call code.
-3. **Use `-O=<name>`, not `O=<name>`** — the leading dash overwrites; without
+3. **Use `-O=<name>`, not `O=<name>`** - the leading dash overwrites; without
    it an existing output file fails the run. Case is not significant.
 4. **The object lands in the execution directory (`/dd/cmds`)**, not your data
    directory. `dir` where you are makes every successful run look failed.
 5. **Never redirect `asm`'s standard output.** Errors go there, so a broken
    assembly looks silent and successful.
-6. **Check the error count, not whether an output file appeared** — `asm`
+6. **Check the error count, not whether an output file appeared** - `asm`
    writes an object even when the assembly failed, and it will `ident`
    cleanly and then fail at run time on something unrelated.
 
@@ -38,8 +38,8 @@ counterpart is in the sibling `68k/os9-68k-assembly.md`; comparing the two
 is the fastest way to see what does and does not carry across.
 
 **It defines its own constants on purpose.** `/dd/defs/os9defs.a` on this
-disk is RMA-format — it opens with `psect` and declares call codes as
-`RMB` entries — and `asm` cannot parse any of it. See "Why not `use`
+disk is RMA-format - it opens with `psect` and declares call codes as
+`RMB` entries - and `asm` cannot parse any of it. See "Why not `use`
 os9defs.a" below.
 
 ```
@@ -163,7 +163,7 @@ PASS open of a missing file: Error #216 - Path Name Not Found
 
 `dump exfile.txt` shows 18 bytes, `written by exfilei` plus the trailing
 `$0D`. **Error 216 is the same number the 68k and C examples report for the
-same mistake** — OS-9 error codes are shared across architectures and
+same mistake** - OS-9 error codes are shared across architectures and
 languages, and the C library passes them through as `errno`.
 
 ### The module the assembler produced
@@ -177,18 +177,18 @@ dump /dd/cmds/exfilei
 
 | Bytes | Field | Reads as |
 |---|---|---|
-| `87CD` @ `$00` | sync | the 6809 module signature — *not* the 68k `$4AFC` |
+| `87CD` @ `$00` | sync | the 6809 module signature - *not* the 68k `$4AFC` |
 | `012E` @ `$02` | module size | 302 bytes |
 | `000D` @ `$04` | name offset | `$0D`, where `ExFileI` sits |
-| `11` @ `$06` | type/language | `Prgrm`(`$10`) + `Objct`(`$01`) — the `mod` operand |
+| `11` @ `$06` | type/language | `Prgrm`(`$10`) + `Objct`(`$01`) - the `mod` operand |
 | `81` @ `$07` | attributes/revision | `ReEnt`(`$80`) + 1 |
 | `07` @ `$08` | header parity | one byte here, not the 68k's word |
 | `0014` @ `$09` | exec offset | entry 20 bytes in |
-| `00C9` @ `$0B` | data size | 201 — the `rmb` block, see below |
+| `00C9` @ `$0B` | data size | 201 - the `rmb` block, see below |
 
-Note `fcs /ExFileI/` starting at `$0D`: its final byte, at `$13`, is `C9` —
+Note `fcs /ExFileI/` starting at `$0D`: its final byte, at `$13`, is `C9` -
 `'I'` with bit 7 set. That high bit *is* the terminator; `fcs` is not
-NUL-terminated. (The `C9` at `$0C` is unrelated — that one is the low byte
+NUL-terminated. (The `C9` at `$0C` is unrelated - that one is the low byte
 of the data size.)
 
 ### `*` is the program counter, `.` is the data counter
@@ -200,15 +200,15 @@ cleanly and yields a module `ident` calls good with a **data size of
 
 **The build output cannot tell you which you got.** `asm`'s
 `data bytes allocated` figure counts the `rmb` block, not what reached the
-`mod` operand, so it reads the same either way — and the CRC is valid either
+`mod` operand, so it reads the same either way - and the CRC is valid either
 way. Check `ident`'s `Data Size:`, or the byte at `$0C`.
 
 The wrong build still assembles, loads and runs; it fails only where the code
 needs the static storage its header never asked for.
 
 This is the quietest failure in this file. A program with a zero-sized data
-area may still appear to work — this one did, storing a path number through
-`U` — because the process gets a usable page anyway. Nothing warns you.
+area may still appear to work - this one did, storing a path number through
+`U` - because the process gets a usable page anyway. Nothing warns you.
 (The `hello.a` sample on this disk uses `size equ *`, so its declared data
 size is its module length by accident rather than by intent.)
 
@@ -224,7 +224,7 @@ two passes disagree. **The disk's own `hello.a` fails this way too** (47
 errors), so a sample that looks canonical is not evidence that `use` works
 here. Define the handful of constants your program actually needs, as above.
 
-Consequently there is no `OS9` macro either — the raw mechanism is `swi2`
+Consequently there is no `OS9` macro either - the raw mechanism is `swi2`
 followed by a one-byte `fcb` call code, which is what the macro expands to
 anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
 
@@ -238,18 +238,18 @@ anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
 - **Never redirect `asm`'s standard output away** (`>/nil`, `>file`). Errors
   go there, so a failing assembly looks silent and successful, and you are
   left with the broken module described above.
-- **`O=<name>` fails if the output already exists** — `***** Error: can't
-  open <name>` — while `-O=<name>` overwrites silently. Use the leading dash
+- **`O=<name>` fails if the output already exists** - `***** Error: can't
+  open <name>` - while `-O=<name>` overwrites silently. Use the leading dash
   for any rebuild.
 - **Case does not matter**: `o=` and `O=` both work and both produce a valid
   module (confirmed by `ident` on each). The distinction that matters is the
   leading `-`, not the letter's case.
 - The object lands in the **execution** directory (`/dd/cmds`), not the data
-  directory — see the note under "Two assemblers".
+  directory - see the note under "Two assemblers".
 - **Only the first 8 characters of a label are significant.** `asm` accepts a
   longer label without complaint and then treats any two that share their
   first 8 characters as the same symbol, so `setupfail` and `setupfail2`
-  collide and the second definition fails with `redefined name` — an error
+  collide and the second definition fails with `redefined name` - an error
   that points at a line whose label is distinct past character 8. `Source`
   (NitrOS-9 `level1/cmds/asm.asm`, whose own comments read "Arbitrary-length
   labels allowed. (first 8 chars must be unique)" and "First 8 characters of
@@ -261,34 +261,34 @@ anyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.
 
 ## Two assemblers
 
-- **`asm`** (module name `Asm`, ~7KB) — "Standard NitrOS-9 6809/6309
+- **`asm`** (module name `Asm`, ~7KB) - "Standard NitrOS-9 6809/6309
   Assembler" per its own `help asm`. A smaller, non-relocating assembler,
   and an older, separate tool from `rma`/RLINK. `Live` (NitrOS-9) end-to-end: assemble
   a real MOD/EMOD program, run it, get correct output. Syntax: `Asm filename
   [<opts>] [>list] [#xxK]`; `O=<name>` generates the object file, and a
-  leading `-` (`-O=<name>`) means silent overwrite — without it, an
+  leading `-` (`-O=<name>`) means silent overwrite - without it, an
   existing output file fails the run. Case is not significant (`Live`
   (NitrOS-9)). RMA's equivalent is `-o=`.
 - **`rma`** (20,143 bytes, module name `rma`, identifying itself in listings as
-  `Microware OS-9 RMA - V1.1`) — the Relocating Macro Assembler the
+  `Microware OS-9 RMA - V1.1`) - the Relocating Macro Assembler the
   PSECT/VSECT/RLINK section below describes. **`Live` (NitrOS-9): works,
-  including a full `rma` → `rlink` → run multi-file build** (its silent
-  failure modes are easy to mistake for a hang — chiefly that **`rma` writes
+  including a full `rma` -> `rlink` -> run multi-file build** (its silent
+  failure modes are easy to mistake for a hang - chiefly that **`rma` writes
   no object file without `-o=`**, and that a label must carry a **trailing
   colon** to be exported to RLINK). Full recipe and traps:
   `using-nitros9-repl.md`.
-  `rma_orig`/`rma.6809` are byte-identical copies; **`rma.6309` is not** — it
+  `rma_orig`/`rma.6809` are byte-identical copies; **`rma.6309` is not** - it
   is a different module, name `r63`, 23,591 bytes.
 
 **`asm`'s `O=<name>` output goes to the execution directory (`CMDS`), not
-the current data directory** — the same behavior as BASIC09's `PACK`.
+the current data directory** - the same behavior as BASIC09's `PACK`.
 Checking `dir name*` in the data directory after assembling makes every run
 look like a silent failure; check `CMDS/name` instead. `ident CMDS/<name>`
 confirms a real, CRC-good module.
 
 **Undocumented per-line length limit** (`Live` (NitrOS-9)): `asm` has an internal
 source-line read limit between 132 (OK) and 135 (broken) characters. An
-over-length line doesn't error on itself — `***** Error: bad instr` fires on
+over-length line doesn't error on itself - `***** Error: bad instr` fires on
 the *next* physical line, with a stray fragment of the overflowing text
 misread as a bogus label, pointing at the wrong line entirely. Keep source
 lines at 132 characters or fewer.
@@ -302,26 +302,26 @@ unmarked; only genuine differences or single-assembler directives are tagged.
 
 | Directive | Purpose |
 |---|---|
-| `END` | Optional — end-of-file alone ends a program. No label |
+| `END` | Optional - end-of-file alone ends a program. No label |
 | `FCB n{,n}` | Byte constants (error if value >255 or <-128) |
 | `FDB n{,n}` | Word constants; values with absolute value <256 get a zero-filled high byte |
 | `FCC /str/` | ASCII string. **Delimiter set differs between assemblers**: RMA's is `! " # $ % & ' ( ) * + , = . /`; `asm`'s is the same but with `-` in place of `=`. Open/close delimiters must match and can't appear inside the string |
-| `FCS /str/` | Same as FCC but sets the sign bit on the last character — OS-9's string-termination convention |
+| `FCS /str/` | Same as FCC but sets the sign bit on the last character - OS-9's string-termination convention |
 | `EQU expr` | One-time constant binding; label must not have been used before, operand can't reference not-yet-defined names |
-| `SET expr` | Like EQU but redefinable — for assembler control flags, not true constants |
-| `MOD size,nameoff,typelang,attrrev{,execoff,memsize}` | **`asm` only.** Emits the module header directly: rewinds both address counters to their `ORG 0` start, emits sync bytes `$87`/`$CD`, emits the 4 (or 6) header-field operands in order, computes the header-parity byte. Operand count must be exactly 4 or 6. **Breaks in Motorola-compatible mode** unless no `RMB`/`ORG` appears between `MOD` and `EMOD`. **`size` must cover `EMOD`'s 3-byte CRC trailer, and where you define the end label decides whether you add it.** The worked example above puts `eom equ *` *after* `emod`, so the counter has already passed the trailer and the bare `eom` is correct. A label defined *before* `emod` has not, and needs `+3` — `Live` (NitrOS-9): a bare label there assembles with `00000 error(s)` but produces a module 3 bytes short, `ident` shows `Module header is incorrect!`, and the shell refuses to run it (`Error #235`). `Flag`: both halves were observed separately and the placement rule reconciling them has not been confirmed in a single run — check your own module's size field against `ident` rather than assuming either form. RMA has no `MOD`/`EMOD` — it uses `PSECT`/`VSECT` and leaves header generation to RLINK |
+| `SET expr` | Like EQU but redefinable - for assembler control flags, not true constants |
+| `MOD size,nameoff,typelang,attrrev{,execoff,memsize}` | **`asm` only.** Emits the module header directly: rewinds both address counters to their `ORG 0` start, emits sync bytes `$87`/`$CD`, emits the 4 (or 6) header-field operands in order, computes the header-parity byte. Operand count must be exactly 4 or 6. **Breaks in Motorola-compatible mode** unless no `RMB`/`ORG` appears between `MOD` and `EMOD`. **`size` must cover `EMOD`'s 3-byte CRC trailer, and where you define the end label decides whether you add it.** The worked example above puts `eom equ *` *after* `emod`, so the counter has already passed the trailer and the bare `eom` is correct. A label defined *before* `emod` has not, and needs `+3` - `Live` (NitrOS-9): a bare label there assembles with `00000 error(s)` but produces a module 3 bytes short, `ident` shows `Module header is incorrect!`, and the shell refuses to run it (`Error #235`). `Flag`: both halves were observed separately and the placement rule reconciling them has not been confirmed in a single run - check your own module's size field against `ident` rather than assuming either form. RMA has no `MOD`/`EMOD` - it uses `PSECT`/`VSECT` and leaves header generation to RLINK |
 | `EMOD` | **`asm` only.** Closes the module; computes and emits the final 3-byte CRC accumulated over every byte since `MOD` |
-| `ORG expr` | **`asm` only.** No label. Repoints whichever counter is active: data counter in normal mode, program counter in Motorola-compatible mode. OS-9 modules carry no load-record table, so relocating the program counter mid-file only makes sense for Motorola-mode output meant for bare 6809 hardware — under OS-9 it breaks loading. RLINK owns all placement in an RMA build |
-| `RMB n` | Reserves `n` bytes. In `asm`, the label gets the *data* counter's value in normal mode, the *instruction* counter's in Motorola mode. In RMA: legal only inside a `VSECT` or `CSECT` — **illegal directly inside a `PSECT`** |
-| `SETDP expr` | **`asm` only.** No label. Sets the internal direct-page counter used to auto-pick direct vs. extended addressing; default 0. The manual is explicit that ordinary OS-9 programs should **not** change it — it's for Motorola-compatible mode, where there's no OS-9-assigned run-time direct page. RMA has no equivalent |
-| `IFEQ/IFNE/IFLT/IFLE/IFGT/IFGE/IFP1 ... ELSE ... ENDC` | Conditional assembly. `IFLT`/`IFLE`/`IFGT`/`IFGE` test `operand <op> 0`, so comparing two symbols by subtraction reverses the intuitive reading (`IFLE MAX-MIN` is true when `MIN > MAX`). `IFP1` is true only on pass 1 — used to gate large `USE`d DEFS files so they're processed once. No labels; they nest freely |
+| `ORG expr` | **`asm` only.** No label. Repoints whichever counter is active: data counter in normal mode, program counter in Motorola-compatible mode. OS-9 modules carry no load-record table, so relocating the program counter mid-file only makes sense for Motorola-mode output meant for bare 6809 hardware - under OS-9 it breaks loading. RLINK owns all placement in an RMA build |
+| `RMB n` | Reserves `n` bytes. In `asm`, the label gets the *data* counter's value in normal mode, the *instruction* counter's in Motorola mode. In RMA: legal only inside a `VSECT` or `CSECT` - **illegal directly inside a `PSECT`** |
+| `SETDP expr` | **`asm` only.** No label. Sets the internal direct-page counter used to auto-pick direct vs. extended addressing; default 0. The manual is explicit that ordinary OS-9 programs should **not** change it - it's for Motorola-compatible mode, where there's no OS-9-assigned run-time direct page. RMA has no equivalent |
+| `IFEQ/IFNE/IFLT/IFLE/IFGT/IFGE/IFP1 ... ELSE ... ENDC` | Conditional assembly. `IFLT`/`IFLE`/`IFGT`/`IFGE` test `operand <op> 0`, so comparing two symbols by subtraction reverses the intuitive reading (`IFLE MAX-MIN` is true when `MIN > MAX`). `IFP1` is true only on pass 1 - used to gate large `USE`d DEFS files so they're processed once. No labels; they nest freely |
 | `USE pathlist` | File inclusion, nestable (~13 levels, matching OS-9's open-path limit minus standard I/O). For DEFS files, interactive input during assembly (`USE /TERM`), and shared subroutine libraries. No label |
 | `NAM str` / `TTL str` | Listing header program name / title. No label, no trailing comment |
-| `OPT option` | **Both assemblers have `OPT`, with different letter sets.** `asm` (ch. 2.8.8): `C`/`Dnum`/`E`/`F`/`G`/`L`/`M`/`N`/`O[=filename]`/`S`/`Wnum`. RMA (ch. 4.7): `l c f g x e s d w` only — no `M` (no Motorola mode), no `O` (ROF output is unconditional). For both: bare letter turns an option on, leading `-` turns it off; numeric options need a trailing number. No label or comment field |
+| `OPT option` | **Both assemblers have `OPT`, with different letter sets.** `asm` (ch. 2.8.8): `C`/`Dnum`/`E`/`F`/`G`/`L`/`M`/`N`/`O[=filename]`/`S`/`Wnum`. RMA (ch. 4.7): `l c f g x e s d w` only - no `M` (no Motorola mode), no `O` (ROF output is unconditional). For both: bare letter turns an option on, leading `-` turns it off; numeric options need a trailing number. No label or comment field |
 | `OS9 expr` | Convenience macro: emits `SWI2` + the function-code byte, for use with `OS9Defs` symbolic names (`OS9 I$Read`) |
 | `PSECT {name,typelang,attrrev,edition,stacksize,entry} ... ENDSECT` | **RMA only.** Opens the program's single relocatable code section; location counter restarts at zero |
 | `VSECT {DP} ... ENDSECT` | **RMA only.** Opens a relocatable data section inside a PSECT; RLINK assigns real addresses at link time. Optional `DP` switches to the direct-page counter set; a PSECT may repeat the block, each counter set accumulating across repeats |
-| `CSECT {expr}` | **RMA only.** Sets the CSECT base-offset counter (default 0). Each `RMB` inside assigns its label the current counter value then advances it — a convenience for enumerated field offsets without hand-written `EQU`s |
+| `CSECT {expr}` | **RMA only.** Sets the CSECT base-offset counter (default 0). Each `RMB` inside assigns its label the current counter value then advances it - a convenience for enumerated field offsets without hand-written `EQU`s |
 | `ENDSECT` | **RMA only.** Closes a `PSECT`, `VSECT`, or `CSECT` |
 | `FAIL text` | Aborts assembly with a message; typically wrapped in `IFxx ... ENDC` to enforce a build-time constraint. Everything after the keyword is the message, so no trailing comment |
 | `REPT n ... ENDR` | Assembles the block `n` times; can't nest, and `n` can't reference an `EXTERNAL` or forward-undefined symbol |
@@ -331,13 +331,13 @@ unmarked; only genuine differences or single-assembler directives are tagged.
 
 **Label/symbol syntax (RMA): 1-9 characters**, starting with a letter; legal
 characters are letters, digits, `$`, `.`, `_`, plus `@` per ch. 1.7's
-expression rules (ch. 1.5's label-field wording omits `@` — an inconsistency
+expression rules (ch. 1.5's label-field wording omits `@` - an inconsistency
 in the manual itself). **RMA does not fold case**: `bufPtr` and `BUFPTR` are
 two symbols. A label can only be defined once (barring `SET`). Appending `:`
 in the label field makes it visible to other modules at link time; without
 the colon it's local to its own `PSECT`.
 
-**Label/symbol syntax (`asm`): 1-8 characters** — a real divergence from
+**Label/symbol syntax (`asm`): 1-8 characters** - a real divergence from
 RMA's 1-9. Legal characters: letters (either case), digits, `$`, `_`, `.`;
 first character must be a letter. Defined exactly once (barring `SET`); no
 forward-reference loops. Case-folding behavior isn't stated in the manual, so
@@ -355,7 +355,7 @@ has only `*` for its single instruction counter.
 OS-9-oriented feature set: separate program and data address counters,
 `MOD`/`EMOD` generation, warnings on OS-9-inadvisable addressing modes.
 **Motorola-compatible mode** collapses to a single program counter, behaving
-like a plain absolute 6809 assembler — for programs targeting bare hardware
+like a plain absolute 6809 assembler - for programs targeting bare hardware
 with no OS-9. Switch with the `M` option or `OPT M`; `-M` returns to normal,
 and modes can be toggled mid-file. Mode affects `RMB`'s label value, `ORG`'s
 target counter, and `MOD`/`EMOD` reliability.
@@ -364,24 +364,24 @@ target counter, and `MOD`/`EMOD` reliability.
 prefixed `-` (on) or `--` (off). An unspecified option keeps its default; an
 in-source `OPT` overrides the command line.
 
-- `-o=path` — write the relocatable object file (ROF) here (mass storage);
+- `-o=path` - write the relocatable object file (ROF) here (mass storage);
   omit for a syntax-check-only run
-- `-l` — formatted listing to standard output (default off — errors only)
-- `-c` — suppress conditional-assembly lines in the listing (**default on**)
-- `-f` — eject pages with a form-feed rather than blank lines (default off)
-- `-g` — include every byte of generated object code in the listing (off)
-- `-x` — hide macro-expanded lines from the listing (default on)
-- `-e` — suppress error-message printing (default on per the manual — a build
+- `-l` - formatted listing to standard output (default off - errors only)
+- `-c` - suppress conditional-assembly lines in the listing (**default on**)
+- `-f` - eject pages with a form-feed rather than blank lines (default off)
+- `-g` - include every byte of generated object code in the listing (off)
+- `-x` - hide macro-expanded lines from the listing (default on)
+- `-e` - suppress error-message printing (default on per the manual - a build
   tool defaulting to hidden errors is surprising; confirm before relying on it)
-- `-s` — append the complete symbol table after the listing (default off)
-- `-d<n>` — lines per page (default 66)
-- `-w<n>` — max line width, truncating longer lines (default 80)
+- `-s` - append the complete symbol table after the listing (default off)
+- `-d<n>` - lines per page (default 66)
+- `-w<n>` - max line width, truncating longer lines (default 80)
 
 **`asm` command-line options** (ch. 2.5, 2.8.8). Format: `asm filename
 [option(s)] [#memsize] [>listing]`. Options separated by spaces or commas, on
 by presence, off with a leading `-`; an in-source `OPT` overrides the command
 line. `#memsize` (Shell-processed) sets the assembler's own data area for its
-symbol table — the default 4K holds ~200 symbols, each additional 4K adds
+symbol table - the default 4K holds ~200 symbols, each additional 4K adds
 ~273 more (15 bytes/entry); a `Symbol Table Full` error means bump it. A
 trailing `>listing` (also Shell-processed) redirects listing output anywhere.
 
@@ -394,12 +394,12 @@ trailing `>listing` (also Shell-processed) redirects listing output anywhere.
 | `G` | Print every object-code line a directive generates, not just the first | off | attempted; no observable difference on multi-word `FDB`/`FCC` |
 | `L` | Generate the formatted listing at all; off means errors only | off | `Live` (NitrOS-9) |
 | `M` | Motorola-compatible mode | off | |
-| `N` | Narrow/non-columnized listing for narrow displays | off | `Live` (NitrOS-9) — drops the fixed-width address/bytes/label columns |
-| `O[=filename]` | Generate an object file — bare `O` names it after the source, a bare name places it under that name in the execution directory, a full pathlist controls device/directory/name | off | `Live` (NitrOS-9) |
+| `N` | Narrow/non-columnized listing for narrow displays | off | `Live` (NitrOS-9) - drops the fixed-width address/bytes/label columns |
+| `O[=filename]` | Generate an object file - bare `O` names it after the source, a bare name places it under that name in the execution directory, a full pathlist controls device/directory/name | off | `Live` (NitrOS-9) |
 | `S` | Append an alphabetical symbol-table dump, one type-code letter per symbol: `D`=data (`RMB`), `E`=equate, `L`=program label, `S`=set label, `U`=undefined | off | `Live` (NitrOS-9) |
 | `Wnum` | Max listing line width, truncating longer lines; the comment field is fixed at column 50, so a low value chops useful content | `W80` | `Live` (NitrOS-9) |
 
-**`I` corrupts the module — do not use it on a file passed as a command-line
+**`I` corrupts the module - do not use it on a file passed as a command-line
 argument.** `Live` (NitrOS-9): every listing line gets an `ASM:` prefix, but the
 assembled module header comes out wrong (`87CD3103` instead of the correct
 `87CD001D`, CRC differing too) while assembly still reports `00000 error(s)`.
@@ -410,9 +410,9 @@ mode") is the only hint that `I` may mean interactive/terminal input.
 **Addressing-mode warnings** (ch. 2.7.4.4-5, `asm`): extended and
 extended-indirect addressing (absolute addresses baked into the instruction)
 get a `W` flag in the listing, since OS-9 programs normally shouldn't use
-absolute addresses — direct-page or PC-relative is preferred. A long branch
+absolute addresses - direct-page or PC-relative is preferred. A long branch
 (`LBxx`) whose destination was within short-branch range also gets `W`.
-**The opposite direction is a hard error**: `Live` (NitrOS-9) — a short conditional
+**The opposite direction is a hard error**: `Live` (NitrOS-9) - a short conditional
 branch whose target is out of 8-bit signed range (±127 bytes) fails assembly
 outright (`***** Error: out of range`). This commonly appears after an edit
 pushes an error handler further from its callers; switch to the `L`-prefixed
@@ -442,7 +442,7 @@ label`) instead of `,PCR` produced the same class of errors (fixed with `LEAY
 label,PCR` once, then offset addressing from there).
 
 **Rule of thumb: if a store/load target was declared with `RMB`/`FCC`/`FCS`
-anywhere in the file, it needs `,PCR` — never plain absolute, even for a
+anywhere in the file, it needs `,PCR` - never plain absolute, even for a
 scratch buffer.**
 
 **Phasing errors** occur when an instruction's length or a symbol's resolved
@@ -454,7 +454,7 @@ the actual mistake. When phasing errors cascade across unrelated-looking
 lines, suspect an addressing-mode bug on an early label before assuming a
 branch-range issue.
 
-## Writing 6809 assembly test programs — conventions
+## Writing 6809 assembly test programs - conventions
 
 - **Character literals**: `asm` accepts `LDA #'1'` but rejects `LDA #' '` and
   `LDA #':'` with a syntax error. Hex (`#$20`, `#$3A`, `#$0D` for CR) is the
@@ -462,19 +462,19 @@ branch-range issue.
 - **Register-clobber discipline around syscalls**: if a call returns real
   data in `X`, `Y` or `U`, and the program uses that same register as its
   `,U`-relative data-area base pointer, it *will* be clobbered unless
-  bracketed — `PSHS U` immediately before the `SWI2`, `PULS U` immediately
+  bracketed - `PSHS U` immediately before the `SWI2`, `PULS U` immediately
   after (`PULS` doesn't touch `CC`, so a carry/error result survives).
 - **Save a return value to memory immediately**, before any print or helper
-  call — shared helpers typically reuse `B` as a counter and `Y` as scratch,
+  call - shared helpers typically reuse `B` as a counter and `Y` as scratch,
   silently destroying a return value left in them.
 - **A module's `CMDS`-visible name comes from `asm`'s `O=<name>` argument,
   not the source's `NAM` directive.** The two are independent, and a name
-  colliding with a module already on disk from an earlier session — under a
-  different logged-in identity — can fail to overwrite with a permission
+  colliding with a module already on disk from an earlier session - under a
+  different logged-in identity - can fail to overwrite with a permission
   error rather than cleanly replacing it.
 - **A fresh boot resets all in-memory kernel state**: module directory,
   process table, DAT/task assignments. Nothing from an earlier session
-  persists — a module used successfully before is no longer resident, so
+  persists - a module used successfully before is no longer resident, so
   `F$Link` alone fails `E$MNF` on it; use `F$Load` (which falls back to a
   filesystem search) or `F$Fork` first. Only disk-level changes survive.
 
@@ -491,14 +491,14 @@ that section, relink.
 A program with only uninitialized `VSECT` data (`RMB`) gets its data-area
 registers set up by RLINK's startup convention. A program needing
 *initialized* data (values baked into the object file) additionally needs
-**`Root.a`** — an assembly-source startup module shipped with the assembler —
+**`Root.a`** - an assembly-source startup module shipped with the assembler -
 linked ahead of it; `Root.a` copies initializer values into the live data
 area at load time and sets up `Y`/`U`/`X` itself. It is unrelated to the C
 compiler's `cstart.r`/`cstart.a` (see `c/os9-clib-reference.md`): same
 purpose, different toolchain, not interchangeable.
 
 **`PSECT` operands** (ch. 3.1.1): `PSECT name,typelang,attrrev,edition,
-stacksize,entry` — all six optional as a group (bare `PSECT` defaults `name`
+stacksize,entry` - all six optional as a group (bare `PSECT` defaults `name`
 to `"program"`, the rest to 0). `name`: up to 20 printable non-space,
 non-comma bytes, used only in RLINK's diagnostics; need not be unique.
 `typelang`: **must be 0 for a non-mainline PSECT**; non-zero marks this PSECT
@@ -518,17 +518,17 @@ area's base address and `DP` holds its lowest page number; RLINK auto-adjusts
 indexed and direct-page operands to match. **No-initialized-data programs**
 get `U`=data-area start, `Y`=data-area end, `SP`=`Y`+1 (parameters land above
 `Y`), `DP`=start page number; with no parameters, `Y`=`X`=`SP`. **This is
-universal OS-9 process-invocation behavior, not an RLINK artifact** — `asm`'s
+universal OS-9 process-invocation behavior, not an RLINK artifact** - `asm`'s
 own manual (ch. 2.9.4) describes the identical setup for a plain single-file
 `MOD`/`EMOD` program with no RLINK involved. **Important**: PC-relative
-addressing cannot reach the data section from code — program and data
+addressing cannot reach the data section from code - program and data
 sections aren't a fixed distance apart. **Initialized-data programs** (ch.
 6.3, needing `Root.a`): once `Root.a` runs, `Y`=bottom of the data area
 (matching the C compiler's own data-pointer register choice, so mixed-language
 linking works), `X`=parameter area, `U`=top of linker-allocated data.
 
 **Running RLINK** (ch. 7.1): `rlink [options] mainline [sub1 {subN}]
-[options]` — `mainline` is the ROF containing the non-zero-typelang PSECT
+[options]` - `mainline` is the ROF containing the non-zero-typelang PSECT
 (external refs resolve against it, and the module header generates from it);
 additional ROFs are always included whether referenced or not; no
 non-mainline ROF may itself contain a mainline PSECT.
@@ -537,15 +537,15 @@ non-mainline ROF may itself contain a mainline PSECT.
 |---|---|
 | `-o=path` | Write the linked memory module here; without `-n`, the module is named after this path's final component |
 | `-n=name` | Explicit output module name |
-| `-l=path` | Library ROF (merged assembly ROFs) — each PSECT inside is pulled in only if it resolves a currently-unresolved reference; no mainline PSECTs allowed; libraries searched in command-line order |
+| `-l=path` | Library ROF (merged assembly ROFs) - each PSECT inside is pulled in only if it resolves a currently-unresolved reference; no mainline PSECTs allowed; libraries searched in command-line order |
 | `-e=n` / `-E=n` | Edition number for the output module (default 1) |
 | `-M=size` | Extra data-area memory, in pages (or `K` for kbytes); if omitted, RLINK sums the stack-size operand from every linked PSECT |
-| `-m` | Print a linkage map of each PSECT's assigned base address (a distinct option from `-M=size`; case is the only difference — verify before scripting) |
+| `-m` | Print a linkage map of each PSECT's assigned base address (a distinct option from `-M=size`; case is the only difference - verify before scripting) |
 | `-s` | Print final assigned addresses for all symbols |
 | `-b=ept` | Link a C function so BASIC09's `RUN` can call it directly, entering at symbol `ept` |
 | `-t` | Allow static data in a BASIC09-callable module, assuming the caller has already sized a static area pointed to by `Y` |
 
-**RMA vs. `asm` — the manual's own comparison** (Appendix A): RMA has no
+**RMA vs. `asm` - the manual's own comparison** (Appendix A): RMA has no
 interactive mode, disk-file input only; RMA emits a ROF that RLINK must
 process into an executable module, where `asm` emits an executable module
 directly via `MOD`/`EMOD`; RMA's `PSECT`/`VSECT` exist specifically to
@@ -562,7 +562,7 @@ address's high byte matches the current `SETDP` value; force with a `<`
 **Input file format** (ch. 1.5): free-form ASCII lines terminated by return,
 **max 256 characters**. Four fields: label (must start in column 1; if
 absent, the line's first character must be a space), operation mnemonic,
-operand, comment — separated by one or more spaces. A line whose first
+operand, comment - separated by one or more spaces. A line whose first
 character is `*` is a full-line comment. Empty lines are skipped for assembly
 but occupy a listing line.
 
@@ -571,7 +571,7 @@ number, location-counter value, generated object bytes (`=` here flags an
 external reference in the operand; `+` in the label-field column flags a
 macro-generated line), then label, mnemonic, operand, comment.
 
-**Expression evaluation** (ch. 1.7 — assembly-time syntax, distinct from the
+**Expression evaluation** (ch. 1.7 - assembly-time syntax, distinct from the
 debugger's calculator below). All arithmetic is 16-bit (0..65535 unsigned /
 -32768..32767 signed); byte-sized contexts require -128..127 or 0..255.
 Evaluated left-to-right within a precedence tier; parentheses override.
@@ -582,7 +582,7 @@ line start. Precedence, highest first: unary `-` and `^` (NOT); then `&`
 (AND) and `!` (OR); then `*`/`/` (unsigned only); then `+`/`-`. Logical ops
 are bitwise. Division by zero and multiplication overflowing 65535 are errors
 with undefined intermediate results. A name used before its own definition is
-treated as external to the PSECT (recorded for RLINK) — but assembler-
+treated as external to the PSECT (recorded for RLINK) - but assembler-
 directive operands cannot contain external names at all, and instruction
 operands that do can only combine an external name with binary `+`/`-`.
 
@@ -602,60 +602,60 @@ keep them cached.
 operand field (never label or mnemonic) of body statements, replaced by the
 literal actual-argument text. An actual argument containing a comma or
 backslash must be double-quoted. Omitted trailing arguments become empty
-strings — no substitution, not a zero value. Two read-only operators support
+strings - no substitution, not a zero value. Two read-only operators support
 validation: `\Ln` = byte length of actual argument `n`; `\#` = count of
-arguments passed — typically paired with `IFxx`/`FAIL` to reject bad calls.
+arguments passed - typically paired with `IFxx`/`FAIL` to reject bad calls.
 
 **Macro automatic internal labels**: `\@` (with an optional letter/digit
 suffix placed either right after the `@` or right before the leading `\`)
 generates a label unique to that expansion. The form is `@nnnX`, where `nnn`
 is a 3-digit sequence number incrementing once per expansion and `X` is the
-suffix — a macro using `\@A` and `\@B` produces `@001A`/`@001B` on its first
+suffix - a macro using `\@A` and `\@B` produces `@001A`/`@001B` on its first
 call, `@002A`/`@002B` on its second.
 
 ## DEFS Files (assembly-time symbolic constants)
 
-- `OS9Defs` — service request codes, signal codes, status codes, direct-page
+- `OS9Defs` - service request codes, signal codes, status codes, direct-page
   variable names, module type/language/attribute masks, process descriptor
   layout, path descriptor offsets, register-stack offsets, condition code
   bits, error codes.
-- `SCFDefs` — SCF device static storage layout, XON/XOFF characters,
+- `SCFDefs` - SCF device static storage layout, XON/XOFF characters,
   SCF-specific path descriptor fields.
-- `RBFDefs` — RBF path/device/file descriptor layouts, segment list format,
+- `RBFDefs` - RBF path/device/file descriptor layouts, segment list format,
   directory entry format, drive table layout.
-- `SysType` — CPU type, MMU type, CPU speed, disk controller, clock module,
+- `SysType` - CPU type, MMU type, CPU speed, disk controller, clock module,
   PIA type, and other build-time configuration constants.
 
 Installation convention (ch. 2.2): `asm` lives in `CMDS` and the `DEFS`
-directory sits at the root of the system disk — programs `USE` it with a full
+directory sits at the root of the system disk - programs `USE` it with a full
 pathlist like `/D0/DEFS/OS9Defs`. On-disk DEFS filenames vary by
 system/release (a Level Two system's may be `os9defs.lii` rather than plain
 `os9defs`).
 
 `Source` (the EOU disk's real `DEFS/os9defs.a`): `Prgrm`=$10, `Objct`=1,
-`ReEnt`=$80 — matching `syscalls-and-module-format.md`'s type/attribute
+`ReEnt`=$80 - matching `syscalls-and-module-format.md`'s type/attribute
 table, and cross-validated against `ident`'s decode of real system modules.
 **Implementation trivia**: `os9defs.a` doesn't define `I$`/`F$` call codes as
-literal `EQU` values — each name is an `RMB 1` entry in a running counted
-table (`I$Read: RMB 1`, `I$ReadLn: RMB 1`, …), so a call's numeric code is
+literal `EQU` values - each name is an `RMB 1` entry in a running counted
+table (`I$Read: RMB 1`, `I$ReadLn: RMB 1`, ...), so a call's numeric code is
 its *position* in that table, assigned by the location counter rather than
 written per name. **That file is RMA source and `asm` cannot `use` it at
-all** — see "Why not `use` os9defs.a" near the top of this file for what
+all** - see "Why not `use` os9defs.a" near the top of this file for what
 happens and what to do instead.
 
 ## Debugger
 
-Every command below is `Live` (NitrOS-9) except `C`, which is `Manual` — it
+Every command below is `Live` (NitrOS-9) except `C`, which is `Manual` - it
 clears the RAM it tests, so it has deliberately never been run here.
 
 | Command | Effect |
 |---|---|
-| *(space)* `expr` | Calculator: evaluate and print in hex + decimal (` 5+3` → `$0008 #00008`) |
+| *(space)* `expr` | Calculator: evaluate and print in hex + decimal (` 5+3` -> `$0008 #00008`) |
 | `.` | Show Dot (working address) and its contents |
 | `. expr` | Set Dot, then show it |
 | `..` | Recall the *previous* Dot value |
 | `-` | Decrement Dot, show it |
-| *(bare return)* | Increment Dot, show it — steps through memory sequentially |
+| *(bare return)* | Increment Dot, show it - steps through memory sequentially |
 | `= expr` | Write to the address at Dot, verify the write, advance Dot |
 | `:` | Show all registers: `SP CC A B DP X Y U PC` |
 | `:reg` | Show one register |
@@ -664,14 +664,14 @@ clears the RAM it tests, so it has deliberately never been run here.
 | `K` / `K expr` | Clear all breakpoints / clear one |
 | `G` / `G expr` | Resume execution / resume at a specific address |
 | `M expr1 expr2` | Hex+ASCII memory dump between two addresses |
-| `C expr1 expr2` | Walking-bit RAM test + clear between two addresses — **destructive**, RAM only. `Manual`: it clears the RAM it tests, which is why it is the one command here never run. Establishing a range that is genuinely scratch is hard on a Level 2 system with DAT mapping, and a wrong range corrupts the running system mid-session |
+| `C expr1 expr2` | Walking-bit RAM test + clear between two addresses - **destructive**, RAM only. `Manual`: it clears the RAM it tests, which is why it is the one command here never run. Establishing a range that is genuinely scratch is hard on a Level 2 system with DAT mapping, and a wrong range corrupts the running system mid-session |
 | `S expr1 expr2` | Search memory from Dot for a 1- or 2-byte pattern |
 | `E text` | Load a program for execution (like Chain, but keeps the debugger resident as a coroutine); shows the initial register dump; `G` starts it |
 | `L text` | Link to a module by name; sets Dot to its first byte |
 | `$` / `$ cmd` | Drop into the OS-9 shell / run one shell command, returning afterward |
 | `Q` | Quit (via `F$Exit`) |
 
-**`S` must start from a real code or data address** — searching from `$0`
+**`S` must start from a real code or data address** - searching from `$0`
 finds nothing, since low direct-page memory isn't meaningful search territory.
 Take a starting address from a `:` register dump's `PC` column.
 
@@ -683,12 +683,12 @@ from its `fcs` name field. `E`'s own act of loading-for-execution doesn't
 satisfy a *subsequent* `L`/`E` lookup either. Treat both as reliable only for
 independently resident modules.
 
-**A module linked multiple times needs one `unlink` per link, not one total**
-— `Live` (NitrOS-9): after a sequence of `L`/`E`/shell-run calls, `mdir` kept showing
+**A module linked multiple times needs one `unlink` per link, not one total** -
+`Live` (NitrOS-9): after a sequence of `L`/`E`/shell-run calls, `mdir` kept showing
 the module resident until four separate `unlink` calls, matching the number
 of linking events.
 
-**`mdir`'s listing isn't exhaustive** — `Live` (NitrOS-9): immediately after a program
+**`mdir`'s listing isn't exhaustive** - `Live` (NitrOS-9): immediately after a program
 successfully `F$Load`ed a module (valid returned entry point, no error), and
 while that program was itself still running, `mdir` showed neither the loaded
 module nor the running program's own. A successful syscall result is stronger
@@ -697,12 +697,12 @@ evidence of residency than `mdir`'s silence.
 **Breakpoint mechanism**: the 6809 `SWI` instruction, inserted and removed
 transparently. Restrictions: RAM only (not ROM), must sit on an instruction's
 first opcode byte, max 12 simultaneous, and **user code cannot use plain
-`SWI`** (reserved for the debugger) — `SWI2` is what ordinary syscalls
+`SWI`** (reserved for the debugger) - `SWI2` is what ordinary syscalls
 already use and `SWI3` is available for user vectoring. A loop needs *two*
 breakpoints to stop on every iteration.
 
 **Register display**: `SP CC A B DP X Y U PC`, one line of names, hex values
-below. `CC` bit 7 (E flag) must be set or `G` won't resume correctly — the
+below. `CC` bit 7 (E flag) must be set or `G` won't resume correctly - the
 entry-state `CC` genuinely has it set (`Live` (NitrOS-9)). `SP` points at the bottom of
 the saved register block when a breakpoint fires.
 
@@ -715,7 +715,7 @@ assembly's `[D,Y]`.
 ## Editor
 
 `Manual`. Line-and-buffer oriented, not screen-oriented (no cursor
-addressing — matching the "no termcap" reality in `unix-differences.md`). Two
+addressing - matching the "no termcap" reality in `unix-differences.md`). Two
 buffers (primary/secondary) with `P`/`G` to move lines between them, `B n` to
 switch primary.
 
@@ -732,11 +732,11 @@ Core navigation/edit: `L n` (list forward) / `X n` (list backward) / `+n`/`-n`
 `C n str1 str2` (change) / `S n str` (search) / `T n` (tab to column) /
 `A n` (anchor search/change to column n).
 
-**Macro system** — the Editor's own facility, a different mechanism from
+**Macro system** - the Editor's own facility, a different mechanism from
 RMA's assembly-time `MACRO`/`ENDM`: `.MAC "name"` opens a macro for editing;
 parameters are `#var` (numeric) or `$var` (string); `[commands]n` loops the
 bracketed commands n times (or `*` = as many as possible, exiting early if
-any command fails); `:` is a conditional — skip to end of loop/macro unless
+any command fails); `:` is a conditional - skip to end of loop/macro unless
 the fail flag is set, then clear it. Test commands that set or clear the fail
 flag: `.EOF`/`.NEOF`, `.EOB`/`.NEOB`, `.EOL`/`.NEOL`, `.STR str`/`.NSTR str`,
 `.ZERO n`, `.STAR n` (true if n = 65535, the wildcard value). `.S`/`.F`
@@ -752,10 +752,10 @@ exits.
 
 **Sources:** OS-9 Interactive Debugger Users Manual; OS-9 Assembler/Editor/
 Debugger Manual (a generic Microware manual despite shipping with Dragon
-systems — no Dragon-specific hardware content); OS-9 Relocating Macro
+systems - no Dragon-specific hardware content); OS-9 Relocating Macro
 Assembler Manual (RMA options, input/listing format, expression evaluation,
 macro facility, PSECT/VSECT/CSECT semantics, data-area access, RLINK options,
-and the RMA-vs-Microware-Interactive-Assembler differences appendix — mostly
+and the RMA-vs-Microware-Interactive-Assembler differences appendix - mostly
 `Manual`; the PSECT operands, the external-reference and trailing-colon export
 mechanisms, `-o=`, and `rlink`'s mainline/subordinate argument order are now
 `Live` (NitrOS-9) via a working two-file build).

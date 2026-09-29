@@ -1,17 +1,17 @@
-# Reference Index — read the matching row(s) before answering
+# Reference Index - read the matching row(s) before answering
 
-Topic → target → file. Keywords are deliberately dense; scan for yours.
+Topic -> target -> file. Keywords are deliberately dense; scan for yours.
 
-**Directory convention.** `common/` holds what applies to both targets — but
+**Directory convention.** `common/` holds what applies to both targets - but
 where a value differs, **68k is the default** and the 6809 delta is called
 out inline or lives under `6809/`.
 
 **So an unqualified value in `common/` is a promise that it holds on both
-targets.** When writing here, either verify that or mark the scope inline —
+targets.** When writing here, either verify that or mark the scope inline -
 an unmarked 68k-only fact is indistinguishable from a verified shared one,
 and the reader has no way to tell which they are looking at. This is not
 hypothetical: `common/` carried "super-user = group 0" bare in four places,
-which is true on 68k and false on 6809 (flat user ID 0) — a privilege guard
+which is true on 68k and false on 6809 (flat user ID 0) - a privilege guard
 written from the bare claim classifies every ordinary 6809 account as
 privileged. The canonical statement of that particular delta lives once, in
 `6809/syscalls-and-module-format.md`.
@@ -24,11 +24,11 @@ finds one copy cannot tell whether the others still agree.
 shared.** Two files there are 68k-only despite the directory, each with a
 6809 counterpart; cite them by full path, never by bare filename:
 
-- `common/utility-usage.md` (v2.4 68k utility set) ↔ `6809/utility-usage.md`
-- `common/using-os9exec-repl.md` (os9exec is the 68k emulator) ↔
+- `common/utility-usage.md` (v2.4 68k utility set) <-> `6809/utility-usage.md`
+- `common/using-os9exec-repl.md` (os9exec is the 68k emulator) <->
   `6809/using-nitros9-repl.md`
 
-## Symptom → cause (when you have a failure, not a topic)
+## Symptom -> cause (when you have a failure, not a topic)
 
 The rest of this index is organised by topic. This table is the other door:
 you have a symptom and no idea which topic it belongs to. Every cause here
@@ -36,140 +36,140 @@ has bitten a real session.
 
 | Symptom | Likely cause | Where |
 |---|---|---|
-| Assembles clean, won't run / `ident` shows nothing sane | assembler wrote an object *despite* errors — check the error count | `6809/assembly-and-tools.md` |
+| Assembles clean, won't run / `ident` shows nothing sane | assembler wrote an object *despite* errors - check the error count | `6809/assembly-and-tools.md` |
 | Build reports success, no output file where you looked | output goes to the **execution** directory, not the data directory | both assembly files |
-| Assembly "silently succeeded" but nothing works | you redirected the assembler's stdout — errors went with it | `6809/assembly-and-tools.md` |
+| Assembly "silently succeeded" but nothing works | you redirected the assembler's stdout - errors went with it | `6809/assembly-and-tools.md` |
 | Module runs but its data area is wrong / corrupt scratch | `mod` data size written with `*` (program counter) instead of `.` | `6809/assembly-and-tools.md` |
 | `mdir` shows a different name than the file you linked | the module name comes from `l68 -o=`, not the source | `68k/os9-68k-assembly.md` |
-| Link fails on `I$`/`F$` symbol names | call names aren't defined anywhere — declare them yourself | `68k/os9-68k-assembly.md` |
-| `non-remote data allocation exceeds 64k`, or `value out of range` on a big local | A6-relative addressing spans one 64K window — declare the array `remote` | `c/os9-c-cheatsheet.md` |
-| Program opens a file, reads nothing, and reports on it anyway | the SDK `cio` library's trap-13 selectors hit the `cio` module's memory routine — rebuild trap-free (`-qm`) | `c/os9-c-cheatsheet.md` |
-| A C program builds clean, runs, and writes nothing — no error, no output | a `-qixm` build: every `putchar` leaks an `F$SRqMem` through the same selector mismatch — rebuild `-qm` | `c/os9-c-cheatsheet.md` |
-| A named file reads as empty while the same data via stdin is fine | `open(path, 0)` — POSIX `O_RDONLY` is 0, which on OS-9 requests **no access**; the open succeeds and every read fails | `common/unix-differences.md` |
-| Unsure whether a fault is yours or the system's | run a period-built program that does the same thing on the same disk — it differs from yours only in who compiled it | `common/using-os9exec-repl.md` |
-| Program needs Enter after every key though it called `cbreak()` | `cbreak()` sets a curses flag only; stdio `getchar()` ignores it — read with `getch()` | `c/os9-clib-reference.md` |
-| `Symbol 'popen' unresolved`, after an `illegal pointer/integer combination` warning | `popen`/`pclose` are in no library on the SDK disk — use `os9fork` with an argument vector | `c/os9-clib-reference.md` |
-| An alarm never fires at all, however long you wait | `F$Alarm`'s `d3` is ticks unless **bit 31** is set, which means 256ths — code that drops that bit asks for a huge tick count | `68k/syscall-reference.md` |
-| A blocked `I$Read` returns an error instead of resuming after a signal | specified, not a fault — signals 2-31 are deadly to serial and pipe I/O, and the error returned is the signal number | `common/ipc.md` |
-| A program "hangs" while burning CPU on a `getchar()` loop | a signal killed the read and latched `ferror(stdin)`; every later read returns −1 at once until `clearerr` | `c/os9-clib-reference.md` |
+| Link fails on `I$`/`F$` symbol names | call names aren't defined anywhere - declare them yourself | `68k/os9-68k-assembly.md` |
+| `non-remote data allocation exceeds 64k`, or `value out of range` on a big local | A6-relative addressing spans one 64K window - declare the array `remote` | `c/os9-c-cheatsheet.md` |
+| Program opens a file, reads nothing, and reports on it anyway | the SDK `cio` library's trap-13 selectors hit the `cio` module's memory routine - rebuild trap-free (`-qm`) | `c/os9-c-cheatsheet.md` |
+| A C program builds clean, runs, and writes nothing - no error, no output | a `-qixm` build: every `putchar` leaks an `F$SRqMem` through the same selector mismatch - rebuild `-qm` | `c/os9-c-cheatsheet.md` |
+| A named file reads as empty while the same data via stdin is fine | `open(path, 0)` - POSIX `O_RDONLY` is 0, which on OS-9 requests **no access**; the open succeeds and every read fails | `common/unix-differences.md` |
+| Unsure whether a fault is yours or the system's | run a period-built program that does the same thing on the same disk - it differs from yours only in who compiled it | `common/using-os9exec-repl.md` |
+| Program needs Enter after every key though it called `cbreak()` | `cbreak()` sets a curses flag only; stdio `getchar()` ignores it - read with `getch()` | `c/os9-clib-reference.md` |
+| `Symbol 'popen' unresolved`, after an `illegal pointer/integer combination` warning | `popen`/`pclose` are in no library on the SDK disk - use `os9fork` with an argument vector | `c/os9-clib-reference.md` |
+| An alarm never fires at all, however long you wait | `F$Alarm`'s `d3` is ticks unless **bit 31** is set, which means 256ths - code that drops that bit asks for a huge tick count | `68k/syscall-reference.md` |
+| A blocked `I$Read` returns an error instead of resuming after a signal | specified, not a fault - signals 2-31 are deadly to serial and pipe I/O, and the error returned is the signal number | `common/ipc.md` |
+| A program "hangs" while burning CPU on a `getchar()` loop | a signal killed the read and latched `ferror(stdin)`; every later read returns -1 at once until `clearerr` | `c/os9-clib-reference.md` |
 | A ported program times out correctly, yet its signal handler was never entered | the alarm interrupts the blocked read; the handler waits for `check_signal()` | `c/os9-clib-reference.md` |
-| A ported program's `alarm()`/`signal()` handler never runs | a Unix-compat `signal()` that only records the code — the handler waits for a `check_signal()` poll | `c/os9-clib-reference.md` |
-| One terminal setting is wrong while the others are right, after code that saves and restores options | a whole-struct `_gs_opt`/`_ss_opt` replay overwriting another routine's change — restore only your own fields | `c/os9-clib-reference.md` |
-| A shipped binary misbehaves in ways the source beside it cannot explain | they may be different editions — compare the binary's usage text against the source before debugging further | `common/using-os9exec-repl.md` |
-| Output is right in a file and wrong on screen or through a pipe — dropped characters, or a stray NUL byte | `putchar`/`putc` evaluate their argument twice when the stream is line-buffered — `putchar(*p++)` | `c/os9-clib-reference.md` |
-| `**** macro arguments required ****` naming a library function you never called directly | an object-like macro expanding to a function-like macro name — give the wrapper parameters | `c/os9-c-cheatsheet.md` |
-| `cpp` dies with no diagnostic at all | an over-long joined source line — no fixed limit, earlier content lowers it; keep lines well under 500 and note `#if 0` does not exempt one | `c/os9-c-cheatsheet.md` |
-| `PC` unresolved at link in a termcap port | it is `PC_` here — and check `BC`/`UP`, which link silently as the wrong type | `c/os9-clib-reference.md` |
-| A flex scanner prints nothing for a named file but works when you pipe into it | `freopen(name,"r",yyin)` before the first `yylex()` — some skeletons leave `yyin` null until then | `c/os9-c-cheatsheet.md` |
+| A ported program's `alarm()`/`signal()` handler never runs | a Unix-compat `signal()` that only records the code - the handler waits for a `check_signal()` poll | `c/os9-clib-reference.md` |
+| One terminal setting is wrong while the others are right, after code that saves and restores options | a whole-struct `_gs_opt`/`_ss_opt` replay overwriting another routine's change - restore only your own fields | `c/os9-clib-reference.md` |
+| A shipped binary misbehaves in ways the source beside it cannot explain | they may be different editions - compare the binary's usage text against the source before debugging further | `common/using-os9exec-repl.md` |
+| Output is right in a file and wrong on screen or through a pipe - dropped characters, or a stray NUL byte | `putchar`/`putc` evaluate their argument twice when the stream is line-buffered - `putchar(*p++)` | `c/os9-clib-reference.md` |
+| `**** macro arguments required ****` naming a library function you never called directly | an object-like macro expanding to a function-like macro name - give the wrapper parameters | `c/os9-c-cheatsheet.md` |
+| `cpp` dies with no diagnostic at all | an over-long joined source line - no fixed limit, earlier content lowers it; keep lines well under 500 and note `#if 0` does not exempt one | `c/os9-c-cheatsheet.md` |
+| `PC` unresolved at link in a termcap port | it is `PC_` here - and check `BC`/`UP`, which link silently as the wrong type | `c/os9-clib-reference.md` |
+| A flex scanner prints nothing for a named file but works when you pipe into it | `freopen(name,"r",yyin)` before the first `yylex()` - some skeletons leave `yyin` null until then | `c/os9-c-cheatsheet.md` |
 | A variable you exported on the host is ignored inside os9exec | only names starting with `@` cross (`@TERM=vt100`); what a non-crossing one looks like inside defeats a NULL check | `common/using-os9exec-repl.md` |
 | curses says `Unknown terminal type ''` though `getenv` returns your `TERM` | no `TERM` in that process's environment; under os9exec, `getenv` cannot tell the environment routes apart | `c/os9-clib-reference.md`, `common/using-os9exec-repl.md` |
-| Bus error in a byte-fill loop (`MOVE.B #$30,(A3)+`) after a write syscall | a float passed to curses `printw` — format with `sprintf`, draw with `addstr` | `c/os9-clib-reference.md` |
+| Bus error in a byte-fill loop (`MOVE.B #$30,(A3)+`) after a write syscall | a float passed to curses `printw` - format with `sprintf`, draw with `addstr` | `c/os9-clib-reference.md` |
 | A ported program calls `fork`, `pipe`, `kill`, `sleep`, `dup`, `wait` or `getcwd` | none of them exist in `clib.l`/`unix.l`; `execl` is a CHAIN that never returns | `c/os9-clib-reference.md` |
-| A file opened through the execution directory (`S_IEXEC`) opens fine but every read fails — a module scan matches nothing | execute mode picks the directory and grants no read; open `S_IEXEC \| S_IREAD` | `68k/syscall-reference.md`, `I$Open` |
+| A file opened through the execution directory (`S_IEXEC`) opens fine but every read fails - a module scan matches nothing | execute mode picks the directory and grants no read; open `S_IEXEC \| S_IREAD` | `68k/syscall-reference.md`, `I$Open` |
 | `**** incorrect include file syntax ****` on a line that looks fine | `#include<file.h>` needs a space before the `<` | `c/os9-c-cheatsheet.md` |
-| Your macro is ignored and the library's is still in force, after one `**** redefined macro ****` warning | this `cpp` keeps the FIRST definition on redefinition — `#undef` before redefining any macro | `c/os9-c-cheatsheet.md` |
-| `'vt100': Unknown terminal type` from a termcap file that plainly contains vt100 | a reader that skips any entry whose first field is not two characters — use `d0|vt100:...` | `common/using-os9exec-repl.md` |
+| Your macro is ignored and the library's is still in force, after one `**** redefined macro ****` warning | this `cpp` keeps the FIRST definition on redefinition - `#undef` before redefining any macro | `c/os9-c-cheatsheet.md` |
+| `'vt100': Unknown terminal type` from a termcap file that plainly contains vt100 | a reader that skips any entry whose first field is not two characters - use `d0|vt100:...` | `common/using-os9exec-repl.md` |
 | A crash dump names a syscall that cannot be where the fault is | `Last syscall` is latched at the last call made, not the fault site; convert `PC` to a module offset via the `Executing:` bytes | `common/using-os9exec-repl.md` |
-| Illegal instruction at a `PC` outside the module, only sometimes — comes and goes with how busy memory is | a one-byte stack overrun (usually a string's NUL) into the high byte of a saved frame pointer: harmless below 16 MB, fatal above; reproduce with `sleep -s 12 #20000k &` | `common/using-os9exec-repl.md` |
-| `E_FNA` (214) opening a file that is present and readable | a leading space in the pathname — `F$PrsNam` does not skip one, and the failure surfaces at the open as a permission error | `68k/syscall-reference.md` |
-| Full-screen program refuses to start (`Unknown terminal type`) or draws only part of its screen | a modern `TERM` it does not know — try `TERM=vt100` first; if `vt100` is already set and the termcap file has it, the entry's first field must be two characters (`d0|vt100:...`) | `common/using-os9exec-repl.md` |
-| A program's last line of output is missing, or the prompt sits on top of it | the message ended in a bare CR and the prompt overwrote it — append `; echo ""` | `common/using-os9exec-repl.md` |
-| EVERY line overwrites the last, or programs seem to print almost nothing | `PD_ALF` cleared on the device — no LF follows CR. Check the raw CR:LF ratio; no bytes are lost | `common/memory-and-io.md` |
-| Shell says `User abort` / `Error #000:002` / `E_???` and nobody pressed a key | a child's non-zero exit status is printed through the error table as though it were an error code — a GNU port that prints usage and `exit(2)` does this every time | `common/os9-tools-and-shell.md` |
-| `r68`: `branch out of range` on a branch to the very next line | it is too **close**, not too far — the short form would need displacement 0, which is the reserved "use the word form" encoding; drop the `.s` | `68k/os9-68k-assembly.md` |
-| `r68` error points at an instruction that is plainly correct | the diagnostic is printed **above** the line it refers to — read the line *after* the `*** error ***` | `68k/os9-68k-assembly.md` |
+| Illegal instruction at a `PC` outside the module, only sometimes - comes and goes with how busy memory is | a one-byte stack overrun (usually a string's NUL) into the high byte of a saved frame pointer: harmless below 16 MB, fatal above; reproduce with `sleep -s 12 #20000k &` | `common/using-os9exec-repl.md` |
+| `E_FNA` (214) opening a file that is present and readable | a leading space in the pathname - `F$PrsNam` does not skip one, and the failure surfaces at the open as a permission error | `68k/syscall-reference.md` |
+| Full-screen program refuses to start (`Unknown terminal type`) or draws only part of its screen | a modern `TERM` it does not know - try `TERM=vt100` first; if `vt100` is already set and the termcap file has it, the entry's first field must be two characters (`d0|vt100:...`) | `common/using-os9exec-repl.md` |
+| A program's last line of output is missing, or the prompt sits on top of it | the message ended in a bare CR and the prompt overwrote it - append `; echo ""` | `common/using-os9exec-repl.md` |
+| EVERY line overwrites the last, or programs seem to print almost nothing | `PD_ALF` cleared on the device - no LF follows CR. Check the raw CR:LF ratio; no bytes are lost | `common/memory-and-io.md` |
+| Shell says `User abort` / `Error #000:002` / `E_???` and nobody pressed a key | a child's non-zero exit status is printed through the error table as though it were an error code - a GNU port that prints usage and `exit(2)` does this every time | `common/os9-tools-and-shell.md` |
+| `r68`: `branch out of range` on a branch to the very next line | it is too **close**, not too far - the short form would need displacement 0, which is the reserved "use the word form" encoding; drop the `.s` | `68k/os9-68k-assembly.md` |
+| `r68` error points at an instruction that is plainly correct | the diagnostic is printed **above** the line it refers to - read the line *after* the `*** error ***` | `68k/os9-68k-assembly.md` |
 | A conversion tool or port hangs at 100% CPU with no error | an unbounded scan: os9exec's arena is zeroed, so an out-of-bounds read finds no terminator and never stops | `common/using-os9exec-repl.md`, `c/kandr-vs-ansi.md` |
-| Output stops at a suspiciously round byte count | a stdio buffer boundary, not a write ceiling — the program stopped writing | `common/using-os9exec-repl.md` |
-| `E_PNNF` (216) on a file you just created and can see on the host | the device is an RBF **image**, a snapshot — the file is not inside it until the image is rebuilt; a host directory would have shown it at once | `common/using-os9exec-repl.md` |
-| An RBF image turns out damaged, with no telling when | two emulator processes had it open at once, each caching its own allocation bitmap — one writer per image; `lsof` before starting a harness | `common/using-os9exec-repl.md` |
-| `del` treats a file name as options, or deletes more files than named | a name starting with `-` is an option — give the full pathlist; a `*`/`?` in the name is expanded by the shell — double-quote the full pathlist | `common/utility-usage.md` |
-| A Microware utility or another program misbehaves after your assembly program has run | it wrote through a plain `(a6)`/`N(a6)`: A6 is data base **+ $8000**, so that lands past your data area in someone else's memory — use `vsect` labels; under os9exec, `-W` names the write | `68k/os9-68k-assembly.md`, `common/using-os9exec-repl.md` |
-| `l68` says `operand size error` on an `(a6,dn)` operand that `r68` accepted | a `vsect` offset near `-$8000` does not fit the 8-bit index displacement — `lea` it into a register first; the module was written anyway | `68k/os9-68k-assembly.md` |
+| Output stops at a suspiciously round byte count | a stdio buffer boundary, not a write ceiling - the program stopped writing | `common/using-os9exec-repl.md` |
+| `E_PNNF` (216) on a file you just created and can see on the host | the device is an RBF **image**, a snapshot - the file is not inside it until the image is rebuilt; a host directory would have shown it at once | `common/using-os9exec-repl.md` |
+| An RBF image turns out damaged, with no telling when | two emulator processes had it open at once, each caching its own allocation bitmap - one writer per image; `lsof` before starting a harness | `common/using-os9exec-repl.md` |
+| `del` treats a file name as options, or deletes more files than named | a name starting with `-` is an option - give the full pathlist; a `*`/`?` in the name is expanded by the shell - double-quote the full pathlist | `common/utility-usage.md` |
+| A Microware utility or another program misbehaves after your assembly program has run | it wrote through a plain `(a6)`/`N(a6)`: A6 is data base **+ $8000**, so that lands past your data area in someone else's memory - use `vsect` labels; under os9exec, `-W` names the write | `68k/os9-68k-assembly.md`, `common/using-os9exec-repl.md` |
+| `l68` says `operand size error` on an `(a6,dn)` operand that `r68` accepted | a `vsect` offset near `-$8000` does not fit the 8-bit index displacement - `lea` it into a register first; the module was written anyway | `68k/os9-68k-assembly.md` |
 | A procedure file stops partway with no error printed | a command exited with status 1: `-x` aborts on it, and the shell prints nothing for 1 | `common/os9-tools-and-shell.md` |
 | An event wait loop never exits though the event is signalled | the loop compares against the post-increment value; `Ev$Wait` returns the value that satisfied it, *before* the wait increment | `68k/syscall-reference.md` |
-| `^syntax error` and nothing runs, from a batch invocation | a shell option written on the command line — `-nx` belongs on the procedure file's first line | `common/using-os9exec-repl.md` |
+| `^syntax error` and nothing runs, from a batch invocation | a shell option written on the command line - `-nx` belongs on the procedure file's first line | `common/using-os9exec-repl.md` |
 | Only the FIRST command of a batch takes effect, the rest silently ignored | commands fed on host **stdin** need LF endings; only a file passed as an *argument* wants CR-only | `common/using-os9exec-repl.md` |
 | A host file opens under the wrong case, or the wrong one of two similar names | host-directory lookup falls back to a case-insensitive, 28-char-cut, spaces-as-`_` scan and takes the FIRST match | `common/using-os9exec-repl.md` |
 | `linecount` or any line reader sees 0 lines in a file that plainly has several | a host directory translates nothing: LF endings, and `I$ReadLn` stops only at CR | `common/using-os9exec-repl.md` |
-| `c68` says `; expected` / `expression with little effect` on correct-looking C | adjacent string literals — nothing under `cc` joins them (the `gcc2` driver does) | `c/kandr-vs-ansi.md` |
+| `c68` says `; expected` / `expression with little effect` on correct-looking C | adjacent string literals - nothing under `cc` joins them (the `gcc2` driver does) | `c/kandr-vs-ansi.md` |
 | `**** multiple definition ****` on parameter declarations that look right | `ansi2knr` was run on an already-K&R tree and rewrote its own output | `c/kandr-vs-ansi.md` |
 | "Can't find" a command that is plainly present | fork lookups use `chx`, not `PATH` | `common/os9-mental-model.md`, `common/using-os9exec-repl.md` |
 | Redirect produced error text, or clobbered the file | `>>` is **stderr**; append is `>+`; plain `>` fails if the file exists | `common/os9-tools-and-shell.md` |
-| `Wildcard match failed` — the command never ran | a `*`/`?` pattern matched no file, which aborts the command instead of passing through; `?` in a borrowed `$?` idiom does this too | `common/os9-tools-and-shell.md` |
-| A batch run stalled, or later procedure lines never executed | either an earlier command failed (`-x` abort-on-error is the default, and the skipping is announced by nothing) or a utility hit an interactive prompt — classically `copy` without `-r` — and read your remaining lines as its answers | `common/os9-tools-and-shell.md`, `common/utility-usage.md`, `common/using-os9exec-repl.md` |
+| `Wildcard match failed` - the command never ran | a `*`/`?` pattern matched no file, which aborts the command instead of passing through; `?` in a borrowed `$?` idiom does this too | `common/os9-tools-and-shell.md` |
+| A batch run stalled, or later procedure lines never executed | either an earlier command failed (`-x` abort-on-error is the default, and the skipping is announced by nothing) or a utility hit an interactive prompt - classically `copy` without `-r` - and read your remaining lines as its answers | `common/os9-tools-and-shell.md`, `common/utility-usage.md`, `common/using-os9exec-repl.md` |
 | `can't execute "<the name you typed>"` with `E_FNA`/214 | the procedure file is in the execution directory; bare-name procedure lookup resolves against the *data* directory | `common/os9-tools-and-shell.md` |
-| `can't execute "<a word you never typed>"` | you named a data file, and the shell is running its contents as commands — the quoted word came from inside the file | `common/os9-tools-and-shell.md` |
+| `can't execute "<a word you never typed>"` | you named a data file, and the shell is running its contents as commands - the quoted word came from inside the file | `common/os9-tools-and-shell.md` |
 | A file you just created won't open, or a long name is refused | OS-9 allows 1 to 28 characters and a 29th is refused everywhere | `common/unix-differences.md` |
 | Compiler reads the whole source as one line | source has LF endings; OS-9 needs CR-only | `c/os9-c-cheatsheet.md`, `common/unix-differences.md`, `common/using-os9exec-repl.md` |
-| `cpp` dies on a `.dat`/data file you never thought of as source | it is `#include`d as C initialisers — the CR rule applies by USE, not by extension | `common/using-os9exec-repl.md` |
+| `cpp` dies on a `.dat`/data file you never thought of as source | it is `#include`d as C initialisers - the CR rule applies by USE, not by extension | `common/using-os9exec-repl.md` |
 | Program builds and runs but misreads its own data file | LF endings in runtime data: the silent form of the CR rule, nothing reports it | `common/using-os9exec-repl.md` |
 | OS-9's `unshar` says `No shell commands in <file>` | the archive was transported without converting to OS-9 text | `common/using-os9exec-repl.md` |
 | Program dies immediately with a trap-handler banner | linked against Microware's `cio` trap handler, which this disk lacks | `common/using-os9exec-repl.md` |
-| Harness times out with the command visibly working | prompt gate doesn't recognise a sub-program's prompt — use raw keys | both REPL files |
+| Harness times out with the command visibly working | prompt gate doesn't recognise a sub-program's prompt - use raw keys | both REPL files |
 | Session hangs or dies on a syscall that looked ordinary | `F$SSvc`/`F$IOQu`/`F$NProc` (6809), `F$SysDbg`/`F$RTE` (68k) | both REPL files |
-| Fix has no effect although the rebuild succeeded / rebuild behaves exactly like the old binary | the crashed module is **still resident** and shadows the new one — `mdir`; the output file itself was replaced | `basic09/basic09-per-target.md` |
+| Fix has no effect although the rebuild succeeded / rebuild behaves exactly like the old binary | the crashed module is **still resident** and shadows the new one - `mdir`; the output file itself was replaced | `basic09/basic09-per-target.md` |
 | `xmode` (or any tool reading device options) fails `Error #000:221 (E_MNF)` on a device that works | os9exec mounts devices with no descriptor modules; `load` one from `CMDS/BOOTOBJS` | `common/using-os9exec-repl.md` |
 | `Exception: ... vector=$08 err=#000:108` (E$Violat) at an ordinary-looking instruction, classically `MVSR2.W` / `MOVE SR,<ea>` | the binary was built for a 68000, where reading SR is user-legal; it is privileged from the 68010 on, and the system is not emulating it. | `68k/os9-68k-assembly.md`, exception vector table |
-| `Error #001 — Unconditional Abort` printed after output that was correct | `F$Exit` called with `B` never cleared — cosmetic, not a real failure | `6809/syscalls-and-module-format.md` |
-| Breakpoint or examine lands at the wrong address | `sc`'s listing double-applies an offset — never take an address from it | `common/using-os9exec-repl.md` |
-| `-d 2` trace shows a `<<<` return under the wrong call name | a nested call overwrote the per-process current-call field — pair returns to entries by position | `common/using-os9exec-repl.md` |
-| `Error #000:043` from BASIC09 — and you can't tell if anything failed | four unrelated causes share this code; two of them mean the operation succeeded | `basic09/pack-and-runb.md` |
+| `Error #001 - Unconditional Abort` printed after output that was correct | `F$Exit` called with `B` never cleared - cosmetic, not a real failure | `6809/syscalls-and-module-format.md` |
+| Breakpoint or examine lands at the wrong address | `sc`'s listing double-applies an offset - never take an address from it | `common/using-os9exec-repl.md` |
+| `-d 2` trace shows a `<<<` return under the wrong call name | a nested call overwrote the per-process current-call field - pair returns to entries by position | `common/using-os9exec-repl.md` |
+| `Error #000:043` from BASIC09 - and you can't tell if anything failed | four unrelated causes share this code; two of them mean the operation succeeded | `basic09/pack-and-runb.md` |
 | A listing is short, or something you know exists reads as absent | page pause ate the tail (`tmode pag=0`), or a filter dropped the marked entries | `common/utility-usage.md`, `common/using-os9exec-repl.md` |
 | Output stopped dead, no error, session otherwise alive | a stray `$13` (XOFF) reached the terminal; SCF swallowed it and is holding output until `$11` | `common/os9-tools-and-shell.md` |
-| Ctrl-C/Ctrl-E killed the wrong process | both go to the device's last writer, not a process you name — use `kill <pid>` | `common/using-os9exec-repl.md` |
+| Ctrl-C/Ctrl-E killed the wrong process | both go to the device's last writer, not a process you name - use `kill <pid>` | `common/using-os9exec-repl.md` |
 | Ctrl-C or Ctrl-E does nothing to a running packed BASIC09 program | RunB turns the key into an error only when an `ON ERROR GOTO` trap is armed; with none, the loop runs on | `basic09/pack-and-runb.md` |
-| Separate writes run together / output garbled | `I$WritLn` writes **to the first CR** — a buffer without one runs past its end | `common/memory-and-io.md` |
-| A console line stops ending on Enter, or a read returns fewer bytes than asked | on SCF the terminator is **PD_EOR**, not literally CR — `tmode eor=` or a program's SS_Opt moved it. Set to zero, I$Read runs to its full count (the raw-input idiom); the manual warns I$ReadLn then ends only on EOF or error | `common/memory-and-io.md` |
-| BASIC09 `E`, bare `E` or `LOAD` fails `#248 - Media Full`, `0 free` workspace at any `#nk` | a stray second CR in the boot autotype reached the guest — restart it | `6809/using-nitros9-repl.md` |
+| Separate writes run together / output garbled | `I$WritLn` writes **to the first CR** - a buffer without one runs past its end | `common/memory-and-io.md` |
+| A console line stops ending on Enter, or a read returns fewer bytes than asked | on SCF the terminator is **PD_EOR**, not literally CR - `tmode eor=` or a program's SS_Opt moved it. Set to zero, I$Read runs to its full count (the raw-input idiom); the manual warns I$ReadLn then ends only on EOF or error | `common/memory-and-io.md` |
+| BASIC09 `E`, bare `E` or `LOAD` fails `#248 - Media Full`, `0 free` workspace at any `#nk` | a stray second CR in the boot autotype reached the guest - restart it | `6809/using-nitros9-repl.md` |
 | TCP connects but no banner ever arrives | an earlier session closed without logging out; or channels exhausted after a few connect/detach cycles even with clean logouts | `6809/using-nitros9-repl.md` |
-| Nothing listening at all, guest looks dead | the DriveWire *server* crashed — check host crash reports before diagnosing the guest | `6809/using-nitros9-repl.md` |
-| Session died while listing a directory | channel-filling output kills it — narrow the listing or read the image host-side | `6809/using-nitros9-repl.md` |
-| Session ended while sending ordinary content | Escape (`$1B`) is SCF's EOF — the shell exited normally on it | `6809/using-nitros9-repl.md` |
+| Nothing listening at all, guest looks dead | the DriveWire *server* crashed - check host crash reports before diagnosing the guest | `6809/using-nitros9-repl.md` |
+| Session died while listing a directory | channel-filling output kills it - narrow the listing or read the image host-side | `6809/using-nitros9-repl.md` |
+| Session ended while sending ordinary content | Escape (`$1B`) is SCF's EOF - the shell exited normally on it | `6809/using-nitros9-repl.md` |
 | File written through the harness fails to parse at a line that looks fine | `tee` dropped a trailing CR under load, joining two lines silently | `6809/using-nitros9-repl.md` |
 | Transfer traffic appears on your own terminal; the device argument did nothing | `kermit` needs `l` to aim at a device, and ignores it silently without | `common/utility-usage.md` |
 
-Error *codes* (number → meaning) are a different lookup: `common/error-codes.md`.
+Error *codes* (number -> meaning) are a different lookup: `common/error-codes.md`.
 
-## Quick rosetta (inline — check before loading a file)
+## Quick rosetta (inline - check before loading a file)
 
-- `fork()`/`exec()` → `F$Fork` / `F$Chain`
-- file descriptor → path number
-- pipe syntax is **`!`**, not `|`; `>>` redirects **stderr**, not append —
+- `fork()`/`exec()` -> `F$Fork` / `F$Chain`
+- file descriptor -> path number
+- pipe syntax is **`!`**, not `|`; `>>` redirects **stderr**, not append -
   append is **`>+`** (`>-` truncates, plain `>` fails if the file exists)
-- climbing: write `...` (one dot per level plus one) — runs compose and add; `../..` also works but the dotted form is the OS-9 one
+- climbing: write `...` (one dot per level plus one) - runs compose and add; `../..` also works but the dotted form is the OS-9 one
 - Ctrl-C backgrounds; **Ctrl-E** is the kill key; ESC on a blank line
   exits the shell
-- shared memory → data modules; `/dev` + VFS → descriptors + file managers
+- shared memory -> data modules; `/dev` + VFS -> descriptors + file managers
 - more memory for a program (BASIC09 especially): `cmd #32k` modifier
 - Full mappings and traps: common/unix-differences.md (Tier 1 first)
 
 ## Common (both architectures)
 
-| Question about… | Read |
+| Question about... | Read |
 |---|---|
 | General concepts: modules, link counts, process model, scheduler (priority+aging), two current directories (chd/chx), I/O layering (file manager / driver / descriptor), CR line endings, big-endian | common/os9-mental-model.md |
 | "How do I do `<Linux thing>` in OS-9?", Unix-habit traps, K&R-not-ANSI, mknod/directory-open surprises, signal contract vs Unix | common/unix-differences.md |
-| Shell syntax (`;` `&` `!` separators, `<` `>` `>>` redirection, `#nk` memory modifier), wildcards, built-ins (chd/chx/ex/profile/setenv/set), PROMPT, procedure files, control keys and line editing (Ctrl-A recall, Ctrl-W pause, ESC=EOF), page pause, the standard utility catalog (attr…xmode) | common/os9-tools-and-shell.md |
-| Per-command **syntax and options** for every v2.4 utility (dir -e, copy -w, del -f, load -d, dsave/fsave/frestore flags, format/os9gen, fixmod -u, grep/pr/qsort/tr, tape…), the `-z`/`-x`/`-b=` conventions, `tee >file` heredoc, full tmode/xmode parameter table (eof=, abort=, quit=, pag=, baud…), the 68k baud code table and what `tmode baud=` really writes, `kermit` flag traps (`l`, `i`-not-`8`) | common/utility-usage.md |
+| Shell syntax (`;` `&` `!` separators, `<` `>` `>>` redirection, `#nk` memory modifier), wildcards, built-ins (chd/chx/ex/profile/setenv/set), PROMPT, procedure files, control keys and line editing (Ctrl-A recall, Ctrl-W pause, ESC=EOF), page pause, the standard utility catalog (attr...xmode) | common/os9-tools-and-shell.md |
+| Per-command **syntax and options** for every v2.4 utility (dir -e, copy -w, del -f, load -d, dsave/fsave/frestore flags, format/os9gen, fixmod -u, grep/pr/qsort/tr, tape...), the `-z`/`-x`/`-b=` conventions, `tee >file` heredoc, full tmode/xmode parameter table (eof=, abort=, quit=, pag=, baud...), the 68k baud code table and what `tmode baud=` really writes, `kermit` flag traps (`l`, `i`-not-`8`) | common/utility-usage.md |
 | Module header fields/offsets, type/language/attribute codes, permissions, header parity, CRC, module directory mechanics, module groups, a6 bias, trap libraries vs subroutine modules, Math module, data modules, boot-time module discovery, INIT module, l68/ROF/linker facts, ident/fixmod/mdir | common/module-format.md |
 | Memory allocation (first-fit/buddy, colored memory, 32-segment limit, malloc/_srqmem/_lmalloc, edata/end), device descriptors (M$Mode/M$DevCon/M$Opt), path descriptors (PD_OPT, PD_COUNT), I$Attach matching, device static storage, I$ call behavior table, device naming (/dd /h0 /term /nil), fork-time memory regions | common/memory-and-io.md |
 | Signals (codes, masking, queuing, intercept), alarms (guard/ticker patterns), events (the one sync primitive), pipes (named vs unnamed, 90-byte default, EOF/deadlock rules), **record locking** (RBF's automatic read/write byte-range locks, EOF lock, lost-update-race-for-free design pattern), data-module IPC patterns, reentrancy in system state | common/ipc.md |
-| `Error #NNN:MMM` format, full E$ table 000–255, BASIC09-internal errors 10–80, errno/ERR conventions, cross-manual discrepancies | common/error-codes.md |
+| `Error #NNN:MMM` format, full E$ table 000-255, BASIC09-internal errors 10-80, errno/ERR conventions, cross-manual discrepancies | common/error-codes.md |
 | Driving the os9exec emulator/REPL as an agent: launch/OS9DISK gotchas, gated-vs-raw send, grep -a, editing files (vi/tee/tr), compiling C end-to-end, BASIC09 session mechanics, cio trap-handler triage, accounts/login/.login, chx-vs-PATH fork rule, RBF image vs host directory, symlink quirks, stopping runaways, idbg, the OS-9 `debug` command (sc/gs defects) | common/using-os9exec-repl.md |
 
-## BASIC09 (same language on both targets — read basic09-language.md first)
+## BASIC09 (same language on both targets - read basic09-language.md first)
 
-| Question about… | Target | Read |
+| Question about... | Target | Read |
 |---|---|---|
 | Syntax, types, PROCEDUREs, I/O, operators, functions, error handling, debug mode | all | basic09/basic09-language.md |
 | Numeric widths/ranges/precision per target, INTEGER overflow, hex-constant sign flip, REAL formats and precision, 68k-only commands (SHELL/CHAIN/command-line PARAM), Graphics Interface Module, **calling 68k assembly or C from BASIC09** (worked `psect`/`r68`/`l68` examples) | both | basic09/basic09-per-target.md |
 | Digest of every trap, one line each with a pointer: porting hazards, fabricated syntax, surprising behavior | all | basic09/gotchas.md |
-| **"BASIC09 ran out of workspace"** — the fix is the shell's `#<size>k` modifier (`basic09 #32k`), not anything inside the language | all | common/os9-tools-and-shell.md |
+| **"BASIC09 ran out of workspace"** - the fix is the shell's `#<size>k` modifier (`basic09 #32k`), not anything inside the language | all | common/os9-tools-and-shell.md |
 | PACK, RunB, packed-module resolution (F$Link/CHX), PARAM argument binding, "Can't install trap handler" triage | all | basic09/pack-and-runb.md |
 
 ## C
 
-| Question about… | Read |
+| Question about... | Read |
 |---|---|
 | K&R vs ANSI constructs, prototypes, missing headers | c/kandr-vs-ansi.md |
 | `cc` invocation, CLIB/CDEF, compiler quirks, calling C from BASIC09 (6809 c-link) | c/os9-c-cheatsheet.md |
@@ -177,7 +177,7 @@ Error *codes* (number → meaning) are a different lookup: `common/error-codes.m
 
 ## 68k
 
-| Question about… | Read |
+| Question about... | Read |
 |---|---|
 | F$/I$ syscall catalog, TRAP #0 convention, register contracts, F$Event/F$Alarm subfunctions, debugger-support calls (F$DFork/F$DExec) | 68k/syscall-reference.md |
 | Assembly: register conventions, program-entry register state, embedded asm, exception vectors, TRAP mnemonics, `r68`/`l68` gotchas | 68k/os9-68k-assembly.md |
@@ -186,11 +186,11 @@ Error *codes* (number → meaning) are a different lookup: `common/error-codes.m
 
 ## 6809
 
-| Question about… | Read |
+| Question about... | Read |
 |---|---|
 | Driving live NitrOS-9 as an agent (nitros9repl.sh), stock-inetd `tcp listen`/`join` bridge, per-connection login and session ownership, no `.login` on 6809, DriveWire facts, SCF Escape=EOF, echo/auto-LF gotchas | 6809/using-nitros9-repl.md |
 | Registers, SWI2 syscall convention, F$/I$ code catalog, which calls need supervision before you automate them, 6809 module header bytes | 6809/syscalls-and-module-format.md |
-| Per-command syntax/options for the Level 2 utility set (attr…xmode, tmode/xmode parameter table, CoCo/Dragon-only commands called out separately), **making a bootable disk — `os9gen`/`cobbler`/`config` — plus `modpatch`**, Level1-vs-Level2 divergences found while cross-checking | 6809/utility-usage.md |
+| Per-command syntax/options for the Level 2 utility set (attr...xmode, tmode/xmode parameter table, CoCo/Dragon-only commands called out separately), **making a bootable disk - `os9gen`/`cobbler`/`config` - plus `modpatch`**, Level1-vs-Level2 divergences found while cross-checking | 6809/utility-usage.md |
 | Assembler directives (asm/RMA), editor, debugger command set, RLINK | 6809/assembly-and-tools.md |
 | BASIC09 `RUN GFX(...)`/`RUN GFX2(...)` graphics/windowing subroutine calls: per-function syntax, window/device-window lifecycle (DWSET/DWEND/OWSET/SELECT), Get/Put buffers, palette/color, cursor/text control | 6809/gfx-windowing.md |
 | **Seeing** the CoCo screen (screenshots via cocoscreen.sh), injecting keystrokes, CLEAR=backtick screen cycling, windint `$1B` escape-code table, creating graphics windows with wcreate, why XRoar's `-gdb` is a dead end | 6809/reading-the-coco-screen.md |

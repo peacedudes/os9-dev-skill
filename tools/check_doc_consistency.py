@@ -678,7 +678,7 @@ _SYMBOL = r"[A-Z][A-Za-z0-9]*[_$.][A-Za-z0-9_$.]*[A-Za-z0-9]"
 # unrelated nearby value bind to the symbol.
 _FACT = re.compile(
     r"`?(?P<sym>" + _SYMBOL + r")`?"
-    r"[ \t]*(?:[|,(=:]|--|—)?[ \t]*"
+    r"[ \t]*(?:[|,(=:]|--|—|-)?[ \t]*"
     r"(?:offset[ \t]+|at[ \t]+)?"
     r"`?(?P<val>\$[0-9A-Fa-f]{1,8})`?"
 )

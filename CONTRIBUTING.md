@@ -11,7 +11,7 @@ untouched for long stretches. Corrections may be merged promptly, slowly, or
 not at all. Nothing here is a commitment to respond, and a quiet repository is
 the expected steady state rather than a sign something went wrong. If that makes
 forking the better route for you, check [LICENSE](LICENSE) for whether that is
-permitted yet — while the pre-publication notice stands, it is not.
+permitted yet - while the pre-publication notice stands, it is not.
 
 ## The most useful thing you can send
 
@@ -21,11 +21,11 @@ saw" is valuable on its own**, and is the highest-value contribution there is.
 
 A good correction report answers three things:
 
-1. **What this repo says** — the file and the line.
-2. **What you observed instead** — the actual output, error, or register state,
+1. **What this repo says** - the file and the line.
+2. **What you observed instead** - the actual output, error, or register state,
    quoted rather than paraphrased. Exact text matters; a message's precise
    wording is often the only way to tell two causes apart.
-3. **Where you observed it** — real hardware, which machine and OS-9 version;
+3. **Where you observed it** - real hardware, which machine and OS-9 version;
    or an emulator, which one and which build. This one decides everything about
    how the correction can be recorded.
 
@@ -44,7 +44,7 @@ through OS-9 forums or mailing lists.
 If you are holding a copy that arrived as a zip or a folder rather than a
 checkout, it travelled without its link. The repository is public; search for its
 name, or ask whoever gave you the copy. A correction posted anywhere public is
-still better than one that waits for the right inbox — but the tracker is where
+still better than one that waits for the right inbox - but the tracker is where
 it will actually be seen.
 
 **Reports from real hardware are the rarest and most valuable thing** this
@@ -70,13 +70,13 @@ disagrees with a Microware manual. Every item on it is a question a real machine
 could answer, and the first one is flagged as having been seen only under
 emulation.
 
-Pick any line from either and test it. You do not need to fix the file — saying
+Pick any line from either and test it. You do not need to fix the file - saying
 "I ran this on real hardware and got X" is the whole contribution.
 
 **The quickest check of all needs no reading.** Most `Live` tags here were
 measured under os9exec, and os9exec's own conformance suite, CONF68K, turns its
-readings of the Microware manuals into 113 standalone tests — hand-written
-assembly, no Microware software — shipped as a disk image, `conf68k.dsk`, with
+readings of the Microware manuals into 113 standalone tests - hand-written
+assembly, no Microware software - shipped as a disk image, `conf68k.dsk`, with
 its releases (https://github.com/peacedudes/os9exec/releases). Put it on a disk
 device of an OS-9/68000 machine, `chd` to it and type `runall`; each test
 prints one `RESULT` line with what it observed and what the manual led it to
@@ -98,12 +98,12 @@ python3 tools/tests/test_check.py
 
 Then:
 
-- **Tag every claim.** `Hearsay`, `Manual`, `Source`, `Live`, `Absent`, `Flag` —
+- **Tag every claim.** `Hearsay`, `Manual`, `Source`, `Live`, `Absent`, `Flag` -
   defined in `os9-dev/references/CONFIDENCE-TAGS.md`. An untagged assertion
-  cannot be weighed by the next reader, so it will need a tag before it lands —
+  cannot be weighed by the next reader, so it will need a tag before it lands -
   and if you are unsure which applies, say what you did and leave the tag to
   whoever merges it. That is not a reason to hold the patch back.
-- **A `Live` tag names what it ran on** — `Live` (os9exec), `Live` (NitrOS-9),
+- **A `Live` tag names what it ran on** - `Live` (os9exec), `Live` (NitrOS-9),
   `Live` (OS-9/68000). Never a bare `Live`. A `Live` claim is evidence about
   that implementation, not about OS-9 in the abstract.
 - **Run it, or say you didn't.** An unrun example is `Manual` at best. Where
@@ -115,7 +115,7 @@ Then:
   resolution.
 - **Don't overwrite an established measurement on one reading.** If something
   looks like a contradiction, check it against the existing `Live` claims and
-  against a manual first — the two may be describing different things. This is
+  against a manual first - the two may be describing different things. This is
   the mistake the project's own authors have made most often, which is why it is
   listed: a plausible correction that quietly replaced a verified fact has had to
   be reverted here more than once.
@@ -123,7 +123,7 @@ Then:
   The reason the tags and the git history earn their keep is that **a recorded
   measurement is the control case for the next observation.** When what you see
   disagrees with what the file says, one of you is wrong and the file is the one
-  with its evidence written down — so the first move is to find out whether you
+  with its evidence written down - so the first move is to find out whether you
   are looking at the same thing, not to replace it. A sister project doing
   captured-output work had two results that looked exactly like damage it had just
   caused, and the only reason neither was "fixed" is that the previous capture was
@@ -141,12 +141,12 @@ Then:
   those lines are responsible for. Two real instances, both caught only by reading
   the result back: a script that removed "the staging line" from a set of
   documents was correct that each line staged a file, and wrong that staging was
-  all it did — one of them also set an environment variable the program needed.
+  all it did - one of them also set an environment variable the program needed.
   And `git commit -- <path>` is genuinely a commit scoped to a path, while also
   committing the *working tree* rather than the index, quietly including changes
   that were deliberately left unstaged. In both cases the pattern matched exactly
   what it was meant to. **Read back what a bulk edit produced before trusting the
-  pattern that produced it** — a diff line count is usually enough to see it.
+  pattern that produced it** - a diff line count is usually enough to see it.
 
 ## What is likely to be declined
 
@@ -196,5 +196,5 @@ your README so readers can find the active copy.
 
 Both collections cover the older end of the line: the v2.4-era OS-9/68000
 system and OS-9/6809 Level Two. Later versions, OS-9000 beyond passing
-mention, and OS-9 for other processors are out of scope — not because they
+mention, and OS-9 for other processors are out of scope - not because they
 don't matter, but because nothing here was verified against them.

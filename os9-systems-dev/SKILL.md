@@ -1,27 +1,27 @@
 ---
 name: os9-systems-dev
-description: Use when writing — or when explaining how anything works inside — an OS-9/68000 device driver or file manager; OS-9 kernel internal structures (System Globals, Process Descriptor, module directory); the scheduler algorithm and how it picks the next process; exception/IRQ vector handling; how an OS-9 disk boots and what loads in what order (bootstrap, OS9Boot, kernel and module load order); how disk space is allocated; 6809 Level 2 MMU/DAT register internals and per-process address mapping; or extending an emulator's kernel-interface layer, such as os9exec's. Covers understanding these mechanisms, not only authoring them — a bare "how does an OS-9 disk boot" or "where does the kernel keep a process's signal state" belongs here. Not for writing ordinary application programs — see the sibling os9-dev skill for that.
+description: Use when writing - or when explaining how anything works inside - an OS-9/68000 device driver or file manager; OS-9 kernel internal structures (System Globals, Process Descriptor, module directory); the scheduler algorithm and how it picks the next process; exception/IRQ vector handling; how an OS-9 disk boots and what loads in what order (bootstrap, OS9Boot, kernel and module load order); how disk space is allocated; 6809 Level 2 MMU/DAT register internals and per-process address mapping; or extending an emulator's kernel-interface layer, such as os9exec's. Covers understanding these mechanisms, not only authoring them - a bare "how does an OS-9 disk boot" or "where does the kernel keep a process's signal state" belongs here. Not for writing ordinary application programs - see the sibling os9-dev skill for that.
 ---
 
 # OS-9 Systems Development Skill
 
-> **Pre-publication — not for distribution.** Circulated privately for review;
+> **Pre-publication - not for distribution.** Circulated privately for review;
 > no license is granted yet. See `LICENSE` at the repo root.
 
-The kernel/systems half of OS-9 development — extending OS-9 itself:
+The kernel/systems half of OS-9 development - extending OS-9 itself:
 
 - **Device drivers** (Init/Read/Write/GetStat/SetStat/Term entry points,
   interrupt service routines, static storage layout)
 - **File managers** (the layer between application I$ calls and a driver)
-- **Kernel internal structures** — System Globals, Process Descriptor,
-  module directory, scheduler data — and the exact scheduler algorithm,
+- **Kernel internal structures** - System Globals, Process Descriptor,
+  module directory, scheduler data - and the exact scheduler algorithm,
   IRQ vector chaining, exception internals
 
 The same material serves anyone extending an emulator's kernel-interface
 layer where it stands in for any of the above.
 
 Writing a program that merely *uses* drivers/file managers through
-ordinary I$/F$ calls is the sibling **`os9-dev`** skill — most OS-9
+ordinary I$/F$ calls is the sibling **`os9-dev`** skill - most OS-9
 questions belong there, not here.
 
 **OS-9 is a current commercial product, not abandonware.** Microware still
@@ -34,9 +34,9 @@ for original source, and none of it is ours to reproduce.
 
 - Drivers and file managers are ordinary OS-9 modules (shared mechanics:
   os9-dev `common/module-format.md`); what differs is the **calling
-  convention** — the kernel invokes specific entry points with a specific
+  convention** - the kernel invokes specific entry points with a specific
   register setup instead of forking the module.
-- **Driver static storage arrives zeroed, not initialized** — a driver has
+- **Driver static storage arrives zeroed, not initialized** - a driver has
   no data-initialization table; everything is set up explicitly in `Init`.
 - RBF/SCF/SBF are the reference implementations of the file-manager
   pattern; a custom manager follows the same entry-point shape.
@@ -46,7 +46,7 @@ for original source, and none of it is ours to reproduce.
 Read `references/INDEX.md` first. If the task also has an application
 side (e.g. testing a new driver from a C program), read `os9-dev` too.
 
-**Answer specifics from the references, not from recall** — entry-point
+**Answer specifics from the references, not from recall** - entry-point
 registers, struct offsets, scheduler constants and boot order are exactly the
 details that general knowledge of OS-9 gets wrong. **If you cannot open them,
 say which claim you could not check** instead of supplying it from memory.
@@ -58,12 +58,12 @@ reimplementations built by the user community, and both have had real errors.
 That matters more here than in the sibling skill: kernel structures, dispatch
 conventions and scheduler behaviour are exactly where a reimplementation is
 likeliest to have simplified something. A `Source` tag here means "this is
-what os9exec's C does" — a statement about os9exec, not about OS-9. Where a
+what os9exec's C does" - a statement about os9exec, not about OS-9. Where a
 Microware manual disagrees with a runtime, the manual is the specification,
 the claim records both readings, and only Microware or genuine hardware
 resolves it. **Microware's word** means Microware-published documentation,
 including manuals issued under licence by Tandy/Radio Shack, Dragon Data or
-Motorola; third-party books are not authoritative however good — the OS-9
+Motorola; third-party books are not authoritative however good - the OS-9
 Guru especially. Tag legend: sibling skill's
 `os9-dev/references/CONFIDENCE-TAGS.md` (install both).
 
@@ -81,4 +81,4 @@ against os9exec's code. Don't read "68k" as "checked" in this skill.
 - State which target (6809/68k) an answer applies to; the 68k line is the
   default here, `6809-level2-mmu.md` is the 6809 exception.
 - Sources are official Microware manuals plus cited third-party
-  references — see `SOURCES.md`.
+  references - see `SOURCES.md`.

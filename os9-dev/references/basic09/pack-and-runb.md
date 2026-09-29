@@ -5,10 +5,10 @@ at run time. The manuals are thin here; most facts below are `Live` (os9exec). M
 
 ## PACK
 
-**PACK is the last step of a build, not an editing operation** (`Hearsay` —
+**PACK is the last step of a build, not an editing operation** (`Hearsay` -
 design intent; the manuals give the mechanics without the reason). It
-compresses a finished procedure to minimal I-code for RunB — a stripped
-BASIC09 with no editor or debugger — so that both the module and its
+compresses a finished procedure to minimal I-code for RunB - a stripped
+BASIC09 with no editor or debugger - so that both the module and its
 interpreter can live in ROM. Read the rest of this section against that: the
 packed form is one-way because nothing downstream ever reads it back, and the
 workspace copy is consumed because the copy you keep is the one you `SAVE`d.
@@ -16,30 +16,30 @@ Losing source to `PACK` is not a trap you fell into, it is having skipped the
 step the workflow assumes.
 
 - `PACK` converts a workspace procedure to a non-listable, non-editable
-  form. **It is one-way** — the packed form can't be `LIST`ed, edited, or
+  form. **It is one-way** - the packed form can't be `LIST`ed, edited, or
   reloaded into the workspace. Always `SAVE` source first.
 - **Output goes to the current execution directory (CHX)**, under the
   procedure name or an explicit `>pathlist`. If the file "didn't appear,"
-  check CHX — it was written, just not where you were looking. (`asm`
+  check CHX - it was written, just not where you were looking. (`asm`
   behaves the same way.)
-- **`SAVE` and `PACK` do NOT redirect to the same place** — `Live` (6809
+- **`SAVE` and `PACK` do NOT redirect to the same place** - `Live` (6809
   and 68k). With a *relative* target, from the same workspace in the same
   session: `SAVE proc >name` lands in **CHD** (the data directory),
-  `PACK proc >name` lands in **CHX** — on 68k, `/h0/CMDS`. The CHX rule
+  `PACK proc >name` lands in **CHX** - on 68k, `/h0/CMDS`. The CHX rule
   above is `PACK`'s alone; `SAVE` follows ordinary data-file resolution.
   Use an absolute path for either when it matters.
-- **Packing does not speed up in-workspace execution** — measured
+- **Packing does not speed up in-workspace execution** - measured
   identical times packed vs. unpacked under interactive `basic`; BASIC09
-  always executes I-code. The manual's 10–30% speedup claim applies to
+  always executes I-code. The manual's 10-30% speedup claim applies to
   running under RunB (comment/name stripping), and is `Manual`, not
   yet measured.
-- **Entry point when packing several procedures** — the biggest gotcha
+- **Entry point when packing several procedures** - the biggest gotcha
   here:
 
 | Form | Entry point of the output module |
 |---|---|
 | `PACK proc1,proc2` | The *first-listed* procedure |
-| `PACK*` (whole workspace) | The *first* procedure in workspace order (the top of `DIR`) — **not** the one `DIR` marks with `*`. `Live` (os9exec) |
+| `PACK*` (whole workspace) | The *first* procedure in workspace order (the top of `DIR`) - **not** the one `DIR` marks with `*`. `Live` (os9exec) |
 
   Both outputs contain every packed procedure's code; only the entry
   differs. If the entry point matters, name the list explicitly.
@@ -48,7 +48,7 @@ step the workflow assumes.
   `second` loaded in that order, `PACK*` enters at `first` whether `*` sits
   on `second` (as it does after `LOAD`) or on `first` (after `e first`). Load
   the source with the entry procedure first, or name the list.
-- **Packing is destructive to the workspace copy — this is why the manual
+- **Packing is destructive to the workspace copy - this is why the manual
   says to always `SAVE` first.** `Live` (os9exec). `PACK` does not merely write a
   file; it converts the *in-workspace* procedure too. With `aaa` and `bbb` in
   the workspace and `bbb` current, `PACK aaa >target` leaves `DIR` showing:
@@ -62,9 +62,9 @@ step the workflow assumes.
   1. **A leading `-` marks it packed.** The manual documents `*` (current
      procedure) but gives no legend for `-`; that it means "packed" is `Live` (os9exec),
      confirmed by it attaching only to the packed procedure and by `LIST aaa`
-     afterwards printing **nothing at all** — the manual's "CANNOT be edited or
+     afterwards printing **nothing at all** - the manual's "CANNOT be edited or
      debugged", in practice.
-  2. **`*` moves to it** — packing makes that procedure current. That does
+  2. **`*` moves to it** - packing makes that procedure current. That does
      not change what a later `PACK*` enters at, which is decided by workspace
      order (table above).
   3. **It grows slightly** (92 -> 96 here; another run 96 -> 100).
@@ -73,7 +73,7 @@ step the workflow assumes.
   easy to destroy while trying to observe them, silently, and both failure
   modes have produced wrong conclusions about what `PACK` did:
   - A filter matching leading-space-then-name (`^ +[a-z]+` and similar) drops
-    every `-` and `*` entry — precisely the marked ones you are looking for,
+    every `-` and `*` entry - precisely the marked ones you are looking for,
     so a packed procedure reads as unmarked or missing.
   - With page pause on, a listing longer than one screen stops and waits for
     a key, and that key is consumed rather than passed to the program
@@ -81,7 +81,7 @@ step the workflow assumes.
     pause instead of reaching the program.
 
   Consequence: **a second `PACK` of the same procedure in one session fails**
-  with BASIC09 error `#000:051` ("Line with Compiler Error") — there is no
+  with BASIC09 error `#000:051` ("Line with Compiler Error") - there is no
   longer any source structure to run the extra compiler pass over. When the
   target already exists, `PACK` first asks `Rewrite?:`; answer `n` and the
   file is untouched. **Answer `y` and the file is truncated to 0 bytes before
@@ -91,8 +91,8 @@ step the workflow assumes.
 - **`>pathlist` with a procname list prints a BASIC09 error and still
   works.** `Live` (os9exec): `SAVE proc >target` and `PACK proc >target` print
   `Error #000:043` while writing a correct file. **The codes are BASIC09's
-  own, from its manual's Appendix C** — 43 is "Unknown Procedure", 51 is
-  "Line with Compiler Error" — not OS-9 kernel codes, and **not** `F$PrsNam`'s
+  own, from its manual's Appendix C** - 43 is "Unknown Procedure", 51 is
+  "Line with Compiler Error" - not OS-9 kernel codes, and **not** `F$PrsNam`'s
   `E$BNam` (which is **235**); a syscall trace shows `F$PrsNam` conforming to
   its documented contract throughout, including the terminating `E$BNam` that
   BASIC09 consumes silently. The trigger is the **procname list**, not the
@@ -103,22 +103,22 @@ step the workflow assumes.
   | `SAVE proc >target` (rel *or* abs, space before `>` or not) | `Error #000:043` | correct, byte-identical to the clean form |
   | `SAVE proc` | clean `Ready` | correct |
   | `SAVE >target` | clean `Ready` | correct |
-  | `PACK proc >target` | `Error #000:043` (twice) | valid module — `ident` gives Good CRC + Good parity, `Ty/La $202` |
+  | `PACK proc >target` | `Error #000:043` (twice) | valid module - `ident` gives Good CRC + Good parity, `Ty/La $202` |
   | `PACK >target` (no procname) | clean `Ready` | valid module |
   | `PACK* <path>` (documented all-form, no `>`) | clean `Ready` | valid module |
 
-  **`PACK` prints it exactly twice, however many procedures the list names** —
+  **`PACK` prints it exactly twice, however many procedures the list names** -
   two errors is not two failed procedures, and the count carries no
   information. Verify the file rather than trusting the message. **Error 51 here means
-  something different and is NOT this spurious message** — see "Packing is destructive to
+  something different and is NOT this spurious message** - see "Packing is destructive to
   the workspace copy" above; a `#000:051` from `PACK` means you are re-packing
   an already-packed procedure, and it **truncates the target to 0 bytes**
   before failing. **`Live` (NitrOS-9): real NitrOS-9 BASIC09
   prints nothing at all** for `SAVE proc >rel`, `SAVE proc >/DD/abs/path`
-  and `PACK proc >rel` — a different binary on a different architecture, so
+  and `PACK proc >rel` - a different binary on a different architecture, so
   suggestive, not proof about the 68k line. `Absent`: whether the genuine
   68k binary on real hardware prints it is untestable here. (`> pathlist`
-  with a space *after* the `>` is a separate thing — unrecognized syntax.)
+  with a space *after* the `>` is a separate thing - unrecognized syntax.)
 
 ## `Error #000:043` means four different things
 
@@ -130,8 +130,8 @@ which before drawing a conclusion:
 |---|---|---|
 | After `SAVE proc >path` or `PACK proc >path` | **Spurious.** The file was written correctly | Check the file; ignore the message |
 | After `runb <path>` or running a packed module by pathname | **Real.** `runb` takes a bare module name, never a path | Invoke by bare name from a CHX where it resolves |
-| On `LOAD` of a 6809 source file | **Real.** The file starts with a `!` comment above `PROCEDURE`, and nothing in it loads | Put `PROCEDURE` on line 1 — `basic09/gotchas.md` |
-| From `RUN <name>` | **Real**, its documented meaning — no such procedure | Check the name and the search order below |
+| On `LOAD` of a 6809 source file | **Real.** The file starts with a `!` comment above `PROCEDURE`, and nothing in it loads | Put `PROCEDURE` on line 1 - `basic09/gotchas.md` |
+| From `RUN <name>` | **Real**, its documented meaning - no such procedure | Check the name and the search order below |
 
 The first two both arise while packing and running the same module minutes
 apart, which is what makes them easy to confuse.
@@ -140,11 +140,11 @@ apart, which is what makes them easy to confuse.
 
 A packed+saved procedure is an OS-9 **subroutine module**: type 2
 (Sbrtn), language 2 (BASIC I-code). **How `ident` renders that is
-architecture-specific — don't carry one form to the other.** On 68k the
+architecture-specific - don't carry one form to the other.** On 68k the
 header has separate `M$Type`/`M$Lang` bytes and `ident` shows `Ty/La
 $0202`. On 6809 it is a single packed byte `(type << 4) | language`, so
 the same module reads **`Ty/La $22`** (`Live` (NitrOS-9), with `At/Rv
-$81` — re-entrant, revision 1). See `common/module-format.md` for the
+$81` - re-entrant, revision 1). See `common/module-format.md` for the
 encoding and what it settles about the 6809 C compiler's own value. It is not a
 program module; something must interpret it.
 
@@ -152,12 +152,12 @@ program module; something must interpret it.
 edit/debug). Per the manual, code under RunB can trap Ctrl-C/Ctrl-Q via
 `ON ERROR GOTO`, which interactive `basic` cannot.
 
-## Invoking a packed module — bare name only, three contexts
+## Invoking a packed module - bare name only, three contexts
 
 1. **`RUN <name>` typed inside interactive `basic`:** workspace first,
    then current *data* directory, then *execution* directory, then OS-9
    module link/load (`Manual` order).
-2. **From the OS-9 shell** — `runb <name>`, or the bare name (the shell
+2. **From the OS-9 shell** - `runb <name>`, or the bare name (the shell
    auto-detects BASIC I-code and forks RunB with the name as argument).
    It is the **shell** that does this, not the kernel: `Manual` on both
    targets (*Using Professional OS-9* v2.4, "Running Compiled Intermediate
@@ -166,12 +166,12 @@ edit/debug). Per the manual, code under RunB can trap Ctrl-C/Ctrl-Q via
    `F$Fork`, p. 1-30), so a program forking a packed module by name gets no
    such help and must fork RunB itself.
    Either way the module resolves via OS-9's standard order: **F$Link
-   (already resident?) then F$Load, which searches only CHX** — not
+   (already resident?) then F$Load, which searches only CHX** - not
    `PATH`. Bare-name invocation additionally needs RunB itself resolvable
-   the same way: preload it (`load runb` in a startup file — resident
+   the same way: preload it (`load runb` in a startup file - resident
    modules are findable regardless of CHX) or have `runb` present in the
    CHX directory.
-   **Only a bare name resolves — never a pathname.** `runb /path/to/mod`
+   **Only a bare name resolves - never a pathname.** `runb /path/to/mod`
    and `/path/to/mod` both fail with `Error #000:043` regardless of
    residency. Invoke by bare name from a CHX where it resolves.
 3. **`RUN <sibling>` inside a running packed module:** resolves via
@@ -197,8 +197,8 @@ reboot.
 Arguments after the module name bind positionally to the entry procedure's
 `PARAM` list (`Live` (os9exec), strings and numerics):
 
-- `runb report hello` + `PARAM n$:STRING` → `n$="hello"`.
-- Numeric conversion works: `runb calc 42` + `PARAM n:INTEGER` → 42.
+- `runb report hello` + `PARAM n$:STRING` -> `n$="hello"`.
+- Numeric conversion works: `runb calc 42` + `PARAM n:INTEGER` -> 42.
 - Each whitespace-separated token maps to one PARAM slot in order; a
   STRING param never swallows more than one token.
 - **PARAM syntax:** per-variable type suffixes (`PARAM a$:STRING,
@@ -224,11 +224,11 @@ Under RunB, unlike interactive BASIC09, Ctrl-C and Ctrl-E "can be trapped by
 
 This banner + `Error #000:216 (E_PNNF)` has several distinct causes:
 
-1. **First `LOAD`/`RUN` touching numeric variables → the `math` trap
+1. **First `LOAD`/`RUN` touching numeric variables -> the `math` trap
    module (TRAP #15) isn't reachable.** Fix: `load math` (put it in the
    startup file); the lazy-linking mechanism is in
    `basic09-per-target.md`. `Live` (os9exec): `load`'s `-s` flag silently fails
-   to make `cio`/`math` resident — `load -s cio csl math` in `/h0/startup`
+   to make `cio`/`math` resident - `load -s cio csl math` in `/h0/startup`
    left only `csl` in `mdir` after a fresh boot, and `load -s math` alone
    fails the same way, while a plain `load math` succeeds every time.
    Whether this is os9exec's command handling or the real Microware
@@ -236,7 +236,7 @@ This banner + `Error #000:216 (E_PNNF)` has several distinct causes:
    `load cio`, no flag, once per session.
 2. **`cio`/`csl` genuinely not resident** (check `mdir`): `load cio`. A
    binary linked against the proprietary `cio` handler dies with this
-   banner on any disk lacking it — see `common/using-os9exec-repl.md` for
+   banner on any disk lacking it - see `common/using-os9exec-repl.md` for
    classifying and rebuilding cio-locked binaries.
 3. Under os9exec only, an intermittent failure with the module resident:
    `common/using-os9exec-repl.md`.

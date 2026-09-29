@@ -1,4 +1,4 @@
-# BASIC09 Gotchas — all targets unless noted
+# BASIC09 Gotchas - all targets unless noted
 
 A digest of the traps, one to three lines each, with a pointer to the full
 treatment. Nothing here is the only statement of a fact except where a bullet
@@ -10,28 +10,28 @@ Full per-target detail: `basic09-per-target.md`.
 
 - **INTEGER overflow wraps silently** at each target's width, no error, no
   warning. The wrap *mechanism* is identical across targets, so porting code
-  that relies on the *width* breaks without any visible symptom — the #1
+  that relies on the *width* breaks without any visible symptom - the #1
   silent-bug source here.
 - **Hex constants change sign meaning across targets.** 6809 `$8000`-`$FFFF`
   are negative (16-bit); the same literal on 68k is a large positive 32-bit
   value. Never compare one across the boundary without an explicit cast.
-- **REAL precision differs** — ~9 decimal digits on 6809, ~14 on 68k. Code
+- **REAL precision differs** - ~9 decimal digits on 6809, ~14 on 68k. Code
   relying on accumulated rounding or near-equality needs tolerance
   comparisons, not `=`.
 - **Binary `PUT`/`GET` files are not cross-target safe** if they contain
-  INTEGER or REAL fields — the field widths differ, so a 68k-written file
+  INTEGER or REAL fields - the field widths differ, so a 68k-written file
   decodes to wrong values on 6809 and vice versa. Use text-format
   `WRITE`/`READ` for portable data exchange.
 - **`PACK` output is target-specific I-code.** A packed 6809 module will not
   run on 68k or vice versa. Keep the source; recompile per target.
 - **Graphics Interface Module is 6809-only** (CoCo/Dragon). Calling `GFX`/
-  `GFX2` on 68k fails silently — no error, just a no-op or a crash depending
+  `GFX2` on 68k fails silently - no error, just a no-op or a crash depending
   on context. Guard or strip before porting.
-- **`PEEK`/`POKE` and `ADDR` are not portable** — the two targets have
+- **`PEEK`/`POKE` and `ADDR` are not portable** - the two targets have
   entirely different address spaces and memory layouts. Treat any code using
   them as target-specific; use `OPEN`/`READ`/`WRITE` for portable I/O.
 - **6809 does not convert numeric command-line `PARAM`s.** A supplied numeric
-  argument lands in the INTEGER as its raw ASCII bytes (`progname 42` →
+  argument lands in the INTEGER as its raw ASCII bytes (`progname 42` ->
   `13362`). `STRING` params are fine; 68k parses correctly.
 
 ## Syntax that looks right and isn't
@@ -40,36 +40,36 @@ Full grammar and the live error codes: `basic09-language.md`.
 
 - **`PRINT USING` does NOT take `#`-placeholder format strings.** `"###.##"`
   was never real BASIC09 syntax and fails at run time. The real format uses
-  directive **letters** — `R8.2` real, `I4` integer, `S8` string, `H4` hex,
-  `B8` boolean, `E12.3` exponential — with optional `<`/`>`/`^` justify.
+  directive **letters** - `R8.2` real, `I4` integer, `S8` string, `H4` hex,
+  `B8` boolean, `E12.3` exponential - with optional `<`/`>`/`^` justify.
   This is the single most dangerous "looks like something I already know"
   trap in the language.
-- **`PRINT USING`'s path number goes after `PRINT`, before `USING`** —
+- **`PRINT USING`'s path number goes after `PRINT`, before `USING`** -
   `PRINT #path USING fmt, list`. The reverse is a syntax error.
 - **There is no multi-line `TYPE`/`ENDTYPE` block, and no `ENDPROC`.** Both
   are fabrications that appear in no manual. `TYPE` is always one
   semicolon-separated line; a `PROCEDURE` ends with an optional, executable
   `END`, or simply runs out of statements.
-- **Two distinct `IF` forms — don't mix them.** Type 1: `IF cond THEN
+- **Two distinct `IF` forms - don't mix them.** Type 1: `IF cond THEN
   linenum`, a bare line number, no `GOTO` keyword, no `ENDIF`. Type 2:
   `IF cond THEN` / statements / `ENDIF` on its own line, where `ENDIF` is
   mandatory. `IF cond THEN GOTO n` is neither form and correctly fails to
-  compile — not a compiler bug.
+  compile - not a compiler bug.
 - **`GOTO`/`GOSUB` targets are explicitly-typed line numbers**, not the hex
   byte offsets `LIST` displays beside unnumbered structured code. Aiming a
   `GOTO` at one of those reads as "GOTO is broken" and isn't.
 - **`LAND`/`LOR`/`LXOR`/`LNOT` are function calls, not infix operators.**
   `6 LAND 3` is a syntax error; write `LAND(6,3)`. `AND`/`OR`/`XOR`/`NOT`
   *are* infix, and are BOOLEAN-only.
-- **`BASE 0`/`BASE 1` needs the space** — `BASE0` is a syntax error, not an
+- **`BASE 0`/`BASE 1` needs the space** - `BASE0` is a syntax error, not an
   alternate spelling. It affects array subscripts only: **string indexing
   always starts at 1** regardless. And the `DIM` bound is always the element
-  count — `BASE 0` shifts where indexing starts, it does not add a slot.
+  count - `BASE 0` shifts where indexing starts, it does not add a slot.
 - **A trailing comment after code is a compile error on both interpreters.**
   `!` must be the first non-blank token on its line. A standalone whole-line
   `!` comment is fine anywhere a statement could go, and `LIST` normalizes it
   to `REM`. (`basic09c`, the independent native compiler, is the mirror
-  image: it accepts trailing comments and rejects standalone comment lines —
+  image: it accepts trailing comments and rejects standalone comment lines -
   no comment style is clean across all three.)
 
 ## Behavior that surprises
@@ -81,13 +81,13 @@ Full grammar and the live error codes: `basic09-language.md`.
   workspace gains an extra procedure named `Program` holding the comment as
   `REM`, listed first; `PACK*` packs it along with the rest. The identical
   file fails on 6809 with `Error #043 --
-  Unknown Procedure`, and the failure is not scoped to one procedure —
+  Unknown Procedure`, and the failure is not scoped to one procedure -
   **nothing in the file loads**, including procedures defined after the
   comment. It is genuinely about *position*: the same comment inside a
   procedure body, or standalone between two procedures, loads cleanly on both
   and normalizes to `REM`. **Fix: put `PROCEDURE` on line 1**, and if a
   whole-file comment is wanted, place it after that line.
-- **No automatic variable initialization** — uninitialized variables hold
+- **No automatic variable initialization** - uninitialized variables hold
   garbage, not zero. `DIM` and initialize explicitly.
 - **The manual forbids BYTE parameters, and nothing enforces it.**
   `PARAM b: BYTE` is accepted with no error at edit time or run time. On 68k a
@@ -100,41 +100,41 @@ Full grammar and the live error codes: `basic09-language.md`.
   widens the already-truncated result into the REAL destination. A REAL
   operand (`i / 3.0`) is what forces real division.
 - **A BOOLEAN operand in a numeric expression is a COMPILE-TIME error**
-  (`Error #000:067`), not a runtime one — the program never starts.
+  (`Error #000:067`), not a runtime one - the program never starts.
 - **`ON ERROR GOTO` does NOT auto-clear after firing**, despite claims
   otherwise. It stays armed indefinitely until an explicit bare `ON ERROR`.
-- **`TRIM$` strips TRAILING spaces only** — `TRIM$("  hi  ")` is `"  hi"`.
-- **`FIX()` rounds to nearest, it does not truncate** — `FIX(-3.9)` is `-4`.
+- **`TRIM$` strips TRAILING spaces only** - `TRIM$("  hi  ")` is `"  hi"`.
+- **`FIX()` rounds to nearest, it does not truncate** - `FIX(-3.9)` is `-4`.
 - **`RND(n>0)` returns a fractional REAL in `[0,n)`**, not an integer the way
   some other BASICs do. Use `FIX(RND(n))` for a random integer.
 - **Divide-by-zero reports a different code on each target, and on 68k it
   may report nothing.** 6809 raises Microware's documented `Error #045 --
   Divide by Zero` for both INTEGER and REAL. 68k raises the underlying 68000
-  CPU exception instead — `#000:105` (`E_ZERDIV`) for INTEGER, `#000:107`
-  (`E_TRAPV`) for REAL — but which of them fires depends on the math module
+  CPU exception instead - `#000:105` (`E_ZERDIV`) for INTEGER, `#000:107`
+  (`E_TRAPV`) for REAL - but which of them fires depends on the math module
   loaded, and with software `math` an INTEGER `5/0` quietly yields
   `2147483647`. Guard divisors; never branch on the number. Details in
   `basic09-language.md`.
 - **A literal `;` inside a string constant gains a spurious backslash.**
   `PRINT "text; more"` stores and echoes as `text\; more`, in both `LIST`'s
-  display and real runtime output — presumably the tokenizer disambiguating
+  display and real runtime output - presumably the tokenizer disambiguating
   from the statement separator. `Live` (NitrOS-9). Easy to miss until it
   shows up in something meant to be exact text. 68k BASIC09 V2.1 does not do
   this: the string lists and prints as `text; more` (`Live` (os9exec)).
-- **Year-2000 fault in 68k's `DATE$`.** Any year ≥ 2000 prints a corrupt
-  leading year digit (`"<6/07/14"` where `"26/07/14"` was correct) — `Live`
+- **Year-2000 fault in 68k's `DATE$`.** Any year >= 2000 prints a corrupt
+  leading year digit (`"<6/07/14"` where `"26/07/14"` was correct) - `Live`
   (os9exec); `Absent` on real 6809 NitrOS-9, so the fault lies on the 68k
   side, not in logic shared with 6809. Don't trust the 68k year field.
 - **BOOLEAN prints mixed case, contrary to the manual.** `PRINT USING`'s `B`
   format is documented by Microware as printing `"TRUE"`/`"FALSE"`, but every
   runtime tested prints `"True    "`/`"False   "` (correct 8-char field
-  width) — `Live` (NitrOS-9, os9exec): 68k os9exec *and* real Microware BASIC09 6809
+  width) - `Live` (NitrOS-9, os9exec): 68k os9exec *and* real Microware BASIC09 6809
   01.01.00, so it is not an emulator artifact. Whether the manual overstates
   or shipping code always diverged is unresolved.
 
 ## Packing and running
 
-- **`PACK`/`RunB` have their own gotcha set** — output goes to CHX (not
+- **`PACK`/`RunB` have their own gotcha set** - output goes to CHX (not
   CHD, unlike `SAVE`), the entry-point rule differs between `PACK a,b` and
   `PACK*`, only bare names ever resolve, a packed group you `load`ed shadows
   a later one reusing its names, and the `Can't install trap handler` banner has several

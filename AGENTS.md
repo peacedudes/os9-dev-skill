@@ -24,8 +24,9 @@ Microware products such as MAUI, and networking is covered only in outline.
 CD-RTOS is OS-9 and the 68000 material applies to it, but CD-i itself (the
 Green Book standard) is not covered, and hardware-specific detail beyond some
 CoCo/Dragon notes is largely absent.
-For those, say so and point to Microware's documentation rather than answering
-from these files.
+For those, say so and point to the right manuals - Microware's for its
+software, the hardware maker's for CD-i and machine-specific detail - rather
+than answering from these files.
 
 ## How to use them
 

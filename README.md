@@ -171,6 +171,6 @@ NOTICE                  attribution: Microware and every other source
 CONTRIBUTING.md         corrections, patches, and the checks every change passes
 SOURCE-AUTHORITY.md     what counts as Microware's word
 DIVERGENCES.md          where a manual contradicts itself or a Microware program
-tools/                  the consistency checker, its tests, the pre-commit hook
+tools/                  the checker, its tests, the pre-commit hook, release tools
 .github/workflows/      the same checks, run on every push and pull request
 ```

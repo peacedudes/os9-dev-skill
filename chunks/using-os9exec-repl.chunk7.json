@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 7,
+  "text": "entirely by any\n    program that opens `/dd/...` - and most do, since `/dd` is the default data\n    directory. Nothing warns you: the read succeeds, against the wrong file.\n    `Live` (os9exec): a program reported `Unknown terminal type` against a\n    termcap that had been corrected, because the correction was made under\n    `OS9H0` while the program read `/dd/sys/termcap` from the original tree.\n    **Set every device you intend to be the same image** (`OS9DISK=<img>\n    OS9H0=<img>`), and when a program's behaviour disagrees with a file you just\n    edited, confirm *which* file it read before concluding anything about the\n    program. The crash dump's `Current` and `Execution` directory lines name\n    real host paths and will tell you outright.\n- Launch: `OS9DISK=/abs/path/disk ./os9exec"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "README.md",
+  "chunk_index": 7,
+  "text": "ay\nso and point to Microware's manuals or the hardware maker's.\n\n## What the assistant will need\n\nAn OS-9 system to run its work on: real hardware if you have it. Without it,\n68000 programs run under [os9exec](https://github.com/peacedudes/os9exec), a\ncommunity emulator, and 6809 work runs on NitrOS-9 under the XRoar emulator.\nThe skills teach the assistant to drive both.\n\n## About OS-9\n\nMicroware wrote OS-9 at the turn of the 1980s for Motorola's 6809 and soon\nbrought it to the 68000. It put a real-time, multitasking, Unix-like system on\nmachines far too small for Unix. It is built from compact, reentrant modules\nthat run as well from ROM as from disk, with one shared copy of each program\nserving every process that runs it. That design suited the Tandy Color\nComputer, Fujitsu's FM machine"
+}

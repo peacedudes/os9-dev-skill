@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 24,
+  "text": ", and the read-only consumer sleeps against it.\n\nSo two plain appenders to one file do **not** interleave freely; the EOF\nlock is documented as being there precisely to stop two processes\nextending a file at the same time.\n\n> The rule above is the manual's (`Manual`: the *Disk File Organization*\n> chapter's \"End of File Lock\"). Stock NitrOS-9 RBF takes the EOF lock for\n> write-only producers and creators alike and wakes waiters on every write\n> (`Live` (NitrOS-9, os9exec)). **If you read anywhere that NitrOS-9 gates this on\n> update mode, that describes a patch that was withdrawn, not the shipping\n> module** - a plausible-sounding claim to inherit, since it is what the\n> \"writes take no lock\" half of the rule implies on its own.\n\nExplicit control exists too (`SS_Lock` to lock/release a ran"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 12,
+  "text": "e: STRING[max_len]\nDIM a, b, c: INTEGER; x, y: REAL        ! Comma = shared type, semicolon = new group\n```\n\nArray indexing base is controlled per-procedure by the statement `BASE 0`\n(0-based) or `BASE 1` (1-based, default) - **note the space; `BASE0`/\n`BASE1` with no space is a syntax error** (`Live` (os9exec): `Error #000:027`),\nnot an alternate spelling. This affects array subscripts only. STRING\ncharacter positions are NOT affected: a string's first character is\nalways position 1, regardless of the current BASE setting.\n\n**The `DIM` bound is the element count, not the highest valid index - BASE\nonly shifts where indexing starts, it does not add an extra slot.**\n`DIM arr(2): BYTE` allocates exactly 2 elements: under `BASE 1` (default)\nthose are `arr(1)` and `arr(2)`; under `BASE 0` they"
+}

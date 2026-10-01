@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 20,
+  "text": "erent transfer sizes. Plain `Read`/`Write` faster than `ReadLn`/`WritLn` (no CR scan).\n\n---\n\n## Data modules (shared memory)\n\nCreated via `F$DatMod`; accessed by pointer or register-indirect addressing once linked (see `memory-and-io.md` for allocation mechanism). A data module is mutable, shared, *live* state - not code.\n\nOS-9's shared-memory IPC mechanism for processes needing to see the same live data (vs. pipes which move data, or signals/events which coordinate timing without payload). Common pattern: data module holding shared state plus an event for coordination - usually paired, not separate.\n\n---\n\n## Record locking (RBF files - a fifth sync primitive, easy to miss)\n\nUnlike everything above, this one needs **no call at all** to work. RBF\n(the disk file manager) locks byte ranges on"
+}

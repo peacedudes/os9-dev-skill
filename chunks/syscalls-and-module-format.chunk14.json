@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 14,
+  "text": "Level 2). `Source, Flag`: NitrOS-9's `fcpymem.asm` never reads X - the copy is driven by D, Y and U alone, a 3-register call. That file's *own* header comment still states the 4-register shape, so it is stale relative to its own code. Whether NitrOS-9 dropped the offset parameter or the manual was never accurate is undetermined; the manual's shape is kept here with this note. `Live` (NitrOS-9) for a trivial self-referential copy |\n| F$SUser | $1C | Y=user ID | Sets caller's user ID. `Live` (NitrOS-9) |\n| F$UnLoad | $1D | A=type, X=name | Unlink by name instead of address. `Live` (NitrOS-9) - FAILED `E$MNF` (221) immediately after the same name was successfully `F$Load`ed by the same process. Possibly `A=type` is not literally the type/lang byte `F$Load` returns in `A`. Unresolved |\n\n### Cr"
+}

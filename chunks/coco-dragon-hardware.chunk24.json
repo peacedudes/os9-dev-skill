@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 24,
+  "text": "dule's CRC afterward (required, since a hand-edited module's CRC would otherwise no longer match). Two patches specific to boot-time device descriptors: disk drive descriptors default to a conservative 30ms step rate for compatibility - changing byte 14 (decimal) from `$00` to `$03` drops this to 6ms, which most drives handle fine and noticeably speeds up floppy access; and an OS-9 Level 1 module can be made Level-2-compatible by changing byte 14 from `$FF` to `$07`. `EasyEdit` is a friendlier alternative specifically for device descriptors - it prompts for the same parameters (step rate, track count, sides, verify) and writes the change back directly, without needing `MODPATCH`/`DEBUG`/`COBBLER`/`OS9GEN` at all.\n\n### Host-Side Disk Editing (ToolShed) - `Live` (NitrOS-9)\n\nAll the tools abo"
+}

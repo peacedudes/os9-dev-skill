@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/SOURCES.md",
+  "chunk_index": 8,
+  "text": "es Screen Dump Utilities manual; \"OS-9 Level Two and the Tandy Color Computer 3\" (Alexander, 1994); OS-9 Quick Reference 2nd Ed. (Farna). Not `Live` (needs real/emulated hardware with video) |\n| 6809/using-nitros9-repl.md | `Live` (NitrOS-9 EOU under XRoar via DriveWire) |\n| 6809/gfx-windowing.md | OS-9 Level 2 Operating System Manual (GFX/GFX2 chapter, Ch. 9) primary; BASIC09 Reference Manual (Tandy), which reprints the same appendix, as an independent second OCR pass for function names and syntax; GFX2 calling sequences largely `Live` (NitrOS-9 under XRoar) |\n| 6809/utility-usage.md | OS-9 Level 2 Operating System Manual (System Command Descriptions) primary; OS-9 Users Manual 1983 and Gimix OS-9 Users Manual 1983 (both Level 1) plus the Farna Quick References as cross-checks for OCR amb"
+}

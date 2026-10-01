@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 22,
+  "text": "omment does not claim, which is exactly\nwhat makes it easy to delete during a port.\n\n## Third-party `signal()` may not be asynchronous at all\n\n`Live` (os9exec), and a trap for anything ported with a Unix compatibility\nlibrary rather than Microware's own calls. The `unix.l` shipping with one\nfreeware collection implements `signal()` **without asynchronous delivery**: it\ninstalls an intercept that merely *records* the signal code, and your handler\nruns only when the program later calls `check_signal()`.\n\n**What is deferred is the handler, not the signal.** The distinction matters,\nbecause the signal has a visible effect that looks like success. Measured `Live`\n(os9exec) on a real terminal, `signal(5, lose)` then `alarm(3)` then blocking in\n`gets()`:\n\n| time | what happened |\n|---|---|\n| 0.0s"
+}

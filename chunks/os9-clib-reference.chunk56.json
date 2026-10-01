@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 56,
+  "text": "rk function instead of the chain function and the caller survives.**\nOne caution from the same scan: `os9forkc` is *declared* in that header but\nexported by **neither** library, so do not reach for it as the `unix.l`-side\npairing.\n\n**So a program built around a coprocess cannot be ported by substituting calls.**\nAnything that forks a helper and talks to it over a two-way pipe - a front end\ndriving `bc`, a pager, a filter pipeline built in C - needs restructuring around\n`os9fork` plus named pipes, not a compatibility shim.\n\n### `<signal.h>` defines five signals, and job control is not among them\n\n`Source` (SDK `DEFS/signal.h`), the complete list:\n\n| name | value |\n|---|---|\n| `SIGKILL` | 0 - cannot be caught or ignored |\n| `SIGWAKE` | 1 |\n| `SIGQUIT` | 2 - keyboard abort |\n| `SIGINT` | 3 - "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 57,
+  "text": "`SIGQUIT` | 2 - keyboard abort |\n| `SIGINT` | 3 - keyboard interrupt |\n| `SIGHUP` | 4 - modem hangup |\n\nWith `SIG_DFL` 0 and `SIG_IGN` 1. **`SIGTERM`, `SIGSTOP`, `SIGCONT` and\n`SIGTSTP` do not exist here**, so job-control handlers cannot be ported - they\nhave to be compiled out. Note also that a program quitting via\n`kill(getpid(), SIGINT)` has no `kill()` to call and must invoke its own cleanup\npath directly.\n\n## `popen()` is not in this C library at all\n\nMeasured, because the gap was worth closing. On the v2.4-era SDK checked:\n\n- `Source`: **no library exports it.** Scanning every `LIB/*.l` for `popen` and\n  `pclose` finds neither - not `clib.l`, not `cio.l`, not `unix.l`.\n- `Source`: **Microware's `<stdio.h>` does not declare it.** The only\n  declaration on the disk is in `DEFS/GCC2/std"
+}

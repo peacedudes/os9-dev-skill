@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 3,
+  "text": "he Unix side before the file reaches OS-9 (`tr '\\n' '\\r'`, or\n  `flip -m` where installed), or edit on OS-9 itself with `vi`/`ed`, which\n  already produce correct native line endings. Under os9exec, see\n  `using-os9exec-repl.md`.\n\n**The CR rule fails differently depending on what the file is FOR.**\nThat OS-9 text is CR-terminated is easy to remember. What catches people is\nthat an LF file announces itself in three different ways, and only the first\nis obvious. `Live` (os9exec), all three:\n\n1. **Source (`.c`, `.h`) - loud, but not always in the same way.** The whole\n   file is one line, and what that does depends on how long the file is.\n   Reported for real sources: `**** source line too long ****` from `cpp`, on\n   every file at once - hard to miss, easy to misread as a defect in the code"
+}

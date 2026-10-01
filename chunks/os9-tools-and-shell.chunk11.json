@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 11,
+  "text": "econd command failed produced line one's output, the error, and nothing\nfurther. Use `-nx` when a batch must finish regardless - and never read \"no\nfurther errors\" as \"the rest ran\".\n\n**`-nx` goes on the first line of the procedure file, not on the command\nline.** `Live` (os9exec): `shell -nx /h6/proc` prints `^syntax error` and runs\nnothing at all - the shell is parsing `-nx` as the thing to execute. Put `-nx`\nas the file's own first line and invoke it plainly with `shell /h6/proc`. Worth\nknowing because the failing spelling is the one a Unix habit reaches for, and\nits error names syntax rather than the option.\n\n**And \"failing\" means any non-zero exit status, reported through the error\ntable as though it were an error code.** `Live` (os9exec), measured with\none-line C programs that do not"
+}

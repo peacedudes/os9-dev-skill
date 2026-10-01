@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 10,
+  "text": "nt`/`long` are both 32-bit and floats are IEEE, there is nothing for it to disambiguate. **6809 behavior unverified (`Manual`) - the markers may genuinely be required there.** |\n| `scanf`/`fscanf`/`sscanf` | Specs: `%d %o %x %u %f %e %g %c %s`, plus `%D %O %X` for long and `[...]` for character-set match. **Every argument must be a pointer** - passing a value instead of `&value` is an easy mistake the compiler won't catch. |\n| `setbuf(FILE *fp, char *buffer)` | Call after `fopen()`, before any I/O. `stderr` is always unbuffered by default. **Do not make `stdout` unbuffered** - passing `NULL` is documented as doing it, and the measured result is corrupt output, not slow output. `Live` (os9exec): after `setbuf(stdout, (char *)NULL)`, `printf(\"sb3 unbuffered printf %s\\n\", \"ok\")` emitted 22 by"
+}

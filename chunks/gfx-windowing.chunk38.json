@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 38,
+  "text": "unenforced ranges (see Open ends below): it bites any call whose\n  foreground happens to match the window's background register.\n- `FONT(path,group,buffer)` - points BASIC09 at a buffer holding a custom\n  character font; **graphics screens only**, no effect on hardware text\n  screens. Three fonts ship built-in via `SYS/Stdfonts` (merge that file\n  into the window first): **Group 200**, Buffers 1-3 - `Manual`, from the\n  primary source's own descriptive prose, which states the group number in\n  words rather than the digits its garbled numeric example shows.\n  **`Live` (NitrOS-9)** - `FONT(200,3)` was accepted with no error\n  *without* first merging `SYS/Stdfonts`, but the text it rendered was\n  garbled repeating glyphs, visibly different from a normal\n  `PRINT #p,\"HELLO WORLD\"` line drawn w"
+}

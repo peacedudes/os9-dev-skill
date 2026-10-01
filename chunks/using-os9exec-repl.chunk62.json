@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 62,
+  "text": " stand-in, behaves differently from the\nMicroware manual, each measured on os9exec V4.10 against the manual it\ndiffers from; V4.11 changes none of them. These are facts about the emulator, not about OS-9: the manual\nremains the specification, and the reference pages state its behaviour and\npoint here. Code that passes on os9exec but relies\non one of these will behave differently on real equipment, and vice versa.\nAll `Live` (os9exec) unless tagged otherwise.\n\n- **`F$CpyMem` range-checks its source.** The manual: \"you can view any\n  memory in the system\". Here sources `0`, `$100`, `$10000`, `$01000000` and\n  the boot-resident shell's header all gave `E$BPAddr` (210); a module the\n  caller loaded could be read. os9exec models an SPU-protected system.\n- **GetStat SS_Size on a pipe answers `E$"
+}

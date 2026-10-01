@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 48,
+  "text": "dependent (68k systems typically run 100Hz/~10ms ticks, see os9-systems-dev kernel-internals; 6809 CoCo/Dragon systems commonly derive 60Hz/~16.66ms ticks from video vertical sync) - `sleep(0)` sleeps indefinitely; `sleep(1)` gives up time slice but may not wait a full tick. |\n| `kill(pid, signal)` / `intercept(handler)` | `intercept()` installs a signal handler function. |\n| `system(char *cmd)` | Passes the string to the OS-9 shell; blocks until it completes. **Max 80 characters** - use `os9fork()` directly for anything longer. **It may launch nothing at all from a program you build yourself** - see below. |\n\n### `system()` may launch nothing, and the return value will not tell you\n\n**`system()` depends on its environment - verify it before relying on it.**\n`Live` (os9exec), one binary bu"
+}

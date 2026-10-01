@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 9,
+  "text": "\n move.w d7,d0\n trap   #0\n dc.w   IClose\n bcs    failed\n\n lea    okmsg(pc),a0\n move.l #okmsglen,d1\n move.w #STDOUT,d0\n trap   #0\n dc.w   IWrite\n\n* Error path. Carry SET means the call failed and d1.w holds the code.\n lea    missing(pc),a0\n moveq  #READ,d0\n trap   #0\n dc.w   IOpen\n bcc    unexpected       succeeding here is itself the failure\n move.w d1,d6            save the code before anything else clobbers d1\n\n lea    experr(pc),a0\n move.l #experrlen,d1\n move.w #STDOUT,d0\n trap   #0\n dc.w   IWrite\n\n* F$PErr(d0.w=error-message file path, 0=none; d1.w=error code)\n move.w d6,d1\n moveq  #0,d0\n trap   #0\n dc.w   FPErr\n\n moveq  #0,d1\n trap   #0\n dc.w   FExit\n\nunexpected\n lea    unexpmsg(pc),a0\n move.l #unexplen,d1\n move.w #STDOUT,d0\n trap   #0\n dc.w   IWrite\n moveq  #1,d1\n trap   #0\n dc.w   F"
+}

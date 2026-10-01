@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 11,
+  "text": "wn terminal type` from a termcap file that plainly contains vt100 | a reader that skips any entry whose first field is not two characters - use `d0|vt100:...` | `c/os9-clib-reference.md`, `common/using-os9exec-repl.md` |\n| A crash dump names a syscall that cannot be where the fault is | `Last syscall` is latched at the last call made, not the fault site; convert `PC` to a module offset via the `Executing:` bytes | `common/using-os9exec-repl.md` |\n| Illegal instruction at a `PC` outside the module, only sometimes - comes and goes with how busy memory is | a one-byte stack overrun (usually a string's NUL) into the high byte of a saved frame pointer: harmless below 16 MB, fatal above; reproduce with `sleep -s 12 #20000k &` | `common/using-os9exec-repl.md` |\n| `E_FNA` (214) opening a file that"
+}

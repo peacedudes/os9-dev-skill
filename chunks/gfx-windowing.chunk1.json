@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 1,
+  "text": "`Manual, Flag` inline\nrather than silently picked. Notation: `[..]` optional, `{..}` repeatable.\n\nCalling sequences and error behavior are largely `Live` (NitrOS-9) against the\ncommunity-maintained `gfx.asm`/`gfx2.asm` package on a real NitrOS-9 system.\nWhat stays `Manual` is concentrated in the window/screen format codes, the\nfull 16-entry default palette table, `PUTGC`'s screen-relative coordinate\nclaim, and `BELL`'s optional-`path` question.\n\n**Assume no argument validation anywhere in this file.** `LINE` at x=639 on\na 320-pixel-wide screen is accepted silently; `PALETTE` accepts register 99\nand color 200. Bad coordinates fail silently, never diagnosably.\n\n**Read every `0-639` below as \"the range of a 640-wide screen type\", not as a\nuniversal.** X and Y are not symmetric: Y behaves exac"
+}

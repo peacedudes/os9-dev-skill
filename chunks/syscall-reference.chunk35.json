@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 35,
+  "text": "t**; reaching\n`E$BNam` at the end of a pathlist is the **documented way a caller's parse\nloop ends**, not a fault. 68k BASIC09 depends on exactly that and consumes it\nsilently (`Live` (os9exec)) - see `basic09/pack-and-runb.md`.\n\n**A leading space is not skipped**, which follows from \"no character is\ninvalid\": a blank ahead of the name terminates a zero-length element rather than\nbeing stepped over. `Live` (os9exec). The reason it is worth stating separately\nis where the consequence appears - a pathname built with an off-by-one slice,\n`\" bench.f\"`, produced **`E$FNA` (214) from the open** on an RBF device\n(under os9exec, `E$BPNam` (215) on a host directory), not a name-parse diagnostic. So a leading blank reads as a *permission* failure on a file that is\npresent and readable, some distance"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "README.md",
+  "chunk_index": 5,
+  "text": "kes attachments** | Attach `os9-dev/SKILL.md` and `os9-dev/references/INDEX.md` (or the `os9-systems-dev` pair for driver and kernel work), describe the task, and ask which files it needs. Then attach those. Two or three usually settle a question |\n\n```sh\nln -s \"$PWD/os9-dev\"         ~/.claude/skills/os9-dev\nln -s \"$PWD/os9-systems-dev\" ~/.claude/skills/os9-systems-dev\n```\n\nThere is nothing to build. Each [release](https://github.com/peacedudes/os9-dev-skill/releases)\nalso carries a zip of both skills.\n\n## The two skills\n\n| Skill | The assistant uses it for |\n|---|---|\n| **`os9-dev`** | Programs that run on OS-9: BASIC09, Microware C, 68000 and 6809 assembly, the shell and utilities, modules, system calls, error codes, and how OS-9 differs from Unix |\n| **`os9-systems-dev`** | Below the ap"
+}

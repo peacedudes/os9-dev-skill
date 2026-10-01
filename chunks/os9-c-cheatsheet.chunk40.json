@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 40,
+  "text": " a real 68k disk image). **For 68K, use the `Live` (os9exec) method\nin `basic09/basic09-per-target.md`'s \"Calling 68000\nmachine-language procedures from BASIC09\" section instead**: compile\nthe C function with ordinary `cc -r -s`, then hand-write a small\nassembly shim (assembled with `r68`, linked with the ordinary `l68` -\nno special tool needed) that translates BASIC09's own calling\nconvention into a call to the compiled C function. That section has a\ncomplete, `Live` (os9exec) worked example.\n\nThe rest of this section is kept for 6809 work and for historical\ncontext on how the *concept* carries over (the mechanism below and the\n68K one solve the same problem - bridging BASIC09's calling convention\nto C - with different concrete tools).\n\nThe C Compiler manual's \"Interfacing to BASIC09\" app"
+}

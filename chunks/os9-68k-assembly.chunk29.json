@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 29,
+  "text": "hich should be treated as the authority for it rather than this\nfile.\n\n## Embedded assembly in C\n\nTwo distinct mechanisms, from two different compiler generations - don't\nconflate them:\n\n- **6809 C compiler (`#asm` / `#endasm`):** a line beginning `#asm` switches\n  the compiler into pass-through mode, copying subsequent lines verbatim to\n  the assembly output until a line beginning `#endasm`. Compiler-generated\n  code normally lives in the PSECT (code) section; if the embedded assembly\n  switches to the VSECT (data) section, the programmer must emit an\n  `ENDSECT` directive before `#endasm` so the section state is correct again\n  for the compiler-generated code that follows. The exact section-directive\n  names here are this (6809) compiler's own RMA convention and are not\n  confirmed for t"
+}

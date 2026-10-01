@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 18,
+  "text": " from\nthe same file - see \"module groups\" below), and a parity check value.\nLookup compares a requested name against each candidate module header's own\nname field (see `os9-dev`'s `common/module-format.md` for the header layout\nitself).\n\nLink-count lifecycle (`F$Link`/`F$Load`/`F$UnLink`, the sticky-bit\nexception, `F$Exit` only auto-unlinking a process's *primary* module),\nmodule-group membership, revision-driven (`M$Revs`) substitution, and the\n`E_NEMOD` type/language-mismatch behavior on fork/chain are the same facts\ndocumented from the application side in `os9-dev`'s `common/module-format.md`\n(\"Module directory mechanics\") and `common/os9-mental-model.md`\n(\"Module directory lifecycle\") - not restated here. One reasoning\ndetail worth adding at the kernel level: **module groups exist beca"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 10,
+  "text": "ct code |\n| `80` `01` @ `$14` | `M$Attr`/`M$Revs` | sharable (bit 7), revision 1 |\n| `31da` @ `$2E` | `M$Parity` | the header's last word |\n| `0000 0050` @ `$30` | `M$Exec` | entry at `$50` - where the code starts |\n| `0000 0400` @ `$3C` | `M$Stack` | 1024 bytes |\n\nThe type/language and attribute/revision words are exactly what the source's\n`psect` line asked for, and the entry offset lands on real code: `41fa` at\n`$50` is `LEA (d16,PC),A0` - the program's first instruction.\n\n`ident` decodes the same bytes for you:\n\n```\nident exfio1\n\nModule size:     $1C6        #454\nModule CRC:      $A78133     Good CRC\nHeader parity:   $31DA       Good parity\nTy/La At/Rev     $101        $8001\nExec off:        $50         #80\nStack size:      $400        #1024\n68000 Prog Mod, Object Code, Sharable\n```\n\n*"
+}

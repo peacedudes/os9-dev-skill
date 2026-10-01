@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 14,
+  "text": "`load [<opts>] {<path>}` - make a file's modules resident. `-d` load\n  from the **data** directory (default is the execution directory - the\n  usual surprise), `-l` print the resolved pathlist.\n- `link` / `unlink [<opts>] {<modname>}` - bump a resident module's link\n  count up/down.\n- `save [<opts>] {<modname>}` - write resident module(s) to file(s);\n  `-f=<path>` all into one file, `-r` overwrite.\n- `ident [<opts>] {<modname>}` - decode header + CRC check. `-m` module\n  in memory (not file), `-q` one line per module, `-s` only report bad\n  CRCs.\n- `fixmod [<opts>] {<modname>}` - `-u` repair CRC/parity;\n  `-ua=<att.rev>` set attribute/revision, `-up=<perm>` set access\n  permissions, `-uo<g>.<u>` set owner, `-ub` fix sys/rev in packed\n  BASIC09 subroutine modules.\n- `mdir [<opts>] [<modname"
+}

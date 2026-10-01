@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 1,
+  "text": "`U`, `S` (hardware\nstack), `DP` (direct page), `CC` (condition codes), `PC`.\n\nAll system calls use **`SWI2`** followed immediately by a one-byte function\ncode (the 6809 analog of 68k's `TRAP #0` + code word). Assembler convenience\nmacro: `OS9 I$Read` expands to `SWI2` + the code byte.\n\n- **Error convention**: carry set + error code in `B` on error; carry clear on\n  success. Registers not specified for a call are unaltered.\n- String parameters are terminated by space+EOL, or by the sign bit (bit 7)\n  set on the last character - the same sign-bit terminator 68k module names\n  use, applied more broadly here.\n- Standard I/O paths: 0=stdin, 1=stdout, 2=stderr (same as 68k).\n- At process entry (Fork/Chain/debugger `E`): `U` = bottom of the data area,\n  `Y` = its top, `X` = the parameter area (wh"
+}

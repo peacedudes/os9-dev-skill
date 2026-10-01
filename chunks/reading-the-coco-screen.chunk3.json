@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/reading-the-coco-screen.md",
+  "chunk_index": 3,
+  "text": "ver becomes\n   visible on *any* screen - not \"hard to find\", genuinely never in the CLEAR\n   cycle. `SELECT` alone still doesn't display anything; a CLEAR press is\n   still needed.\n2. **Hold the window open.** A procedure that draws and then exits (or reaches\n   `END`) tears its window down before there is anything to look at. Run it\n   backgrounded with a `LOOP`/`ENDLOOP`, stdout and stderr redirected to\n   `/nil` - a backgrounded job's prompts otherwise interleave with the REPL's\n   own channel and wreck it. (OS-9 spells stderr `>>`; `>+`/`>-` are\n   append/truncate, and `>>>` silently does nothing despite looking like\n   append.)\n3. **Clean up between renders.** A stale backgrounded job holds its `/wN`\n   open, so the next test's `DWSET` on the same path fails silently into the\n   debug"
+}

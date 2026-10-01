@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 2,
+  "text": "ith hardware memory-access limitations, colored memory partitions\naddress space into distinct regions (non-volatile RAM, DMA-accessible regions, etc.).\nData modules can be allocated from a specific color when needed.\n\n### Fragmentation\n\nWithout MMU address translation, separate physical memory areas can't be\ncombined logically. OS-9's allocation strategy avoids fragmentation rather than\ncleaning it up - a necessary choice on systems without virtual memory.\n\n### MMU and DMA\n\nAn MMU is **optional** - not required for OS-9 operation. Register-indirect addressing provides process isolation even without one. Where present, MMU adds memory protection (via System Security Module, `ssm`). On MMU systems, DMA transfers from user buffers require address translation, which OS-9 provides.\n\nWithout MMU"
+}

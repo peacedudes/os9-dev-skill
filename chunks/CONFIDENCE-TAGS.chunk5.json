@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/CONFIDENCE-TAGS.md",
+  "chunk_index": 5,
+  "text": "** Where such a claim and a Microware manual disagree, the\nmanual is the specification and the runtime is the candidate defect. That is\nunchanged by this notation; naming the runtime makes it checkable rather than\nassumed.\n\n## Ordering\n\n`Hearsay` < `Manual` < `Source` < `Live`. **This ranks how well we know what\nthe runtimes do. It does not rank authority over what OS-9 is.** For that a\nMicroware manual is the specification and both runtimes are candidate defects.\nMicroware-published documentation is authoritative, including manuals issued\nunder licence by Tandy/Radio Shack, Dragon Data or Motorola; third-party books\nare not, however good.\n\nWhere stronger evidence **confirms** a weaker claim, replace the tag. Where it\n**contradicts** one, combine - keep the higher tier plus `Flag`, so the\n"
+}

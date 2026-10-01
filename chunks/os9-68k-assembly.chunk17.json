@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 17,
+  "text": "---|\n| 0 | Reset: initial SSP | Kernel uses this to find system-global base on every exception; requires 4K RAM below and above it. Never touch. |\n| 1 | Reset: initial PC | Coldstart entry point; after boot, only used to restart after catastrophic failure. Never touch. |\n| 2 | Bus error (`T_BUSERR`) | |\n| 3 | Address error (`T_ADDERR`) | |\n| 4 | Illegal instruction (`T_ILLINS`) | |\n| 5 | Zero divide (`T_ZERDIV`) | |\n| 8 | Privilege violation (`T_PRIV`) | Supervisor-state instruction executed in user state. 68000-era binaries have a specific trap here - see **Reading SR in user state** below |\n| 9 | Trace | Single-step; `F$DFork`/`F$DExec`/`F$DExit` and the OS-9 debugger use this |\n| 25-31 | Autovectored interrupts, levels 1-7 | Serviced through `F$IRQ`; level 7 (vector 31) is non-maskable "
+}

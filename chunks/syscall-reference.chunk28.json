@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 28,
+  "text": "-|---------|-------|\n| **F$Send** | Send signal to a process | **d0.w=receiver PID (0=all), d1.w=signal code**. Kill (0) restricted to same user/group (superuser excepted); other codes unrestricted. PID 0 broadcasts to all same-user/group processes except the sender. A signal sent while an earlier one is still pending joins a FIFO queue for that process `Manual`; Dibble's *OS-9 Insights* §8.9 (third-party) puts a queued send at up to 10× the cost of an unqueued one. `Live` (os9exec) for the order (CONF68K t69) |\n| **F$Icpt** | Install signal intercept routine | The manual names only d1.w (signal code) and a6 as set on entry `Manual`. Dibble's *OS-9 Insights* §8.1 (third-party, \"An Undocumented Feature\") adds that d0.w holds the count of queued signals, counting the one being delivered, so "
+}

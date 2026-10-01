@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 8,
+  "text": "ing-os9exec-repl.md`, \"What os9exec does not implement\".)\n\n**When a process was forked: `P$DatBeg` ($2BC) and `P$TimBeg` ($2C0).** The\nfirst holds the Julian day number, the second the seconds **since** midnight -\nthe same form as `F$Time` with `d0.w=1`, and not the countdown `D_Second` uses.\n`F$AllPrc` stamps them from the system clock when it allocates the descriptor.\nA process that wants its own start time, or the machine's uptime, reads its\ndescriptor with `F$GPrDsc` and combines the two with a Julian-mode `F$Time`;\nMicroware's `rstatd` works out boot time for `rup` this way (`Live`\n(os9exec), seen in a syscall trace). Offsets and formats come from the Guru\nonly (see the authority ceiling above): unconfirmed against Microware, and a\nmonitor that turns out wrong should suspect them firs"
+}

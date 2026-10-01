@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 22,
+  "text": "at\n**505** where the same statement without the include passed at 511.\n\nSo treat **511 as a best case observed with nothing else in the file**, not as\nthe limit. The working rule is **keep joined logical lines well under 500**, and\nshorter still in a real file with headers.\n\n**A diagnosed line can still hang the build.** `Live` (os9exec): a 600-character\nline alone in `main()` printed `**** source line too long ****` and then the\n`cc` run never returned - no exit status, killed by a 40-second timeout. In an\nunattended build that reads as a hang, not a failure; give every batch compile\na timeout.\n\n**Do not count on getting a message.** The same over-length condition is reported\ncleanly in some files and kills `cpp` silently in others, and the difference is\nwhat preceded it. A `cpp` that die"
+}

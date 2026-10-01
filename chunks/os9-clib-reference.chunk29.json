@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 29,
+  "text": " it treats the value itself as the entry.\n\n**The cause is the entry's first field.** The reader skips a line unless its\n**third byte is `|`** - the older two-character alias form, `d0|vt100:...` -\nand it skips lines beginning `#` as comments. A modern entry whose first field\nis longer than two characters is skipped outright:\n\n```\nxterm-256color|xterm|vt100|xterm with 256 colors:     skipped: byte 2 is 'e'\nd0|vt100:bs:co#80:li#24:cl=\\E[H\\E[J:...              matched\n```\n\n`vt100` present only as a later alias is never reached, because the line\ncarrying it is discarded before any alias is examined.\n\n**The fix is to give the entry a two-character alias.** `Live` (os9exec): with\n`TERMCAP` pointing at a file holding `d0|vt100:...`, two programs of this family\nthat had answered `'vt100': Unknown "
+}

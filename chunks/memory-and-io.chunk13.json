@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 13,
+  "text": "mmetrically: it calls TERM, frees\nwhatever it had allocated, and passes the error back - no device table\nentry gets created. `I$Detach` decrements the use count; at\nzero, the kernel checks whether another device shares the same static\nstorage, and if not, calls TERM, deallocates storage, and removes the entry.\n\n### Path descriptors\n\nA path descriptor has three sections:\n\n1. A universal 42-byte section (`PD_PD` through `PD_SysGlob`, offsets\n   $00-$29 - includes `PD_LProc`, `PD_ErrNo`, and `PD_SysGlob`) common to\n   every path descriptor. (The Technical I/O Manual states this section's\n   size explicitly as 42 bytes.)\n2. A file-manager-specific section (`PD_FST`) for that manager's file\n   pointers/state.\n3. The 128-byte option area (`PD_OPT`), initialized from the device\n   descriptor's `M"
+}

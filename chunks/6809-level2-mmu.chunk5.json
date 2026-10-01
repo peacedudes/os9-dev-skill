@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/6809-level2-mmu.md",
+  "chunk_index": 5,
+  "text": "dressing Subtleties\n\n- After reset, mapping RAM contents are undefined, so the boot ROM at `$F000-$FFFF` must always be selected regardless of what's in the (garbage) mapping RAM - this requires *logical*-side address decoding for the ROM-select logic, not physical-side, to avoid a chicken-and-egg dependency.\n- Logical-side ROM decoding is simpler but caps per-task space at 60K (interrupt vectors and task-clear code have to live in the reserved high block of every map). The alternative - disabling/redirecting the MMU immediately post-reset, then re-enabling under software control - allows the full 64K per task but needs more complex, fully-decoded (20-21 bit) address hardware.\n- Writing to the MMU's own control range (e.g. `$F000-$F00F`) multiplexes the mapping RAM's address input away fro"
+}

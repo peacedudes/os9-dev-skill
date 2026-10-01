@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 5,
+  "text": "ide the editor. `Live` (os9exec).\n- **Memory:** `basic #32k` (the shell's `#<size>k` modifier - see\n  `common/os9-tools-and-shell.md`) fixes load/run failures caused by the small\n  default allocation. Reach for it before suspecting the program. `Live`\n  (os9exec).\n- **Loading host-authored source:** write plain BASIC09 text, convert it with `tr '\\n' '\\r'`,\n  place it where OS-9 sees it, then `B: LOAD <exact-filename>` and `RUN\n  <procedure-name>` (from the file's PROCEDURE line - need not match the\n  filename). `LOAD` compiles plain source directly and does a **literal\n  name match** - no extension inference (OS-9 convention is no extension at\n  all; `LOAD qt` will not find `qt.bas`). `Live` (os9exec).\n- **Don't start the file with a `!` comment above PROCEDURE** if the same\n  source might"
+}

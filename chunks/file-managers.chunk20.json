@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 20,
+  "text": "s a design opportunity.**\nRBF's locking is automatic and silent. It protects a program whether or not\nits author ever thought about concurrency - but it also *enables* designs\nthat would otherwise need real synchronization primitives, and those designs\nonly get built by someone who knows the guarantee exists. Two cases worth\ndesigning around deliberately rather than merely tolerating as a safety net\n(`Hearsay` - firsthand from the mechanism's designer at Microware):\n\n1. **A database-style read-modify-write cycle is safe under concurrent\n   access with zero application-level locking calls.** A `Read` in update\n   mode automatically locks the record just read; the following `Write` on\n   that path releases it. Two processes both doing \"read a record, change it,\n   write it back\" on one file "
+}

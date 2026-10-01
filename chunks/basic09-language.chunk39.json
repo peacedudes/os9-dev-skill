@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 39,
+  "text": "numbering always starts at 1, unaffected by BASE mode (`Live` (os9exec)) |\n| `SIZE(variable)` | Byte size of a variable/structure - common in pointer/record arithmetic, e.g. `SEEK #file, SIZE(record)*(index-1)`. Value is architecture-specific - see the per-architecture file. |\n| `ADDR(var)` | Absolute memory address of a variable - not portable across targets, see `gotchas.md` |\n| `SIN`/`COS`/`TAN`/`ASN`/`ACS`/`ATN`/`LOG`/`LOG10`/`EXP`/`SQR`/`SQRT`/`PI` | Transcendental, REAL result; angles in degrees or radians via `DEG`/`RAD`. Precision is architecture-specific - see the per-architecture file. Per the BASIC09 Reference Manual, all of these are derived internally via a CORDIC algorithm written specifically for BASIC09, rather than a lookup table or a standard math-library routine. `SQR` a"
+}

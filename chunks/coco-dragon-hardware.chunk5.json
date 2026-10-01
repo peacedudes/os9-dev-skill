@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 5,
+  "text": "/`TMODE` settings. Vertical resolution is fixed at 192 pixels across every graphics type (5-8); only horizontal resolution and color depth vary. The `-s=` type code selects resolution and color depth together as a single value - there's no separate parameter for each.\n\nText window coordinates run 0-79 (column) by 0-23 (row), origin at the upper-left. Type 1 (40-column) windows are hard-limited to 40 characters across by the fixed character-cell size. Hardware text windows (types 1/2) render faster than graphics windows since they use dedicated character-cell hardware, but can't draw graphics primitives; graphics windows (5-8) support drawing/painting but render text more slowly since it's done in software. A graphics window's font (e.g. `sys/stdfonts`) must be merged into memory with `wcre"
+}

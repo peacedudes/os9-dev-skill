@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 5,
+  "text": "\n     order (table above).\n  3. **It grows slightly** (92 -> 96 here; another run 96 -> 100).\n\n  **Read that `DIR` raw, and set `tmode pag=0` first.** Both markers above are\n  easy to destroy while trying to observe them, silently, and both failure\n  modes have produced wrong conclusions about what `PACK` did:\n  - A filter matching leading-space-then-name (`^ +[a-z]+` and similar) drops\n    every `-` and `*` entry - precisely the marked ones you are looking for,\n    so a packed procedure reads as unmarked or missing.\n  - With page pause on, a listing longer than one screen stops and waits for\n    a key, and that key is consumed rather than passed to the program\n    (os9exec's release notes), so a harness's next keystroke releases the\n    pause instead of reaching the program.\n\n  Consequenc"
+}

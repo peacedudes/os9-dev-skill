@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 30,
+  "text": "ve mode shows the current baud\n  rate and delay value, sends test data, and prompts for a new delay\n  value repeatedly until Enter is pressed with no new value; `-s=<n>`\n  sets a value directly without the interactive loop. A tuned value is\n  only in-memory - make it stick across boots by adding the `tuneport`\n  invocation to `startup`, or by baking it into a new boot file with\n  `cobbler`.\n- `wcreate <devname> <xpos> <ypos> <xsize> <ysize> <fg> <bg> [<border>] [-s=<type>] [-z] [-?]` -\n  creates a display window (`W`, `W1`, `W2`, ...). `xpos`/`ypos` are the\n  decimal coordinates of the window's upper-left corner; `xsize` is\n  1-80 columns, `ysize` is 1-24 lines. `fg`/`bg` set foreground/\n  background color; `border` is optional and defaults to black **unless**\n  `-s=<type>` is given, in wh"
+}

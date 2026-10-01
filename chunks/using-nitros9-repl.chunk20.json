@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 20,
+  "text": "o\n  run inetd**, so a client started with the emulator is refused; retry.\n- **A channel with nothing joined to it parses guest output as `tcp`/`dw`\n  command text** and answers `FAIL`. That is what a shell parked on a bare\n  channel looks like against a DW4 server.\n- **Guest time is already correct at boot** if the disk's `clock2_dw` fetches\n  it from the DriveWire server (OP_TIME). Don't run `setime`.\n- **A literal `$` in a shell-quoted harness argument needs escaping.** Typing\n  syscall names (`I$WritLn`) or hex literals (`PRINT $FFFF`) inside a\n  double-quoted bash string triggers bash's own expansion and they silently\n  vanish - the guest receives `I` or a bare `PRINT`, with no error on either\n  side. Escape as `\\$`, or single-quote the whole argument.\n\n## Session facts\n\n- **An unauthe"
+}

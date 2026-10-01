@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 39,
+  "text": " a trailing semicolon**: `send-keys` treats a final `;` as its\nown separator even with `-l`, so a typed C line arrives without its\nsemicolon - a baffling syntax error on a line that looks correct in the\npane. Escape it (`\\;`) or don't end the send with `;`.\n\nHow an LF file fails depends on what the file is for (source, runtime data, or\ndata `#include`d as source): see `unix-differences.md`, \"Lines end with CR, not LF\".\n\n## Compiling and running C\n\n```\nsetenv CLIB /h0/LIB\nsetenv CDEF /h0/DEFS\ncc /dd/source.c\n```\n\n- `cc` forks its sub-tools (`cpp`, `c68`, `o68`, `r68`, `l68`) by bare\n  name, which resolves against the **execution directory, not PATH** (see\n  `os9-mental-model.md`). Keep `chx` parked at the shared command directory via `.login`.\n- `cc: cannot execute the pre-processor` usuall"
+}

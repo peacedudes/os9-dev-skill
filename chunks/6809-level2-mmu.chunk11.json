@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/6809-level2-mmu.md",
+  "chunk_index": 11,
+  "text": "sically defective\n  chip there prevents boot; the chip must be replaced.\n- **Auto-detects standard-ACIA vs. intelligent I/O board configurations**\n  via a jumper-selectable Task Select Register bit - a Level 2 boot ROM\n  commonly needs to probe hardware variants before it can bring up a\n  console at all.\n\n---\n\n**Sources:** OS-9 Level Two Operating System Manual; OS-9 Level Two System Designers Guide (Revision C, 1983) - the latter written explicitly for hardware designers building 6809 MMU boards, reflecting Microware's own consultation with Motorola on the MC6829's design. GMX III section: \"OS-9 GMX III Support ROM User's Manual\" Revision C (1983, Gimix Inc.).\n"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/reading-the-coco-screen.md",
+  "chunk_index": 6,
+  "text": "primitives are `$1B`-prefixed codes written to a window path, easiest\nfrom a shell via `display`. Take the opcodes from `source/lib/alib/windefs.as`\nin the NitrOS-9 tree (secondary cross-check only - see the note on NitrOS-9\nsource provenance). **The table below is `Source`, not `Live`** - the opcodes\nwere read from that file; only the ones appearing in the worked examples here\nhave actually been sent to a window.\n\nGuessing costs real time: `$1b22` is `WOWSet` (overlay window set), **not**\nSELECT, which is `$1b21`. A SELECT experiment built on the wrong opcode\nproduces a confident and entirely bogus conclusion.\n\n| Code | Meaning | Code | Meaning |\n|---|---|---|---|\n| `$1b21` | `WSelect` | `$1b40` | `WSetDPtr` set draw pointer |\n| `$1b20` | `WDWSet` device window set | `$1b42` | `WPoint` |\n"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 21,
+  "text": " line constructions agreeing:\n\n| file | joined line | result |\n|---|---|---|\n| line alone, no `#include` | 508-511 | builds |\n| line alone, no `#include` | 512 | `cpp` aborts, no diagnostic |\n| line alone, no `#include` | 513-600 | `**** source line too long ****` |\n| **same line after `#include <stdio.h>`** | **520** | **`cpp` aborts, no diagnostic** |\n| **same line after `#include <stdio.h>`** | **600** | **`cpp` aborts, no diagnostic** |\n\nThe last two rows are the point: **identical line, identical construction - only\na preceding `#include` differs, and a length that was diagnosed becomes a\ncrash.** The pair was run at 520 and again at 600, both times flipping.\nReported independently, a statement inside `main()` after `<stdio.h>` failed at\n**505** where the same statement without the in"
+}

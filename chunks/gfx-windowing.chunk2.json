@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 2,
+  "text": "ersal.** X and Y are not symmetric: Y behaves exactly as documented, while\nX depends on the screen type and on `SCALESW`. The mechanism is established\nand measured - see \"Coordinates are screen-relative\" under *Concepts shared\nacross GFX2 functions* for the scaling rule and for what changes when\n`SCALESW` is off. On a 320-wide screen type the meaningful range is 0-319, and\nnothing rejects a larger value.\n\n## GFX (Level 1 low-resolution VDG graphics)\n\nLoading: `GFX` must be in the execution directory or already resident;\nBASIC09 auto-loads it on the first `RUN GFX(...)` call, or it can be\npreloaded with `LOAD`. Once loaded it stays resident until removed with\n`UNLINK` (OS-9 shell) or `KILL` (BASIC09).\n\n- `RUN GFX(\"MODE\",format,color)` - switches from text to graphics screen;\n  must be calle"
+}

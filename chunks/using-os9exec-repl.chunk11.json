@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 11,
+  "text": "to full speed.** os9exec paces terminal output to the path's\n  configured baud rate (`baud_throttle`, on by default); `-r` disables it.\n  Keep the throttle only for a test that genuinely depends on real-time\n  pacing.\n- **But never check OUTPUT behaviour with `-r`**, `Live` (os9exec). Pacing runs\n  bytes through a finite FIFO, and that is where output gets lost or reordered;\n  `-r` bypasses it, so a truncation bug is invisible under the flag you\n  normally run with. A lost line then reads as a missing feature - \"this build\n  has no `-k` option\" from a `mount -?` listing that arrived short. If a claim\n  is about what reaches the screen, reproduce it the way a user sees it: no\n  `-r`, and compare against the `-r` run rather than trusting either alone.\n- **`-r` also destroys any animation bui"
+}

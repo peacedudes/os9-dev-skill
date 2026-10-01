@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 35,
+  "text": "r)` - deallocates a Get/Put buffer.\n- `GET(path,group,buffer,xcor,ycor,xsize,ysize)` - copies a window region\n  into a Get/Put buffer (creating it automatically if not already defined\n  via `DEFBUFF`; if the captured data would exceed an existing buffer's\n  size, it's silently truncated to fit). `xcor`/`ycor` = upper-left corner\n  of the region to save (X 0-639, Y 0-191); `xsize`/`ysize` = its\n  dimensions.\n- `PUT(path,group,buffer,xcor,ycor)` - draws a previously `GET`-saved\n  image back into the window at `xcor,ycor` (its upper-left corner);\n  dimensions come from what `GET` recorded, not from a parameter here.\n  Repeated `PUT` calls at incrementing coordinates is the documented\n  technique for simple animation - each call overwrites what the last one\n  drew. **`Live` (NitrOS-9)** - `FCI"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 15,
+  "text": "ee the CoCo table\n  below); emit Esc only after ~50 ms proves nothing follows. Flush a pending\n  Esc on stream EOF too - EOF is *readable*, so it beats the timeout and would\n  otherwise swallow the key as the terminal closes.\n- **The CoCo HAS arrow keys and F1/F2, and sends them as plain bytes** - never\n  as escape sequences. So a host terminal's `ESC [ ...` is an encoding artifact\n  to be *translated back*, not swallowed. Full keyboard table, agreed\n  byte-for-byte by three independent sources - NitrOS-9 `vtio.asm` (the driver\n  this guest runs), the OS-9 Quick Reference 1982, and the Farna 2nd-edition\n  quick reference:\n\n  | Key | normal | shift | ctrl |\n  |---|---|---|---|\n  | UP ARROW | `$0C` | `$1C` | `$13` |\n  | DOWN ARROW | `$0A` | `$1A` | `$12` |\n  | LEFT ARROW | `$08` | `$18` | `$"
+}

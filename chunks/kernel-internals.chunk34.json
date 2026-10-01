@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 34,
+  "text": " ONLY code that runs while every process\n  is blocked/sleeping** (the fully-idle path `do_arbitrate` drops into when\n  nothing is runnable). It is therefore the sole place stdin\n  (`CheckInputBuffers()`) and due alarms (`CheckAlarms()`) get serviced while\n  idle. Any new \"wake a blocked process from a host event\" mechanism must be\n  serviced here too, not only in the syscall dispatcher.\n\n---\n\n**Sources:** An independent 1985-era OS-9/68000 technical manual (primary\nfor the scheduler algorithm and vector layout);\nThe OS-9 Guru (module directory, memory allocation, process\ndescriptor internals - including the detailed\n`F$AProc`/`D_ActAge`/`P$Sched` scheduler walkthrough behind the\nsystem-wide-counter description above); cross-checked against OS-9\nInsights (editions 2-3) and the OS-9 v2.4 Tec"
+}

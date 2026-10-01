@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 6,
+  "text": "/boolean; nonzero/`TRUE` =\n  pressed); `xcor`/`ycor` are output variables, range 0-63. Standard\n  joystick or mouse only - does not work with the high-resolution mouse\n  adapter.\n- `RUN GFX(\"GLOC\",storage)` - writes the graphics screen's memory address\n  into `storage` (integer/byte variable), enabling direct `PEEK`/`POKE`\n  access for effects GFX itself doesn't expose (area fill, saving a screen\n  to disk). Needs >=8KB free in the user's address space to map the screen\n  in; total program+data memory must stay <=56KB while doing this.\n- `RUN GFX(\"GCOLR\",[xcor,ycor,]color)` - reads a pixel's color into\n  `color` (an integer or byte variable): at the draw pointer if\n  coordinates are omitted, or at the given `xcor,ycor` if given. Resolved\n  from the BASIC09 Reference Manual Rev G, whose own"
+}

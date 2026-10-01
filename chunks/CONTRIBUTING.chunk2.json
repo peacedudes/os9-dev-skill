@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 2,
+  "text": " about\n   how the correction can be recorded.\n\nThat third point is not bureaucracy. Every claim here carries a confidence tag\nnaming its evidence, so a report that says *where* can be acted on, while one\nthat says only *what* usually cannot.\n\n### Where to send it\n\n**The repository's issue tracker, and nowhere else.** That is the only channel;\nthere is deliberately no email address here, and the author is not reachable\nthrough OS-9 forums or mailing lists.\n\nIssues: https://github.com/peacedudes/os9-dev-skill/issues\n\nIf you are holding a copy that arrived as a zip or a folder rather than a\ncheckout, it travelled without its link. The repository is public; search for its\nname, or ask whoever gave you the copy. A correction posted anywhere public is\nstill better than one that waits for the rig"
+}

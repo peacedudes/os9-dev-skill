@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 42,
+  "text": " local time -\nis not available under gcc2: os9lib's `<time.h>` only declares it in its\nnon-GCC branch. A zone-agnostic workaround needing no new library symbol:\nconvert the raw fields naively into a `time_t`, run it through\n`localtime()`, measure how far the returned fields drifted from the\noriginals, and add that difference back. This is correct in any timezone;\nit can be off by an hour for a timestamp that lands inside a DST\ntransition, which minute-resolution local dates can't disambiguate anyway.\n\n## Memory Management\n\n| Function(s) | Notes |\n|---|---|\n| `malloc(unsigned size)` / `free(ptr)` / `calloc(nel, elsize)` | `calloc` zero-initializes. Repeated `free()` of the same pointer is undefined, not caught. |\n| `sbrk(int increase)` | Request memory from OS; returns -1 if refused. |\n| `i"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 25,
+  "text": "e suite:\n  data the guest writes to the served image was not visible in the backing\n  file on the host - checked mid-session and after, with two independent host\n  tools, under every condition tried. Read results back **through the guest**\n  (`list` the file over the channel) rather than by reading the image file.\n  Caveat on the strength of this: `drivewire-cli` itself was not instrumented,\n  so a flush path that was never triggered is not ruled out - treat it as\n  \"do not depend on write-back\", not as a proven never.\n\n- **The `.ide` disk image persists across restarts** - it's a real file edited\n  in place, not a pristine snapshot. Source files survive a restart, but so do\n  stale outputs from a failed attempt, which make a fresh run look like it\n  silently failed. `del` anything you're "
+}

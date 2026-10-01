@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 3,
+  "text": "ed from /dd/defs/os9defs.a,\n* which is RMA-format and cannot be assembled by asm.\nPrgrm   equ $10\nObjct   equ $01\nReEnt   equ $80\nICreat  equ $83\nIOpen   equ $84\nIWrite  equ $8A\nIClose  equ $8F\nFPErr   equ $0F\nFExit   equ $06\nREAD    equ 1\nWRITE   equ 2\nATTRS   equ $03\n* Data area: offsets from U. Its size is the mod directive's last operand.\n        org 0\npath    rmb 1\n        rmb 200\nsize    equ .\n        mod eom,name,Prgrm+Objct,ReEnt+1,start,size\nname    fcs /ExFileI/\n* --- happy path: create, write one line, close ---\nstart   leax fname,pcr\n        lda #WRITE\n        ldb #ATTRS\n        swi2\n        fcb ICreat\n        bcs failed\n        sta path,u\n        leax line,pcr\n        ldy #linelen\n        lda path,u\n        swi2\n        fcb IWrite\n        bcs failed\n        lda path,u\n        "
+}

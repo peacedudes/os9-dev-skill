@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 14,
+  "text": "SDK and running: `char c = -1;` tests\nnegative, and **`EOF` assigned to a `char` still compares equal to `EOF`**.\n\nThis matters because the commonest 1980s C read loop is\n\n    char ch;\n    while ((ch = getc(fp)) != EOF) ...\n\nwhich is a latent bug on any compiler where `char` is unsigned, and is NOT one\nhere. Do not reach for it as an explanation when a K&R program reads past end\nof file on OS-9 - it will not be the cause, and it is an easy theory to spend\nan hour on.\n"
+}

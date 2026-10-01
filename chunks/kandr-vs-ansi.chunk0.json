@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 0,
+  "text": "# K&R vs ANSI C: OS-9 Microware Compiler\n\nThe Microware OS-9 C compiler is a **K&R-era implementation**. Modern ANSI C\nwill often fail to compile. Most of these are just \"this is K&R C\" facts -\nthe two that actually bite in practice (and are specific to this compiler, not\ngeneral K&R background) are the function-definition syntax you need to write\nanything at all, and the `\\n` escape sequence, which is called out\nseparately below.\n\n**Provenance note:** rows marked *(6809 manual)* below are `Manual`,\nsourced from the 1983 6809 C Compiler manual's own \"Differences From The\nK & R Specification\" section and not independently re-confirmed against a\n68k Ultra C toolchain - treat them as \"this is what the 6809-vintage\ncompiler did,\" not as a guaranteed 68k fact, unless another row or\n`os9-c-cheat"
+}

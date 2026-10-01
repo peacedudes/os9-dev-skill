@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 28,
+  "text": "SCF/SBF/PIPEMAN) | see `os9-mental-model.md` |\n| ELF/executable | OS-9 module | see Tier 1 #3, `module-format.md` |\n| shared library | reentrant module / trap handler | e.g. math via `trap #15` |\n| `dlopen` | `F$Load` by name | |\n| pipe / named pipe | `/pipe` unnamed / `/pipe/<name>` named | default buffer 90 bytes per the manuals - see `ipc.md` |\n| UID/GID | owner ID / group ID in process descriptor | |\n| `sudo`/root | super-user = group 0 (**68k**; on 6809 it is flat user ID 0 - `6809/syscalls-and-module-format.md`) | |\n| process states | Active / Waiting / Sleeping | |\n| `nice`/`setpriority` | priority + `setpr` | aging twist, see Tier 2 |\n| `errno` | `errno` | not cleared on success - check the call's return value first |\n\n---\n\n**Sources:** OS-9 v2.4 Technical Reference Manual, Technic"
+}

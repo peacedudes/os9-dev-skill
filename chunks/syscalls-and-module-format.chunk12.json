@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 12,
+  "text": "t |\n| F$AllBit | $13 | D=first bit, X=map, Y=count | Sets bits (marks allocated). `Live` (NitrOS-9) - confirmed by reading the map bytes back |\n| F$DelBit | $14 | D=first bit, X=map, Y=count | Clears bits (marks free). `Live` (NitrOS-9) |\n| F$Time | $15 | X=6-byte buffer | year/month/day/hour/min/sec. **The year byte is `year - 1900`**, not a raw or 2-digit value. `Live` (NitrOS-9) |\n| F$STime | $16 | X=6-byte packet | Also starts the real-time clock. `Live` (NitrOS-9) - FAILED with `err=00000`, which is not a real OS-9 error number, suggesting the call may not populate `B` on failure. Unresolved |\n| F$CRC | $17 | X=start, Y=count, U=3-byte accumulator | Accumulator must init to `$FFFFFF`. `Live` (NitrOS-9) for the call; the checksum algorithm itself was not checked against a known-answer "
+}

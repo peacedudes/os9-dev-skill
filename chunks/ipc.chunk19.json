@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 19,
+  "text": "ne pipe while blocked reading from another, in a cycle with\n  another process doing the reverse. Nothing in the pipe mechanism itself\n  detects a cross-pipe cycle like this - avoid it by closing unused path\n  ends promptly, or using non-blocking reads when a process legitimately\n  juggles more than one pipe.\n\n**EOF is \"empty AND no other writers\":** `I$Read`/`I$ReadLn` sleep if insufficient data is ready. EOF recognized only once the pipe is empty *and* reader count equals total user count. Partial reads before EOF return fewer bytes (not an error).\n\n**Why pipes over signals:** longer messages (not capped at 16 bits), natural queuing, pending-data checks, and (named pipes) coordination between unrelated processes. Reader/writer can use different transfer sizes. Plain `Read`/`Write` faster "
+}

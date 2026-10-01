@@ -1,0 +1,5 @@
+{
+  "source": "README.md",
+  "chunk_index": 6,
+  "text": "from Unix |\n| **`os9-systems-dev`** | Below the application line: device drivers, file managers, kernel internals, the scheduler, 6809 Level 2 memory management |\n\nThey are siblings and cite each other, so install both.\n\n**Scope:** the early OS-9 line, from the 6809 (Level One and Level Two) up to\nOS-9/68000 version 2.4. CD-RTOS, the OS-9 inside the Philips CD-i player, is\nOS-9, and the 68000 material applies to it. Out of scope: OS-9000, later\nOS-9 releases, Microware's other products such as MAUI, the CD-i \"Green\nBook\" standard itself, and most machine-specific hardware detail beyond some\nTandy Color Computer and Dragon notes. Networking is covered only in outline.\nWhen a question goes past these limits, the skills tell the assistant to say\nso and point to Microware's manuals or the hard"
+}

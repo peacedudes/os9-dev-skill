@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 10,
+  "text": " Flavor | Delivers | Constraints |\n|---|---|---|\n| User-state (`A$Set`, `A$Cycle`, `A$AtDate`, `A$AtJul`) | A signal to the requesting process | Normal process context |\n| System-state | Runs a subroutine at kernel priority | Cannot sleep, wait, or fork; stack is biased into the system process descriptor (~1K of free space there) |\n\n**Auto-cleanup gotcha:** the kernel auto-deletes a process's pending alarms\nwhen that process exits - usually what you want, but wrong for a\n*persistent* system-state alarm meant to outlive the process that set it\n(e.g. a disk-motor shutdown timer). Workaround: make the `F$Alarm` call as\nthe **system process** itself, not the process that wants the timer.\n\n**Patterns:**\n- **Guard** - set an alarm before an otherwise-unbounded wait; it fires a\n  timeout signal t"
+}

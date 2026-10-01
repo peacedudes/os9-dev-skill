@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/INDEX.md",
+  "chunk_index": 3,
+  "text": "ory - locking is RBF-only, so use a `mount -k` image | file-managers.md |\n| Under os9exec, observed scheduling doesn't match the documented priority-aging algorithm | os9exec doesn't implement it; it runs a simpler round-robin | kernel-internals.md |\n\nModule format, syscall catalog, and error codes are shared with\napplication-level work and live in the sibling `os9-dev` skill\n(`common/module-format.md`, `68k/syscall-reference.md`,\n`common/error-codes.md`) - not duplicated here. `os9-dev`'s\n`common/memory-and-io.md` also covers a mental-model-level pass over\ndevice descriptors, `I$Attach`/device-table matching, and path-descriptor\nstructure - the same territory `device-drivers.md`/`file-managers.md`\ncover in full systems depth here; the two are meant to agree, so cross-check\n`os9-dev`'s `me"
+}

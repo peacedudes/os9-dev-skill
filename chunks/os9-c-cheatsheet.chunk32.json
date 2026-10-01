@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 32,
+  "text": "rrectly rounded `1.0/3.0` (`3FD5555555555555`, printing\n`0.3333333333333333` at `%.17g`), and so does a `-K=2F` build. The choice is fixed at\ncompile time: `load math881` at run time does not change an already-compiled\nprogram. See `basic09/basic09-per-target.md` for BASIC09 REAL, which shares the\nsoft-float handler.\n\nOn the 6809 compiler only, `SHORT`/`SHORT INT` are synonyms for plain\n`int`, `LONG INT` is a synonym for `long`, and `LONG FLOAT` means `double`\n(PDP-11-derived naming). That compiler's manual also documents BASIC09's\n`INTEGER` as identical to its 2-byte `int`, and BASIC09's `BYTE`/`BOOLEAN`\nas identical to `char` - an equivalence that assumes the 6809 sizes and so\ndoes not hold on 68k.\n\n**String termination differs between the two languages, and this bites\nin practice.** A C"
+}

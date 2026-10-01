@@ -1,0 +1,5 @@
+{
+  "source": "DIVERGENCES.md",
+  "chunk_index": 0,
+  "text": "# Divergences from Microware documentation\n\nPlaces where observed OS-9 behaviour, or our own documentation, disagrees with\nor isn't covered by Microware's published manuals. The manual is the\nspecification; each item is a question for Microware to settle.\n\n## Behaviour vs. the manual\n\n- **BOOLEAN prints `True`/`False`, not the documented `TRUE`/`FALSE`.** Both\n  BASIC09 manuals (Rev H, and Tandy 1983) specify uppercase; a genuine Microware\n  6809 BASIC09 v01.01.00 module prints mixed case. (Checked via\n  `PRINT USING \"B\"`.) **The module was Microware's; the machine was not** - this\n  was observed under emulation, and which runtime is not recorded here. Of every\n  item on this page it is the cheapest to re-test on a real 6809, and doing so is\n  exactly the contribution `CONTRIBUTING.md` ask"
+}

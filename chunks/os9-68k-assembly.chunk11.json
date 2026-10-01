@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 11,
+  "text": "io.a -O=exfileio.r\nl68 exfileio.r -o=exfio1\nexfio1\n\nPASS create/write/close\nPASS open of a missing file failed as expected: Error #000:216 (E_PNNF) Path Name Not Found\n```\n\n`dump exfile.txt` confirms the write landed byte-for-byte: 26 bytes,\n`written by example-fileio` plus the trailing `$0D` - matching `linelen`.\n\nWhat the program demonstrates that the tables alone don't:\n\n- **The call code is an inline `dc.w` immediately after `trap #0`**, not a\n  register argument. The kernel reads it from the instruction stream and\n  resumes past it.\n- **Names like `I$Create` are not symbols** - they must be `set` locally, as\n  above. See the TRAP #0 section below for why nothing on the disk defines\n  them.\n- **Carry set = failure, `d1.w` = error code.** Save it immediately: the very\n  next call overwr"
+}

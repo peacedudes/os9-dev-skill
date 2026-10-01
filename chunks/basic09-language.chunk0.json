@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 0,
+  "text": "# BASIC09 Language Reference - shared, architecture-independent\n\nMicroware built BASIC09 as an interactive compiler with \"the fast execution\nspeed typical of compiler languages plus the ease of use and memory space\nefficiency typical of interpreter languages\" (`Manual`, BASIC09 Reference\nManual Rev G, introduction; the 68k *OS-9 BASIC User Manual* says the same):\nstructured, typed, and compiled to I-code rather than interpreted line by line.\n\n**This is the primary BASIC09 language reference.** BASIC09 is the same\nlanguage on 6809 and 68k OS-9 - same statements, same keywords, same\nbuilt-in functions, same control-flow constructs. Everything on this page\napplies to both architectures identically. The only things that differ\nbetween 6809 and 68k are numeric type widths/ranges/precision and a"
+}

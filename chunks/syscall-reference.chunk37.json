@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 37,
+  "text": "specifies neither. 68k\ncallers - the shell included - rely on `a1` pointing *at* the terminator,\nexactly as the 68k manual says, so adding the 6809 skip would break them.\n\n**F$PErr** (d0.w=path to an **error-message file**, 0=none; d1.w=error code):\nwrites an error message to the **standard error path**. `d0.w` is *not* a mode\nswitch - given a path, the kernel searches that ASCII file for a line whose\nfirst seven characters match the error number (`000:215`) and prints the rest\nof that line after the number (continuation lines begin with a space); with\n`d0.w=0` there is no such file and a stock system prints just\n`ERROR #mmm.nnn`. Numbers `000:000`-`063:255` are reserved for the OS.\n`Manual`.\n\n`Live` (os9exec): the line honours `>>` redirection, and a `d0.w` path open\non `/dd/SYS/errmsg` p"
+}

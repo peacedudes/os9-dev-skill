@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 33,
+  "text": "`, and is reached only via `,U`-relative addressing.\n\nBoth failure modes are real: declaring a `,U`-addressed buffer with `RMB`\ninside the code section produced 22 cascading `***** Error: phasing` errors\n(fixed by converting to `EQU` offsets and enlarging `MOD`'s data-size field);\nstoring to a forward-referenced label with plain extended addressing (`STX\nlabel`) instead of `,PCR` produced the same class of errors (fixed with `LEAY\nlabel,PCR` once, then offset addressing from there).\n\n**Rule of thumb: if a store/load target was declared with `RMB`/`FCC`/`FCS`\nanywhere in the file, it needs `,PCR` - never plain absolute, even for a\nscratch buffer.**\n\n**Phasing errors** occur when an instruction's length or a symbol's resolved\naddress changes between passes. The classic cause is a branch that"
+}

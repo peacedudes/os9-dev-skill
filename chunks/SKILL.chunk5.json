@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/SKILL.md",
+  "chunk_index": 5,
+  "text": "oware manual disagrees with a runtime, the manual is the specification,\nthe claim records both readings, and only Microware or genuine hardware\nresolves it. **Microware's word** means Microware-published documentation,\nincluding manuals issued under licence by Tandy/Radio Shack, Dragon Data or\nMotorola; third-party books are not authoritative however good - the OS-9\nGuru especially. Tag legend: sibling skill's\n`os9-dev/references/CONFIDENCE-TAGS.md` (install both).\n\n**Driver and file-manager entry points run only on OS-9 itself.** os9exec\nserves device I/O from its own host-side layer rather than by dispatching to\ninstalled modules, so there a correctly-assembled, CRC-valid `Drivr` module\ninstalls and is never invoked, and `iniz` does nothing. Assembling and linking\na `Drivr`/`Devic` modul"
+}

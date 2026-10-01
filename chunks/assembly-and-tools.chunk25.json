@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 25,
+  "text": " evaluation.** Both assemblers share a 16-bit arithmetic model\nand the identical precedence table: unary `-` (negate) and `^` (NOT) highest,\nthen `&` (AND)/`!` (OR), then `*`/`/`, then `+`/`-`, evaluated left-to-right\nwithin a tier, parentheses override. Byte-range checks are identical (0..255\nunsigned / -128..127 signed). `asm` adds a second location-counter operand,\n`.` (period), giving the *data* address counter's value at line start; RMA\nhas only `*` for its single instruction counter.\n\n**Two assembler modes** (`asm` only, ch. 2.4). **Normal mode** has the\nOS-9-oriented feature set: separate program and data address counters,\n`MOD`/`EMOD` generation, warnings on OS-9-inadvisable addressing modes.\n**Motorola-compatible mode** collapses to a single program counter, behaving\nlike a plain "
+}

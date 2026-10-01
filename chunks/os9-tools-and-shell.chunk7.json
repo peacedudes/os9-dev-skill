@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 7,
+  "text": " so its `setenv`/`chd`/prompt changes persist - unlike running the file by name, which forks a child shell whose changes evaporate |\n| `set <opts>` | Change shell options mid-session (no leading `-` needed: `set np`) |\n| `setenv` / `unsetenv` / `printenv` | Set, remove, list environment variables. Names are case-sensitive (`PATH` != `path`). `unsetenv` removes the variable outright |\n| `logout` | End the login shell/session (runs `.logout`) |\n\nShell invocation options (also settable via `set`): `t`/`nt` echo input\nlines on/off, `p=\"...\"`/`np` prompt on/off, `x`/`nx` abort-on-error on/off.\n`Live` (os9exec): all three confirmed via `set` - `set t`\nechoed each command line before running it; `set np` suppressed the `$`\nprompt for subsequent commands; `set x` aborted the shell on the first\ncom"
+}

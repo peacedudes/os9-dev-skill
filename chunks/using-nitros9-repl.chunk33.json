@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 33,
+  "text": "ng `tee`, and prefer the host-side\n  injection route below for anything longer than a few lines.\n- **Injecting files too large to type**: ToolShed can extract the RBF\n  filesystem straight out of the `.ide` container and inject files host-side,\n  with XRoar stopped. **ToolShed bug**: `os9 copy -r` (rewrite-in-place)\n  updates a file's declared size but can leave data blocks holding stale bytes -\n  `fstat` reports the right size while the content is wrong. `del` then copy\n  fresh instead of `-r`.\n- Host-side editing generally: the OS-9 partition starts at byte **323,584**\n  inside a `68IDE.ide` container (`Live` (NitrOS-9) - an RBF LSN0 with volume name\n  \"NitrOS-9 EOU 6809\"), which ToolShed cannot read directly. `dd` the\n  partition out, run `os9 copy` against the raw partition, `dd` it ba"
+}

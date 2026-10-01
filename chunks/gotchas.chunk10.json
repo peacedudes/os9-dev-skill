@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/gotchas.md",
+  "chunk_index": 10,
+  "text": "ng meant to be exact text. 68k BASIC09 V2.1 does not do\n  this: the string lists and prints as `text; more` (`Live` (os9exec)).\n- **Year-2000 fault in 68k's `DATE$`.** Any year >= 2000 prints a corrupt\n  leading year digit (`\"<6/07/14\"` where `\"26/07/14\"` was correct) - `Live`\n  (os9exec); `Absent` on real 6809 NitrOS-9, so the fault lies on the 68k\n  side, not in logic shared with 6809. Don't trust the 68k year field.\n- **BOOLEAN prints mixed case, contrary to the manual.** `PRINT USING`'s `B`\n  format is documented by Microware as printing `\"TRUE\"`/`\"FALSE\"`, but every\n  runtime tested prints `\"True    \"`/`\"False   \"` (correct 8-char field\n  width) - `Live` (NitrOS-9, os9exec): 68k os9exec *and* real Microware BASIC09 6809\n  01.01.00, so it is not an emulator artifact. Whether the manual"
+}

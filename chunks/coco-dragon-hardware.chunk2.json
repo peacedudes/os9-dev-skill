@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 2,
+  "text": "$0C` | CLEAR SCREEN, home cursor |\n| `$0D` | RETURN (cursor to line start) |\n| `$0E`/`$0F` | Switch to ALPHA / GRAPHICS mode (GRAPHICS takes mode+color bytes, allocates a 6K display buffer) |\n| `$10 c` | PRESET SCREEN to color c |\n| `$11 c` | SET COLOR (foreground + color set) |\n| `$12` | QUIT GRAPHICS, return the 6K buffer |\n| `$13` | ERASE GRAPHICS (erase screen) |\n\n**Graphics mode** (separate cursor from the text cursor; coordinates 0,0 at lower-left, always positive):\n\n| Code | Effect |\n|---|---|\n| `$14` | Home graphics cursor to (0,0) |\n| `$15 x y` | Set graphics cursor position |\n| `$16 x y` | Draw line from current position to (x,y), foreground color |\n| `$17 x y` | Same as $16 in background color (erase) |\n| `$18 x y` / `$19 x y` | Plot / erase a point |\n| `$1A r` | Draw circle at "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 25,
+  "text": "ed for per-link\nteardown; not implemented in this era's OS-9 releases). Assembly code\nnormally reaches a trap handler through the `tcall` macro: it accepts a\npair of word-sized arguments - trap vector number (1-15) and a\nfunction-selector word - expanding to the appropriate `TRAP` instruction.\n\n**Lazy binding**: a `tcall` made before `F$TLink` has installed the target\nhandler checks the module's `M$Excpt` (default trap entry) offset - zero\naborts the call, non-zero jumps to that exception routine, which installs\nthe handler and re-executes the original `tcall`. This lets a program defer\na trap handler's linkage until it's actually needed at runtime.\n\n## Memory Allocation Internals\n\n- **Minimum allocation unit**: 16 bytes - the smallest chunk OS-9's\n  free-list bookkeeping can track; every "
+}

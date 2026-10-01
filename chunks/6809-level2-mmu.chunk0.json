@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/6809-level2-mmu.md",
+  "chunk_index": 0,
+  "text": "# OS-9/6809 Level 2 Memory Management (DAT/MMU)\n\n`Manual` - MMU/DAT register internals sit below what a shell session\ncan observe, and the boot-ROM material below what any emulator exercises,\nso `Live` verification isn't reachable here. Cross-referenced across the\nLevel 2 Operating System Manual and the Level 2 System Designer's Guide,\nwhich agree closely.\n\n## The Split: Level 1 vs Level 2\n\n6809 OS-9 exists in two distinct configurations, differing fundamentally in\nmemory organization:\n\n**Level 1** is a single-process (or minimal multi-process) system confined\nto a flat, shared 64K address space combining RAM and ROM. No MMU, no\nmemory isolation. Practical systems needed at least 12K RAM, with most\nreal deployments using 56-60K usable space after accounting for ROM and\nvideo RAM. Level 1 i"
+}

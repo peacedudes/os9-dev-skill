@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 20,
+  "text": "ath, d1.w=code, ... | per code | File manager handles known codes, forwards unknown ones to the driver. Known: SS_Opt (128-byte option area), file size (C code 2), SS_Lock (record lock), SS_Ticks (lock timeout). **`I$GetStt`/SS.Size (code 2) returns its result in `d2.l`, not `d1`.** `Live` (os9exec). SS_Size, \"Return Current File Size (RBF, PIPE)\" / \"Set File Size (RBF, PIPE)\": GetStat returns d2.l=current size; SetStat takes d2.l=desired size, and for a pipe `d2.l=0` resets the pipe path \"provided the pipe has no active readers or writers\" - any other value is ignored (`Manual`). Neither page names an access mode the path needs. On a pipe, GetStat is ambiguous: the SS_Size page says file size, while Pipeman's own list says it \"returns the size of the pipe buffer\" (`Manual`, `Flag`) |\n\n## "
+}

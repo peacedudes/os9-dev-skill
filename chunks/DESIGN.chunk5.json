@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 5,
+  "text": "(a mere \"fails E$PNNF\" is an\n  error-path return of a call that *exists* - present, not absent); or an\n  explicit bound phrase (\"has no `X`\", \"no `X`\", \"`X` ... unimplemented/absent\").\n- **present** if: \"does implement `X`\" / \"`X` is implemented\"; or the subject\n  carries `Live` without an unimplemented marker.\n- **none** otherwise.\n\nThe known-tag set is **parsed from `CONFIDENCE-TAGS.md`** (single source of truth).\n\n## Subject rule\n\nIn a markdown table row (`| ... |`) the **subject** is the call in the first\ncolumn; tag-based presence attaches only to it. A call merely referenced in\nanother row's notes (\"the name was `F$Load`ed\", \"same as `F$Fork`\") is *not* a\nclaim about that call - otherwise a `Live`/failure marker leaks onto every call\nnamed nearby. Explicit bound phrases still count f"
+}

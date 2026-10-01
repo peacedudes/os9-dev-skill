@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/6809-level2-mmu.md",
+  "chunk_index": 6,
+  "text": "ltiplexes the mapping RAM's address input away from the normal `A12-A15` (or `A11-A15`) source over to `A0-A3`, so the 16 (or so) entries can be loaded sequentially by software. The decoder that triggers this multiplexer switch **must** decode logical addresses, not physical ones - decoding physical addresses here creates a circular dependency (you need the MMU to know if you're addressing the MMU).\n\n## The 6809 IRQ-Masking Peculiarity (real hazard for automatic task switching)\n\n- `SWI2`/`SWI3` - the instructions OS-9 syscalls and user vectoring are\n  built on - **do not set the 6809's IRQ mask bit**. A hardware IRQ firing\n  between task-switch start and the kernel reloading its own stack pointer\n  (which may still point into whatever map was active pre-switch) corrupts\n  the stack and cra"
+}

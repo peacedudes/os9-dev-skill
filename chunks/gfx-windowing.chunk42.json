@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 42,
+  "text": "via `I$Write`. So this implementation performs\n  **no software range validation** - which does not confirm 0-15/0-63 as the\n  real range. Real GIME hardware might wrap or alias an out-of-range value.\n  The full 16-entry default color table beyond registers 0-7\n  (black/red/green/yellow/blue/magenta/cyan/white) was not cleanly recovered\n  by either OCR pass.\n- **Window/screen format codes** (`DWSET`'s and `GPLOAD`'s `format`\n  parameter) are `Manual`, cross-referenced against `wcreate -s=<type>`'s\n  `Live` (NitrOS-9) table, but GFX2's own use of those codes is not itself confirmed.\n- **`OWEND`'s restore** does not visibly restore content saved by\n  `OWSET(1,...)`, reproduced on two window geometries, contradicting the\n  documented behavior.\n- **`COLGR` is not a function at all** - it's a pl"
+}

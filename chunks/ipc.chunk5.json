@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 5,
+  "text": "lf**, `Live`\n(os9exec): with signal 5 armed by `F$Alarm` and nothing typed, both\n`read(0,&c,1)` and `readln(0,buf,80)` returned -1 with `errno` = **5**. The\nerror-code appendix points the same way by listing `000:002` KEYBOARD\nQUIT, `000:003` KEYBOARD INTERRUPT and `000:004` MODEM HANGUP as error *numbers* -\nthey are signal codes surfacing as errors. Measured on a reimplementation, so\nit is evidence about that runtime and consistent with Microware's own wording,\nnot a reading of real hardware.\n\n**Delivery is queued, not dropped:** a signal sent to a process that already\nhas one pending is *not* discarded - it joins a FIFO queue and is delivered\nin send order (`Manual`, `F$Send`). Dibble's *OS-9 Insights* (third-party)\nputs a queued send at up to **10x** the cost of an unqueued one, so a ho"
+}

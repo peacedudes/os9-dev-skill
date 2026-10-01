@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 7,
+  "text": "target` and `PACK proc >target` print\n  `Error #000:043` while writing a correct file. **The codes are BASIC09's\n  own, from its manual's Appendix C** - 43 is \"Unknown Procedure\", 51 is\n  \"Line with Compiler Error\" - not OS-9 kernel codes, and **not** `F$PrsNam`'s\n  `E$BNam` (which is **235**); a syscall trace shows `F$PrsNam` conforming to\n  its documented contract throughout, including the terminating `E$BNam` that\n  BASIC09 consumes silently. The trigger is the **procname list**, not the\n  path shape:\n\n  | Form | 68k `os9exec` | Output |\n  |---|---|---|\n  | `SAVE proc >target` (rel *or* abs, space before `>` or not) | `Error #000:043` | correct, byte-identical to the clean form |\n  | `SAVE proc` | clean `Ready` | correct |\n  | `SAVE >target` | clean `Ready` | correct |\n  | `PACK proc >t"
+}

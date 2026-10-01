@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-mental-model.md",
+  "chunk_index": 3,
+  "text": "is reachable both from the shell's utilities and directly via\nsystem calls (`F$`/`I$`); the utilities are thin wrappers over the same\ncalls.\n\n## The process model\n\n- A **process** = shared program module + private data context (static\n  storage, stack, parameter area), tracked by a kernel-owned process\n  descriptor user code never touches.\n- `F$Fork`: kernel locates/loads the module, allocates data memory sized\n  from the module header (+ any extra requested), copies the module's\n  data-initialization table in, patches position-dependent pointers, and\n  returns the child PID. Child inherits current directories, environment,\n  and open paths - never memory.\n- **System state vs. user state**: kernel/supervisor mode (unrestricted,\n  not time-sliced) vs. application mode (time-sliced). On 68k "
+}

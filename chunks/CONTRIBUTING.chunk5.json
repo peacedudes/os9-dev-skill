@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 5,
+  "text": "-written\nassembly, no Microware software - shipped as a disk image, `conf68k.dsk`, with\nits releases, v4.1.1 or later (https://github.com/peacedudes/os9exec/releases).\nPut it on a disk\ndevice of an OS-9/68000 machine and follow the disk's own readme. A run ends\nwith one verdict. \"Nothing to send -- thank you\" means everything passed or was\nskipped, and there is nothing to do: a skip is not a failure. **Only when the\nverdict asks** is there something to send, and it goes to os9exec's issue\ntracker (https://github.com/peacedudes/os9exec/issues), not here, as the readme\ndescribes: the tests are os9exec's, and a result that disagrees corrects the\nemulator first and this corpus with it.\n\n## If you want to send a patch\n\nThe same three things apply, plus the conventions that keep the corpus\ntrust"
+}

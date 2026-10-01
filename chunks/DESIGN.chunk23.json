@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 23,
+  "text": "n against the two breaks that motivated it, both real and both\nalready fixed by the time the check existed: reintroducing the\n`SOURCE-AUTHORITY.md` pointer into `os9-dev/SKILL.md` and the bare\n`6809-level2-mmu.md` into `6809/utility-usage.md` makes the checker flag\nexactly those two lines, exit 1; restoring both is silent again, exit 0. Run\nfor real it also found one break nobody had noticed - `os9-systems-dev`'s\n`INDEX.md` citing `memory-and-io.md` with the `os9-dev` qualifier four lines\nupstream, out of any reasonable reader's reach - which is the useful kind of\nresult, since the check was written before that line was looked at.\n\nCheck 6 was proven the same way, and the vacuity trap was checked explicitly\nfirst: the extractor really does bind 182 facts across the corpus, so a silent\ngree"
+}

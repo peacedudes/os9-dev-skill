@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 41,
+  "text": " gives an immediate\n`WHAT?` from the shell before `rma` starts, though `dir #32k` accepts the same\nmodifier - the `#<size>k` execution-memory modifier is rejected for `rma`\nspecifically. `dir` with more than one wildcard argument shows only the last\none rather than concatenating. This NitrOS-9 `grep` has no `-e` (it treats the\nflag as a filename); run one pattern per call.\n\n## DriveWire protocol contract\n\nBoth of these are easy to get wrong and both have bitten real projects:\n\n- **OP_DWINIT ($5A) must be answered with a NON-ZERO byte.** The NitrOS-9\n  driver treats zero or no response as a DW3 server and silently disables all\n  DW4 extensions including the virtual-serial poller. Symptom: the channel\n  opens and guest->host output flows fine, but no OP_SERREAD ($43) polls ever\n  arrive, so "
+}

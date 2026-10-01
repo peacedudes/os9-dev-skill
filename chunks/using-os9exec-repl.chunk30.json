@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 30,
+  "text": "ng slash works. `mount -?` also lists `-n=<bytes>` sector size,\n`-c=<num>` cluster size and `-d=<device>` (a RAM disk copied from a device).\nWorth knowing because a good deal of freeware wants a `/r0` to scribble on.\n\n**`mount <image> hX` attaches an existing RBF image while the emulator runs**,\n`Live` (os9exec). The image may be named by an OS-9 path (`mount /h5/disk.dsk\nhc`, the file sitting on a host-directory device), by a name relative to the\ncurrent directory, or by a host path. `-w` mounts it write-protected, so a\nwrite gives `E_WP` (242). A device name already in use is refused with `/h5 is\nalready a device` and `E_DEVBSY` (250). It is the alternative to naming the\nimage with `OS9Hx` at startup when you only find out mid-session that you need it.\n\n**`OS9DISK` CAN point at an RBF im"
+}

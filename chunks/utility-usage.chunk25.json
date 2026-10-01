@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 25,
+  "text": " = ^D) |\n| `psc=<h>` | pause char (17 = ^W) |\n| `abort=<h>` | interrupt char (03 = ^C) |\n| `quit=<h>` | abort/kill char (05 = ^E) |\n| `xon=<h>`, `xoff=<h>` | flow control chars (11, 13) |\n| `bell=<h>` | alert char (07) |\n| `normal` | reset everything above to defaults |\n| `type`, `par`, `cs`, `stop` | serial hardware settings - **display-only in tmode**; change via the descriptor (`xmode`/`moded` + `iniz`) |\n| `baud=<n>` | writes the open path's baud option byte, but not the hardware rate - see below |\n\nValues are hex for character codes, decimal for counts.\n\n### `baud=` - the argument is a rate, the stored byte is a code\n\n\"Display-only\" is right about the **hardware**: making a device actually run\nat a new rate takes `deiniz` -> `xmode` -> `iniz`. But `tmode baud=<n>` does\nwrite the open "
+}

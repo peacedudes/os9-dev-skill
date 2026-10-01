@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 21,
+  "text": "name(var+0)                         ! by value - wrap in a no-op expr to force a copy\n```\n\n**`ENDPROC` does not exist - this was another fabrication, same pattern\nas the `TYPE`/`ENDTYPE` one above.** Zero occurrences anywhere in either\nprimary manual. The only procedure terminator is `END`, and per the\nmanual it isn't really a closing keyword at all (BASIC09 Reference\nManual, Rev H, p.50): a procedure simply ends when its statements run\nout, and `END` may appear zero, one, or several times anywhere in a\nprocedure's body as an ordinary executable statement, not a required\ntrailer. `END` mid-procedure works like an early return, and can carry\nan output list that behaves the same as `PRINT`'s.\n\nBy default, variables, arrays, and records arrive at a called procedure by\nreference - the actual m"
+}

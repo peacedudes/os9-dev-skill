@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-mental-model.md",
+  "chunk_index": 0,
+  "text": "# OS-9 Mental Model\n\nModules, processes, I/O, and memory as one system. These concepts are\nidentical across 6809/68k/OS-9000; where a byte value or register is\narchitecture-specific it's marked inline. 68k values are the default here;\n6809 byte layouts live in `6809/syscalls-and-module-format.md`.\n\n## Modules: the unit of software is memory, not files\n\n- Everything executable or data-bearing is a **module**: header (type,\n  language, attributes, CRC) + body + trailing 24-bit CRC. Programs, device\n  drivers, file managers, trap libraries, shared data - all modules.\n- The kernel tracks resident modules by name in the **module directory**.\n  \"Loading\" registers a module there; \"running\" forks a process from the\n  registered copy. One resident copy serves every process running it.\n- Header sta"
+}

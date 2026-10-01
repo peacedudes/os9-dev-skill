@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 14,
+  "text": "double side, bit1 FM/MFM density, bit2 double track (96/135 TPI), bit3 quad density (192 TPI), bit4 octal density (384 TPI) |\n| `DD_SPT` | $11 | 2 | Sectors per track |\n| `DD_BT` | $15 | 3 | Bootstrap's starting LSN |\n| `DD_BSZ` | $18 | 2 | Bootstrap size |\n| `DD_DAT` | $1A | 5 | Creation date: Y/M/D/H/M |\n| `DD_NAM` | $1F | 32 | Volume name |\n| `DD_OPT` | $3F | 32 | Default path-descriptor options for the device |\n| `DD_SYNC` | $60 | 4 | Media integrity code |\n| `DD_MapLSN` | $64 | 4 | Allocation map's starting LSN (0 defaults to LSN 1) |\n| `DD_LSNSize` | $68 | 2 | Logical sector size (0 defaults to 256 bytes) |\n| `DD_VersID` | $6A | 2 | Sector-0 version ID |\n\n### Allocation Map\n\nOne bit per **cluster** - the true allocation unit, one or more sectors,\nalways a power-of-2 sector count per "
+}

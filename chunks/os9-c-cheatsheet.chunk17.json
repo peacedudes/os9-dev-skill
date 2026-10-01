@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 17,
+  "text": "r diagnostic from the file.\n\n### `#undef` before redefining a macro: it keeps the first definition\n\n`Live` (os9exec), measured with two probes, `cc -qm=16k` against the SDK:\n\n- `#define answer() 42` with **no earlier definition**, then `printf(\"%d\",\n  answer())` prints `42`. Zero-argument function-like macros expand normally.\n- `#include <stdio.h>`, then `#define getchar() 7` with **no `#undef`**, then\n  `printf(\"%d\", getchar())` with stdin on `/nil`. `cpp` warns `**** redefined\n  macro ****` and the program prints `-1` - stdio's `getchar` reading EOF. **The\n  new definition was ignored and the first one stayed in force.**\n\nSo the diagnostic is real and the redefinition is not. **`#undef` before\nredefining any macro, library or not.** It is one line and it is the difference\nbetween your de"
+}

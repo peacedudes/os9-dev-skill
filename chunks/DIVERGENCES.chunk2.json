@@ -1,0 +1,5 @@
+{
+  "source": "DIVERGENCES.md",
+  "chunk_index": 2,
+  "text": " -\n  positive, and a value a signed 32-bit INTEGER cannot hold - where its own\n  \"wraps around\" wording implies the negative result. The 6809-era manual\n  (p. 7-2) uses the same sentence template without the defect.\n\n## Gaps in the manuals themselves\n\n- **Shell redirections `>+` and `>-` are undocumented.** Both are real,\n  working syntax (append-or-create; truncate-or-create); *Using Professional\n  OS-9 v2.4* lists only `<`, `>`, `>>`.\n- **Error 200 is mislabelled** `E$BPNum` in the v2.4 Technical Reference\n  appendix; it is `E$PthFul` everywhere else, including that manual's own\n  per-call error lists. A single-edition typo.\n- **6809 syscall codes `$1F`, `$20`, `$23`-`$26`** are neither documented nor\n  confirmed reserved anywhere in the manuals.\n- **`M$Attr` bits 0-4 are undocumented** "
+}

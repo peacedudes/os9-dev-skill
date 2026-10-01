@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 16,
+  "text": "$1A` | `$12` |\n  | LEFT ARROW | `$08` | `$18` | `$10` |\n  | RIGHT ARROW | `$09` | `$19` | `$11` |\n  | BREAK | `$05` | `$03` | `$1B` |\n  | ENTER | `$0D` | `$0D` | `$0D` |\n  | F1 | `$B1` | `$B3` | `$B5` |\n  | F2 | `$B2` | `$B4` | `$B6` |\n  | CLEAR | `$82` NextWin | `$83` PrevWin | `$84` KbdMouse toggle |\n\n  **LEFT ARROW *is* Ctrl-H and SHIFT-LEFT *is* Ctrl-X** - OS-9's `bsp=08` /\n  `del=18` defaults were chosen to match the keycaps, which is the whole reason\n  those defaults look arbitrary otherwise. Cross-confirmed in Microware's own\n  BASIC09 Reference Manual Rev G CoCo control-character table, which also gives\n  `<BREAK>`=Ctrl-E, `<SHIFT><BREAK>`=Ctrl-C, `CONTROL <BREAK>`=Escape/EOF,\n  Ctrl-A=redisplay previous line, Ctrl-0=shift lock. Never write \"the CoCo has\n  no arrow keys\": it has fo"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 1,
+  "text": "ntics* (`P$SigLvl`, `P$Signal`, `P$State`), but the numeric offsets\nrest on a third-party foundation - the strongest tier available here, and not\nMicroware-authoritative. Real hardware or a Microware internal header would\nlift it.\n\n**System Global Memory** is `Manual` only, because there is no source here\nto check it against: os9exec keeps no in-memory System Globals. Its\n`F$SetSys` answers each `D_*` offset it models from its own state, which\ncovers most that programs read, but an answer is not a mechanism:\n`D_MinPty` and `D_MaxAge` are merely stored and echoed back, and nothing\nschedules by them. The scheduler algorithm below is OS-9's; os9exec schedules\nits own way (see the last section of this file). `Source` (os9exec). Two\nSystem Global values are also `Source`: os9exec's 16-byte mini"
+}

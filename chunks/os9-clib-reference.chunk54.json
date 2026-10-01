@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 54,
+  "text": "` | **no** | named pipes, `/pipe` (`common/ipc.md`) |\n| `popen()`/`pclose()` | **no** | nothing; build it from `os9fork` + `/pipe` |\n| `dup()`/`dup2()` | **no** | `os9exec`'s path arguments |\n| `kill()` | **no** | `F$Send`; `getpid()` *is* present in both libraries |\n| `sleep()` | **no** | `tsleep()` (unix.l), in **ticks** - with **bit 31** set it counts 256ths of a second, the same encoding as `F$Alarm` (`68k/syscall-reference.md`) |\n| `execl()` | unix.l | **but it is a CHAIN, not an exec after a fork** - see below |\n| `getcwd()`/`getwd()` | **no** | read the directory files and climb; see \"No `getcwd`\" in `common/unix-differences.md` |\n\n**`execl()` replaces your process.** `Live` (os9exec): a program printing\n`BEFORE execl`, calling `execl(\"/h0/CMDS/echo\", \"echo\", \"CHILD-RAN\", 0)`, then\n"
+}

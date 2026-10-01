@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 30,
+  "text": "s it goes\nand only reports the error it hit at the end, so an image that saw a failed\n`deldir` is in an undefined state - discard it and re-extract, never keep\nworking on it.\n\n**`del` succeeds on entries `copy` and `fstat` refuse with 214.** Damaged or\npermission-less directory entries can be unreadable yet still deletable, which\nis what you want during a cleanup - don't conclude an entry is stuck just\nbecause you cannot read it.\n\n**Container vs. raw-RBF caveat**: `os9` expects a raw RBF filesystem\nstarting at byte 0 (a standard `.dsk` floppy image is this). Some\ndistributed images - e.g. XRoar's own `.ide` hard-disk container format -\nwrap the real filesystem behind an emulator-specific header and/or\npartition table. Pointing `os9 dir` straight at such a file fails with\nerror 216 (`EOS_PN"
+}

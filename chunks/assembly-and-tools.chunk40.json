@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 40,
+  "text": "(ch. 2.9.4) describes the identical setup for a plain single-file\n`MOD`/`EMOD` program with no RLINK involved. **Important**: PC-relative\naddressing cannot reach the data section from code - program and data\nsections aren't a fixed distance apart. **Initialized-data programs** (ch.\n6.3, needing `Root.a`): once `Root.a` runs, `Y`=bottom of the data area\n(matching the C compiler's own data-pointer register choice, so mixed-language\nlinking works), `X`=parameter area, `U`=top of linker-allocated data.\n\n**Running RLINK** (ch. 7.1): `rlink [options] mainline [sub1 {subN}]\n[options]` - `mainline` is the ROF containing the non-zero-typelang PSECT\n(external refs resolve against it, and the module header generates from it);\nadditional ROFs are always included whether referenced or not; no\nnon-mainl"
+}

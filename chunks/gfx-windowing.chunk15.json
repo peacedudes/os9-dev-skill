@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 15,
+  "text": "ype code (see above), `xcor`/\n  `ycor` are the upper-left corner in character columns/rows, `width`/\n  `length` are the window's size in characters/lines, `fg`/`bg`/`border`\n  are palette register numbers. Typically run right after opening a path\n  to the window.\n- `DWEND(path)` - tears down a window `DWSET` created; once no device\n  window remains on a screen, its memory goes back to the system pool.\n  Display jumps to whatever device window comes next, the same effect a\n  CLEAR keypress has. A common pattern is calling `DWSET` again right\n  after, to reuse the same path for a window of a different type.\n- `DWPROTSW(path,switch)` - OS-9's CoCo3 windowing is protected by default\n  (windows can't overlap); `switch` `OFF` removes that protection for one\n  window so others can be placed over "
+}

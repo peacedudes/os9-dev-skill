@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 6,
+  "text": "s are free\" is wrong by the whole job.\n\n**So the pre-port measurement is two counts, not one:** the declarations (never\nconverted), and the definitions *not* already in the split style (also never\nconverted). \"Is this ANSI?\" does not predict the work; the brace style does.\n\nThree more blind spots, each confirmed in the tool's own source (`Source`):\n\n- **It only recognises a function whose name is at the left margin.** Its header\n  says so: *\"a non-keyword identifier at the left margin, followed by a left\n  parenthesis.\"* So `static void f(void)` - keyword first - is skipped entirely.\n- **It has no variadic support at all.** `va_alist`, `va_dcl` and `va_list`\n  appear nowhere in `ansi2knr.c`. Variadic definitions convert by hand to\n  `format(va_alist) va_dcl` plus `va_start`/`va_arg`/`va_en"
+}

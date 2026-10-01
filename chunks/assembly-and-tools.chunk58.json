@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 58,
+  "text": " a loop or macro with the fail flag cleared/set.\n\nFile/shell integration: `.READ str`/`.WRITE str` redirect the editor's\ninput/output file (empty string restores the original); `.SHELL text` runs an\nOS-9 shell command without leaving the editor; `.LOAD str`/`.SAVE str1 str2`\nload/save named macros to a file; `Q` writes remaining buffer content and\nexits.\n\n---\n\n**Sources:** OS-9 Interactive Debugger Users Manual; OS-9 Assembler/Editor/\nDebugger Manual (a generic Microware manual despite shipping with Dragon\nsystems - no Dragon-specific hardware content); OS-9 Relocating Macro\nAssembler Manual (RMA options, input/listing format, expression evaluation,\nmacro facility, PSECT/VSECT/CSECT semantics, data-area access, RLINK options,\nand the RMA-vs-Microware-Interactive-Assembler differences appen"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 40,
+  "text": "register-level parameter detail for individual system calls:\n  `syscall-reference.md` (this directory)\n- Device driver/file manager authoring (entry-point skeletons, static\n  storage layout, `F$IRQ` wrapper patterns): sibling `os9-systems-dev` skill\n- Compiler/linker toolchain: `c/os9-c-cheatsheet.md`; the `debug` command:\n  \"Symbolic debugging\" above\n\nSources: The OS-9 Guru (68000-specific chapters); OS-9 v2.4 Technical\nReference Manual (module format, exception vectors, TRAP conventions);\nOS-9 C Compiler manual / The OS-9 Primer (register ABI, embedded\nassembly). Toolchain behavior: `Live` (os9exec).\n"
+}

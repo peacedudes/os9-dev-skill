@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/INDEX.md",
+  "chunk_index": 1,
+  "text": "ut | kernel-internals.md |\n| 6809 Level 1 vs Level 2 (flat 64K vs DAT/MMU), Level 2 MMU/DAT register internals, Gimix GMX III support ROM | 6809-level2-mmu.md |\n| DriveWire server implementation, NitrOS-9 scdwv/dwio driver pair | sibling os9-dev skill: `references/6809/using-nitros9-repl.md` |\n\n## Symptom -> cause (when you have a failure, not a topic)\n\nThe other door into this index: you have a symptom and no idea which topic\nowns it. The last four rows arise only under the os9exec emulator, and they are\nthe expensive ones there because nothing is wrong with your code.\n\n| Symptom | Likely cause | Where |\n|---|---|---|\n| Two different offsets both claim to be the path open count | `PD_CNT` `$03` and `PD_COUNT` are two genuine distinct fields, not a contradiction | file-managers.md |\n| A ne"
+}

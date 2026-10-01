@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 23,
+  "text": "gs_devn(path, buf)`, given the **path number** of that open\n   directory, returns the device name. Clear any sign bit on it too.\n\n`Live` (os9exec): this gives `/h1/CMDS` after `chx /h1/CMDS` at Microware's\nshell, on an RBF image; it works the same way under a ported shell. The collection's `which` does it in `pathof()`.\n\n### A filename is at most 28 characters\n\nOS-9 allows 1 to 28 characters in a name (`Manual`: *Using Professional OS-9*\nv2.4, \"Rules for Constructing File Names\"), which is exactly what an RBF\ndirectory entry holds - a 28-byte name field whose last character carries the\nsign bit (Technical Manual, \"Directory File Format\"). **There is no\nterminating NUL**: a 28-character name fills the field, and code that reads\nentries as C strings runs on into the descriptor-sector bytes. "
+}

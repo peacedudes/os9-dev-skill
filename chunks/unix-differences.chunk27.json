@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 27,
+  "text": " | |\n| `exit` | `F$Exit` | |\n| `getpid`/`getuid` | `F$ID` | returns PID, owner ID, priority (68k `group.user`; 6809 flat) |\n| `kill(pid,sig)` | `F$Send` | |\n| `signal`/`sigaction` | `F$Icpt` | contract differs, see Tier 2 |\n| `sleep` | `F$Sleep` | counts ticks; 0 = sleep until signaled |\n| `alarm`/`setitimer` | `F$Alarm` | one-shot, cyclic, or absolute date/time |\n| semaphore | `F$Event` | counted, see Tier 2 |\n| `setenv`/`getenv` | `setenv`/`printenv` (shell) | shell-level, not kernel syscalls |\n| shell script | procedure file | no shebang; run by name or `shell <file` |\n| subshell | `F$Fork` of the shell module | |\n| `/dev/*` | device descriptor modules | named `/term`, `/d0`, `/p`, `/pipe`, `/nil`, ... |\n| VFS layer | file managers (RBF/SCF/SBF/PIPEMAN) | see `os9-mental-model.md` |\n| E"
+}

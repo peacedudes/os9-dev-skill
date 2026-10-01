@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 43,
+  "text": "ire channel n; channel 0 is unused.\nOpening the bare `/N` descriptor makes the multiplexer hand out the lowest free\nchannel, so an inetd session's device name (and hence its shell prompt) varies\nrun to run - match the prompt loosely, not against a fixed `N1`.\n"
+}

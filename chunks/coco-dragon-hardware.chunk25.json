@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 25,
+  "text": " (ToolShed) - `Live` (NitrOS-9)\n\nAll the tools above run *inside* a booted OS-9 session. **ToolShed**\n(`boisy/toolshed` on GitHub, actively maintained, open source) is a modern\nhost-native replacement: its `os9` command reads and writes OS-9 RBF disk\nimages directly as files on a Mac/Linux/Windows machine, no emulator boot\nrequired. It covers the same ground as the classic Radio Shack OS-9\nDevelopment System tools (`dir`, `copy`, `del`, `makdir`, `free`, `dcheck`,\n`format`, `gen` for bootstrap-track generation, `ident`/`dump` for module\ninspection) plus host-filesystem transfer. Builds cleanly on macOS with\nthe system `cc` if you skip `cocofuse` (the only piece needing FUSE).\n\n**Path syntax**: `os9 <cmd> imagefile,path/inside/image` - the comma\ndelimits a host path from a path inside the d"
+}

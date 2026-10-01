@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 28,
+  "text": " `ERLINE(path)` - deletes the cursor's line **without** closing the gap -\n  this is the one difference from `DELLIN`.\n- `EREOLINE(path)` - erases from the cursor to the line's right edge.\n- `EREOWNDW(path)` - erases from the cursor down to the window's bottom.\n- `REVON` / `REVOFF` `(path)` - reverse video on/off; a persistent state,\n  not a per-call effect - stays in effect until the counterpart is called.\n- `UNDLNON` / `UNDLNOFF` `(path)` - underline on/off, same persistent-state\n  behavior as `REVON`/`REVOFF`. Default is off.\n- `BOLDSW(path,\"switch\")` - `\"ON\"`/`\"OFF\"` bold typeface; **graphics\n  screens only**, has no effect on hardware text screens. Default regular.\n- `PROPSW(path,\"switch\")` - `\"ON\"`/`\"OFF\"` proportional character spacing.\n  Default off.\n- `BLNKON` / `BLNKOFF` `(path)` "
+}

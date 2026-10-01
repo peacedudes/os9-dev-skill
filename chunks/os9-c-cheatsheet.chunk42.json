@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 42,
+  "text": "odule-name>(...)` from BASIC09\n   then invokes it.\n\n**Why the different build path:** skipping `cstart.r` means nothing runs\nthe usual startup work - statics are never zeroed/initialized, and the\nstack-check helper the compiler normally calls into doesn't exist. A\nBASIC09-callable C module has to supply its own stand-ins (a dummy\n`_Stkcheck` routine, an `errno` storage cell) for anything the C library\ncode it calls expects to find.\n\n**Parameter-passing convention:** BASIC09 passes parameters to the C\nfunction on the stack as: a 2-byte count of how many parameter pairs\nfollow, then one (address, size) pair per argument. Because of this, **a\nBASIC09-callable C function should declare every parameter as a pointer**\n(`int *arg`, not `int arg`) - the compiler then generates the correct\nderefere"
+}

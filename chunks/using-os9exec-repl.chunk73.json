@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 73,
+  "text": "one. Trust `>>>` lines for what was called; pair a return with its\nentry by position, not by the name on it, and do not conclude a call\nreturned a value it never returned.\n\n## Reading a process crash dump\n\nWhen a process dies, os9exec prints a dump: exit code, open paths, last\nsyscall, registers, the faulting instruction with the bytes at `PC`, and the\nstatic-memory range. Three things about it are easy to misread.\n\n**`Last syscall` is the last one the process *made*, not where it died.**\nIt is a latched field, so a program that faults in a stretch of pure\ncomputation still shows whatever it called before entering it - which can be\nthousands of instructions and an unrelated subsystem away. `Live` (os9exec): a\nprogram that ran away inside a memory-copy loop reported `Last syscall: F$ID\n(0x0"
+}

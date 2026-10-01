@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 32,
+  "text": "ted stdin instead of the command\n  line (`Live` (NitrOS-9) name - a cross-check source's `-@` was wrong).\n  `-?` prints a help message.\n- `wmode` `Manual` (Farna 2nd-ed only - not in the primary Level 2\n  manual) - re-applies `wcreate`-style parameters to an already-created\n  window, but does **not** touch anything governed by `xmode`/`tmode` -\n  those still need their own separate invocation.\n- `devs`, `irqs`, `events` - `Absent` (6809). These are Professional OS-9/68000\n  utilities (attached-device table, IRQ polling table, active\n  named-event listing) documented in `common/utility-usage.md`. 6809 has\n  no `events` counterpart because its own IPC primitives are\n  process-directed signals (`F$Send`/`F$Icpt`/`F$Sleep` - see\n  `6809/syscalls-and-module-format.md`'s Signals section) rather "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 19,
+  "text": "as\n  built for**. Only running it against the tree as it stood at that commit\n  exposed it. `test_finds_a_claim_whose_subject_and_quantity_are_on_different_lines`\n  is the regression test.\n\nMeasured on this repo's own history: silent on two of six sampled commits, three\nfiles named on the one that mattered - including, two commits before a human\nfound it by accident, the file holding the stale claim.\n\n**What it still cannot find:** two prose statements that contradict each other in\nfiles that share no backticked subject, and any disagreement of reasoning rather\nthan of fact. Those need a reader.\n\n## Honest limits\n\n- **Level I vs Level II is not modelled.** Both fall in the \"6809\" bucket, so a\n  future Level-II-present / Level-I-absent split *could* surface as a presence\n  finding; the mess"
+}

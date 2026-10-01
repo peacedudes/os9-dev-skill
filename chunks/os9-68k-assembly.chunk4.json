@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 4,
+  "text": "start like a ROF (a zeroed sync\n  word, a large text file); `error reading input file` = a truncated ROF;\n  `no root psect found` = nothing supplied an entry point. That last one is\n  **not** a sign of a healthy object: an empty file and a one-line text file\n  both get it, so `l68` on a single `.r` is no integrity check.\n- **`LIB/cstart.r`** - prepended by the C driver at the front of every\n  link list; supplies the root psect and the startup code that calls\n  `main()`.\n- **`debug`** - symbolic debugger; usage, and two known faults (`sc`\n  addresses, `gs` stepping): \"Symbolic debugging\" below.\n- **`r68 -O=` and `l68 -o=` overwrite an existing output cleanly** -\n  `Live` (os9exec): three rebuilds under one name, longer, shorter and longer\n  again, each ran the new text, on a host directory "
+}

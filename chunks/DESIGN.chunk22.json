@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 22,
+  "text": " untouched corpus is silent.\n\nChecks 4-5 (added 2026-07-21) were proven the same way: injecting a bogus\n`INDEX.md` row flags it and reverting is silent again (the real `INDEX.md`\ncorpus has zero cross-reference findings). Check 5, run for real against the\nlive memory directory (`--memory-dir`), immediately found genuine rot: 36\n`[[name]]` links across ~15 memory files pointing at slugs that don't exist\n(mostly a dropped/added `feedback_` prefix drift, e.g. `[[commit_approval]]`\nvs. the real `feedback_commit_approval`) - real data the check was never\ntuned against, which is why it's convincing rather than circular. That\ninventory is a maintenance worklist, not fixed by this change; see the\n`doc-consistency-checker` memory.\n\nCheck 7 was proven against the two breaks that motivated it, both r"
+}

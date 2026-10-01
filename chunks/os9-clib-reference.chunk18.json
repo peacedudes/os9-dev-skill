@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 18,
+  "text": "file against its output\nthrough a pipe.\n\nThe fix is one line at the top of the file:\n\n```c\n#undef putchar\n#define putchar(c) fputc((c), stdout)\n```\n\n`fputc` is a function, so its argument is evaluated once. Do the same for `putc`\nwhere a stream may be line-buffered. Afterwards file output is unchanged and pipe\noutput becomes correct.\n\n## Restore the option fields you changed, never a whole saved struct\n\n`Live` (os9exec). `_gs_opt`/`_ss_opt` read and write the path's whole option\nstructure, so the obvious idiom - save a `struct _sgs` on entry, put the copy\nback on exit - makes every routine that does it **clobber every other one**.\n\nMeasured in a rogue port with two independent routines: one turned echo off, the\nother cleared the `^C`, `^E` and `ESC` keys. The keyboard routine took its copy"
+}

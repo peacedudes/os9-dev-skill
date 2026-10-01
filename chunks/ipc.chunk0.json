@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 0,
+  "text": "# OS-9 Inter-Process Communication: Patterns and Gotchas\n\nMechanism-level call signatures (`F$Send`, `F$Icpt`, `F$Event`/`Ev$*`,\n`F$DatMod`, etc.) are in `68k/syscall-reference.md`. This file is the practical\nlayer on top: how these mechanisms actually get used, and where they bite.\n\n---\n\n## Signals\n\nOne process can asynchronously interrupt another via signal - a narrow channel that flags\nexceptional conditions or serves as a general-purpose notification when unmasked.\n\n**Codes:**\n\n| Code | Meaning | Interceptable? |\n|---|---|---|\n| 0 | Kill | No |\n| 1 | Wake-up | No |\n| 2-4 | Keyboard/modem (Ctrl-E abort, Ctrl-C interrupt, hangup) | Yes |\n| 5-255 | Microware-reserved | Yes |\n| 256+ | User-defined | Yes |\n\n**68k-specific ceiling:** the `256+` user-defined tier assumes a 16-bit\nsignal code "
+}

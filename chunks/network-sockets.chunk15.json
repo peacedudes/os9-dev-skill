@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 15,
+  "text": " error counts.\n- **`iestat`** - richer stats for the Intel i82596 driver (VME/167), plus\n  chip-specific queue-state and timing info. Two throttle parameters, `t_on`/\n  `t_off` (bus-hold/bus-release time in µs × CPU MHz), stop the chip from\n  monopolizing the bus.\n  - Non-zero **`rmiss`** = the chip dropped incoming packets because the receive\n    queue was full - the CPU isn't draining it fast enough; raise `max_rfd`\n    in the driver descriptor.\n  - Non-zero **`dropped`** = outgoing packets the driver queued but the chip's\n    command queue was full for - raise `max_cbl`.\n  - Non-zero **`lcol`**/**`lcar`** (late collision / lost carrier) point at a bad\n    transceiver cable; non-zero **`babl`** (babble) points at a bad Ethernet\n    cable or terminator.\n\n---\n\n## `ftp` utility\n\n- Invoked a"
+}

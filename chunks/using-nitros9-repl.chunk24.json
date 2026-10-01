@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 24,
+  "text": " sets `PATH` for a logged-in account. So the\n  moment you `chx` to your own directory - running programs off a\n  DriveWire-mounted image, say - `procs`, `runb` and the rest become\n  unreachable, and the failure reads as \"my disk is broken\" rather than \"my\n  search path moved\". Two fixes: `load procs`/`load runb` **before** the\n  `chx`, since a resident module is found in the module directory ahead of\n  any directory search; or `setenv PATH` yourself. The `load` route is the\n  one to use in anything you ship - it depends on the module being present,\n  not on where the host system happens to keep it.\n\n- **A `--disk0` image served over DriveWire is not a host-side retrieval\n  route.** `Live` (NitrOS-9), found while building the 6809 conformance suite:\n  data the guest writes to the served ima"
+}

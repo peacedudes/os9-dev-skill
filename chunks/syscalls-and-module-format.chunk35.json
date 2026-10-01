@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 35,
+  "text": "ameters at all - reserved for the kernel's own use, not for application code. Absent from the System Programmer's Manual's Table C.2, which ends at `F$DelRam`/$51 |\n\n**Also real, code not confirmed:** `F$AllHRam` (\"Allocate High RAM\" - like\n`F$AllRAM` but searching from the top of memory down, used by\nscreen-allocation routines) is `Manual` across three independent sources, but\nnone gave a legible machine code, so it is omitted from the table rather than\nguessed.\n\n**Level-2-exclusive vs. universal:** the calls marked \"Yes\" all explicitly\nmanipulate a DAT image, a DAT task register, or an inter-address-space\ntransfer in their own primary-source description - none of which means\nanything on a Level 1 system, with one unshared 64K address space and no task\nregisters. `F$Boot`/`F$SUser`/`F$UnL"
+}

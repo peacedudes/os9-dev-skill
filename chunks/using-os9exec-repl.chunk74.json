@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 74,
+  "text": "memory-copy loop reported `Last syscall: F$ID\n(0x000c)`, and `F$ID` had nothing to do with the fault. **Never treat that line\nas the fault's location or cause** without independent evidence; it is a\nstarting point for \"what had it been doing\", not a pointer to the bug.\n\n**`PC` is an absolute emulated address; the module is loaded somewhere.** To\nget the module-relative offset - the one your disassembly is numbered in -\nuse the bytes the dump prints on the `Executing:` line:\n\n1. Take the byte string shown at `PC` (e.g. `18d0 206f 000c 700d b010`).\n2. Search the module file for that byte sequence; a run of 10-12 bytes is\n   normally unique.\n3. `base = PC - offset_of_match`. Sanity-check it: `base + M$Size` should land\n   just below the static range the dump reports.\n\nThen disassemble the fil"
+}

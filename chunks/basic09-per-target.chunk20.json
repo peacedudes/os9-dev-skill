@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 20,
+  "text": "first needs *any* numeric\nhandling, which includes compiling an ordinary `DIM x:INTEGER` - not just\nREAL arithmetic. If `math` isn't resident and isn't reachable from the\ncurrent `CHX`, this fails with `**** Can't install trap handler ****` /\n`Error #000:216 (E_PNNF)`, naming nothing about the module you were actually\ntrying to call, and can strike on the very first `LOAD` of any procedure\ncontaining a numeric declaration. Fix: `load math` before doing anything\nnumeric, ideally in the startup file alongside `cio`/`csl`. The same banner\nhas other causes with different fixes - triage table in `pack-and-runb.md`.\n\n---\n\n**Sources:** BASIC09 Reference Manual (Rev H) - \"Type INTEGER\" p. 7-2, \"Type\nREAL\" p. 7-3, Constants p. 7-6, and the 6809 Graphics Interface Module note.\nOS-9 BASIC User Manual"
+}

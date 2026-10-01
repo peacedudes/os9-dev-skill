@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 15,
+  "text": " codes rather than one - `7`=19200 (ACIAPAK driver only) and `8`=32000 (SIO driver only), `Live` (NitrOS-9) in `6809/utility-usage.md`'s `baud=` row, which supersedes the manuals here. **Word length** (bits 5-6 of `baud=`): 00=8 bits, 01=7 bits. **Stop bits** (bit 7 of `baud=`): 0=1, 1=2.\n\n**Serial hardware:** the stock Tandy Modempak (a ROM cartridge, obsolete by the mid-1990s) has a built-in 300-baud modem and RS-232 port with no hardware handshaking - any modem speed above 9.6K baud needs handshaking support the Modempak's port doesn't provide, so upgrading just the modem chip doesn't help. The separate RS-232 Pak (harder to find than the Modempak) supports up to 14.4K baud for modem use and 19.2K for a direct terminal connection. Default printer baud rate is 600; most printers accept f"
+}

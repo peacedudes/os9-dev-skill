@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 26,
+  "text": " `iniz`. But `tmode baud=<n>` does\nwrite the open path's own baud option byte, and a later `tmode` on that same\nstill-open path reads the new value back - `Live` (os9exec). The argument\nthere is **raw bits per second**, not the code index below.\n\nThe byte in the device descriptor is a **code**, and the two architectures\nencode it differently. Reading one target's table for the other gives wrong\nanswers:\n\nOn **6809** the byte packs rate *and* word length *and* stop bits - that\nencoding is `Manual`, from the Level 2 documentation, and is given in full in\n`6809/utility-usage.md`'s `baud=` row.\n\nFor **68k** the mapping is `PD_BAU`'s, `Manual` (Technical I/O Manual v2.4\np. 3-9; v2.4 Technical Reference Manual p. B-18). Codes are hex:\n\n| Code | bps | Code | bps | Code | bps |\n|---|---|---|---|--"
+}

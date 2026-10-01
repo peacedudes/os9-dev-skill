@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 34,
+  "text": "lf), `buffer` 1-255, `size` 1-8192 bytes. Each\n  distinct `group` number costs a whole 8KB allocation (~30 bytes\n  overhead, ~8162 bytes usable) regardless of how many buffers live in\n  it - the manual recommends using your own process ID (obtainable via a\n  `SYSCALL` \"get ID\" call) as the group number specifically to avoid\n  colliding with another process's buffers. Persists until `KILLBUFF`.\n  **`DEFBUFF`, double F, is correct** - `Manual`, re-checked directly\n  against the primary source's own section header, its `Syntax:` line,\n  and its index entry, all three of which independently agree; the Tandy\n  cross-check's single-F reading was that source's own OCR error, not a\n  real disagreement in the underlying text.\n- `KILLBUFF(group,buffer)` - deallocates a Get/Put buffer.\n- `GET(path,gr"
+}

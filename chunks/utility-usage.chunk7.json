@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 7,
+  "text": "words, `-c` characters,\n  `-b` per-character frequency breakdown.\n- `del [<opts>] {<path>}` - `-f` delete write-protected, `-p` prompt per\n  file, `-e` zero the freed disk space (secure erase). `del` refuses a\n  directory: *\"You cannot delete directory files with this utility unless\n  their attribute is changed to non-directory\"*, `Manual` (*Using\n  Professional OS-9* v2.4). `Live`\n  (os9exec): `del <dir>` gives `E_FNA`/214 whether the directory is empty or\n  not.\n\n  **Removing a file whose name starts with `-` or contains `*`/`?`.** RBF\n  accepts such names (a program can create them), and the obvious commands\n  misfire. `Live` (os9exec), Microware's `del` and shell on an RBF image:\n  - A leading `-` is read as an option: `del -y` gives `unknown option 'y'`,\n    and so does `\"-y\"` (the sh"
+}

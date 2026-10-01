@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/CONFIDENCE-TAGS.md",
+  "chunk_index": 4,
+  "text": "recisely rather than forcing it\ninto an existing bucket. A Microware system and a clone are recorded the same\nway: neither is the unmarked default, because that is exactly the distinction\na reader needs to weigh the claim.\n\n**Every `Live` tag in both skills is qualified.** A bare one is a defect -\nit means the implementation went unrecorded, not that the claim holds\neverywhere. One known exception is left deliberately: `os9-tools-and-shell.md`'s\n`attr` cross-reference, where the underlying work spans a 6809 and a 68k\nfinding and picking either would invent provenance. Leaving it bare is the\nhonest state; resolve it by re-running, not by guessing.\n\n**A claim carrying only clone qualifiers is evidence about a reimplementation,\nnot about OS-9.** Where such a claim and a Microware manual disag"
+}

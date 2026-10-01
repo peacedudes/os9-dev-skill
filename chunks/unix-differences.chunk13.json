@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 13,
+  "text": "pace.\n- A handler runs immediately and can't be interrupted by another signal\n  (kernel masks during it) - keep it short/reentrant, no syscalls or\n  sleeping. Do real work in the mainline under a mask, not in the handler.\n  - **This is the kernel's `F$Icpt` contract, and a ported program may not be\n    using it.** A Unix-compatibility `signal()` can install an intercept that\n    only *records* the code, leaving your handler to run at the next poll -\n    so \"handlers run immediately\" is true of OS-9 and can be false of the\n    library in front of it. Establish which `signal()` was linked before\n    concluding the kernel is at fault; see\n    `c/os9-clib-reference.md`.\n- Masking nests with ±1 (`F$SigMask`); clearing to 0 wipes all nesting, not\n  just yours. `F$Sleep` auto-unmasks - this is wh"
+}

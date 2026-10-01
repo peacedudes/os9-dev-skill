@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 22,
+  "text": "sion hangs or dies on a syscall that looked ordinary | `F$SSvc`/`F$IOQu`/`F$NProc` (6809), `F$SysDbg`/`F$RTE` (68k) | both REPL files |\n| Fix has no effect although the rebuild succeeded / rebuild behaves exactly like the old binary | the crashed module is **still resident** and shadows the new one - `mdir`; the output file itself was replaced | `basic09/basic09-per-target.md` |\n| `xmode` (or any tool reading device options) fails `Error #000:221 (E_MNF)` on a device that works | os9exec mounts devices with no descriptor modules; `load` one from `CMDS/BOOTOBJS` | `common/using-os9exec-repl.md` |\n| `Exception: ... vector=$08 err=#000:108` (E$Violat) at an ordinary-looking instruction, classically `MVSR2.W` / `MOVE SR,<ea>` | the binary was built for a 68000, where reading SR is user-legal; "
+}

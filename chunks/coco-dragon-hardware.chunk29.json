@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 29,
+  "text": " on any directory with no deletable\nentries, including one you just emptied. The cause is visible in\n`librbfdelete.c`: the directory is opened `FAM_READ`, and only the per-entry\nloop body reopens it `FAM_WRITE` - so on an empty directory the final\n`_os9_ss_fd` that clears the directory attribute runs against a read-only path,\nnever clears it, and the delete of a still-`d` file fails. Workaround: copy any\none-byte file in, then `deldir -q`, which deletes the dummy and the directory\ntogether. `-q` is required non-interactively at all times - without it `deldir`\nprompts, and a prompt reading EOF fails the delete. `attr` is no help here: it\nhas no flag for the directory bit.\n\n**A failed `deldir` still writes to the image.** It deletes entries as it goes\nand only reports the error it hit at the"
+}

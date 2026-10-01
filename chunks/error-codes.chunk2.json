@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 2,
+  "text": "was serviced; no caller is waiting for an error code\nin `d1.w`. **6809: same carry-flag convention, but the error code lands in\n`B` instead of `d1.w`** - see `6809/syscalls-and-module-format.md`'s\nRegister Set and Calling Convention section.\n\n### Errors in C and BASIC09\n\nC system calls don't use the carry/`d1.w` convention directly - the C\nruntime translates it. A failing system call returns `-1`, and the specific\nerror code is left in the predefined variable `errno` (declared via\n`<errno.h>`). `errno` is **not cleared on success** - it only ever holds the\nvalue from the most recently *failed* call. Check the call's own return\nvalue first; only consult `errno` once failure is confirmed.\n\nBASIC09 exposes the same information through the `ERR` function, which\nreturns the most recent error co"
+}

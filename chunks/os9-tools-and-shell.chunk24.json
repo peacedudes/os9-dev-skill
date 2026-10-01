@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 24,
+  "text": " than the screen width wrap\n  without being counted, so the pause point drifts on wrapped output.\n\n## Discovering what's installed\n\nAsk the running system, never assume: `dir /dd/CMDS` (core set), look for\nfreeware/toolchain subdirectories (their separation from core CMDS is\nusually deliberate - name collisions), `ident`/`attr <name>` for what a\nthing is, and `mdir` for what's loaded. `Live` (os9exec).\n\n## Standard utility set\n\nNames below are the Professional OS-9 v2.4 (68k) set; most exist on 6809 as\nwell, often with different option letters. `help <name>` (or `<name> -?`)\nprints usage for any of them. **Per-command syntax and option letters:\n`common/utility-usage.md` for 68k, `6809/utility-usage.md` for 6809** - read\nthe right one before invoking a utility with options rather than guess"
+}

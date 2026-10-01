@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 8,
+  "text": "brary calls.\n\nThe `_lmalloc()`/`_lcalloc()`/`_lrealloc()` family trades bookkeeping for\nsize: they skip storing the allocation's size and a validity check value,\nsaving 8 bytes per allocation compared to `malloc()`/`calloc()`/`realloc()` -\nuseful when a program makes many small allocations and every byte of\noverhead multiplies.\n\n---\n\n## File-manager / device-driver architecture\n\n### The layering (mechanics view)\n\nKernel -> file manager (class logic) -> driver (one controller) - configured\nby device descriptors; concept-level picture in `os9-mental-model.md`.\nMechanical details worth having here: non-executable modules (descriptors)\nare referenced directly as tables, while drivers and file managers are\nentered through jump tables; a new physical device usually needs only a new\ndriver + desc"
+}

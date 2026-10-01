@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 40,
+  "text": "-9)) - which diverges from BASIC09's own `READ`/`LEN()` (also `Live` (NitrOS-9)), where it does not. Code carrying a count between syscall and BASIC09 semantics needs an explicit off-by-one adjustment |\n| I$WritLn | $8C | A=path, X=buffer, Y=max | Writes to first CR; SCF adds LF/CR/nulls as configured. `Live` (NitrOS-9) |\n| I$GetStt | $8D | A=path, B=function code | Device-dependent; see GETSTAT/SETSTAT below. `Live` (NitrOS-9) for the call - `B=6` (SS.EOF) and `B=2` (SS.SIZ) both accepted cleanly. **The SS.SIZ return-value convention is NOT confirmed**: the size did not come back in X:U (`I$Seek`'s convention), and X most likely just went untouched |\n| I$SetStt | $8E | A=path, B=function code | |\n| I$Close | $8F | A=path | Implicit Detach. `Live` (NitrOS-9) |\n| I$DeletX | $90 | A=access m"
+}

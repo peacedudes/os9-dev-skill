@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 12,
+  "text": ", all of which really happened:\n   a **root doc** (`SOURCE-AUTHORITY.md`, `DIVERGENCES.md`, `README.md` sit\n   beside the skills, not in them - four payload files pointed at\n   `SOURCE-AUTHORITY.md` and none could resolve it once installed); a **bare\n   sibling filename** (`6809-level2-mmu.md` written unqualified in an os9-dev\n   file names nothing an os9-dev reader can find); and **shared content\n   duplicated into both skills**, which the layout rule puts in os9-dev alone.\n   Fails the run.\n\n   The sibling test looks for the owning skill's name on the citing line **or\n   the one above**, because the qualifier routinely wraps (\"Full mechanism:\n   `os9-systems-dev`\" / \"skill's `kernel-internals.md`\"). `INDEX.md`,\n   `SOURCES.md` and `SKILL.md` are exempt from the duplication rule - each\n  "
+}

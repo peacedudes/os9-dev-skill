@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 9,
+  "text": "cates past max. **Terminator is target-specific:** `0x00` (NUL) on **68k** (`Live` (os9exec) - byte-dump: `STRING[8]=\"XY\"` after `\"ABCDEFGH\"` -> `58 59 00 44...`), `$FF` on **6809** (`Manual` - not dumped). A string filling its declared max length has **no** terminator byte at all (`Live` (os9exec): `STRING[3]=\"XYZ\"` -> exactly `58 59 5A`). |\n| BOOLEAN | TRUE / FALSE. Not usable in numeric expressions - storing anything else into a BOOLEAN fails at runtime instead of being silently coerced. |\n\nUndeclared numeric variables default to REAL; a name ending in `$` and\nleft undeclared defaults to STRING[32]. Mixing numeric types in an\nexpression (BYTE/INTEGER/REAL) auto-converts to the largest type present;\nmixing STRING with a numeric type is a compile-time error, not a runtime\ncoercion. A cons"
+}

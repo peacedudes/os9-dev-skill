@@ -1,0 +1,5 @@
+{
+  "source": "AGENTS.md",
+  "chunk_index": 0,
+  "text": "# OS-9 development skills - agent guide\n\nThis folder holds two self-contained reference skills for Microware OS-9\ndevelopment. They are plain Markdown; any coding agent can use them by reading\nthe relevant files on demand. No build, no dependencies.\n\n## The two skills\n\n- **`os9-dev/`** - Application work on OS-9 (6809 or 68000): BASIC09, Microware\n  C, 68k/6809 assembly, the shell and utilities, modules, syscalls, error\n  codes, and driving the os9exec / NitrOS-9 emulators. Consult it when writing,\n  porting, or debugging programs that *run on* OS-9.\n\n- **`os9-systems-dev/`** - Below the application line: device drivers, file\n  managers, kernel internals (System Globals, Process Descriptor, scheduler),\n  exception/IRQ handling, disk/boot mechanics, and 6809 Level 2 MMU/DAT.\n  Consult it fo"
+}

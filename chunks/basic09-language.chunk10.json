@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 10,
+  "text": "compile-time error, not a runtime\ncoercion. A constant containing a decimal point or `E` exponent (e.g.\n`1.95E+12`) is always REAL, even if its value would fit in INTEGER.\n\n**A BOOLEAN operand in a numeric expression is a COMPILE-TIME error, not\na runtime one.** `Live` (os9exec): `n = flag + 1` with `flag: BOOLEAN` fails\nat `LOAD` with `Error #000:067 (E_ILLARG)` - the program never even\nstarts running. This is a stricter check than the destination-assignment\ncase in the table row above (which the manual frames as a runtime\ncoercion failure) - using a BOOLEAN as an *operand* is caught earlier,\nat compile time.\n\n**Division truncates based on the OPERAND types, not the destination\nvariable's type - assigning to a REAL destination does NOT retroactively\nforce real division.** `Live` (os9exec)"
+}

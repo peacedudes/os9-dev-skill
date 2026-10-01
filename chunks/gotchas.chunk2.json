@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/gotchas.md",
+  "chunk_index": 2,
+  "text": " on context. Guard or strip before porting.\n- **`PEEK`/`POKE` and `ADDR` are not portable** - the two targets have\n  entirely different address spaces and memory layouts. Treat any code using\n  them as target-specific; use `OPEN`/`READ`/`WRITE` for portable I/O.\n- **6809 does not convert numeric command-line `PARAM`s.** A supplied numeric\n  argument lands in the INTEGER as its raw ASCII bytes (`progname 42` ->\n  `13362`). `STRING` params are fine; 68k parses correctly.\n\n## Syntax that looks right and isn't\n\nFull grammar and the live error codes: `basic09-language.md`.\n\n- **`PRINT USING` does NOT take `#`-placeholder format strings.** `\"###.##\"`\n  was never real BASIC09 syntax and fails at run time. The real format uses\n  directive **letters** - `R8.2` real, `I4` integer, `S8` string, `H4` "
+}

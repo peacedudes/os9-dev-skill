@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 27,
+  "text": "any* write mode - it is\nthe only case where a write locks part of a file, and a sequential-output\ncreator gains it on creation. Case 2 above depends on this: the *write-only*\nassembler must hold the ghost lock, or the consumer has nothing to sleep\nagainst.\n\nHow the two reimplementations do it, if you are modelling one:\n\n- **os9exec** - the EOF lock is its own flag on the path, gained by a write\n  landing at the end of the file through any write-capable path (write-only\n  or update) and by a create for output, and dropped at close before the\n  wake. `Live` (os9exec), RBF image, reader and writer in separate processes:\n  a reader of a file its creator has not yet written to waits until the first\n  write; a writer that has moved away from the end holds no lock, and a\n  reader then sees every "
+}

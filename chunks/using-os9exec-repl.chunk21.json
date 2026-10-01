@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 21,
+  "text": "ariable is present - just useless. The\nprogram then proceeds with `\"\"` or with `dumb`, and a curses or termcap program\nreports either `Unknown terminal type ''` (empty name - the type never arrived)\nor a failure naming a terminal you never chose. Neither is a fault in your\ntermcap file.\n\n**`USER` and `HOME` being NULL matters for ports.** Programs that name the player\nfrom `getenv(\"USER\")` hand that pointer straight to `strncpy`. Supply a fallback\nrather than assuming a login session set one.\n\n**So: pass `@NAME=VALUE` on the host command line, or set the variable\nin-universe** (`setenv` in a shell procedure, or a real login through\n`SYS/login`, which is what exports `TERM`, `TERMCAP`, `USER` and `HOME` on a\nconfigured disk).\n\n## A working `getenv` is not evidence a library can see your var"
+}

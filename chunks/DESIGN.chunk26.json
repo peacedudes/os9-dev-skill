@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 26,
+  "text": " a gate nobody believes gets routed around,\ncommented out, or `--no-verify`d - taking every other check with it. A gate is\nonly as strong as its credibility.\n\nAnd the flavour of false positive to watch for is a check firing on text that\n*documents* the thing it forbids. Every `../..` in this corpus appears in prose\nteaching that OS-9 spells it `...`; a naive pathlist gate would flag the\nexplanation of the rule it enforces. Screen the context, not just the string.\n\n**Wiring is a separate claim from correctness, and needs its own proof.** A check\ncan be right, tested, and never invoked. The function passing its unit tests and\nthe tree being green are two true statements that together still permit a check\nthat the CLI never calls - registering it in the driver is a third thing, and\nreading th"
+}

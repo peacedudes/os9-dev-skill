@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 30,
+  "text": "ng N records in a single bulk operation instead of\nlooping. Structured `TYPE` records combine naturally with this: dimension\nan array of a `TYPE`, and `PUT`/`GET` moves whole records (or the whole\narray) at once. `Live` (os9exec): pre-allocate several\nempty `TYPE` records, `SEEK` to\na computed `SIZE()`-based offset, `PUT` a record there, `SEEK` back and\n`GET` it - round-trips correctly, and a neighboring untouched record is\nconfirmed still empty (proves `SEEK`+`PUT` only touches its target, not\nadjacent records).\n\n```basic\nPROCEDURE stockfile\n  TYPE stock_rec = tag: STRING[16]; onhand, reorder: INTEGER; price: REAL\n  DIM blank: stock_rec\n  DIM sp: BYTE; n, slot: INTEGER\n\n  CREATE #sp, \"stock\"\n  blank.tag = \"\"\n  blank.onhand = 0\n  blank.reorder = 0\n  blank.price = 0\n  ! pre-allocate 50 empt"
+}

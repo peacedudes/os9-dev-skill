@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 24,
+  "text": "bind 182 facts across the corpus, so a silent\ngreen is not an empty scan. Injecting a plausible drift (`M$Mode` `$37` -> `$39`\nin `device-drivers.md` alone) makes it flag the symbol and name all four\ncontributing locations across three files, exit 1; reverting is silent again,\nexit 0. The disown-suppression is exercised against the real `M$Parity` `$28`\nscan-error line, not a synthetic one.\n\n`check_absent_scope` was proven in both directions, and the second direction is\nthe one this section exists to insist on - because it is the one that was nearly\nskipped even with this page already written.\n\nMust-flag: the three bare `Absent` tags that shipped in `6809/utility-usage.md`\nbefore the scope rule existed, recovered from git and fed to the check, produce\nexactly three findings. Must-not-flag:"
+}

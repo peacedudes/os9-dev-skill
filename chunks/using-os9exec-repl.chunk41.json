@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 41,
+  "text": "emulators compiling in one directory clobber each other.** `cc`\n  names its intermediates after its own process ID (`ctmp.000004.r`), and in\n  a fresh batch run `cc` gets the same PID every time, so parallel runs\n  sharing one data directory overwrite each other's temporaries. `Live`\n  (os9exec). Give each run its own directory, or run them one at a time.\n\n## BASIC09 interactively\n\nThe line editor, workspace and `LOAD` mechanics are in\n`basic09/basic09-language.md`, \"Working at the prompts\". One os9exec-only trap:\n\n- **An intermittent `**** Can't install trap handler ****` / `Error #000:216`\n  while `mdir` shows the handler resident** is an emulator-level race,\n  timing-sensitive and historically correlated with baud-rate pacing. Restart\n  the os9exec session; if it recurs, it is os9exec, "
+}

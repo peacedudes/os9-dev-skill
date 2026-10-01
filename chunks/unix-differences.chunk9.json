@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 9,
+  "text": " append, use `>+`.** The Unix reflex that `>>` means\nappend is the trap, and it fails quietly: you get a file of error text and\nan untouched original.\n\n**`Manual`-confirmed** - *Using Professional OS-9* v2.4 lists exactly three\nmodifiers: \"`<` Redirects the standard input path, `>` Redirects the\nstandard output path, `>>` Redirects the standard error path.\" OS-9\nadditionally has `>+` (append to existing file or create) and `>-`\n(truncate existing file or create) - undocumented in the v2.4 manual but\nboth `Live` (NitrOS-9, os9exec). Standard `>` (create only, fail if exists)\nremains the default. Full table: `common/os9-tools-and-shell.md`.\n\n### 5. Control keys are inverted or unfamiliar\n\nBehavior, not just codes, differs:\n\n| Key | Unix | OS-9 |\n|---|---|---|\n| **Ctrl-C** | kills foreground "
+}

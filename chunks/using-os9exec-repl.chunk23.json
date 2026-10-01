@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 23,
+  "text": "al type ''`, `LINES=0 COLS=0` |\n| `setenv TERM vt100` in a shell procedure | `vt100` | `Unknown terminal type ''`, `LINES=0 COLS=0` |\n\nSame binary, `getenv` agreeing in every row. The failing cases report an\n**empty** name: curses is not failing to match `vt100`, it never sees a name.\nAnd the `@` route fails too once Microware's shell is between os9exec and the\nprogram, so on this rig what decides it is whether the curses program is the\nprocess os9exec started, not how the variable was created. It is not every\nshell: on the freeware rig, bash's `export TERM=vt100 TERMCAP=/dd/SYS/termcap`\nin `SYS/login` reaches the curses and termcap programs that bash starts.\n\n**This is one rig's curses, not a property of OS-9 curses, `Flag`.** On a second\nrig the same comparison passes on all three routes"
+}

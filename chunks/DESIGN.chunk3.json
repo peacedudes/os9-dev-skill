@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 3,
+  "text": "ec) are **independent implementations of a\nshared design on different hardware - not one emulator ported to two machines.**\nThe 68k derives from the 6809 but has calls the 6809 lacks; within the 6809,\nLevel I and Level II differ (MMU hardware). Both are reverse-engineered clones,\nwrong in minor cases. Consequences the checker honours:\n\n- A call present on one platform/level and absent on another is a **legitimate\n  difference, not a contradiction.** Only the *same* implementation at the *same*\n  level both having and lacking a call is a real contradiction.\n- Output is **neutral**: \"reconcile / investigate which is right\", never \"X is\n  authoritative, fix Y\".\n\n## Anchor and platform\n\nEvery `F$...` / `I$...` token is an anchor (`\\b[FI]\\$[A-Za-z][A-Za-z0-9]+\\b`). Each\ndoc's platform comes fro"
+}

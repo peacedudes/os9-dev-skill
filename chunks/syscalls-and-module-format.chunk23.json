@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 23,
+  "text": " arriving process's `P$Age` is set from its priority. **This is a genuine architecture difference, not an error in either file**: OS-9/68000 instead keeps one system-wide `D_ActAge` counter and a `P$Sched` constant fixed at insertion - see the sibling `os9-systems-dev` skill's `kernel-internals.md`. Don't carry the 68k mechanism onto 6809 or vice versa |\n| F$NProc | $2D | - | | Start next process: pulls the next entry off the active queue and transfers control to it (no return to caller); waits for an interrupt and rechecks if the queue is empty. Caller must already be queued, or it becomes invisible to the scheduler though `Procs` still shows its descriptor |\n| F$VModul | $2E | LI: X=new module addr. LII: D=DAT image ptr, X=module block offset | | Checks header parity/CRC, then on a same-"
+}

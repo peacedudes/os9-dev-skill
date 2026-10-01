@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 26,
+  "text": "ions operating on integer values. Unlike C, where `&&`/`||`\nand `&`/`|` are lexically distinct, BASIC09 names are similar - but the\ndistinction is consistent across both manuals: boolean operators vs. logical\nfunctions for bit manipulation.\n\n---\n\n## Tier 3 - effectively 1:1. Just a rename; look it up and move on.\n\n| Unix/Linux | OS-9 | Note |\n|---|---|---|\n| file descriptor (0,1,2) | path number (0,1,2) | same stdin/stdout/stderr convention |\n| `open`/`close` | `I$Open` / `I$Close` | |\n| `read` / `write` | `I$Read`/`I$ReadLn`, `I$Write`/`I$WritLn` | Ln variants do line editing/formatting |\n| `lseek` | `I$Seek` | |\n| PID | PID | plus an owner ID, inherited - a `group.user` pair on 68k, one flat integer on 6809 |\n| `wait`/`waitpid` | `F$Wait` | |\n| `exit` | `F$Exit` | |\n| `getpid`/`getuid` |"
+}

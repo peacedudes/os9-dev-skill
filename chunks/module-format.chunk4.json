@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 4,
+  "text": "chnical Manual*'s own header figure (ch. 1) lists the same\noffsets. One OCR trap in that scan, called out so it isn't mistaken for a\nconflict: it prints `M$Parity` at `$28`. That is a scan error (8-for-E, the\nsame misread that turns I$SetStt's `$8E` into `$BE` in the 6809 manuals) -\n`M$Parity` is the header's last word at **`$2E`**, confirmed by both the v2.4\nTechnical Reference (`$2E M$Parity`) and the fixed 48-byte header size. Trust\n`0x2E`.\n\n### Type codes (M$Type)\n\n| Code | Symbol | Meaning |\n|---|---|---|\n| 0 | - | wildcard |\n| 1 | Prgrm | program |\n| 2 | Sbrtn | subroutine module |\n| 3 | Multi | multi-module |\n| 4 | Data | data module |\n| 5 | CSDData | - |\n| 6-10 | - | reserved |\n| 11 | TrapLib | user trap library |\n| 12 | Systm | system component |\n| 13 | FlMgr | file manager |\n| 14"
+}

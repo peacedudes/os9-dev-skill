@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 19,
+  "text": "the file exists | `common/os9-tools-and-shell.md` |\n| `Wildcard match failed` - the command never ran | a `*`/`?` pattern matched no file, which aborts the command instead of passing through; `?` in a borrowed `$?` idiom does this too | `common/os9-tools-and-shell.md` |\n| A batch run stalled, or later procedure lines never executed | either an earlier command failed (`-x` abort-on-error is the default, and the skipping is announced by nothing) or a utility hit an interactive prompt - classically `copy` without `-r` - and read your remaining lines as its answers | `common/os9-tools-and-shell.md`, `common/utility-usage.md` |\n| `can't execute \"<the name you typed>\"` with `E_FNA`/214 | the procedure file is in the execution directory; bare-name procedure lookup resolves against the *data* dire"
+}

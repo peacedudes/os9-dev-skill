@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 19,
+  "text": "S_Reten`, `SS_RFM`/`SS_WFM` file-mark\nhandling, `SS_Skip`). Distinguishes \"early EOT\" (soft warning, keep\nwriting) from physical end-of-tape. Async writes return before data\nphysically lands, useful for streaming throughput but only where\nwrite-completion confirmation can be deferred.\n\n## Interrupt Vector Registration and Dispatch\n\n`F$IRQ` registers a driver's IRQ routine, either in the auto-vectored\npolling table (levels 1-7, vectors 25-31, shared/polled among every driver\nregistered at that level) or a specific vectored-interrupt slot (vectors\n64-255, 192 available, may also be shared by multiple devices).\n\n**Register conventions on IRQ entry** (distinct from the normal\nREAD/WRITE/GETSTAT/SETSTAT dispatch registers above): `(a2)` = driver static\nstorage, `(a3)` = device port address, `(a"
+}

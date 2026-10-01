@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 26,
+  "text": "an silently pick a\nwinner, both readings are recorded for each:\n\n- **† Uninitialized user TRAP range.** The v2.4 manual gives\n  **000:133-000:147** (`E$Trap`) for uninitialized user TRAP #1-#15. The 1985\n  manual instead gives **000:124-000:138** (`E$Trap`) for uninitialized user\n  TRAP #0-#14 - a different base offset *and* a different trap-numbering\n  convention (0-based vs. 1-based). Note this also means the 1985 numbering\n  overlaps 000:124, which the v2.4 manual assigns to \"spurious interrupt\" -\n  the two editions are not reconcilable by a simple off-by-one; treat both\n  ranges as edition-specific and confirm against the actual kernel/INIT\n  build you're targeting rather than assuming either table is authoritative.\n- **‡ 000:225 (E$Param) specificity.** The v2.4 manual describes 000:2"
+}

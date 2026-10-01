@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 51,
+  "text": "have done. `Live` (os9exec): this\nreturned a pid, the child's output appeared, and `wait` reported status 0:\n\n```c\nextern int os9exec(), os9fork(), wait();\nint status = 0;\n\nif ((pid = os9exec(os9fork, av[0], av, environ, 0, 0, 3)) < 0)\n        return -1;\nwait(&status);\n```\n\n**`os9exec()` takes a fork function as its first argument** - a *pointer*,\nwhich is why `os9fork` appears bare with no parentheses. It is a wrapper that\ncalls the fork routine you nominate, so the name is passed as a value, never\ninvoked here. Its prototype, from the SDK's own `DEFS/os9lib/stdlib.h`:\n\n```c\nos9exec(int (*procfunc)(), char *, char **, char **, unsigned int, short, short)\n```\n\nTwo things follow, and both are traps:\n\n- **Do not collapse it into a direct `os9fork(...)` call.** The two take\n  different argume"
+}

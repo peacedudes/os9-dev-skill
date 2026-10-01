@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 38,
+  "text": "m the exact form with `cc -?` (and `l68 -?`)\nbefore scripting one.\n\n| Flag | Effect |\n|---|---|\n| `-A` | Skip assembler step; output remains as assembly code (.a files) |\n| `-R` | Suppress linking; outputs `.r` relocatables instead of an executable |\n| `-Es<n>` | Set the module header edition number |\n| `-F<name>` | Override output filename |\n| `-O` | Run the optimizer. On 6809 this typically shrinks code ~11%; 68k behavior not documented. |\n| `-P` | Enable profiler (function call-frequency stats) |\n| `-M<n>` / `-M<n>K` | Compile-time memory allocation, in pages or KB (linker ignores requests under 256 bytes) |\n| `-l=<full-path>` | Link extra library. The documented `-L=<file>` flag is not forwarded by `cc` to the linker; use lowercase `-l=<full-path-to-file.l>` instead (bare names fail - "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 3,
+  "text": "ic is\nstill better than one that waits for the right inbox - but the tracker is where\nit will actually be seen.\n\n**Reports from real hardware are the rarest and most valuable thing** this\nproject can receive. Nothing in it has been checked against a real OS-9 machine.\nSeveral claims are flagged precisely because only hardware can settle them, and\none measurement from a real system may resolve a question that has been open\nhere for months.\n\n### If you have real hardware, there is a worklist waiting for you\n\nTwo ready-made lists of open questions, both already written down:\n\n```sh\npython3 tools/check_doc_consistency.py    # prints every open `Flag`, with file and line\n```\n\nThat inventory is the set of places where sources contradict each other or a\nmeasurement is missing, each one named and "
+}

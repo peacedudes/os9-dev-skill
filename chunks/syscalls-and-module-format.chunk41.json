@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 41,
+  "text": " `Live` (NitrOS-9) |\n| I$DeletX | $90 | A=access mode (1/2/3=data, 4=exec), X=pathlist | Added in Rev F1 (1983); delete with explicit directory selection. `Live` (NitrOS-9) |\n\nCommon GETSTAT/SETSTAT function codes (`Manual`, against the System\nProgrammer's Manual §11.3 GetStat table, whose canonical spellings are\n`SS.Opt`/`SS.Ready`/`SS.Size`/`SS.Pos`/`SS.EOF`): 0=option section (`SS.OPT`,\nread/write raw path descriptor options), 1=`SS.RDY` data-ready test (SCF),\n2=`SS.SIZ` file size, 5=`SS.POS` file position, 6=`SS.EOF` test. Two more the\nCoCo work rarely needs: `SS.DevNm` ($E, return device name - IOMAN) and\n`SS.FD` ($F, read file-descriptor sector - RBF, Level II). Record locking\nadded `SS.Lock`/`SS.Ticks` (setstat) in Rev F1. CoCo adds `SS.Mouse` ($89 as a\nGetStat sub-function) - see `"
+}

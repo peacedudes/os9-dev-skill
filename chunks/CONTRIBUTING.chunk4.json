@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 4,
+  "text": "r or a\nmeasurement is missing, each one named and located. Several say outright that\nonly Microware or real hardware can settle them.\n\n`DIVERGENCES.md` is the shorter, sharper list: places where observed behaviour\ndisagrees with a Microware manual. Every item on it is a question a real machine\ncould answer, and the first one is flagged as having been seen only under\nemulation.\n\nPick any line from either and test it. You do not need to fix the file - saying\n\"I ran this on real hardware and got X\" is the whole contribution.\n\n**The quickest check of all needs no reading.** Most `Live` tags here were\nmeasured under os9exec, and os9exec's own conformance suite, CONF68K, turns its\nreadings of the Microware manuals into 116 standalone tests - hand-written\nassembly, no Microware software - shipped"
+}

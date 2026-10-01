@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 34,
+  "text": "hat convention applying elsewhere in this call\nfamily; and **the pattern is purely length-bounded by `d1.w`**, needing no\nterminator of its own. `d1`'s upper word is irrelevant.\n\n**F$PrsNam** ((a0)=path string -> d0.b=terminator character, d1.w=element\nlength, (a0)=updated past a leading `/` if present, (a1)=address of the last\ncharacter of the name +1, i.e. the terminator): parses **one** element per\ncall, so a multi-element pathlist takes several. `Live` (os9exec).\n\nValid element characters are `A-Z a-z 0-9 . _ $`. **No character is\n\"invalid\"** - anything else simply terminates the element and is returned as\nthe delimiter. That is why **`E$BNam` (235) is this call's only possible\nerror, and a zero-length element is the only way to raise it**; reaching\n`E$BNam` at the end of a pathlist is"
+}

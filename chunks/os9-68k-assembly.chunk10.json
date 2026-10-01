@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 10,
+  "text": "\n dc.w   IWrite\n moveq  #1,d1\n trap   #0\n dc.w   FExit\n\nfailed\n move.w d1,d6\n lea    failmsg(pc),a0\n move.l #faillen,d1\n move.w #STDOUT,d0\n trap   #0\n dc.w   IWrite\n move.w d6,d1\n moveq  #0,d0\n trap   #0\n dc.w   FPErr\n moveq  #1,d1\n trap   #0\n dc.w   FExit\n\nfname    dc.b \"exfile.txt\",0\nmissing  dc.b \"no.such.file\",0\nline     dc.b \"written by example-fileio\",13\nlinelen  equ *-line\nokmsg    dc.b \"PASS create/write/close\",13,10\nokmsglen equ *-okmsg\nexperr   dc.b \"PASS open of a missing file failed as expected: \"\nexperrlen equ *-experr\nunexpmsg dc.b \"FAIL open of a missing file succeeded\",13,10\nunexplen equ *-unexpmsg\nfailmsg  dc.b \"FAIL happy path: \"\nfaillen  equ *-failmsg\n ends\n```\n\nBuilt and run, and what it actually printed:\n\n```\nr68 exfileio.a -O=exfileio.r\nl68 exfileio.r -o=exfio1\nexfio1"
+}

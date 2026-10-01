@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 2,
+  "text": "ath);\n    printf(\"PASS create/write/close\\n\");\n\n    /* --- error path: open a file that is not there --- */\n    path = open(\"no.such.file\", READ_MODE);\n    if (path < 0)\n        printf(\"PASS open of a missing file: errno %d\\n\", errno);\n    else {\n        printf(\"FAIL open of a missing file succeeded\\n\");\n        close(path);\n    }\n\n    /* --- error path: fork a module that is not there --- */\n    child = os9fork(\"nosuchmod\", 0, \"\", 1, 1, 0);\n    if (child < 0)\n        printf(\"PASS os9fork of a missing module: errno %d\\n\", errno);\n    else\n        printf(\"FAIL os9fork of a missing module returned %d\\n\", child);\n\n    /* --- happy path: fork a real child and collect its status --- */\n    child = os9fork(\"exfio1\", 0, \"\", 1, 1, 0);\n    if (child < 0) {\n        printf(\"FAIL os9fork, errno %d\\n\","
+}

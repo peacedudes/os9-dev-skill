@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 44,
+  "text": "e, zero-initializes it, and passes it as the function's first\nargument.\n\n**Converting between BASIC09 REAL and C `double`:** these are different\nbinary formats (see the data-type table above) and need explicit\nconversion functions on the C side (traditionally named `getbreal`/\n`putbreal` in the manual's example) that manipulate the byte layout\ndirectly - there's no automatic coercion crossing the language boundary.\n\n*(Some of this appendix's example C source is badly OCR-corrupted in this\nproject's extracted source and wasn't independently re-verified beyond\nwhat's stated here - treat exact variable names/offsets in a from-scratch\nattempt as needing a fresh check against the real manual, not this\nsummary, if precision matters.)*\n\n---\n\n**Sources:** Official Microware C Compiler manual (1983"
+}

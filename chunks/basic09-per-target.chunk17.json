@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 17,
+  "text": " addonec.c` (relocatable, no stack-check prologue - see\n`c/os9-c-cheatsheet.md`). `l68 addonec.r` alone reports `no root psect\nfound`, which is expected and healthy for a pure-C object with no `psect` of\nits own - confirmation it compiled, not a failure.\n\n```asm\n nam cshim\n ttl RUN addonecmod(n) - calls C addone_c(n) by reference\nSbrtn set 2\nObjct set 1\nReEnt set $80\nType_Lang set (Sbrtn<<8)+Objct\nAttr_Rev set (ReEnt<<8)+1\n psect cshim,Type_Lang,Attr_Rev,0,0,cshim\ncshim move.l d1,d0\n jsr addone_c(pc)\n rts\n ends\n```\n\n```\nr68 -O=cshim.r cshim.a\nl68 -o=addonecmod cshim.r addonec.r\n```\n\nCalled exactly like the assembly-only example (`RUN addonecmod(n)` with\n`n=99`) prints **`100`**.\n\n**Gotcha - `jsr addone_c` without `(pc)` assembles but crashes at runtime.**\n`r68` accepts a bare `jsr` to an e"
+}

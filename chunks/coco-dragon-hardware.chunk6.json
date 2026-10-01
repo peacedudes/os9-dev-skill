@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 6,
+  "text": "s/stdfonts`) must be merged into memory with `wcreate` before the window is created - VDG (32-column) windows don't need this step. Type 2 (80-column text) windows use a fixed 10-entry initial color palette that repeats: 0=white, 1=blue, 2=black, 3=green, 4=red, 5=yellow, 6=magenta, 7=cyan, then wraps (8=white, 9=blue) - a `wcreate` color argument above 9 maps back into this same cycle rather than erroring.\n\nWindow-specific error codes (additive to the universal `E$` range in `common/error-codes.md`, not a contradiction of it): 183 Illegal Window Type, 184 Window Already Defined, 185 Font Not Found, 189 Illegal Coordinates, 190 Internal Integrity Check, 191 Buffer Too Small, 195 Illegal Window Definition, 196 Window Undefined, 220 Phone Hangup/Carrier Lost (RS-232, not window-specific but "
+}

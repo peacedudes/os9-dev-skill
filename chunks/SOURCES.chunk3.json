@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/SOURCES.md",
+  "chunk_index": 3,
+  "text": "\nconventions, which that disk represents only in part.\n\n**One scope caveat that matters for the `-?` figure.** The 609 are the programs\nwhose help response was individually captured - around two-thirds of the\ncatalogue. Programs with no help flag at all, and full-screen programs that\nsimply start when given one, are largely absent from that 609. So \"545 of 609\"\nis *of the programs that answered something*, not of everything on the disk, and\nthe true proportion of programs honouring `-?` across a whole disk is lower.\n\nThe collection is **osk-freeware**: https://github.com/peacedudes/osk-freeware\n\n## Primary sources by file\n\n| File | Primary sources |\n|---|---|\n| common/os9-mental-model.md, common/unix-differences.md, common/module-format.md, common/memory-and-io.md, common/os9-tools-and-she"
+}

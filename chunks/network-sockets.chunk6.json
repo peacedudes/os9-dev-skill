@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 6,
+  "text": "copy anything you need to keep before calling again.\n\n---\n\n## Socket API - behavior deltas from stock BSD\n\nFunction names and general semantics match BSD; only the OS-9-specific\nbehavior is worth calling out:\n\n| Call | OS-9-specific behavior |\n|---|---|\n| `socket()` | Standard `AF_INET`/`SOCK_STREAM`/`SOCK_DGRAM` creation; returns a path number. Full error/signature detail unverified. |\n| `bind()` | Wildcard (all-zero) address binds to any local interface. Binding port 0 or another invalid combination returns `EADDRINUSE`. |\n| `listen()` | `SOCK_STREAM` only - `SOCK_DGRAM` gets `EOPNOTSUPP`. Requires a prior `bind()`; calling on an unbound socket returns `E_ILLFNC` (an OS-9 code, not a BSD one). Full pending-connection queue returns `ECONNREFUSED` to the connecting client. |\n| `connect()` "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 14,
+  "text": "Sys`, normally zero)\n  defines a **priority threshold, not an age cap**: a process whose\n  priority is at or above it gets its scheduling constant computed as\n  `priority + $80000000` instead of `priority + D_ActAge` - a value the\n  aging counter never touches, so members of this upper tier are ordered\n  strictly by raw priority among themselves, with no aging effect at all.\n  As a whole, this upper tier preempts and completely starves every\n  process below the threshold for as long as any upper-tier process stays\n  active - a genuinely active high-priority workload monopolizes the CPU\n  rather than \"waiting its turn\" against lower tiers. Setting `D_MaxAge` to\n  1 pushes essentially every process into the upper tier, producing strict\n  priority-only scheduling with aging effectively switch"
+}

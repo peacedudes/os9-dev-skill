@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 49,
+  "text": "a trailing comment after code on the same\nline; `PRINT x ! note` is a compile error, not a stylistic choice.\n`Live` (NitrOS-9, os9exec) on both real interpreters: rejected on\n68k (`Error #000:029`) and on 6809 (`Error #034 -- Missing Left\nParenthesis` - different message, same rejection), in both cases with\nthe error caret landing right at the `!`. A standalone whole-line `!`\ncomment, by contrast, is completely fine anywhere a statement could go -\n`LIST` always normalizes it to `REM <text>`, regardless of which\nspelling appears in the source. See `gotchas.md` for a further,\n`LOAD`-specific 6809-vs-68k divergence when the very first line of a\n*file* is a comment.\n\n## System Mode Commands\n\n`$` (drop to shell), `BYE`, `CHD`, `CHX`, `DIR`, `EDIT`, `KILL`, `LIST`,\n`LOAD`, `MEM`, `PACK`, `RENAME"
+}

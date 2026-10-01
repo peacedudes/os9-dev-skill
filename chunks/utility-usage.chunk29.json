@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 29,
+  "text": "), `.io` (I/O subroutine), `.hp` (help),\n  `.dw` (window descriptor), `.dt` (terminal descriptor). Its main\n  advantage over `backup` + selective deletion is producing zero\n  fragmentation.\n- `display {<hex>}` - takes one or more hex byte values and writes the\n  corresponding ASCII/control characters to stdout; the standard way to\n  script cursor/screen-control sequences at a terminal.\n- `montype [c|r|m]` - tells the system what kind of display is attached:\n  `c` composite/color-TV (the default if `montype` is never run), `r`\n  RGB monitor, `m` monochrome/black-and-white. Affects color rendering\n  only on compatible hardware.\n- `tuneport [/p | /t1] [-s=<n>]` - tunes a serial port's delay-loop value\n  against its current baud rate. Interactive mode shows the current baud\n  rate and delay va"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 18,
+  "text": "RETURN` correctly\nreturned to the caller with a value modified inside the subroutine.\n\n**The hex byte offsets `LIST` displays for unnumbered structured code are\nnot valid `GOTO`/`GOSUB` targets** - they are `LIST`'s own display\nannotation, unrelated to the classic line-number addressing these statements\nuse. Aiming a `GOTO` at one reads as \"GOTO is broken\" and isn't.\n\n**The manual actually defines two distinct `IF` forms, and conflating\nthem produces invalid syntax that looks reasonable but isn't:**\n\n```basic\nIF <bool expr> THEN <line#>                          ! Type 1\nIF <bool expr> THEN <statements> [ELSE <statements>]\nENDIF                                                 ! Type 2\n```\n\n**Type 1** is a bare line number after `THEN` - no `GOTO` keyword at\nall - and has no `ENDIF`: `IF i<5"
+}

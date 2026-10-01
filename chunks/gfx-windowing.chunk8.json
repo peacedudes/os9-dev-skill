@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 8,
+  "text": "ursor\n  coordinates (`CURXY`, `DWSET`'s `xcor`/`ycor`) are column/row units\n  relative to the window's own character grid, not pixels.\n- Two independent cursors exist: the **draw pointer** (invisible, used by\n  graphics functions, starts at 0,0) and the **text cursor** (used by\n  cursor-movement functions). `LINE` updates the draw pointer to its\n  endpoint as a side effect; `BOX` and `BAR` explicitly do **not** move it.\n  `SETDPTR(path,xcor,ycor)` sets the draw pointer explicitly - anything\n  that omits its own coordinates (bare `CIRCLE`, `LINE` with only an end\n  point) starts from wherever the draw pointer currently is. Coordinates\n  are screen-relative unless `SCALESW` is off, in which case they become\n  relative to the window's own working-area origin.\n  **`Live` (NitrOS-9) - substanti"
+}

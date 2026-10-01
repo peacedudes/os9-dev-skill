@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 15,
+  "text": " the execution directory (`CMDS`), not\nthe current data directory** - the same behavior as BASIC09's `PACK`.\nChecking `dir name*` in the data directory after assembling makes every run\nlook like a silent failure; check `CMDS/name` instead. `ident CMDS/<name>`\nconfirms a real, CRC-good module.\n\n**Undocumented per-line length limit** (`Live` (NitrOS-9)): `asm` has an internal\nsource-line read limit between 132 (OK) and 135 (broken) characters. An\nover-length line doesn't error on itself - `***** Error: bad instr` fires on\nthe *next* physical line, with a stray fragment of the overflowing text\nmisread as a bogus label, pointing at the wrong line entirely. Keep source\nlines at 132 characters or fewer.\n\n## Assembler Directives\n\n`Manual`, from `asm`/MIA's own manual (ch. 2.8) cross-checked again"
+}

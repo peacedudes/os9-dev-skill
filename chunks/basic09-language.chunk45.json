@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 45,
+  "text": "es `Error #000:107 (E_TRAPV)`,\n  and `ON ERROR GOTO` catching it sees `ERR` = **107**. With `math881` it\n  stops with BASIC09's own error **050**, also catchable (`Live` (os9exec));\n  which of the two a real 68881 system reports is unmeasured, `Flag`.\n\nWhere an error is raised, it is catchable with `ON ERROR GOTO`, and left\nunhandled it drops into interactive Debug Mode. On 68k, whether one is\nraised at all depends on which math module is loaded.\n\n**Portable code must not test for a specific code, or rely on the trap.**\n6809 reports Microware's documented BASIC09 error 45 for both operand types;\n68k reports the underlying 68000 CPU exception instead - 105 for INTEGER,\n107 for REAL (BASIC09's 050 under `math881`) - when it reports anything. Guard divisors that could be zero:\na trap is not a"
+}

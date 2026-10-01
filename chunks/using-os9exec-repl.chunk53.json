@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 53,
+  "text": "g on a host directory**, where on an\nRBF image it prints `Error #000:214 (E_FNA)`; either way the execution\ndirectory is unchanged. `Live` (os9exec).\n\n**Host-side modes the emulator chooses**, `Live` (os9exec): `makdir` creates a\ndirectory at `0700`, and a shell `>` redirect creates a file at `0600`. A\nsuper-user `I$Create` on a host directory always keeps owner **read**\nand never write - a deliberate choice, and RBF is unchanged.\n\n**Fuller treatment**: the emulator's own `docs/host-drives.md`\n([os9exec](https://github.com/peacedudes/os9exec)) is a guide to how host drives\nwork and how they differ from RBF, and goes further than this section needs to.\n\n**Host links inside a device root**, `Live` (os9exec): hard links behave as\nordinary files (deleting one name leaves the other's content), "
+}

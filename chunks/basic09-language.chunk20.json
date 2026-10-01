@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 20,
+  "text": "piler bug, not direction-dependent, and\nnot about interaction with other constructs. It is easy to misdiagnose as a\nbug without the manual's two-form grammar in hand.\n**Use Type 1 (`IF cond THEN linenum`) for a bare conditional jump, or\nType 2 with `ENDIF` on its own line for anything else** - never mix a\n`GOTO`/`GOSUB` keyword into a same-line `THEN` clause without `ENDIF`.\n\n## Procedures & Parameters\n\n```basic\nPROCEDURE name\nPARAM param1, param2: TYPE\nDIM local_vars: TYPE\nstmts\nEND                                      ! optional, see below\n\nRUN name                                ! call\nRUN name(arg1, arg2)                    ! with args\nRUN name(var)                           ! by reference (default) - callee can mutate caller's var\nRUN name(var+0)                         ! by value - w"
+}

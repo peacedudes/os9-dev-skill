@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 32,
+  "text": "nd work (building an image, populating a disk),\npass the shell a **procedure file** - the mechanism `os9repl.sh` itself uses\nto boot (`shell /h0/startup`):\n\n```\ngtimeout 60 env OS9DISK=/abs/path/image OS9H1=/abs/workdir OS9STOP=1 \\\n    ./os9exec shell /h1/<proc> </dev/null 2>&1\n```\n\n`/h1` is whatever `OS9H1` names - give it an **absolute path** to the directory\nholding the procedure file, rather than relying on a magic `h1` beside the\nbinary, for the reasons under \"Launching and disks\" above.\n\nThe OS-9 side - CR-only endings, silent `-x` abort, where `-nx` goes, prompting\nutilities, `sleep` ticks - is in `os9-tools-and-shell.md`, \"Procedure files\".\nWhat the host boundary adds:\n\n- **Commands fed on HOST stdin must be the opposite of a procedure file -\n  LF-terminated.**\n  `Live` (os9exec): "
+}

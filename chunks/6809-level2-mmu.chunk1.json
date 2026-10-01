@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/6809-level2-mmu.md",
+  "chunk_index": 1,
+  "text": " after accounting for ROM and\nvideo RAM. Level 1 is simpler, cheaper, and adequate for embedded control\nor single-user applications within tight RAM budgets.\n\n**Level 2** adds Dynamic Address Translation (DAT) hardware - an MMU that\nvirtualizes each process's address space independently. While each process\nstill generates only 16-bit logical addresses (64K per task, not more),\nthose addresses are mapped by the MMU into disjoint portions of a larger\n*physical* memory pool. This enables true multitasking with memory\nisolation - different tasks can occupy different physical regions while\neach seeing the same logical address layout.\n\n**Common misreading**: \"Level 2 gives an 8MB address space\" is wrong. Each\nprocess is confined to 64K *logical* addressing - the CPU generates only\n16-bit address"
+}

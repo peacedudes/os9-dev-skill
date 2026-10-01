@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 24,
+  "text": "e letters, digits, `$`, `.`, `_`, plus `@` per ch. 1.7's\nexpression rules (ch. 1.5's label-field wording omits `@` - an inconsistency\nin the manual itself). **RMA does not fold case**: `bufPtr` and `BUFPTR` are\ntwo symbols. A label can only be defined once (barring `SET`). Appending `:`\nin the label field makes it visible to other modules at link time; without\nthe colon it's local to its own `PSECT`.\n\n**Label/symbol syntax (`asm`): 1-8 characters** - a real divergence from\nRMA's 1-9. Legal characters: letters (either case), digits, `$`, `_`, `.`;\nfirst character must be a letter. Defined exactly once (barring `SET`); no\nforward-reference loops. Case-folding behavior isn't stated in the manual, so\ndon't assume it matches RMA's.\n\n**Expression evaluation.** Both assemblers share a 16-bit arit"
+}

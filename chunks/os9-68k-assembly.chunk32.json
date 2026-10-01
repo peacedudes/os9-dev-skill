@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 32,
+  "text": "ource is a real 68k assembler manual, so **nothing below rests\non a 68k directive reference.** Several of these were settled live anyway, and\neach says so; treat only the ones marked open as unverified.\n\n- Exact `psect`/`vsect`/`csect` directive syntax and parameter order (the\n  documented PSECT/VSECT syntax is the **6809** RMA's) - **unverified as a\n  manual citation, but resolved in practice**: the worked program above uses\n  the 6-operand `psect` form and is `Live` (os9exec), and\n  `basic09/basic09-per-target.md` has a second `Live` (os9exec) example of the same\n  shape for a `Sbrtn` module.\n- `ds.w`/`ds.l` and other data-definition directive syntax specifics -\n  resolved, `Live` (os9exec): `dc.b 'ab'` (single-quoted, two or more\n  characters) fails on `r68` with `*** error - value out "
+}

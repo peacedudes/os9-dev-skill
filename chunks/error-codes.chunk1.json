@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 1,
+  "text": " for `_` before looking it up.\n\n### Return convention: carry flag and an error-code register\n\nBoth architectures signal errors via the carry flag; the register holding\nthe code differs. **68k (this section's example): carry bit (C flag) set\non error, clear on success; `d1.w` holds the error code (MMM) when carry\nis set.**\n\n```asm\nOS9 I$Open          ; make the system call\nBCS.S ErrorHandler   ; branch if carry set (error)\n; success path here\n```\n\nDevice drivers use the same carry/`d1.w` convention on 68k: upon return\nfrom any driver subroutine (via `RTS`), the carry bit signals\nsuccess/failure and `d1.w` holds the error code. For IRQ service routines,\nthis convention is modified - IRQ only uses the carry bit to signal\nwhether the interrupt was serviced; no caller is waiting for an error co"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 23,
+  "text": "in), `-n` show without executing, `-t` touch dates only, `-u`\n  rebuild regardless of dates, `-i` ignore errors, `-s` silent,\n  `-b`/`-bo` disable built-in rules (all/object), `-d`/`-dd` debug\n  verbosity, `-x` cross-compiler mode.\n\n## tmode / xmode parameters\n\n`tmode [<opts>] [<params>]` / `xmode <devname> [<params>]` - mechanism\n(open-path-vs-device-descriptor scope, persistence rules) is in\n`os9-tools-and-shell.md`; invocation specifics here: `-w=<path#>` selects\npath 0/1/2 for `tmode` (required inside a procedure file); `type par cs\nstop baud` only take via `deiniz <dev>` -> `xmode ...` -> `iniz <dev>`. Same\nparameter vocabulary for both; a parameter with no value resets to its\ndefault; `=0` disables the feature.\n\n| Parameter | Meaning (default) |\n|---|---|\n| `upc`/`noupc` | force uppe"
+}

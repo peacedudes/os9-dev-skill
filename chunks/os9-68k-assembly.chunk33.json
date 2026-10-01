@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 33,
+  "text": "cters) fails on `r68` with `*** error - value out of range ***`,\n  while a single character (`dc.b 'x',0`) assembles, as a character\n  constant; `dc.b \"text\"` (double-quoted) assembles clean - use double\n  quotes for string data. **`ds.b`, `ds.w` and `ds.l` are rejected in a\n  code `psect`** (`*** error - bad mnemonic ***`); **`ds.b` inside a\n  `vsect` assembles clean** (`Live` (os9exec)), which is where uninitialised\n  storage belongs.\n- **Never write into the module itself.** `(d16,PC)` is a **source-only**\n  addressing mode on the 68000, so `move.l d0,x(pc)` does not assemble\n  (`Live` (os9exec): `*** error - illegal addressing mode ***`) - and\n  the workaround of `lea x(pc),a1` then writing through `a1` is wrong on OS-9\n  even though it assembles: a module is one shared, re-entrant cop"
+}

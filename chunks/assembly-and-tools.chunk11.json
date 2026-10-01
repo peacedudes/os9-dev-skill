@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 11,
+  "text": "relationship to the actual\n  mistake. **Check the error count, never the presence of an output file.**\n- **Never redirect `asm`'s standard output away** (`>/nil`, `>file`). Errors\n  go there, so a failing assembly looks silent and successful, and you are\n  left with the broken module described above.\n- **`O=<name>` fails if the output already exists** - `***** Error: can't\n  open <name>` - while `-O=<name>` overwrites silently. Use the leading dash\n  for any rebuild.\n- **Case does not matter**: `o=` and `O=` both work and both produce a valid\n  module (confirmed by `ident` on each). The distinction that matters is the\n  leading `-`, not the letter's case.\n- The object lands in the **execution** directory (`/dd/cmds`), not the data\n  directory - see the note under \"Two assemblers\".\n- **Only"
+}

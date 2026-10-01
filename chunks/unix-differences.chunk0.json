@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 0,
+  "text": "# OS-9 for people who already know Unix\n\nDelta document, not a tutorial - ordered by how badly a wrong Unix\nassumption bites, not by topic. Tier 3 (bottom) is a flat 1:1 lookup table;\nskim once. Spend attention on Tier 1.\n\nApplies OS-9-wide, not just 68k: the shell/directory/pipe behaviors below\n(chd/chx split, `!` not `|`, CR line endings, ESC-exit, the control-key\ninversions) were independently cross-referenced against multiple 6809\nprimary sources and confirmed identical. Where 6809 genuinely differs\n(register conventions, `int` width, module header encoding), that's a\nTier 2/3 item, not a Tier 1 one - the model-level breaks from Unix are the\nsame regardless of which OS-9 architecture you're on.\n\n---\n\n## Tier 1 - model breaks (wrong, not just slow, if you assume Unix)\n\n### 1. Two curren"
+}

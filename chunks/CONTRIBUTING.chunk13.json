@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 13,
+  "text": "cross-file numeric drift, dump-decode claims, error\n  symbols against the error table, and the no-dates/no-hashes/no-host-paths rule.\n  Its own behaviour is covered by 136 tests. You do not have to absorb a house\n  style by osmosis; run the checker.\n- **The provenance chain is written down.** `SOURCE-AUTHORITY.md` says which\n  sources are Microware speaking and which are someone's reading of Microware,\n  and `NOTICE` records who is owed credit. Keep those current and the project\n  stays defensible.\n- **The open questions are listed, not implied.** The checker prints every\n  unresolved `Flag`, and `DIVERGENCES.md` holds the manual-versus-observed\n  conflicts. That is a roadmap you did not have to write.\n\nIf you fork it and take it somewhere better, the license permits that outright\nonce it "
+}

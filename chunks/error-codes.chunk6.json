@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 6,
+  "text": " number |\n| 40 | Missing variable reference | 76 | Multiply-defined variable |\n| 41 | No ending quote | 77 | Illegal input variable |\n| 42 | Too many subscripts | 78 | Seek out of range |\n| 43 | Unknown procedure | 79 | Missing DATA statement |\n| 44 | Multiply-defined procedure | 80 | Print buffer overflow |\n| 45 | Divide by zero | | |\n\n`Manual` - this table is confirmed word-for-word identical across three\nindependent BASIC09 Reference Manual editions (Rev F/1983 Dragon Data\nedition, Rev G/Tandy edition, Rev H/Microware unbranded edition); see\nthis file's Sources line. `Live` example codes hit in practice: `000:027` (syntax error - e.g. from `BASE0` typed without\nthe required space, see `basic09/basic09-language.md`), `000:055`\n(subscript out of range - e.g. indexing a `DIM`'d array past "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 29,
+  "text": "ued signals, counting the one being delivered, so 1 = nothing else waiting; the C `intercept()` wrapper hides it. `Live` (os9exec) (CONF68K t70). No handler installed => any interceptable signal kills the process. `Live` (os9exec) |\n| **F$SigMask** | Mask delivery | d1 = +1 increment / -1 decrement / 0 clear-to-zero. Counter is P$SigLvl, an eight-bit level that saturates rather than wraps in either direction (`Manual`: Microware's intermediate training course); keep increments and decrements paired. F$Sleep unmasks internally, making `mask -> sleep(0)` a safe masked wait. `Live` (os9exec) |\n| **F$SigReset** | Reset intercept-nesting counter | Needed when `longjmp()` bypasses F$RTE exits |\n| **F$RTE** | Return from intercept | Processes queued signals first |\n| **F$STrap** | Install error-e"
+}

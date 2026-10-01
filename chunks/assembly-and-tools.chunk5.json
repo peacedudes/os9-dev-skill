@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 5,
+  "text": "i2\n        fcb IWrite\n        puls b\n        swi2\n        fcb FPErr\n        ldb #1\n        swi2\n        fcb FExit\nfname   fcc /exfile.txt/\n        fcb $0D\nmissing fcc /no.such.file/\n        fcb $0D\nline    fcc /written by exfilei/\n        fcb $0D\nlinelen equ *-line\nokmsg   fcc /PASS create-write-close/\n        fcb $0D\nokmsgln equ *-okmsg\nexperr  fcc /PASS open of a missing file: /\nexperrl equ *-experr\nunexmsg fcc /FAIL open of a missing file succeeded/\n        fcb $0D\nunexln  equ *-unexmsg\nfailmsg fcc /FAIL happy path: /\nfailln  equ *-failmsg\n        emod\neom     equ *\n```\n\nBuilt and run, and what it actually printed:\n\n```\nasm exfilei.a -O=exfilei\n00000 error(s)\n00000 warning(s)\n$012E 00302 program bytes generated\n$00C9 00201 data bytes allocated\n\nexfilei\nPASS create-write-close\nPASS open "
+}

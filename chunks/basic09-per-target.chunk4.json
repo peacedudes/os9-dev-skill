@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 4,
+  "text": "ghter-looking\n\"2.94e-39 to 1.70e38\" figure is calculated from the bit layout rather than\nmanual-stated - prefer what the manual actually says.\n\n**68k** REAL is a genuine IEEE-754 double (`Manual`, storage format `Live` (os9exec)):\nsign in bit 7 of the first byte, an 11-bit exponent (bits 0-6 of byte 1 +\nbits 4-7 of byte 2) biased by 1024, and a 52-bit mantissa with an implied\nleading one. `PUT`ting `1.0` to a file wrote exactly `3F F0 00 00 00 00 00\n00`. `SIZE()` returns 8 for a REAL and 4 for an INTEGER. The `DIGITS` statement (range 1-15)\ncontrols both display precision and the precision of transcendental\ncalculations.\n\n**68k REAL arithmetic is full double precision too**, `Live` (os9exec), with the\ndefault `math` module and with `math881` loaded alike: `.1+.2` stores the IEEE\ndouble `3F"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/6809-level2-mmu.md",
+  "chunk_index": 2,
+  "text": "addressing - the CPU generates only\n16-bit addresses, an absolute per-task ceiling, no negotiation. The \"up to\nseveral MB\" in hardware specs is the *combined physical* address space the\nMMU can map across all tasks simultaneously - e.g. 8 task registers + 9-bit\nmapping RAM addresses up to 512K physical, shared by all tasks, not 512K\nper task. The manuals occasionally blur this distinction (cross-checked\nacross two independent documents to separate logical-per-task from\nphysical-system-wide cleanly).\n\nLevel 1's constrained 64K address space (often much less after ROM/video RAM) drove OS-9's minimal-footprint design ethos discussed in `os9-dev`'s `common/os9-mental-model.md`.\n\n## How DAT Translation Works\n\n- **DAT image**: each process descriptor holds a full software copy of the MMU's regis"
+}

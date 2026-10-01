@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 0,
+  "text": "# OS-9 Memory Model and I/O Architecture\n\nMemory allocation/layout, then the mechanics of the file-manager/driver/\ndescriptor architecture (concept-level overview: `os9-mental-model.md`).\nDisk-block-level RBF detail (identification sector, file-descriptor\nfields, directory format, record locking) is in the sibling\n`os9-systems-dev` skill's `file-managers.md`.\n\n---\n\n## Memory model\n\n### Allocation units and block sizing\n\nOS-9 allocates in multiples of a **16-byte minimum allocation unit** - the smallest independently-freeable chunk tracked by free-list bookkeeping. This is a logical granularity; actual physical allocation depends on memory protection:\n\n| System type | Minimum allocatable block |\n|---|---|\n| MMU-equipped (memory protection) | Matches the MMU page size (e.g. 4K) - kernel allo"
+}

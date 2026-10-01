@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 28,
+  "text": "aker function\nwritten but not added to its registry, with the verification tool then reporting\n\"24 of 24 breaks were caught\", which was true and answered a different question.\nNothing lied; the missing label in the output was the only evidence.\n\n**Where a breaker cannot reach, say so instead of writing one.** A proof that\nexercises nothing is worse than a documented absence of proof, because it reports\nsuccess. If the harness cannot put a check's inputs under test, record that and\nprove the check another way rather than staging a break the check could not have\nseen.\n"
+}

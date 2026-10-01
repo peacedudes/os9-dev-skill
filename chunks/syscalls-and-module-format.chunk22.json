@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 22,
+  "text": "0 (remove) or control-packet addr, Y=service routine, U=static storage | | Add/remove device from IRQ table; control packet at [X]: flip byte, [X+1]=mask byte, [X+2]=priority (0-255); error E$Poll. Real drivers throughout the NitrOS-9 tree call it, so it is implemented |\n| F$IOQu | $2B | A=process number | | Enter I/O queue: links caller into another process's I/O queue and sleeps untimed pending a wakeup signal; used heavily by IOMAN/file managers |\n| F$AProc | $2C | X=process descriptor addr | | Insert process in active process queue; ages already-queued processes and sets the new one's age to its priority. **6809 really does age per process** - `Source` (NitrOS-9 `faproc.asm`): a loop increments each queued process's own `P$Age`, and the arriving process's `P$Age` is set from its priori"
+}

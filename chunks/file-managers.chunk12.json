@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 12,
+  "text": "tem. Every disk has the same layout:\nidentification sector at LSN 0, allocation bitmap (usually LSN 1), root\ndirectory immediately following the bitmap, then file data in segments with\nallocation tracked via the bitmap. LSNs are logical sector numbers (0 to\nn-1); mapping an LSN to a physical track/head/sector is entirely the driver's\njob, not RBF's.\n\n### Identification Sector (LSN 0)\n\n`Manual`, verified against the OS-9 Technical Manual \"Disk File\nOrganization\". That manual carries one field this table omits: a 2-byte\n`DD_RES` reserved slot at `$13`, between `DD_SPT` and `DD_BT`.\n\nEvery other field below abuts its neighbour exactly, with one exception worth\nknowing if you are hand-authoring an LSN 0: **`$5F` is unaccounted for** -\n`DD_OPT` ends at `$5E` and `DD_SYNC` starts at `$60`. Wheth"
+}

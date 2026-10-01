@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/6809-level2-mmu.md",
+  "chunk_index": 7,
+  "text": "as active pre-switch) corrupts\n  the stack and crashes the system.\n- **Fix used in practice**: hardware externally masks the IRQ line from\n  the moment interrupt-acknowledge is detected (decode `BA=1,BS=1` on the\n  6809's `BA`/`BS` lines) until the kernel's first instruction\n  (`ORCC #IRQMASK`) actually executes in its own map.\n- Automatic task-switching hardware (the MC6829 approach) additionally\n  needs a cycle-counting \"fuse register\" to know when it's safe to switch\n  the task register *back* from 0 (kernel map) to the interrupted user\n  task, since restoration happens via a plain `RTI` with no other signal\n  marking \"done.\"\n\nAutomatic switching's payoff: without it, every user map must waste part of its address space mirroring interrupt vectors and task-clear code (capping user space "
+}

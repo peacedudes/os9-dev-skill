@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 12,
+  "text": "* Save it immediately: the very\n  next call overwrites `d1`. The program stashes it in `d6` before doing\n  anything else. `F$PErr` then turns the code into the printed message.\n- **`d0` is both an input and a result register.** `I$Create` returns the path\n  number there, and every following call wants something else in `d0`, so the\n  path is parked in `d7` first.\n- **Reach your own data `(pc)`-relative via `lea`** - see the addressing-mode\n  note under \"Known gaps\"; a PC-relative *destination* is not available.\n- `r68` emits `*** warning - destination in short branch range ***` for each\n  `bcs`/`bcc` here. It is a size hint, not an error (`Errors: 00000`); the\n  `.s` form silences it. It fires whenever the target is close enough that\n  `.s` *would* assemble, for the bare and `.w` spellings"
+}

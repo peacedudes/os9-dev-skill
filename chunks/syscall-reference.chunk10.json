@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 10,
+  "text": " CRC | d0.l=count, d1.l=accumulator (init $FFFFFFFF), (a0)=data | d1.l=updated | 24-bit, one's-complemented for storage. Kernel checks once at load/bootstrap, never re-verifies. `Live` (os9exec) |\n| **F$DatMod** | Create/link data module | d0.l=size, d1.w=attr/rev, d2.w=access, d3.w=type/lang, d4.l=color, (a0)=name - **d3 and d4 are read only if bit 15 of d2 is set**; otherwise the module is type Data, language 0, general memory (the Guru 11.5.4, `Hearsay`-grade third party; the TRM marks both \"optional\" without saying how) | d0.w=type, d1.w=attr, (a1)=data, (a2)=header | Named shared memory: creator sizes it, later callers link by name. No kernel synchronization - coordinate with events/signals. `Live` (os9exec) |\n\n## Memory\n\n| Call | Purpose | Key inputs | Key outputs | Notes |\n|------|-"
+}

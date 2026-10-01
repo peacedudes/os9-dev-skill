@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 45,
+  "text": "o a process with an\n  installed `F$Icpt` handler were delivered identically, with the correct code\n  in `B` both times. **The \"reserved\" language is a documentation convention;\n  the kernel enforces no boundary within 4-255 on delivery.**\n- A signal with no installed handler kills the process unless the code is 0 or 1.\n- If a process already has an unprocessed signal pending, `F$Send` to it\n  fails - the sender should `F$Sleep` briefly and retry.\n\n## Module Header\n\nMuch smaller than 68k's 48-byte universal section: **9 bytes minimum**.\n`Manual`, matching the *OS-9 System Programmer's Manual* §4.2 field-for-field.\n\n| Offset | Size | Field | Notes |\n|---|---|---|---|\n| $00-$01 | 2 | Sync | `$87,$CD` - illegal/reserved 6809 opcodes, the 6809 analog of 68k's `$4AFC` (`Source`) |\n| $02-$03 | 2 "
+}

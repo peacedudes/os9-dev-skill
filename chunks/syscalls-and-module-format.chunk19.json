@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 19,
+  "text": "s silence on the D-register mode byte. `D=1` (arm) and PID-targeting untested - arming a real alarm risks an async signal into a shared session |\n| F$NMLink | $21 | A=type/lang, X=name ptr | Like `F$Link` but doesn't map the module into the caller's address space - returns A=type/lang, B=revision, X=past name, Y=memory requirement, so a process can size a fork before committing. `Live` (NitrOS-9) |\n| F$NMLoad | $22 | A=type/lang, X=pathlist ptr | Like `F$Load` without mapping; same returns as `F$NMLink`. Without a full pathlist, loads from the current execution directory. `Live` (NitrOS-9) |\n| F$VIRQ | $27 | Y=addr of a 5-byte packet (install) or match key (delete), X=0 (delete) or nonzero (install), D=initial tick count (install only) | Installs/removes a virtual (software-polled) interru"
+}

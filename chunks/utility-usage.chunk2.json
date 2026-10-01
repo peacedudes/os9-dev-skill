@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 2,
+  "text": "s that do accept `-?` emit an option\n  error first and print their usage anyway** - `illegal option -- ?`,\n  ``unrecognized option `-?'``, `invalid option -- ?`, `bad flag: '?'`, all\n  present on one disk, including `grep`, `diff`, `head` and `sort`. A sweep that\n  scores \"produced an error word\" as failure therefore marks working programs\n  broken, exactly as one keyed on \"printed a usage line\" marks broken programs\n  working. Quote the flag (`'-?'`) at any shell that globs `?`.\n- **`-z` / `-z=<file>`** - read the operand list (file/module/device\n  names) from standard input / from `<file>`. Supported by most utilities\n  that take name lists; the glue for pipelines like\n  `dir -u ! qsort ! attr -z ...`.\n- **`-x`** - resolve the named file(s) against the current **execution**\n  directory i"
+}

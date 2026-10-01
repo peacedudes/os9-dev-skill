@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 26,
+  "text": "n that window cannot be addressed by the ordinary mode.\n\n**`remote` is the escape, and Microware's `c68` supports it** - `Live` (os9exec),\nmeasured with `cc ... -qm=16k`:\n\n- **File scope.** `remote char big[300000];` compiles, links and runs: writing\n  `big[0]` and `big[299999]` and printing both works.\n- **Function-local static.** `static remote char buf[200000];` inside a\n  non-recursive function, called twice, returns the right values across both\n  calls.\n\nThis is what a Unix port with real buffers needs - agrep 2.01 carries over a\nmegabyte of file-scope arrays and 98K of locals, and hits both walls without it.\n\n**Two things not established**, so do not assume either way:\n\n- whether an `extern` declaration of a remote array must itself say `remote`;\n- whether **initialized** remote data"
+}

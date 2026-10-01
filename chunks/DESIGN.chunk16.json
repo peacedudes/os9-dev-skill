@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 16,
+  "text": "lls as examples but\n`INDEX.md`'s file-pointers are not \"examples,\" they're the navigation table.\n\n## A second tool: `check_claim_coupling.py` (advisory, not a gate)\n\n**The failure it exists for is not a wrong value, it is a stale duplicate.** A\nfact gets measured again, the file being edited is corrected carefully, and an\nolder statement of the same fact is left standing somewhere else. `check_shared_facts`\nabove catches the value-level form (`SYMBOL $VALUE` given two values). It cannot\ncatch the form that actually bit this corpus: `cpp` \"bus-errors at 513\ncharacters\" in one file while another had just established the limit is **not a\nfixed number**. Both files quoted the same digits. Nothing numeric disagreed -\nthe claims disagreed about the *shape* of the fact.\n\nSo this tool does not att"
+}

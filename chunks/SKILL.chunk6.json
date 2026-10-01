@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/SKILL.md",
+  "chunk_index": 6,
+  "text": "ng. Assembling and linking\na `Drivr`/`Devic` module byte-correctly does work under it.\n\nSo the files here are mostly `Manual`, with some struct offsets `Source`\nagainst os9exec's code. Don't read \"68k\" as \"checked\" in this skill.\n\n## Rules of engagement\n\n- State which target (6809/68k) an answer applies to; the 68k line is the\n  default here, `6809-level2-mmu.md` is the 6809 exception.\n- Sources are official Microware manuals plus cited third-party\n  references - see `SOURCES.md`.\n"
+}

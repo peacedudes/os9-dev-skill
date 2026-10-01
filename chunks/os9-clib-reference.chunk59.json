@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 59,
+  "text": "arsay`, of a `popen()` failing at run time\nwith a distinctive message:\n\n    popen of \"cccp ...\" failed!\n\nwith the reported cure being to put the wanted program in the **data** directory\nrather than on the execution path. That account cannot be about this library,\nsince a build here does not reach run time. It most likely describes a program\nbuilt with the GCC2 toolchain, whose header does declare `popen`. **Unmeasured,\nand now known to be out of scope for a Microware `cc` build** - if you meet that\nmessage, establish which toolchain and which library the program was built with\nbefore treating the directory advice as a rule.\n\n## Startup & Arguments\n\nEvery C program is linked against `LIB/cstart.r` first - the compiler\ndriver puts it at the front of the link file list automatically. This\nmod"
+}

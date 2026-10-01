@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 27,
+  "text": "am) specificity.** The v2.4 manual describes 000:225\n  generically as \"bad parameter - an illegal or impossible parameter was\n  passed to a service request.\" The 1985 manual gives a narrower, concrete\n  case for the same code: an impossible vector number passed to the IRQ\n  polling system. These aren't contradictory - the 1985 description reads as\n  one specific instance of the general v2.4 case - but the 1985 manual\n  presents it as *the* meaning rather than *an* example, so both phrasings\n  are preserved here rather than merging them into one.\n- **§ 000:064 symbol spelling.** The v2.4 manual spells this symbol\n  `E$IllFnc`; the 1985 manual spells it `E$IllFno` for the identical code\n  and meaning. Both are recorded rather than picking one - treat this as a\n  spelling variant across editi"
+}

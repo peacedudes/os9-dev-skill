@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 17,
+  "text": "<path> [<args>]`\n  (replace shell), `profile <path>`, `setenv <var> <value>`,\n  `unsetenv <var>`, `printenv`, `logout` - argument shapes as shown; no\n  further options.\n- `login [<name>] [,] [<password>]` - authenticate against\n  `SYS/password`.\n- `shell [[set] <arglist>]` - options usable at invocation, via the\n  `set` built-in, or per-line: `-p`/`-p=<str>`/`-np` prompt,\n  `-t`/`-nt` echo input (off default), `-x`/`-nx` abort on error (on\n  default), `-e=<file>`/`-ne` error-message printing (off default),\n  `-v`/`-nv` report each directory searched, `-l`/`-nl` whether only\n  `logout` may end a login shell (`-nl`: EOF ends it too).\n\n## Devices, disks, system\n\n- `iniz` / `deiniz [<opts>] {<devname>}` - attach/detach devices.\n- `devs`, `irqs`, `events` - tables of attached devices / IRQ poll"
+}

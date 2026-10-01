@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 15,
+  "text": "ore sectors,\nalways a power-of-2 sector count per `DD_BIT` - not one bit per sector. A set\nbit means the cluster is in use, defective, or non-existent; a clear bit\nmeans free.\n\n### File Descriptor Sector\n\n`Manual`, verified against the OS-9 \"Disk File Organization\" manual.\n\n| Field | Offset | Size | Contents |\n|---|---|---|---|\n| `FD_ATT` | $00 | 1 | Attribute byte (see bit layout below) |\n| `FD_OWN` | $01 | 2 | Owner's user ID |\n| `FD_DAT` | $03 | 5 | Last-modified date, Y/M/D/H/M - updated whenever the file is opened write/update |\n| `FD_LNK` | $08 | 1 | Hard-link count for this file descriptor |\n| `FD_SIZ` | $09 | 4 | File size in bytes |\n| `FD_CREAT` | $0D | 3 | Creation date, Y/M/D |\n| `FD_SEG` | $10 | 240 | Segment list: 5-byte entries (3-byte LSN + 2-byte sector count) to the end of"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 10,
+  "text": "do |\n|---|---|---|\n| After `SAVE proc >path` or `PACK proc >path` | **Spurious.** The file was written correctly | Check the file; ignore the message |\n| After `runb <path>` or running a packed module by pathname | **Real.** `runb` takes a bare module name, never a path | Invoke by bare name from a CHX where it resolves |\n| On `LOAD` of a 6809 source file | **Real.** The file starts with a `!` comment above `PROCEDURE`, and nothing in it loads | Put `PROCEDURE` on line 1 - `basic09/gotchas.md` |\n| From `RUN <name>` | **Real**, its documented meaning - no such procedure | Check the name and the search order below |\n\nThe first two both arise while packing and running the same module minutes\napart, which is what makes them easy to confuse.\n\n## What a packed module is\n\nA packed+saved procedure"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 7,
+  "text": "from the BASIC09 Reference Manual Rev G, whose own detailed entry gives\n  both call forms directly (`GCOLR`, not `GCOLOR` - the Level 2 manual's\n  quick-reference table abbreviates it that way too; the primary GFX\n  chapter itself never printed a full syntax line for this one).\n\n## GFX2 (Level 2 high-resolution graphics/windowing)\n\n### Concepts shared across GFX2 functions\n\n- General call form: `RUN GFX2([path,]\"FUNCTION\",params...)`. `path` is\n  optional on nearly every function - omit it to operate on the current\n  window. **Exceptions with no `path` parameter at all:** `DEFBUFF`,\n  `GPLOAD`, and `GCSET` - these operate on buffer/cursor storage that\n  isn't window-scoped.\n- Drawing coordinates use a 640×192 grid (X 0-639, Y 0-191). Text-cursor\n  coordinates (`CURXY`, `DWSET`'s `xcor`/`yc"
+}

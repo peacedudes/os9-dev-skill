@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 1,
+  "text": " families\n  are specific enough to be worth knowing:\n\n  | Wants | Programs |\n  |---|---|\n  | `-h` | the `gzip` and `zip` families, `ckermit`, `elm`, `gmake`, `nroff`, `rayshade`, `ularn`, `chksum`, `crypto`, `cuts`, `frm`, `pep`, `scales`, `undump` |\n  | `-H` | the macutils - `binhex`, `hexbin`, `macsave`, `macstream`, `macunpack`, `UnMacpack` - and `travesty` |\n  | `--help` | the coreutils-style set: `ed`, `env`, `logname`, `ls`, `su`, `whoami` (their `-?` reply is ``Try `X --help'``) |\n  | a lone `-` | `fortune`, `shuffle`, `strfile` |\n  | `h`, no dash | `zoo` |\n  | no help flag at all | the TeX and netpbm families - `afm2tfm`, `dvi2tty`, `pbmtopk`, `pktopbm`, `pnmconvol`, `ppmmake`, and others |\n\n  **The subtler hazard: 67 of the programs that do accept `-?` emit an option\n  error first"
+}

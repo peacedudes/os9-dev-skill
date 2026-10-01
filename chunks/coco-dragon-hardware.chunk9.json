@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 9,
+  "text": " and Dragon, no dedicated sound chip; CoCo 3's GIME adds programmable timers at `$FF92-$FF95` for more precisely-timed DAC updates. An optional \"Speech/Sound Pak\" cartridge (TMS7040, AY-3-8913, SP0256-AL2) existed as separate add-on hardware - register layout not covered by any source consulted here.\n\n**No OS-9 sound driver/file-manager class exists** - unlike SCF/RBF, there's no audio-specific I/O category. A program hits `$FF20`/`$FF23` directly, same as BASIC, but must not disable interrupts to do it (safe for a single-tasking BASIC program, not for an OS-9 process sharing the CPU). `SOUNDRV2` (archived as `SOUNDRV2.LZH`) is a known freeware utility built around exactly this multitasking-safe direct-I/O approach - confirms the convention exists; its source wasn't read, so no specific re"
+}

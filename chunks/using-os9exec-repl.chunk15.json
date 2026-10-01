@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 15,
+  "text": "ognized prompt (shell `$`, debugger)\n  before and after sending. **It goes silent inside any sub-program with\n  its own prompt** (BASIC09's `B:`/`E:`, an editor, a custom login\n  prompt): the send times out with zero pane change because the gate\n  failed *before* sending. Switch to raw mode. **A program's own raw output\n  can trigger the same desync**, `Live` (os9exec): a bare CR (no LF) written by a raw\n  `write()` mid-output (stdio `printf` of `\\r` arrives with a LF added, and\n  does not do this)\n  repositions the cursor to column 0 without clearing the line, so a genuine\n  fresh prompt sits mid-line behind leftover text and the gate - which wants\n  the prompt at line-start - times out even though the shell is fine.\n  Recovery for both cases: one raw `key Enter` to force a blank prompt l"
+}

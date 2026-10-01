@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-mental-model.md",
+  "chunk_index": 10,
+  "text": " move |\n| Device descriptor | Small data-only module naming a logical device (`/d0`, `/term`), its file manager, its driver, and hardware config (port address, IRQ, options) |\n\nDescriptors are cheap tables: one driver serves many logical devices, one\nphysical port can carry several descriptors (e.g. terminal-mode and\nprinter-mode names for the same serial port). All three layers load/unload\nat runtime - adding an interface never needs a reboot. (Microware docs\ncount \"four levels\" by including the kernel + its INIT/clock modules as\nlevel one.)\n\nStandard file managers:\n\n| File manager | Device class |\n|---|---|\n| **RBF** | Random-access block devices - disks: hierarchical directories, segment allocation, record locking |\n| **SCF** | Sequential character devices - terminals, printers, serial "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 11,
+  "text": "06 | E$Chk | CHK exception | CHK or CHK2 instruction exception |\n| 000:107 | E$TrapV | TRAP exception | TRAPV, TRAPcc, or FTRAPcc instruction exception |\n| 000:108 | E$Violat | Privilege violation | Privilege violation exception |\n| 000:109 | E$Trace | Uninitialized trace | Uninitialized trace exception |\n| 000:110 | E$1010 | A-Line emulator trap | 1010-line emulator exception |\n| 000:111 | E$1111 | F-Line emulator trap | 1111-line emulator exception |\n| 000:113 | - | Coprocessor protocol violation | Coprocessor protocol violation |\n| 000:114 | - | Format error (exception) | Format error exception |\n| 000:115 | - | Uninitialized interrupt | Uninitialized interrupt occurred |\n| 000:124 | - | Spurious interrupt † | Spurious interrupt occurred |\n| 000:133-000:147 | E$Trap | Uninitialized user"
+}

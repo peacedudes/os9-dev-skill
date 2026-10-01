@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 44,
+  "text": "n traps in these references - link mode, line endings, buffering -\nproduce programs that are broken by how they were built, on a disk where\neverything around them works.\n\n**Check that the binary and the source beside it are the same program.** Both\nuses above assume they are, and an archive is not obliged to honour that: a\ndirectory can hold one edition's source and a different edition's binary, in\nwhich case reading the source tells you nothing about the binary, and the binary\nis not a control for anything you build from that source. `Live` (os9exec): a\nshipped `ispell` faulted at its first dictionary lookup while a build from the\nsource next to it worked - different editions, and neither the emulator nor the\ndata was at fault. **The cheapest tell is the usage text**: run the binary with\n"
+}

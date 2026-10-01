@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 8,
+  "text": "e location counters**, and the\n`mod` directive's last operand wants the data one. `size equ *` assembles\ncleanly and yields a module `ident` calls good with a **data size of\n`$0000`**; `size equ .` gives the intended `$00C9`. `Live` (NitrOS-9).\n\n**The build output cannot tell you which you got.** `asm`'s\n`data bytes allocated` figure counts the `rmb` block, not what reached the\n`mod` operand, so it reads the same either way - and the CRC is valid either\nway. Check `ident`'s `Data Size:`, or the byte at `$0C`.\n\nThe wrong build still assembles, loads and runs; it fails only where the code\nneeds the static storage its header never asked for.\n\nThis is the quietest failure in this file. A program with a zero-sized data\narea may still appear to work - this one did, storing a path number through\n"
+}

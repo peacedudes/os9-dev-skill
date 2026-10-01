@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 15,
+  "text": "ery hit is a\njudgement call for a human. Jaccard overlap of 5-word shingles over prose\nparagraphs of >=25 words, threshold 0.5, cross-file only; fenced code, table\nrows and headings are skipped because a worked example beside its output, and\ntable rows sharing a column vocabulary, are expected to repeat. At the time of\nwriting the corpus scores **zero hits even at 0.25** across 710 comparable\nparagraphs - verified as a real result, not a blind detector, by planting an\nedited copy of a real 867-word paragraph and confirming it scores 97%.\n\nMeta-docs (`CONFIDENCE-TAGS.md`, `VERIFICATION-BACKLOG.md`, `INDEX.md`,\n`SOURCES.md`) are excluded from checks 1-3 (used only for their tag set) but\n`INDEX.md` is exactly what check 4 scans - they quote calls as examples but\n`INDEX.md`'s file-pointers are"
+}

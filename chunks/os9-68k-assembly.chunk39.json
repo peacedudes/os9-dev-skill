@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 39,
+  "text": "***`); no working syntax\n  for authoring a `Devic`-type module byte-accurately is known - open gap.\n  For an ordinary `Prgrm` module, prefer the worked program near the top of\n  this file; the `basic09-per-target.md` example matters when the target is\n  a BASIC09-callable `Sbrtn`.\n- **A linked module's registered name comes from `l68 -o=<name>`'s\n  output-file argument, not from the source's `nam`/`psect` name\n  operand.** `Live` (os9exec): linking the same object twice under two different\n  `-o=` names produced two modules with two different `M$Name` strings\n  (confirmed via `mdir`/`dump`), regardless of what the source's `nam`\n  directive said. Matters for anyone installing a driver/descriptor under\n  a specific required name.\n- Per-call register-level parameter detail for individual sys"
+}

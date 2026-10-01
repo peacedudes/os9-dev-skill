@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 37,
+  "text": " at a\n  previously loaded Get/Put buffer to use as a repeating fill texture\n  instead of a flat color, until turned off again with `group=0,buffer=0`.\n  A pattern tile is 32×8 pixels; how many bytes that needs depends on the\n  active screen's color depth (1/2/4 bits per pixel needs a 32/64/128-byte\n  buffer) since the color mode dictates how many pixels each byte packs.\n  **`Live` (NitrOS-9)** - a `GET`-captured 4-stripe 32×8 tile, then `PATTERN(1,3)`\n  before a `BAR`, renders as a repeating tiled texture, clearly distinct\n  from a flat `PATTERN(0,0)` bar drawn beside it. **A fill drawn in the\n  same palette register `DWSET` assigned as `bg` is invisible** - no error,\n  nothing rendered at all. Not specific to `PATTERN` or to `PALETTE`'s\n  unenforced ranges (see Open ends below): it bites "
+}

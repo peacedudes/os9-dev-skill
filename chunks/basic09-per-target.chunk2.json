@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 2,
+  "text": "\n## INTEGER: 16-bit -> 32-bit\n\n**Overflow is ordinary two's-complement wrap at each width, silent, no\nerror** - `Live` (NitrOS-9, os9exec, basic09c) on real 6809 (`32767+1` -> `-32768`), real 68k\n(`2147483647+1` -> `-2147483648`), and `basic09c` alike. This is the **#1\nsilent-bug source when porting**: the wrap *mechanism* is identical, so code\nrelying on the *width* still has to change even though nothing looks broken.\n\nOne manual defect, not a behavioral divergence: the 68k-era *OS-9 BASIC User\nManual* (ch. 9, p. 9-2) prints `2,147,483,648` - positive, a value a signed\n32-bit INTEGER cannot hold - where its own \"wraps around\" wording implies the\nnegative result. The 6809-era manual (p. 7-2) uses the same sentence template\nand gets it right.\n\n**Hex constants carry the width, and the sign "
+}

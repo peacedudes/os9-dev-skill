@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 17,
+  "text": "n **unnamed pipe**, a writer that fills the buffer with no reader\n  attached gets **`E_WRITE`** rather than blocking. **`Source`+`Live`**\n  (os9exec): the write fails with `E_WRITE` when the pipe is unnamed and its\n  path count is below 2 (nobody else attached); a C writer to an unnamed pipe\n  got `E_WRITE` once the buffer filled. The stronger *cyclic*\n  deadlock (several mutually-write-blocked processes sharing one unnamed pipe,\n  all detected and one given `E_WRITE`) needs a multi-process setup and is\n  `Manual`.\n- **Creating a named pipe that already exists:** the `FAM_NOCREATE` open flag\n  makes this fail outright; without it, behavior is file-manager-dependent\n  and may truncate the existing pipe - pass `FAM_NOCREATE` if you specifically\n  need \"fail, don't clobber\" semantics.\n- **`OP"
+}

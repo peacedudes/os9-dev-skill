@@ -1,0 +1,5 @@
+{
+  "source": "README.md",
+  "chunk_index": 8,
+  "text": "ted the Tandy Color\nComputer, Fujitsu's FM machines and the Philips CD-i player, and also factory\nfloors and instruments, where it starts \"instant on\" from reset. OS-9 is\nstill developed, sold and supported by Microware LP, at\n[microware.com](https://www.microware.com).\n\nThis project comes from OS-9's users, not from Microware. Microware is not\nresponsible for it and does not endorse it, and anything it says about OS-9 is\nours, not theirs. Where it and a Microware manual disagree, trust the manual.\n\n## Sources and provenance\n\nSome thirty Microware manuals, quick references and training guides stand\nbehind these files, and each skill's `SOURCES.md` says which ones back which\nfile. `SOURCE-AUTHORITY.md` defines what counts as Microware's word.\n`DIVERGENCES.md` lists the few places where a ma"
+}

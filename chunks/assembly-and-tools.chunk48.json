@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 48,
+  "text": "produces `@001A`/`@001B` on its first\ncall, `@002A`/`@002B` on its second.\n\n## DEFS Files (assembly-time symbolic constants)\n\n- `OS9Defs` - service request codes, signal codes, status codes, direct-page\n  variable names, module type/language/attribute masks, process descriptor\n  layout, path descriptor offsets, register-stack offsets, condition code\n  bits, error codes.\n- `SCFDefs` - SCF device static storage layout, XON/XOFF characters,\n  SCF-specific path descriptor fields.\n- `RBFDefs` - RBF path/device/file descriptor layouts, segment list format,\n  directory entry format, drive table layout.\n- `SysType` - CPU type, MMU type, CPU speed, disk controller, clock module,\n  PIA type, and other build-time configuration constants.\n\nInstallation convention (ch. 2.2): `asm` lives in `CMDS` and t"
+}

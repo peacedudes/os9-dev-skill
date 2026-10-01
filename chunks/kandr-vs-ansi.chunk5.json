@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 5,
+  "text": "*\n\n**But the definitions are only free in one brace style.** The tool requires the\nfunction *name* to be the first thing on its line (`Source`, `ansi2knr.c`: \"the\nfunction name must be the first thing on the line\", and its test returns early\nwith `no name at left margin`). So it converts\n\n```c\nint                     /* name on its own line -> converted */\nfoo(int a, char *b)\n```\n\nand skips the ordinary same-line form\n\n```c\nint foo(int a, char *b) /* `int` is at the margin, not `foo` -> skipped */\n```\n\n`Live` (os9exec), two trees that are ANSI throughout and converted **nothing**:\none with all sixteen definitions written on one line, one with twenty-four. A\ntree in that style gets no benefit at all, and the estimate built on \"the\ndefinitions are free\" is wrong by the whole job.\n\n**So the p"
+}

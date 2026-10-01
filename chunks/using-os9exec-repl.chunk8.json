@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 8,
+  "text": "right.\n- Launch: `OS9DISK=/abs/path/disk ./os9exec /dd/CMDS/shell`\n- macOS first run: `xattr -d com.apple.quarantine os9exec`\n- **Pass absolute paths to `OS9DISK` and `OS9Hx`.** `OS9DISK=./dd` works\n  (`Live` (os9exec), a host directory), but a *relative* `OS9Hx` splits down\n  the middle: `Live` (os9exec), with `OS9H2=rel` naming a host directory,\n  **opening a file on `/h2` works while `load /h2/<module>` fails with\n  `E_PNNF` (216)**, which reads like a missing module rather than a path\n  problem. An image named by a bare relative name (`OS9H2=rimg`) gives\n  `E_PNNF` for everything; `./rimg` works. Absolute paths avoid all of it.\n  - **Do not \"tidy away\" an `h0`...`hz` file or symlink** because it looks like a\n    leftover of the magic-name scheme. It may be exactly what `OS9H0` names: a"
+}

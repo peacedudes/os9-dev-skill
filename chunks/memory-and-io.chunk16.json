@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 16,
+  "text": " `M$Port`) |\n| `V_BUSY` | PID currently using the device (0 = idle) |\n| `V_WAKE` | PID to wake when I/O completes |\n| `V_PATHS` | Linked list of open path descriptors |\n| Drive tables | Per-drive state (current track, interleave, error counts, etc.) |\n\nExample use: RBF caches sector 0 in driver static storage to avoid\nre-reading it on every access.\n\n### File manager classes: RBF and SCF\n\n- **RBF** (Random Block File Manager) - the file manager for block-oriented\n  random-access devices (floppy/hard disk): directory structure, sector/\n  segment allocation, block I/O. Supports disk caching. (Disk-block-level\n  structure - identification sector, file descriptor layout, record\n  locking - is covered in the filesystem reference, not here.)\n- **SCF** (Sequential Character File Manager) - the fil"
+}

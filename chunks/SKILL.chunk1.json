@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/SKILL.md",
+  "chunk_index": 1,
+  "text": "gnal state\" belongs here. Not for writing ordinary application programs - see the sibling os9-dev skill for that.\n---\n\n# OS-9 Systems Development Skill\n\nThe kernel/systems half of OS-9 development - extending OS-9 itself:\n\n- **Device drivers** (Init/Read/Write/GetStat/SetStat/Term entry points,\n  interrupt service routines, static storage layout)\n- **File managers** (the layer between application I$ calls and a driver)\n- **Kernel internal structures** - System Globals, Process Descriptor,\n  module directory, scheduler data - and the exact scheduler algorithm,\n  IRQ vector chaining, exception internals\n\nThe same material serves anyone extending an emulator's kernel-interface\nlayer where it stands in for any of the above.\n\nWriting a program that merely *uses* drivers/file managers through\nor"
+}

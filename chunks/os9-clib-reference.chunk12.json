@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 12,
+  "text": "y or in the emulator it was measured on is unresolved, `Flag` - the rule for a porter is not to leave `stdout` unbuffered: give it a buffer, or leave the default alone and `fflush()`. Unix programs that do this in `main` (cshar's `unshar`) print garbage until the call is removed. |\n| `write(int path, char *buf, int count)` / `read(int path, char *buf, int count)` | Raw path-based I/O (OS-9 `I$Write`/`I$Read` directly, no `FILE *` or buffering) - the primitive underneath the numbered stdin/stdout/stderr paths (0/1/2). **Do not mix these with `printf`/`fprintf`/other stdio calls on the same path without an explicit `fflush()` in between** - the output is reordered: `Live` (os9exec), the raw bytes go out at once and the buffered text follows at the next flush, to a file, a pipe and the consol"
+}

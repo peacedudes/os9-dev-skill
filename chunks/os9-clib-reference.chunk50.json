@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 50,
+  "text": ">  no shell ran\n```\n\nThat distinguishes \"nothing ran\" from \"the child ran and printed nothing\",\nbecause a shell creates the redirect target *before* running the command - even\na command that does not exist leaves an empty file behind. A writable directory\nand no file therefore means the command string was never interpreted at all.\n\nRuled out by measurement, so do not re-investigate: it is not the trap-free\nbuild (a `cio`-linked build fails the same way), and not `wait(0)` versus\n`wait(&status)` (identical). Period-built binaries shell out correctly on the\ndisk where freshly built ones do not. The mechanism is unresolved, `Flag`.\n\n**The workaround is clean, and is verified to run** - fork the command\nyourself, which is what `system()` would have done. `Live` (os9exec): this\nreturned a pid, "
+}

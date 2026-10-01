@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 39,
+  "text": "ding through trap handlers and F$Chain) run at full speed as one logical instruction (PC advances by 4). The child resumes from the register buffer, so edits to it take effect (only SR's condition codes are taken from it, not its system byte). A free run that ends in the child's exit returns carry set with `E$PrcAbt` (228). `Live` (os9exec) |\n| **F$DExit** | Kill debuggee | Resources survive for post-mortem examination. `Live` (os9exec) |\n| **F$SysDbg** | Enter ROM debugger | Used by `break` (superuser, console); halts everything |\n\n## Notes\n\n- **F$SSpd** is marked \"currently not implemented\" in the v2.4 manual\n  (`Manual`). os9exec also leaves `F$Trans` and `F$UAcct` unimplemented: see\n  \"What os9exec does not implement\" in `common/using-os9exec-repl.md`.\n\n- Signal 0 = kill (`kill` comman"
+}

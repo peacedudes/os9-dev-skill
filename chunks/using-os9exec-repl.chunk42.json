@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 42,
+  "text": "the os9exec session; if it recurs, it is os9exec, not your program. The\n  OS-9 causes of that banner are triaged in `basic09/pack-and-runb.md`.\n\n## The cio trap handler divides archived binaries\n\nSee `c/os9-c-cheatsheet.md`, \"The `cio` trap handler divides archived binaries\".\n\n## Existing freeware is a development resource, not just software to run\n\nWorth knowing before you write anything: a well-stocked OS-9 disk carries a\nlarge body of period freeware, and **source frequently ships beside the binary**.\nTwo uses that are not obvious:\n\n- **Read a working program instead of deriving a convention.** When a manual\n  gives you a register contract but no idiom, a program from the era that already\n  does the thing is often the faster answer - and it is evidence that the\n  sequence works, which t"
+}

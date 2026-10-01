@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 18,
+  "text": " one line and it is the difference\nbetween your definition being used and silently discarded.\n\nThis is a legitimate reading of the standard rather than a defect - redefining a\nmacro with a different body requires a diagnostic, and what happens next is not\nguaranteed - so do not expect a host compiler to reproduce it. A host `cpp` that\ntakes the *second* definition will hide the bug on your development machine and\nsurface it only on OS-9.\n\n**What it looks like when it bites: nothing.** A rogue 5.3 port put `#define\ngetchar() md_getchar()` in a header included after `<stdio.h>`. The one warning\nscrolled past, the build linked, and in play no key did what it should - every\nkeystroke behaved as though stdio's `getchar` was still in force, because it was.\nAdding `#undef getchar` on the line abo"
+}

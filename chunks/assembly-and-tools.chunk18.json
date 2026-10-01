@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 18,
+  "text": "een `MOD` and `EMOD`. **`size` must cover `EMOD`'s 3-byte CRC trailer, and where you define the end label decides whether you add it.** The worked example above puts `eom equ *` *after* `emod`, so the counter has already passed the trailer and the bare `eom` is correct. A label defined *before* `emod` has not, and needs `+3` - `Live` (NitrOS-9): a bare label there assembles with `00000 error(s)` but produces a module 3 bytes short, `ident` shows `Module header is incorrect!`, and the shell refuses to run it (`Error #235`). `Flag`: both halves were observed separately and the placement rule reconciling them has not been confirmed in a single run - check your own module's size field against `ident` rather than assuming either form. RMA has no `MOD`/`EMOD` - it uses `PSECT`/`VSECT` and leaves"
+}

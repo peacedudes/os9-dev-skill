@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 18,
+  "text": "s: a 28-byte name field (`DIR_NM`,\nbytes 0-27, sign bit set on the name's last character), one unused byte (byte\n28, must be zero), and a 3-byte LSN of the entry's file descriptor (`DIR_FD`,\nbytes 29-31). A zero first byte marks a deleted or unused entry. Every\ndirectory automatically gets `.` and `..` entries when created.\n\n## Raw Physical I/O\n\nAppending `@` to a device name (`/d2@`) opens it for raw physical I/O -\nstandard open/close/read/write/seek apply, addressing by physical byte offset\nand bypassing the filesystem and its security entirely. Seek address = LSN ×\nlogical sector size (read `PD_SctSiz` from the path descriptor; 256 if zero).\nOnly super-users may open the raw device for write; non-super-users can read\nonly the identification sector and allocation bitmap, and any read pas"
+}

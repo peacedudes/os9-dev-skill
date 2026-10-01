@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 17,
+  "text": "CF** (Sequential Character File Manager) - the file manager for\n  character-at-a-time devices (terminals, character printers):\n  line editing, special-character handling, parity stripping, flow control.\n  - Line buffer: **512 bytes max** including the trailing end-of-record\n    character, one buffer per\n    open path.\n  - Editing keys are path-descriptor options, remappable via `tmode`/`xmode`\n    (full key table: `os9-tools-and-shell.md`); setting a key code to zero\n    disables that feature.\n  - **`PD_ALF` decides whether a carriage return is followed by a line feed**\n    (`Manual`, v2.4 Technical I/O, SCF path options: \"If PD_ALF is not zero,\n    carriage returns are automatically followed by line-feeds\"). Clearing it is\n    how a program gets a clean binary stream out of a terminal - a"
+}

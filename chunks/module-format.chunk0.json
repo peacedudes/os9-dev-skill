@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 0,
+  "text": "# OS-9 Module Format\n\nThe unit of loadable code and data is the **memory module**: standard\nheader + body + trailing 24-bit CRC, tracked by name in the kernel's\nmodule directory (lifecycle: `os9-mental-model.md`). This file documents\nthe 68k encoding as the default; 6809 byte values are a separate section\nand must never be blended with the 68k tables. BASIC09 packed modules and\nRunB: `basic09/pack-and-runb.md`.\n\nCore facts:\n\n- **Position independence (68k):** compilers emit PIC automatically; hand\n  assembly must use only PC-relative and register-indirect modes. Load\n  address is assigned at fork time.\n- **Reentrancy:** one module copy serves all processes; each reaches its\n  own data through a6 (linker convention). Data modules are the deliberate\n  non-reentrant exception.\n- **C string li"
+}

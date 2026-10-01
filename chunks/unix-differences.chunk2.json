@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 2,
+  "text": "ll.md` for the\ntest). Full resolution rule, `PATH` guidance, and the\ncompiler-driver exception: `os9-mental-model.md`'s \"Two current\ndirectories, not one\" section; under os9exec, its own gotchas:\n`using-os9exec-repl.md`.\n\n### 2. Lines end with CR, not LF\n\nOS-9's line terminator is CR (0x0D), not LF (0x0A) - the most common\nsnag when a file crosses between Unix and OS-9.\n\n- OS-9 C's `\\n` **is CR**, not LF - a separate `\\e` escape produces a true\n  LF when one is genuinely needed.\n- A Unix-authored (LF) source file can make the OS-9 C compiler read the\n  whole file as one line, producing cascading syntax errors at nonsensical\n  spots.\n- RBF/SCF translation behavior: see `os9-mental-model.md`'s \"Conventions\n  that bite\" section.\n- Convert on the Unix side before the file reaches OS-9 (`tr '\\n"
+}

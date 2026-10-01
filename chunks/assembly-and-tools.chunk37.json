@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 37,
+  "text": "independently position-independent), and **RLINK** combines the resulting\nrelocatable object files (ROFs) into one module, assigning real addresses and\nresolving cross-file symbol references. Change one section, reassemble just\nthat section, relink.\n\nA program with only uninitialized `VSECT` data (`RMB`) gets its data-area\nregisters set up by RLINK's startup convention. A program needing\n*initialized* data (values baked into the object file) additionally needs\n**`Root.a`** - an assembly-source startup module shipped with the assembler -\nlinked ahead of it; `Root.a` copies initializer values into the live data\narea at load time and sets up `Y`/`U`/`X` itself. It is unrelated to the C\ncompiler's `cstart.r`/`cstart.a` (see `c/os9-clib-reference.md`): same\npurpose, different toolchain, not int"
+}

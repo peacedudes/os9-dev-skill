@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 23,
+  "text": "d commands up to, but not past, the 8K boundary. Two tools rebuild a merged `OS9Boot` file after editing which modules it contains: **`COBBLER`** copies the in-memory (already-patched) boot image to disk, preserving any live patches; **`OS9GEN`** instead builds fresh from a module list read from disk, so it does *not* pick up in-memory changes. `MODBUSTER` (public-domain, D.P. Johnson) does the reverse of merging - it splits a merged `OS9Boot` back into individual module files.\n\nDirect binary patching of a resident module's bytes is done with `MODPATCH`, either interactively or by feeding it a command script (`MODPATCH scriptfile`): `L` links/loads the target module, `C <offset> <hexbytes>` changes bytes at an offset, `V` re-verifies the module's CRC afterward (required, since a hand-edite"
+}

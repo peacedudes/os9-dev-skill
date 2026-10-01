@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/SKILL.md",
+  "chunk_index": 3,
+  "text": "del\n\n- Drivers and file managers are ordinary OS-9 modules (shared mechanics:\n  os9-dev `common/module-format.md`); what differs is the **calling\n  convention** - the kernel invokes specific entry points with a specific\n  register setup instead of forking the module.\n- **Driver static storage arrives zeroed, not initialized** - a driver has\n  no data-initialization table; everything is set up explicitly in `Init`.\n- RBF/SCF/SBF are the reference implementations of the file-manager\n  pattern; a custom manager follows the same entry-point shape.\n\n## Deeper information\n\nRead `references/INDEX.md` first. If the task also has an application\nside (e.g. testing a new driver from a C program), read `os9-dev` too.\n\n**Answer specifics from the references, not from recall** - entry-point\nregisters, s"
+}

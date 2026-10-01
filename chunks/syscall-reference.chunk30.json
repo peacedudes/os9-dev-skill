@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 30,
+  "text": "ed signals first |\n| **F$STrap** | Install error-exception handler | **(a0)=the stack the handler is to run on** (0 = the stack current at the call), (a1)=service table. Error exceptions occupy **vectors 2-8, 10-24, 48-63** and are normally fatal (`Manual`, v2.4 TRM p. 2-31); F$STrap catches those of the group *considered non-fatal*, which p. 1-60 names as bus error, address error, illegal instruction, zero divide, CHK, TRAPV, privilege violation, line 1010 and line 1111 (2-8, 10, 11) plus seven FPCP exceptions (48-54). The manual warns that not all catchable vectors apply to every CPU - 48-54 are 68020/68030 only. Handler entry registers and the resume sequence: `68k/os9-68k-assembly.md`. An F$DFork child's resources survive for post-mortem. `Live` (os9exec) |\n| **F$TLink** | Install trap"
+}

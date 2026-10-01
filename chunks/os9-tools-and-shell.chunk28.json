@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 28,
+  "text": "nts` (event-table\nlist), `date` (`-j` Julian), `setime` (start the system clock - run it at\nboot; multitasking scheduling depends on the clock; `setime -s` reads a\nbattery-backed clock), `tmode`/`xmode`, `tsmon` (watch terminals for\nlogins), `login`, `echo`, `break` (enter the ROM debugger, superuser),\n`moded` (edit module option tables), `binex`/`exbin` (module <-> S-record\nconversion), `romsplit` (split images for ROM burning), `make`, `shell`.\n\nUtilities live in `CMDS` and are found via the execution directory and\n`PATH` - see `unix-differences.md` for why `chd` alone never makes a\nprogram runnable.\n\n---\nSources: Using Professional OS-9 v2.4 (shell, basic commands, utilities);\nThe OS-9 Primer (environment variables, built-ins); The OS-9 Guru §2.1-2.2;\nOS-9 v2.4 Technical Reference Manua"
+}

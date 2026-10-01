@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 9,
+  "text": "SSWI`'s raw hardware-vector mechanism may have a different, undocumented entry/exit convention |\n| F$PErr | $0F | B=error code | Writes to the standard error path. A stock system prints a bare `ERROR #<decimal>`, but **the reporting routine is vectored and replaceable by design** - freely on Level 1; on Level 2 only system-wide, and Microware shipped no Level 2 replacement. So NitrOS-9's fuller `Error #216 - Path Name Not Found` line is that documented extensibility in use, **not** undocumented richness. `Manual` + `Live` (NitrOS-9) |\n| F$PrsNam | $10 | X=pathlist | One name per call. Returns X past a leading `/`, Y=address of last name char +1, A=delimiter byte, B=count. Terminates on any non-component character **or a set high-order bit**, and **skips one trailing comma or any number of "
+}

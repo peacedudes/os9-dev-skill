@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 29,
+  "text": "s:** OS-9 v2.4 Technical Reference Manual, Technical I/O Manual v2.4,\nDisk File Organization manual, Using Professional OS-9 v2.4, OS-9 Insights,\nThe OS-9 Guru, The OS-9 Primer, OS-9 C Compiler manual, BASIC09 Reference\nManual (Rev H), OS-9 BASIC User Manual (Rev G, 1991) (all official Microware\ndocumentation). Directory-resolution rule, line-ending behavior, C `int`\nsize, module-header offsets, and the control-key/`tmode` fix additionally\nverified live on os9exec.\n"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 31,
+  "text": "l task/image setup; returns Y=DAT image ptr. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`) |\n| F$LDAXY | $46 | X=block offset, Y=DAT image ptr | Yes | Load A from `[X,[Y]]` - cross-task memory access primitive; returns A=data byte; no bounds check. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`) |\n| F$LDAXYP | $47 | X=block offset, Y=DAT image ptr | Yes | Load A from `[X+,[Y]]` (post-increment variant); returns A=data byte, X=incremented. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`) |\n| F$LDDDXY | $48 | D=offset-to-the-offset, X=offset within DAT image, Y=DAT image ptr | Yes | Load D from `[D+X,[Y]]`; returns D=2 bytes; offsets relative to the first block the DAT image points to. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`) |\n| F$LDABX | $49 | B=task#, X=data ptr | Yes | Load A from `0"
+}

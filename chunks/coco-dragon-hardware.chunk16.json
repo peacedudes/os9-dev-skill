@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 16,
+  "text": "t printer baud rate is 600; most printers accept far higher, but raising it isn't strictly linear - too-high a rate can paradoxically slow printing, so the practical rate for a given printer/cable is usually found by testing with `xmode`, not assumed from the printer's rated maximum. None of this applies to a parallel-port printer - parallel transfer has no baud rate, so `tmode`/`xmode` baud settings are simply ignored for it.\n\n**Multi-user terminals:** OS-9 supports up to three external keyboard/monitor pairs (`T1`/`T2`/`T3` device descriptors) attached to one CoCo simultaneously - real multi-user capability, not just multi-tasking a single console. In practice, though, additional terminals visibly slow down the primary user under heavy CPU or disk load, since it's still one 6809 sharing "
+}

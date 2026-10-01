@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 13,
+  "text": "he codes SCF already owns.** `Live`\n  (NitrOS-9). `tmode` on an inetd channel reports `bsp=08 del=18\n  eor=0D eof=1B reprint=04 dup=01 psc=17 abort=03 quit=05` - every control key\n  is a *guest-side* setting, so rewriting one host-side both hides the real key\n  and silently overrides whatever the user set. An allowlist bridge that\n  passed only six control bytes killed **Ctrl-A (`dup` - recall last line, and\n  OS-9's whole command-history mechanism: the line editor has no cursor\n  movement, so there is nothing for an arrow key to drive)**, Tab, Ctrl-W\n  (`psc`) and Ctrl-D (`reprint`), and remapped Ctrl-D to Esc, so the one key\n  that redisplays a line instead logged you out. Pass everything through and\n  leave remapping to `tmode`.\n- **The Backspace key is the one code a bridge legitimatel"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "AI_USAGE_DE.md",
+  "chunk_index": 1,
+  "text": "eispiele, Schritt-für-Schritt-Anleitung) spezifizieren.\n\nBeispiel-Workflows:\n- Frage an KI: \"Wie funktioniert das Dateisystem-Modul X unter OS-9?\" → Retrieval relevante Kapitel → Synthese + Code-Snippets.\n- Automatische Code-Generierung: Nutze Beispiele aus dem Repo als Referenz-Korpus und generiere Manager/Treiber-Stubs.\n\n"
+}

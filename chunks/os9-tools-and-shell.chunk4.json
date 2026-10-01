@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 4,
+  "text": " All three |\n\nCombine freely: `cmd >out >>err` sends output and errors to separate files.\n\n`Live` (NitrOS-9, os9exec): a failing `del`'s error text went to\n`>>` (`del: can't delete '...'`, 40 bytes captured) but *not* to `>` (0\nbytes) - direct confirmation that `>`=stdout, `>>`=stderr. `cmd >>>/nil`\nswallows a stderr banner. `<>>>path` is owner-stated and accepted live -\nnote the shell still prints a failed child's exit status on its *own*\nstderr, which is not the child's and looks like a leak.\n\n`;`/`&`/`!` are also `Live` (os9exec) (`echo A;echo B` both ran; `echo hello !\ntr a-z A-Z` -> `HELLO`; `echo A & echo B` both ran).\n\nWildcards `*` (any string) and `?` (one character) are expanded by the shell\nitself via `F$CmpNam`; the program receives matched names only.\n\n**A pattern matching not"
+}

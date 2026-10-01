@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 5,
+  "text": "ototypes.\n  See `c/kandr-vs-ansi.md` before reaching for ANSI syntax.\n- `\\015` writes the CR that OS-9 uses as its line terminator; the resulting\n  file dumped as 20 bytes ending `0d`. `\\n` is *not* a newline here - see\n  `common/unix-differences.md`.\n- **Don't interleave `write()` and `printf()` on the same path** - this\n  program keeps the file on its own path and messages on stdout. The File\n  I/O section below has the corruption details.\n\n## Standard Headers Available\n\n| Header | Notes |\n|--------|-------|\n| `<stdio.h>` | File I/O, printf/scanf; defines `FILE`, `stdin`, `stdout`, `stderr` |\n| `<stdlib.h>` | `exit()`, `system()`; limited (no `rand()`, etc.). **Not on Ultra C's default `CDEF` include path** - `Live` (os9exec): `#include <stdlib.h>` fails `cpp` with `can't open /h0/DEFS/s"
+}

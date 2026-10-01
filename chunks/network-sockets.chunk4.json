@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 4,
+  "text": "emory. IFMAN/SOCKMAN carve one contiguous block out of the kernel at startup\nvia `mbinstall`, then satisfy every further Internet-related allocation from\nthat pool - faster, and keeps network traffic from competing with\napplication memory.\n\n**Supported subset:** `AF_INET` only (no other BSD address families);\n`SOCK_STREAM` (TCP) and `SOCK_DGRAM` (UDP) only. Non-blocking I/O and\nout-of-band data are not fully supported in this version. There is no\n`select()` - `_ss_sevent()` is the OS-9 replacement, letting a process wait\non multiple socket paths at once (BSD `select()` was judged impractical to\nimplement directly on OS-9).\n\n---\n\n## Socket structures\n\nDefined in `in.h` / `netdb.h`:\n\n| Structure | Fields | Returned by |\n|---|---|---|\n| `sockaddr_in` | `sin_family` (=`AF_INET`), `sin_port`, `"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 13,
+  "text": "er and supports 10/15/30MB drives; its drivers ship as part of the OS-9 Level 1 Development Pak product.\n\nHard drives spin at 3600 RPM (12× a CoCo floppy's 300 RPM) with heads flying at 18 millionths of an inch or less above the platter - never move a running drive, since a head strike destroys data; most drives have a safe inner-cylinder landing zone, some auto-park.\n\n## Serial (ACIA) Configuration\n\nVia `TMODE`/`XMODE`'s `baud=` and `type=` parameters - these are two separate fields, not a baud/word-length/parity split across both: `baud=` alone packs baud rate, word length, *and* stop bits (bits 0-3 baud rate, bit 4 reserved, bits 5-6 word length, bit 7 stop bits); `type=` is the device-initialization byte, interpreted device-dependently. **For ACIA (serial) devices:** parity (bits 0-2):"
+}

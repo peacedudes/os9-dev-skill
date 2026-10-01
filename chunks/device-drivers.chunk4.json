@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 4,
+  "text": "ic rules based on which\ndevice opens are happening and whether the driver is already attached.\n\nWhen a path opens a device name the kernel has never seen before (no\nmatching device-table entry), the kernel allocates fresh static storage for\nthe driver, initializes `V_PORT` from the device descriptor's hardware\naddress field, and invokes `INIT`. If `INIT` succeeds, a device-table entry\nis created and the caller gets a path. If `INIT` fails partway through, the\nkernel immediately calls `TERM` (even though `INIT` didn't finish), then\ndeallocates the storage and returns the error - **no device-table entry is\ncreated**. This is why `TERM` must validate static storage state before\nusing it; it may be partially initialized or zeroed-but-not-configured.\n\nOn subsequent opens, the kernel searches fo"
+}

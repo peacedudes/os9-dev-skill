@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 17,
+  "text": ", because stdin was never opened by that code. A program can therefore\nlook half-working in a way that points at the pattern matcher rather than the\nopen.\n\nWrite `S_IREAD` (1). Treat a literal `0`, or any `O_RDONLY` from a compatibility\nheader, as a porting defect until you have checked what that header defines.\n\n### `I$Create` is not `creat()`\n\n`Manual` (v2.4 TRM, I$Create): *\"An error occurs if the pathlist specifies a file\nname that already exists.\"* Unix `creat()` on an existing file truncates it and\nhands it back; OS-9 refuses with **`E$CEF` (218)**. Anything built on\nopen-or-create, or on \"clobber the output file and start writing\", needs its own\ndelete-then-create, and should expect 218 rather than treating it as fatal.\n\n`I$Create` also **cannot make a directory** - that is `I$MakDi"
+}

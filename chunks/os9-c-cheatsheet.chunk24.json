@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 24,
+  "text": "sation block\n  instead**, so `yyin` is null until the first call. A `freopen` in `main()`\n  reopens nothing, the scanner then reads `stdin`, and the program prints\n  nothing - **with no error at all** - `Live` (os9exec).\n\nOne grep settles which you have:\n\n```sh\ngrep -n 'yyin' LIB/flex.skel        # declaration-initialised, or set in yylex?\n```\n\n**The failure hides from the obvious test.** A scanner whose `freopen` did\nnothing still works perfectly when you pipe input into it, because `stdin` was\nwhat it was going to read anyway. Only invoking it with a *named file* exposes\nthe bug - so a test suite that pipes its fixtures will pass a scanner that\ncannot open a file at all. That is the same asymmetry as the `putc` line-buffering\ntrap in `c/os9-clib-reference.md`: **the convenient way to dri"
+}

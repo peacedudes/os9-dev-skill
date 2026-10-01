@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 2,
+  "text": " part of the base OS-9 kernel - this file documents version 1.4\n(Microware, July 1992, Product Number INT-68-NA-68-MO - the \"68\" in the part\nnumber is the product line, not a version digit), which requires OS-9/68000\nv2.3 or later. The source manual never mentions the 6809 anywhere and its\nown product number identifies it as 68K-specific; there's no evidence a 6809\nport ever existed.\n\n---\n\n## System architecture\n\nThe stack is built from cooperating OS-9 modules, not a monolithic kernel\nsubsystem:\n\n| Module | Role |\n|---|---|\n| **SOCKMAN** | Socket manager - the only thing user programs talk to (via `socklib.l`). Dispatches calls into the protocol modules and exposes a standard calling interface plus timer services, so a new protocol module can be added later without touching SOCKMAN or the"
+}

@@ -1,0 +1,338 @@
+[
+  {
+    "path": "AGENTS.md",
+    "title": "OS-9 development skills - agent guide",
+    "length": 3587,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "AI_USAGE_DE.md",
+    "title": "Anleitung: Wie KIs diese Wissensbasis nutzen können (Deutsch)",
+    "length": 1075,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "CLAUDE.md",
+    "title": "Claude Code",
+    "length": 279,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "CONTRIBUTING.md",
+    "title": "Corrections and additions",
+    "length": 10970,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "DIVERGENCES.md",
+    "title": "Divergences from Microware documentation",
+    "length": 2956,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "README.md",
+    "title": "OS-9 skills for AI coding assistants",
+    "length": 8931,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "SOURCE-AUTHORITY.md",
+    "title": "Source authority: what counts as Microware's word",
+    "length": 7881,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "SUMMARY_DE.md",
+    "title": "Zusammenfassung: os9-dev-skill (Deutsch)",
+    "length": 839,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "TRANSLATION_TASKS.md",
+    "title": "Übersetzungsaufgaben für os9-dev-skill",
+    "length": 885,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/SKILL.md",
+    "title": "OS-9 Development Skill",
+    "length": 5434,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/SOURCES.md",
+    "title": "Provenance",
+    "length": 8418,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/6809/assembly-and-tools.md",
+    "title": "OS-9/6809 Assembly, Editor, and Debugger",
+    "length": 44518,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/6809/coco-dragon-hardware.md",
+    "title": "CoCo/Dragon Hardware-Specific Reference",
+    "length": 25884,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/6809/gfx-windowing.md",
+    "title": "6809 BASIC09 Graphics: GFX and GFX2",
+    "length": 33028,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/6809/reading-the-coco-screen.md",
+    "title": "Seeing the CoCo Screen (6809, XRoar)",
+    "length": 7348,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/6809/syscalls-and-module-format.md",
+    "title": "OS-9/6809 System Calls and Module Format",
+    "length": 37425,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/6809/using-nitros9-repl.md",
+    "title": "Driving a live NitrOS-9 (6809) system",
+    "length": 32510,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/6809/utility-usage.md",
+    "title": "6809 OS-9 Utility Usage: Syntax and Options",
+    "length": 34373,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/68k/network-sockets.md",
+    "title": "OS-9/Internet: Networking and Socket Programming",
+    "length": 13602,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/68k/os9-68k-assembly.md",
+    "title": "OS-9/68000 Assembly Language Reference",
+    "length": 30610,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/68k/syscall-reference.md",
+    "title": "OS-9/68000 System Call Reference",
+    "length": 30730,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/CONFIDENCE-TAGS.md",
+    "title": "Confidence tags",
+    "length": 5542,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/INDEX.md",
+    "title": "Reference Index - read the matching row(s) before answering",
+    "length": 28955,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/basic09/basic09-language.md",
+    "title": "BASIC09 Language Reference - shared, architecture-independent",
+    "length": 38661,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/basic09/basic09-per-target.md",
+    "title": "BASIC09 per target - 6809 vs OS-9/68000",
+    "length": 16301,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/basic09/gotchas.md",
+    "title": "BASIC09 Gotchas - all targets unless noted",
+    "length": 8750,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/basic09/pack-and-runb.md",
+    "title": "PACK and RunB: Packed BASIC09 Modules",
+    "length": 14417,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/c/kandr-vs-ansi.md",
+    "title": "K&R vs ANSI C: OS-9 Microware Compiler",
+    "length": 10972,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/c/os9-c-cheatsheet.md",
+    "title": "OS-9 C Compiler Cheatsheet (68k)",
+    "length": 34150,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/c/os9-clib-reference.md",
+    "title": "OS-9 C Standard Library Reference",
+    "length": 47769,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/common/error-codes.md",
+    "title": "OS-9 Error Codes Reference",
+    "length": 23447,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/common/ipc.md",
+    "title": "OS-9 Inter-Process Communication: Patterns and Gotchas",
+    "length": 19926,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/common/memory-and-io.md",
+    "title": "OS-9 Memory Model and I/O Architecture",
+    "length": 21472,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/common/module-format.md",
+    "title": "OS-9 Module Format",
+    "length": 22207,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/common/os9-mental-model.md",
+    "title": "OS-9 Mental Model",
+    "length": 10090,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/common/os9-tools-and-shell.md",
+    "title": "OS-9 Shell and Utilities",
+    "length": 22112,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/common/unix-differences.md",
+    "title": "OS-9 for people who already know Unix",
+    "length": 22220,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/common/using-os9exec-repl.md",
+    "title": "Driving os9exec as an Agent",
+    "length": 58471,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-dev/references/common/utility-usage.md",
+    "title": "OS-9 Utility Usage: Syntax and Options",
+    "length": 21032,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-systems-dev/SKILL.md",
+    "title": "OS-9 Systems Development Skill",
+    "length": 4986,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-systems-dev/SOURCES.md",
+    "title": "Provenance",
+    "length": 1745,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-systems-dev/references/6809-level2-mmu.md",
+    "title": "OS-9/6809 Level 2 Memory Management (DAT/MMU)",
+    "length": 8920,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-systems-dev/references/INDEX.md",
+    "title": "Reference Index - read the matching row before answering",
+    "length": 4007,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-systems-dev/references/device-drivers.md",
+    "title": "OS-9 Device Drivers",
+    "length": 16578,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-systems-dev/references/file-managers.md",
+    "title": "OS-9 File Managers",
+    "length": 27757,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "os9-systems-dev/references/kernel-internals.md",
+    "title": "OS-9 Kernel Internals",
+    "length": 26555,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "tools/DESIGN.md",
+    "title": "Skill-doc consistency checker - design",
+    "length": 21573,
+    "language": "en",
+    "topics": []
+  },
+  {
+    "path": "tools/release-notes.md",
+    "title": "",
+    "length": 1308,
+    "language": "en",
+    "topics": []
+  }
+]

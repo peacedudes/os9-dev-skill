@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 20,
+  "text": "stalls/removes a virtual (software-polled) interrupt handler; no output beyond carry/error. Packet layout: `Vi.Cnt`($0, 2 bytes)=live counter, `Vi.Rst`($2, 2 bytes)=reset value, `Vi.Stat`($4, 1 byte)=status (bit 0 set when the VIRQ fires, bit 7 set if the counter should reset instead of one-shot). `Source` (NitrOS-9 `clock.asm`) matches the Technical Reference exactly, including delete-by-matching-Y. `Live` (NitrOS-9) for both install and delete |\n\n### Privileged system-mode F$ ($28-$52)\n\nKernel-internal; listed for completeness, not for ordinary programs. Codes are\n`Manual`, cross-confirmed across two independent listings. Params come from\nthe System Programmer's Manual §11.2/12.1; `F$NProc`, `F$SRqMem`, `F$AllImg`,\n`F$AllPrc`, `F$AllRAM`, `F$AllTsk` and `F$Move` were diffed against those"
+}

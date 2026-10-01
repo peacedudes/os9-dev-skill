@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/SOURCES.md",
+  "chunk_index": 11,
+  "text": "agree, both readings are recorded in the file with\na `Flag` tag, rather than silently picking one (see common/error-codes.md\nand common/module-format.md for examples).\n"
+}

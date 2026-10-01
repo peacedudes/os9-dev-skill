@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 20,
+  "text": " setting among several right\nones rather than an obvious breakage; and option changes may not be private to\nyour path at all (see the `PD_ALF` discussion in `common/memory-and-io.md`), so a\nwhole-struct replay can undo something another *process* set, not merely another\nroutine of yours.\n\n## A signal that kills a read leaves stdio latched, and the loop spins\n\n`Live` (os9exec). A signal in the deadly range aborts a blocked serial or pipe\nread (see `common/ipc.md`), and through Microware stdio the aftermath is worse\nthan the abort:\n\n- `getchar()` returns **EOF**, with `ferror(stdin)` **set**;\n- the error flag **stays set**;\n- every later `getchar()` returns -1 **immediately, without reading**, until\n  `clearerr(stdin)`.\n\nSo a program looping on `getchar()` does not block, does not report any"
+}

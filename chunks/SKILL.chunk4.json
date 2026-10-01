@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/SKILL.md",
+  "chunk_index": 4,
+  "text": "nces, not from recall** - entry-point\nregisters, struct offsets, scheduler constants and boot order are exactly the\ndetails that general knowledge of OS-9 gets wrong. **If you cannot open them,\nsay which claim you could not check** instead of supplying it from memory.\n\n## Verification\n\n**Neither emulator is OS-9.** `os9exec` and NitrOS-9 are reverse-engineered\nreimplementations built by the user community, and both have had real errors.\nThat matters more here than in the sibling skill: kernel structures, dispatch\nconventions and scheduler behaviour are exactly where a reimplementation is\nlikeliest to have simplified something. A `Source` tag here means \"this is\nwhat os9exec's C does\" - a statement about os9exec, not about OS-9. Where a\nMicroware manual disagrees with a runtime, the manual "
+}

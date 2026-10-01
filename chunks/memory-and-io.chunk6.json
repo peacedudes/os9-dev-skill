@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 6,
+  "text": "wn pool of memory already obtained from the system but not yet\nhanded to the caller, and only goes back to the kernel when that pool runs\ndry. Each trip to the kernel requests in units of a configurable minimum\nblock size (4K by default); a larger minimum trades some wasted space for\nfewer, less-fragmenting system calls.\n\nA hard constraint sits underneath all of this: **a process may hold at most\n32 memory areas at once** - and that ceiling counts the process's initial\nstatic storage and stack, not just what it asks for later, so fewer than 32\nare actually available. Both `malloc()`'s own system requests and any direct\n`_srqmem()` calls come out of the remainder. Programs with large\nor fragmented memory needs should request bigger chunks up front rather than\nmany small ones, precisely beca"
+}

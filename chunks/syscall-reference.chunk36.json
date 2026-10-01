@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 36,
+  "text": "a file that is\npresent and readable, some distance from the code that built the string. Compare\nthe 6809 entry, which *does* skip trailing spaces; neither line skips leading\nones, and `I$Open` separately skips **trailing** spaces (see its row above).\n\nOn the error path the 68k ERROR OUTPUT specifies carry + `d1.w` and nothing\nelse, so read nothing else back after `E$BNam`. (os9exec leaves `d0.b`/`a1`\nholding the caller's pre-call values, which conforms. `Source`.)\n\n**Do not import the 6809 entry's fuller contract here.** The 6809 System\nProgrammer's Manual describes this primitive with a trailing comma/space skip\nand a meaningful error-path pointer; the 68k line is an *evolution* of that\ndesign, not the same implementation, and the 68k TRM specifies neither. 68k\ncallers - the shell include"
+}

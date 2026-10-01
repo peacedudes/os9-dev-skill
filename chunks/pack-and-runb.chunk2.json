@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 2,
+  "text": "e` lands in **CHD** (the data directory),\n  `PACK proc >name` lands in **CHX** - on 68k, `/h0/CMDS`. The CHX rule\n  above is `PACK`'s alone; `SAVE` follows ordinary data-file resolution.\n  Use an absolute path for either when it matters.\n- **Packing does not speed up in-workspace execution** - measured\n  identical times packed vs. unpacked under interactive `basic`; BASIC09\n  always executes I-code. The manual's 10-30% speedup claim applies to\n  running under RunB (comment/name stripping), and is `Manual`, not\n  yet measured.\n- **Entry point when packing several procedures** - the biggest gotcha\n  here:\n\n| Form | Entry point of the output module |\n|---|---|\n| `PACK proc1,proc2` | The *first-listed* procedure |\n| `PACK*` (whole workspace) | The *first* procedure in workspace order (the top "
+}

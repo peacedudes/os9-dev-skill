@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 14,
+  "text": "e bare account name** (`send dog`, not\n`login dog`): `tsmon` has already invoked `login`, so there is no login verb.\nThe prompts it treats as \"ready\" are the shell `$`, `for hlp)` ending a\ndebug-prompt line, `User name?:` and `Password:`.\n\n**Set `OS9REPL_SESSION` when another session may be running.** It names the tmux\nsession (default `os9exec`), and two callers sharing one name will fight over\nthe same pane. `OS9REPL_TIMEOUT` is seconds per command (default 20 - raise it\nfor a compile), `OS9REPL_KEY_DELAY` the gap between keystrokes in `vi` mode. The\n6809 script reads `NITROS9REPL_*` equivalents and adds `connect` (an interactive\nsession in your own terminal) and `server` (the DriveWire protocol log).\n\n- **Gated `send`** - waits for a recognized prompt (shell `$`, debugger)\n  before and "
+}

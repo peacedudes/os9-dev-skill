@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 2,
+  "text": "r`) are server-side and may be ignored,\nwhich suits a harness - no telnet negotiation to strip.\n\n**Spawn `login`, not `shell`** (ownership - see Session facts). It prompts\n`User name?: `, and `Password: ` only when that user's password field is\nnon-empty. Answer on *every* connection: inetd forks a fresh login per\nconnection.\n\n**The guest picks the port, but the socket is bound host-side.** It comes from\nthe disk's `inetd.conf`, so concurrent harness runs need *different* ports and\neach run's disk clone must be edited to match - pointing a client at a port the\nguest never asked for just hangs, with nothing listening and no error.\n\nPrerequisites, each obtained separately: XRoar; a **CoCo3 ROM image**\n(proprietary, Tandy-derived, not redistributable); a bootable NitrOS-9 IDE\ndisk image (Nitr"
+}

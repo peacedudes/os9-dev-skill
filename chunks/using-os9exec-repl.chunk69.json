@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 69,
+  "text": "s the signal\n  instead and decides for itself: RunB is one, and its manual makes Ctrl-C\n  and Ctrl-E trappable by `ON ERROR GOTO` (`Manual`, *OS-9 BASIC User\n  Manual*, App. D). A loop that makes\n  no system calls is reached through the clock tick, so under `os9exec -q`\n  (tick off) neither key can take the CPU from it.\n- **Neither key aims at a process you choose.** Both are delivered to the\n  device's *last writer* (`Source`, os9exec: `lastwritten_pid`), so with two\n  processes interleaving output the signal can land on a bystander - the one\n  that happened to write most recently, not the runaway. `kill <pid>` after\n  `procs` is the aimed alternative, and the only safe one while output from\n  more than one process is in flight.\n- **ESC on a blank line** exits the shell; a harness restart"
+}

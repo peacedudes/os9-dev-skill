@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 17,
+  "text": "'t appear inside the string |\n| `FCS /str/` | Same as FCC but sets the sign bit on the last character - OS-9's string-termination convention |\n| `EQU expr` | One-time constant binding; label must not have been used before, operand can't reference not-yet-defined names |\n| `SET expr` | Like EQU but redefinable - for assembler control flags, not true constants |\n| `MOD size,nameoff,typelang,attrrev{,execoff,memsize}` | **`asm` only.** Emits the module header directly: rewinds both address counters to their `ORG 0` start, emits sync bytes `$87`/`$CD`, emits the 4 (or 6) header-field operands in order, computes the header-parity byte. Operand count must be exactly 4 or 6. **Breaks in Motorola-compatible mode** unless no `RMB`/`ORG` appears between `MOD` and `EMOD`. **`size` must cover `EMOD`'s"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 8,
+  "text": "mmands; `set x` aborted the shell on the first\ncommand error (a following `echo` never ran) while `set nx` continued past\nthe error. (`p`'s prompt *string* form `p=\"...\"` not separately exercised,\nonly the on/off behaviour.)\n\n- The `PROMPT` environment variable holds the prompt string; a leading `@`\n  expands to the shell-nesting level (tracked in `_sh`), so nested shells\n  show `1.`, `2.`, ... prefixes. Shipped default prompt is `$`.\n- Login (via `tsmon`) sets `PORT` (terminal), `HOME` (from the password\n  file), `SHELL`, and `USER` automatically; single-user systems set them in\n  a startup procedure file.\n\n## Procedure files\n\nA file of command lines, run by typing its name - the shell forks a child\nshell to execute it, so built-ins inside it (`chd`, `setenv`, ...) cannot\ndisturb the invo"
+}

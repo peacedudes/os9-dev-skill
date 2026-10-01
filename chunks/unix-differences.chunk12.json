@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 12,
+  "text": " Only deliberate IPC (pipes, data modules,\nevents, signals) shares state. Child inherits current\ndirectories/environment/open paths, not memory.\n\n`F$Chain` (≈ `exec()`) reuses the current process (no new PID), preserving\nopen paths.\n\n### Signals are numbers carrying data; handlers must be tiny\n\n- Numeric codes, not names. 0=Kill, 1=Wake (uninterceptable); 2=Abort\n  (Ctrl-E), 3=Interrupt (Ctrl-C); 5-255 reserved; 256-65535 user-defined,\n  the code itself usable as a payload. **The 256-65535 tier is 68k-only**\n  (16-bit code in `d1.w`) - 6809 carries the signal code in the 8-bit `B`\n  register and caps at 255; see `6809/syscalls-and-module-format.md`'s\n  Signals section for its (source-disputed) reserved-range boundary within\n  that smaller space.\n- A handler runs immediately and can't be in"
+}

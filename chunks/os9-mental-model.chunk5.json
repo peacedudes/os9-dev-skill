@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-mental-model.md",
+  "chunk_index": 5,
+  "text": "rams\n\n- **Colored memory**: allocation can request a specific memory type (fast/\n  slow/video/non-volatile RAM); uncolored requests get the highest-priority\n  type available.\n- **No MMU address translation** (on the classic line): a process's data\n  area is one contiguous block; `F$Mem` expansion needs free memory\n  immediately above it. Fragmentation is avoided, not repaired - drivers\n  allocating at open time scatter allocations, so `iniz` devices early.\n- Sticky (\"ghost\") modules save reload time but can be evicted when a\n  large contiguous request needs the space.\n- OS-9's small-footprint discipline (tiny headers, small default stacks, a\n  lean C library) is inherited from 6809 Level 1's 64K world and never\n  left; it's why OS-9 remained viable as an instant-on embedded/real-time\n  OS "
+}

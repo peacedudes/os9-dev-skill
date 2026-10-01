@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 15,
+  "text": " up. Every line after the `copy` is gone without a word,\n  and a stray `y` among them answers *yes*, so the overwrite can happen\n  anyway. Give `copy` an explicit `-r` (`-f` for a write-protected\n  destination) so it never asks. Abort-on-error does *not* rescue this case:\n  in a procedure file the prompt is reached before the failure can end the run,\n  so the error is reported, the overwrite still happens, and the lines that\n  answered it are gone.\n- **`sleep` counts ticks unless given `-s`.** `Live` (os9exec): `sleep 5` in a\n  procedure file meant to wait for a background server is gone in a twentieth\n  of a second, and the run ends before anything it was waiting for happens.\n  Write `sleep -s 5`. See `sleep` in `utility-usage.md`.\n\n**No two utilities spell \"don't ask\" the same way**, so "
+}

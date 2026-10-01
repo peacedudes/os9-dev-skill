@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 17,
+  "text": "he *shape* of the fact.\n\nSo this tool does not attempt to decide agreement. Given a commit (or the staged\nindex) it reports **which other files make claims about the same subjects**, and\nhands the judgement back. A changed line is claim-bearing only if it carries a\nquantity or limit wording; a bare mention is not a claim, and treating every\nmention as one is what makes a check noisy enough to be switched off.\n\n**Why advisory and not a gate.** It reasons about adjacency, so it can only ever\nbe a prompt. Per the false-positive rule above, a gate that blocks on a guess is\none people learn to bypass - and a bypassed gate protects nothing. It prints and\nexits 0. Its *tests* are a gate; its findings are not.\n\n**Two limits worth knowing before trusting it:**\n\n- **It works per-commit, not corpus-w"
+}

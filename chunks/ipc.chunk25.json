@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 25,
+  "text": "ontrol exists too (`SS_Lock` to lock/release a range by hand,\n`SS_Ticks` to bound how long to wait for a conflicting lock) but is rarely\nneeded - the automatic behavior above covers most real designs. **Deep\nmechanics, exact byte-range rules, and the assembly-level implementation**:\nsibling skill `os9-systems-dev`, `file-managers.md` -> Record Locking.\n\n## Reentrancy note for C programs using any of the above\n\nMicroware C generates reentrant code by default, with one exception: **system-state code (drivers, file managers)** must avoid globals/statics and stdlib calls (no per-process isolation at that privilege level). Use parameters or path-descriptor storage instead.\n\n---\n\nSources: OS-9 Insights (edition 3), cross-checked against the OS-9 v2.4\nTechnical Reference Manual's IPC chapter for "
+}

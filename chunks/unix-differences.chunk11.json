@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 11,
+  "text": "- \"repeat\"; see `os9-tools-and-shell.md`) |\n| Flow control | Ctrl-S pause / Ctrl-Q resume | Same (XOFF/XON), **plus** Ctrl-W pauses until any key |\n| EOF / exit shell | Ctrl-D | ESC on a blank line |\n\nHazard: an arrow key sends an ANSI escape sequence starting with a raw ESC\nbyte; the line editor reads bare ESC as \"exit.\" `tmode eof=04` remaps\nexit/EOF to Ctrl-D, verified live, fixing this.\n\nConfigurable per-device via `tmode`/`xmode` - table is the documented\ndefault, not guaranteed. Full key set and remapping:\n`os9-tools-and-shell.md`.\n\n---\n\n## Tier 2 - same concept, different contract (close, but specifics differ)\n\n### `fork` doesn't share memory\n\n`F$Fork` gives the child a fully independent data area - no\ncopy-on-write, no shared pages. Only deliberate IPC (pipes, data modules,\nevents,"
+}

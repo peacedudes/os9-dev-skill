@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 17,
+  "text": "is a path option that some earlier\n  program cleared, and it can outlive that program. The CR:LF ratio of the raw\n  stream settles which you have - see `common/memory-and-io.md`.\n- **Raw `key`** - no gating, returns after a fixed delay **without waiting\n  for the program to finish**. Poll the pane until the expected prompt\n  returns; never treat `key`'s return as completion.\n\nRule: if the pane's last non-blank line isn't the shell's `$`, use raw keys\nuntil you're back at the shell. One command at a time; never pipe a blind\nscript into an interactive session. On a wedged or garbled session, restart -\nit's cheap and reliable.\n\n## Host-side output filtering: always `grep -a`\n\nOS-9 programs emit control bytes freely; plain `grep` decides the stream\nis binary and replaces real output with `Bina"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "README.md",
+  "chunk_index": 0,
+  "text": "# OS-9 skills for AI coding assistants\n\nTwo agent skills that teach an AI coding assistant to work on **Microware\nOS-9** for the 6809 and the 68000. With them loaded, an assistant can write,\nport and debug BASIC09, Microware C and 68000 or 6809 assembly. It can drive\nthe shell and its utilities, build modules, make system calls, read error\ncodes, and work below the application line on device drivers, file managers\nand the kernel.\n\nInstall them in Claude Code:\n\n```\n/plugin marketplace add peacedudes/os9-dev-skill\n/plugin install os9@os9-dev-skill\n```\n\nOther assistants: see [Installing](#installing).\n\n## Why it exists\n\nAI models know very little about OS-9, and some of what they know is wrong.\nIts documentation is spread across decades of manuals, editions and scans, so\na model has seen litt"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 20,
+  "text": " only inside a `VSECT` or `CSECT` - **illegal directly inside a `PSECT`** |\n| `SETDP expr` | **`asm` only.** No label. Sets the internal direct-page counter used to auto-pick direct vs. extended addressing; default 0. The manual is explicit that ordinary OS-9 programs should **not** change it - it's for Motorola-compatible mode, where there's no OS-9-assigned run-time direct page. RMA has no equivalent |\n| `IFEQ/IFNE/IFLT/IFLE/IFGT/IFGE/IFP1 ... ELSE ... ENDC` | Conditional assembly. `IFLT`/`IFLE`/`IFGT`/`IFGE` test `operand <op> 0`, so comparing two symbols by subtraction reverses the intuitive reading (`IFLE MAX-MIN` is true when `MIN > MAX`). `IFP1` is true only on pass 1 - used to gate large `USE`d DEFS files so they're processed once. No labels; they nest freely |\n| `USE pathlist` | F"
+}

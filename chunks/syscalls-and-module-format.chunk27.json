@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 27,
+  "text": " | | Contiguous, block-rounded bootstrap memory request; returns D=granted count, U=block addr. **Deprecated since Level 2 v1.2** - equated to `F$SRqMem`. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`), matching `F$SRqMem`, consistent with the two being equated |\n| F$GProcP | $37 | A=PID | Yes | Translates a PID to its process descriptor's address *in system address space* - only meaningful with more than one address space; returns Y=descriptor ptr. `Source` (NitrOS-9 `fgprocp.asm`): the return register is unambiguously Y, a full 16-bit address. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`) |\n| F$Move | $38 | A=src task#, B=dest task#, X=src ptr, Y=count, U=dest ptr | Yes | Moves data between two address spaces (two DAT task mappings) - meaningless on single-address-space Level 1. `Live` "
+}

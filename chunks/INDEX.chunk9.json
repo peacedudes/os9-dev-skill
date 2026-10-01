@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 9,
+  "text": "eatsheet.md` |\n| A variable you exported on the host is ignored inside os9exec | only names starting with `@` cross (`@TERM=vt100`); what a non-crossing one looks like inside defeats a NULL check | `common/using-os9exec-repl.md` |\n| curses says `Unknown terminal type ''` though `getenv` returns your `TERM` | no `TERM` in that process's environment; under os9exec, `getenv` cannot tell the environment routes apart | `c/os9-clib-reference.md`, `common/using-os9exec-repl.md` |\n| Bus error in a byte-fill loop (`MOVE.B #$30,(A3)+`) after a write syscall | a float passed to curses `printw` - format with `sprintf`, draw with `addstr` | `c/os9-clib-reference.md` |\n| A ported program calls `fork`, `pipe`, `kill`, `sleep`, `dup`, `wait` or `getcwd` | none of them exist in `clib.l`/`unix.l`; `execl` i"
+}

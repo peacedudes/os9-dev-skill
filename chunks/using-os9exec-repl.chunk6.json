@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 6,
+  "text": " The symptom is\n    `Error #000:216` / `E_PNNF` on a path you just created and can see on the\n    host, which reads convincingly like a broken program or a corrupt image.\n    `dir /dd/<the directory you added to>` settles it in seconds, and is worth\n    making a reflex before debugging anything else. Build pipelines make this\n    easy to forget twice: knowing the rule does not help if the build step is a\n    separate command you did not run.\n  - **A device you did not configure is not absent - it falls back**, and the\n    fallback can be a different tree from the one you are editing. Setting only\n    `OS9H0` leaves `/dd` pointing at whatever the start path supplies, so a file\n    you changed under your own image is read from somewhere else entirely by any\n    program that opens `/dd/...` -"
+}

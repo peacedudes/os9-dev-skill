@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 14,
+  "text": "`math881` are the optional floating-point\n  handlers and referencing one is harmless.\n- A statically linked \"cio-free\" build of the same utility is noticeably\n  larger; prefer it when both exist. `Live` (os9exec).\n- **Linking the SDK's `cio` library against a mismatched `cio` module\n  silently corrupts I/O** rather than failing - the selector numbers differ.\n  Build trap-free (`-qm`) for anything installed; see the `-qm` pitfall\n  above.\n- Escape hatch: anything compiled with a public compiler plus a POSIX\n  wrapper header set that calls syscalls directly needs no trap handler.\n  `Live` (os9exec).\n- **The same banner also means \"present but not reachable.\"** A trap\n  handler's companion module is found through the module directory and then\n  the current execution directory, so moving `chx`"
+}

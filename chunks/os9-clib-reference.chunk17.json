@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 17,
+  "text": "he first byte survives because the buffer is\nnot yet set up, so that call takes the flush branch and evaluates `(c)` once.\n\n**So `prog >file` is clean and `prog | anything >file` is corrupt.** A test that\ncaptures output by redirecting to a file cannot find this class of bug, and a\nbyte-identical file comparison will pronounce the program correct. Test through a\npipe.\n\nGrepping source for `putc`/`putchar` with a `++` or `--` argument is a useful\nscreen but **not a verdict** - binaries carrying the pattern in their source have\nbeen measured clean. A shipped binary need not have been built from the source\nbeside it, or against this library vintage. Use the grep to choose what to test,\nthen settle it on the binary by comparing its output to a file against its output\nthrough a pipe.\n\nThe fix i"
+}

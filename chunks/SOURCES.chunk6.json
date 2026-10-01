@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/SOURCES.md",
+  "chunk_index": 6,
+  "text": "u; OS-9 Insights; Technical I/O Manual v2.4 |\n| 68k/os9-68k-assembly.md | The OS-9 Guru (68000-specific chapters); OS-9 v2.4 Technical Reference Manual; OS-9 C Compiler manual |\n| 68k/network-sockets.md | OS-9 Internet Software Reference Manual (68000-only; the API is not run - its libraries do not link with `l68`, though os9exec carries TCP) |\n| 6809/syscalls-and-module-format.md, 6809/assembly-and-tools.md | 9+ cross-referenced 6809 sources: OS-9 System Programmer's Manual (+ Rev F1 errata; Appendix C machine-code tables are the authoritative syscall-code source); Level 2 Operating System Manual; OS-9 Level Two Development System manual (Tandy); Tandy/CoCo Technical Reference; two independent User's Guides; Interactive Debugger manual; OS-9 Assembler/Editor/Debugger Manual (fully mined -"
+}

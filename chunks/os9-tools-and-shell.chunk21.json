@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 21,
+  "text": "ot just at input prompts. Unix-habit\ninversions (Ctrl-C != kill, ESC != harmless) are tabulated in\n`unix-differences.md`; the arrow-key/ESC hazard is in\n`using-os9exec-repl.md`.\n\n**Tip - switching between OS-9 and Unix all day.** Two `tmode` settings\nremove most of the friction, and both are worth making immediately:\n\n| Want | Set | Why |\n|---|---|---|\n| Ctrl-D ends input, as in Unix | `tmode eof=04` | OS-9's EOF is ESC ($1B) |\n| Backspace erases | `tmode bsp=7F` | modern terminals send DEL ($7F) for the Backspace key; OS-9 expects BS ($08), so out of the box Backspace inserts a literal character instead of erasing |\n\n`Live` (os9exec): before `bsp=7F`, `echo hellox<DEL>` prints `hellox` plus a\nstray $7F; after, the echo shows the BS-space-BS erase and it prints `hello`.\n`bse=`/`bsb` tune t"
+}

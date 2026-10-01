@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 3,
+  "text": " < 0) {\n        printf(\"FAIL os9fork, errno %d\\n\", errno);\n        exit(1);\n    }\n    child = wait(&status);\n    printf(\"PASS child pid %d exited, status %d\\n\", child, status);\n    exit(0);\n}\n```\n\nBuilt and run, and what it actually printed (`exfio1` is the worked\nassembly example from `68k/os9-68k-assembly.md`; its two lines appear\ninline because the child shares the terminal):\n\n```\ncc cex.c -f=/dd/CMDS/DOG/cex2\ncex2\n\nPASS create/write/close\nPASS open of a missing file: errno 216\nPASS os9fork of a missing module: errno 221\nPASS create/write/close\nPASS open of a missing file failed as expected: Error #000:216 (E_PNNF) Path Name Not Found\nPASS child pid 7 exited, status 0\n```\n\nWhat to take from it:\n\n- **`errno` holds OS-9 error codes, not POSIX ones.** A missing file gives\n  **216** (`E$PNN"
+}

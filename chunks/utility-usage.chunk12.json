@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 12,
+  "text": " file per column,\n  `-c=<char>` column separator, `-l=<n>`/`-r=<n>` margins, `-o` truncate\n  long lines, `-t` no title, `-u=<title>` title text, `-h=<n>` blank\n  lines after title, `-n=<n>` line-number increment, `-x=<n>` first page\n  number, `-f` newline padding instead of form feeds.\n- `rename [<opts>] <path> <newname>`\n- `touch [<opts>] {<path>}` - update modification date; `-c` don't\n  create missing files, `-q` continue past errors.\n- `tee {<path>}` - copy stdin to stdout plus every named path. **The\n  OS-9 heredoc:** `tee >file`, type content, end with the EOF key (ESC\n  by default; Ctrl-D after `tmode eof=04`) - quickest way to create a\n  short file anywhere.\n- `cmp [<opts>] <path1> <path2>` - per-mismatch offset/values; `-s` stop\n  at first difference, summary only.\n- `grep [<opts>"
+}

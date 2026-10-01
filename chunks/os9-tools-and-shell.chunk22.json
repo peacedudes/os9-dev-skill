@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 22,
+  "text": "S erase and it prints `hello`.\n`bse=`/`bsb` tune the echo side separately - see the parameter table in\n`common/utility-usage.md`.\n\nPut them in the account's `.login`, which is read from its **data** directory,\nto get them every session. Note `tmode` acts on the open **path**, so a change\noutlives the process that made it - it persists for the rest of the session,\nincluding across `logout`. That is what makes `.login` the right place for it,\nbut it also means a script or harness must not assume ESC is still EOF.\n\n## tmode, xmode, page pause\n\n- `tmode` changes the option bytes of an **open path** - immediate, and\n  gone when that path closes. `xmode` (SCF/GFM devices) updates the\n  **in-memory device descriptor** - takes effect at once and sticks\n  across path open/close until reboot; not pe"
+}

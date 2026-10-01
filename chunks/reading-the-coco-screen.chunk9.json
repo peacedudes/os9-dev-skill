@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/reading-the-coco-screen.md",
+  "chunk_index": 9,
+  "text": "at location is what the CoCo sees. On macOS, high-level AppleScript\nkey injection does not work: both `key code` and `keystroke` reach the process\nbut arrive as the *wrong key*. A HID-level `CGEvent` keyDown/keyUp pair posted\ndirectly to the process does work.\n\n**XRoar's `-gdb` target is a dead end**: connecting to port 65520 wedges the\nemulator - no RSP reply, no output even at `-debug-gdb -1`, unresponsive to\nSIGTERM, port left bound, needs `kill -9`. Confirmed on XRoar 1.11 / macOS\narm64. It would only have exposed the CPU's 64K logical space anyway, not the\nGIME's physical video buffer.\n"
+}

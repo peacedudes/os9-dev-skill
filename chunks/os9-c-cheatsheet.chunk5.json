@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 5,
+  "text": "n the module's raw\n  allocator, which reads `d0` as a byte count while `d0` actually holds the\n  `FILE *`. The allocation *succeeds*, so the call appears to return a pointer,\n  the `FILE`'s `ptr`/`end` are never updated, the next `putc` takes the slow path\n  again - and **every character leaks a fresh chunk until the arena is gone**.\n\n  Measured, `Live` (os9exec), from `putchar('x')` four thousand times:\n\n  | Build | x's written | error message |\n  |---|---|---|\n  | `-qixm` | **0** | none - the program just ends |\n  | `-qm` | 4000 | none |\n\n  The syscall trace makes the per-character leak direct rather than inferred:\n  the `-qixm` build issues **one `F$SRqMem` per `putchar`**, each asking for the\n  same large \"size\" (338,312 bytes in this run), never returning one; the first\n  98 succeed, "
+}

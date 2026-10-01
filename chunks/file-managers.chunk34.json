@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 34,
+  "text": " Microware OS-9 did.\n\n## File Security\n\nEvery file open checks access permission on every directory in the pathlist\nplus the target file itself - no read permission on a directory means nothing\nunder it is reachable, whatever the target file's own permissions say.\n\nOne gotcha for a file-manager author porting or debugging security logic:\n`FD_OWN` is nominally a 2-byte owner-ID field, but RBF compares only the\n**low-order byte** of both group and user ID from the password file - a user\nwith ID 256 (or group 256) collides with ID 0, which RBF treats as\nsuper-user. A file manager module itself, like a driver, must be owned by\nsuper-user with the system-state attribute bit set or OS-9 refuses to load it.\n\n## Device-Independence in Practice\n\nThe reason this layer exists: a program's `I$Read` is"
+}

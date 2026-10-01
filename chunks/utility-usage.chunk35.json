@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 35,
+  "text": "n't a Level 1 concept and doesn't appear in Level 1\n  documentation.\n- **`wmode`'s own manual coverage is thinner than its windowing\n  siblings.** `wcreate`, `montype`, and `tuneport` all have their own\n  entries in the Level 2 Operating System Manual; `wmode` doesn't - it's\n  sourced here from the Farna CoCo quick reference only (see `## Devices,\n  disks, system`). Functionally it still reads as Level-2-only, same as\n  the rest of the windowing set, just not documented in this particular\n  manual.\n- **Per-program memory limits are similar in practice, different in\n  mechanism.** Both levels cap a single program around 56-60K of usable\n  RAM after reserving space for ROM/vectors/video - Level 1 because\n  that's literally all the flat 64K address space has left over; Level 2\n  because even "
+}

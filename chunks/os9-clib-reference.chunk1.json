@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 1,
+  "text": "gainst\nthe manual's cross-reference table between C names and raw service-request\nnames (`F$xxx`/`I$xxx`).\n\n## A complete worked program - `Live` (os9exec)\n\nCompiled with `cc` and run. It covers the three things a C\nprogram does on OS-9 that a Unix habit gets wrong: path I/O, `errno`\ncarrying OS-9 codes, and process creation through `os9fork()` rather than\n`fork()`/`exec()`.\n\n```c\n#include <stdio.h>\n#include <errno.h>\n\n#define READ_MODE  1\n#define ATTRS      0x03\n\nmain()\n{\n    int path, child, status;\n\n    /* --- happy path: create, write, close --- */\n    path = creat(\"cexfile.txt\", ATTRS);\n    if (path < 0) {\n        printf(\"FAIL creat, errno %d\\n\", errno);\n        exit(1);\n    }\n    write(path, \"written by cexample\\015\", 20);\n    close(path);\n    printf(\"PASS create/write/close\\n\");\n\n  "
+}

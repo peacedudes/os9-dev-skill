@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 48,
+  "text": "t inode), and genuine RBF mechanics (allocation bitmap, record\n  locking) exist.\n- A **host-native directory** is a convenience shim: RBF-specific behavior has\n  nothing real underneath. Behavior observed on a host-native mount may not\n  hold on a real image or real hardware. `format`/`iniz` can build a real RBF\n  image from a blank file on an `OS9Hx` device when RBF-specific behavior\n  needs testing.\n\n  **Traversal above the root is confined**, `Live` (os9exec), **on\n  host-directory devices** - those configured through `OS9DISK`/`OS9Hx` pointing\n  at a directory, and those created by `mount -k=0`, which also makes one:\n  `list ../outside` and `list ../../../../outside` both give `E_PNNF` while a\n  read inside the device works. The four-level climb really did climb four\n  levels: on a hos"
+}

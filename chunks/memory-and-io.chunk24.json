@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 24,
+  "text": ", `/p2` | Parallel/serial printers |\n| `/r0` | RAM disk |\n| `/term`, `/t1`, `/t2` | Terminals |\n\nAll device names begin with `/`; a device name is also its device\ndescriptor module's name. `/dd` (default device) is a special alias for the\nprimary storage device (hard disk or RAM disk) - only one `/dd` descriptor\nis loaded at a time, and programs use it for config/data files without\ncaring what the actual physical device is. Changing what `/dd` points to\nrequires a new boot file/ROM or loading a different-revision descriptor.\n\n---\n\n## 6809-specific: direct page and stack facts\n\nThese do not apply to 68k and should not be blended with the general\nmaterial above - they're specific to the 6809's hardware direct-page\naddressing mode and this compiler's runtime.\n\n- **`direct` storage class** - t"
+}

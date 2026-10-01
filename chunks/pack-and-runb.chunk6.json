@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 6,
+  "text": "use instead of reaching the program.\n\n  Consequence: **a second `PACK` of the same procedure in one session fails**\n  with BASIC09 error `#000:051` (\"Line with Compiler Error\") - there is no\n  longer any source structure to run the extra compiler pass over. When the\n  target already exists, `PACK` first asks `Rewrite?:`; answer `n` and the\n  file is untouched. **Answer `y` and the file is truncated to 0 bytes before\n  the `#051`**, destroying the good module an earlier `PACK` wrote there. In\n  a batch that feeds `basic` its commands, the next input line answers the\n  prompt. Re-pack from a fresh `LOAD` of the saved source instead.\n- **`>pathlist` with a procname list prints a BASIC09 error and still\n  works.** `Live` (os9exec): `SAVE proc >target` and `PACK proc >target` print\n  `Error #00"
+}

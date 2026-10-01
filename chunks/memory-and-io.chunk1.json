@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 1,
+  "text": " Matches the MMU page size (e.g. 4K) - kernel allocates whole physical pages and subdivides them internally |\n| No MMU / no inter-task protection | 256 bytes |\n\nThe kernel manages free fragments *within* these larger blocks so a small\nrequest doesn't waste an entire page/block.\n\n### First-fit and the buddy allocator\n\nOS-9 supports two allocation strategies:\n\n- **First-fit** - grabs the first free block large enough for the request. Faster but more fragmentation-prone.\n- **Buddy-system allocator** - power-of-two-sized lists with subdivision on exact-size misses. Achieves bounded latency for real-time code, but requires MMU-based protection's `D_MinBlk` to exactly match the MMU page size to maintain security.\n\n### Colored memory\n\nOn systems with hardware memory-access limitations, colored me"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 0,
+  "text": "# PACK and RunB: Packed BASIC09 Modules\n\nHow BASIC09 procedures become standalone OS-9 modules and how they resolve\nat run time. The manuals are thin here; most facts below are `Live` (os9exec). Module-format background: `common/module-format.md`.\n\n## PACK\n\n**PACK is the last step of a build, not an editing operation** (`Hearsay` -\ndesign intent; the manuals give the mechanics without the reason). It\ncompresses a finished procedure to minimal I-code for RunB - a stripped\nBASIC09 with no editor or debugger - so that both the module and its\ninterpreter can live in ROM. Read the rest of this section against that: the\npacked form is one-way because nothing downstream ever reads it back, and the\nworkspace copy is consumed because the copy you keep is the one you `SAVE`d.\nLosing source to `PACK`"
+}

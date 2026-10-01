@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 52,
+  "text": "scratch is hard on a Level 2 system with DAT mapping, and a wrong range corrupts the running system mid-session |\n| `S expr1 expr2` | Search memory from Dot for a 1- or 2-byte pattern |\n| `E text` | Load a program for execution (like Chain, but keeps the debugger resident as a coroutine); shows the initial register dump; `G` starts it |\n| `L text` | Link to a module by name; sets Dot to its first byte |\n| `$` / `$ cmd` | Drop into the OS-9 shell / run one shell command, returning afterward |\n| `Q` | Quit (via `F$Exit`) |\n\n**`S` must start from a real code or data address** - searching from `$0`\nfinds nothing, since low direct-page memory isn't meaningful search territory.\nTake a starting address from a `:` register dump's `PC` column.\n\n**`L` and `E` only find modules already in the live mo"
+}

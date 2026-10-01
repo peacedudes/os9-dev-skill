@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 26,
+  "text": "-byte minimum reservation** - even with zero `direct` variables\n  declared, the linker still reserves at least 1 byte of direct-page space.\n  This is deliberate: it guarantees a pointer to a direct-page variable can\n  never be NULL (0).\n- **64-byte stack overhead per call** - on each C function entry, a\n  system-interface routine reserves that function's own stack needs plus a\n  fixed **64 bytes** for user-written assembly routines, the system\n  interface, and arithmetic-support routines. This 64-byte figure is\n  specific to this 6809 runtime and not confirmed for a 68k runtime (which\n  would likely need a larger reserve, given wider registers).\n- **Stack overflow detection** - the runtime tracks the lowest stack address\n  granted so far; if a new function's stack request would push that\n "
+}

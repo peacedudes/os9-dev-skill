@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 21,
+  "text": "size of the pipe buffer\" (`Manual`, `Flag`) |\n\n## Events (F$Event subfunctions)\n\nOne counter primitive covers mutex + condition variable + counting\nsemaphore (see `common/ipc.md`). **F$Event** = `$53`; the subfunction is in\n`d1.w`. Function codes: Ev$Link=`0`, Ev$UnLnk=`1`, Ev$Creat=`2`,\nEv$Delet=`3`, Ev$Wait=`4`, Ev$WaitR=`5`, Ev$Read=`6`, Ev$Info=`7`,\nEv$Signl=`8`, Ev$Pulse=`9`, Ev$Set=`$0A`, Ev$SetR=`$0B`.\n\n**Register contracts** (`Live` (os9exec)):\n\n- **Ev$Creat**: a0=name, d0.l=initial value, d1.w=2, d2.w=wait-increment,\n  d3.w=signal-increment -> d0.l=event ID. `E$EvBusy` if the name exists.\n- **Ev$Link**: a0=name, d1.w=0 -> d0.l=event ID (`E$EvNF` if not created yet).\n- **Ev$Wait**: d0.l=event ID, d1.w=4, d2.l=min, d3.l=max -> **blocks** until\n  `min <= value <= max`, then adds the "
+}

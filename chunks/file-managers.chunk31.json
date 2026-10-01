@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 31,
+  "text": "uctive, the honest order is: read, check what was actually touched,\n   unwind if it conflicts. Writes are the opposite - destructive, exact\n   length known up front, so check before.\n4. **Refuse a same-process conflict rather than sleeping on it**\n   (`E_DEADLK`). The only process that could release the lock is the one\n   about to wait for it. Without this, a single-process test doesn't fail, it\n   *hangs* - and this refusal is what makes the whole mechanism testable\n   without concurrency.\n\nAlso: **`SS_Ticks` is only as good as the scheduling under it.** A timeout\ncan fire only if the blocked process is re-run while it waits, so on a\nruntime that never preempts, a blocked reader may never notice its deadline.\nos9exec re-runs a lock waiter when its `SS_Ticks` deadline comes due, from the\ns"
+}

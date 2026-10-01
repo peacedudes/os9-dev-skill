@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 15,
+  "text": "cific additions:\n\n- By Microware convention `TRAP #13` is CIO and `TRAP #15` is the math\n  trap (see `common/module-format.md`'s Math module section).\n- **No file on this SDK's disk defines the I$/F$ call names as assemblable\n  symbols** - `Live` (os9exec): `dc.w I$Write` assembles clean (`r68` treats an\n  unresolved name after `dc.w` as an ordinary external symbol and defers\n  to the linker with no warning), but `l68` then fails with `Symbol\n  'I$Write' unresolved`. A search of the SDK's `DEFS` tree (`oskdefs.d`, `macros.d`,\n  both the `os9lib` and `GCC2` header trees) finds `I$Open` only once, in a\n  C comment in `funcs.h` beside `#define I_OPEN (0x84)` - a C constant under\n  another name, not an assemblable symbol. `syscall-reference.md`'s call names must be\n  hand-defined as numeric `E"
+}

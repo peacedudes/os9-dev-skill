@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 15,
+  "text": "C09 subroutine modules.\n- `mdir [<opts>] [<modname>]` - `-e` extended, `-a` show language\n  field, `-t=<type>` filter by type, `-u` unformatted for piping.\n- `mfree [-e]` - free memory; `-e` per-block detail.\n- `dump [<opts>] [<path> [<addr>]]` - hex/ASCII; `-m` a resident module,\n  `-s` treat offset as a sector number (RBF forensics), `-c` don't\n  collapse duplicate lines.\n- `echo [<opts>] [<text>]` - writes its text and a return. **The options are\n  not Unix's**, `Live` (os9exec, from the utility's own `-?`): `-n` \"separate[s]\n  text with carriage returns\", `-r` sends no return at the end (Unix `echo -n`),\n  and `-z` reads the text from standard input. **So `-z` anywhere among the\n  words turns a label into a reader**: in a procedure file, `echo step two\n  -z` echoes the *rest of the pro"
+}

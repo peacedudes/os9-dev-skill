@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 20,
+  "text": "scard the whole line being typed |\n| Ctrl-W | Pause output; any key resumes (distinct from page pause below) |\n| Ctrl-S / Ctrl-Q | XOFF/XON flow control, same as Unix. **SCF consumes both - a reading program never sees them**, so a stray `$13` in a byte stream pauses output with nothing in the data and no error to show for it (`xon=`/`xoff=` remap them per path) |\n| ESC (or Ctrl-[) | End-of-file on terminal input; on a blank shell line, exits the shell |\n| Ctrl-C | Interrupt signal (code 3). A program with no intercept handler dies; but a foreground program that has not yet written to the terminal is moved to the background by the shell instead |\n| Ctrl-E | Abort signal (code 2) - the \"actually kill it\" key |\n\nCtrl-C/Ctrl-E work any time, not just at input prompts. Unix-habit\ninversions (C"
+}

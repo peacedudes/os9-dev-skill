@@ -1,0 +1,5 @@
+{
+  "source": "SOURCE-AUTHORITY.md",
+  "chunk_index": 8,
+  "text": "FARNA 1994 (and 68k content, not 6809) |\n| `OS-9_Quick_Reference_2nd_Farna_CoCo.txt` | FARNA 1994 |\n| `O-FLEX_..._Gimix.txt` | FHL Inc. 1983 |\n| `OS-9_GMX_III_Support_ROM_User_Manual_RevC.txt` | GIMIX 1983 |\n| `OS9_68000_V2.4_System_Requirements.txt` | Peripheral Technology (board vendor) |\n| `OS-9_Processors_Hardware_Support.txt` | RadiSys 2006 marketing data sheet - no technical content |\n| `Motorola_M68000_Programmers_Reference_Manual.txt` | Motorola 1992 - **authoritative for the CPU, not for OS-9** |\n\n## Judgment calls, recorded so they can be challenged\n\n- **`os9insights` (ed2/ed3) and `OS-9_Primer` are copyright Microware Systems\n  Corporation**, so by the rule above they are authoritative - even though both\n  are books in form. They are not third-party books; the rights holder is\n "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 29,
+  "text": "Guru §2.1-2.2;\nOS-9 v2.4 Technical Reference Manual; Technical I/O Manual v2.4. The\n`#<size>k` modifier behavior is additionally `Live` (os9exec).\nBare `chd` (to `$HOME`, the environment variable rather than the\npassword-file data directory) and bare `chx` (no change; `E_FNA` printed when\nthe execution directory is on an RBF device) are both `Live` (os9exec).\n"
+}

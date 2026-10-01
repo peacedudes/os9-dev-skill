@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 43,
+  "text": "- the compiler then generates the correct\ndereferencing code, and the count/size values are typically unused unless\nyou want to validate what was actually passed.\n\n**Static data needs an explicit BASIC09-side memory block, not `static`\ndeclarations.** Since there's no `cstart.r`-provided static-data area, a\nfunction needing persistent storage takes an extra pointer parameter (a\nmemory block BASIC09 allocates and passes in), and the *first* statement\nin the function must be inline assembly loading that pointer from a fixed\nstack offset (`6,8` in the appendix's example) before anything else runs.\nLink with `-rot` to have `c-link` report the exact byte size BASIC09 must\nallocate for this block; the BASIC09 side then `DIM`s an array of that\nsize, zero-initializes it, and passes it as the funct"
+}

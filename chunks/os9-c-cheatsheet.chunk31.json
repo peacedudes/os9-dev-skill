@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 31,
+  "text": "0` (big-endian), textbook IEEE single. NOT the 6809 proprietary format |\n| `double` | 8 bytes - same proprietary format, 7-byte mantissa | **8 bytes, IEEE-754 double (`Live` (os9exec))** - a C `double`=1.0 stored `3F F0 00 00 00 00 00 00` (big-endian), textbook IEEE double |\n\n**`double` arithmetic is full IEEE double**, `Live` (os9exec), whether through\nthe default soft-float `math` trap handler or compiled for the 68881 with\n`cc -K=2F` (`-K=2` = target 68020, `F` = 68881; uses the `c68020`/`r68020`\npasses). The runtime-computed `1.0/10.0+2.0/10.0-3.0/10.0` leaves\n`5.5511151231257827e-17` (2⁻⁵⁴, the textbook double result) either way, and\n`0.1+0.2 == 0.3` is false - so compare with a tolerance, as on any IEEE system.\nSoft-float gives the correctly rounded `1.0/3.0` (`3FD5555555555555`, pri"
+}

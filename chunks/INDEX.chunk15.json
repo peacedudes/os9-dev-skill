@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 15,
+  "text": "t directory would have shown it at once | `common/using-os9exec-repl.md` |\n| An RBF image turns out damaged, with no telling when | two emulator processes had it open at once, each caching its own allocation bitmap - one writer per image; `lsof` before starting a harness | `common/using-os9exec-repl.md` |\n| `del` treats a file name as options, or deletes more files than named | a name starting with `-` is an option - give the full pathlist; a `*`/`?` in the name is expanded by the shell - double-quote the full pathlist | `common/utility-usage.md` |\n| A Microware utility or another program misbehaves after your assembly program has run | it wrote through a plain `(a6)`/`N(a6)`: A6 is data base **+ $8000**, so that lands past your data area in someone else's memory - use `vsect` labels; unde"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 39,
+  "text": "m a normal\n  `PRINT #p,\"HELLO WORLD\"` line drawn with the default font just above it\n  on the same screen. Clean confirmation that \"merge the file into the\n  window first\" above is a real, silently-unenforced prerequisite - GFX2\n  happily points `FONT` at an unmerged/garbage buffer and draws whatever is\n  there rather than erroring.\n- `GCSET(group,buffer)` *(no `path` argument)* - defines a buffer as the\n  graphics cursor's shape source; `group=0` disables the graphics cursor\n  entirely. Requires merging `SYS/Stdcur` into the window before use.\n- `PUTGC(path,xcor,ycor)` - plots the graphics cursor at `xcor,ycor`.\n  Unlike most GFX2 functions, these coordinates are **screen-relative**,\n  not window-relative. Built-in cursor shapes live in Group 202\n  (`SYS/Stdptrs`); selecting which shape t"
+}

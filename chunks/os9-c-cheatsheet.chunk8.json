@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 8,
+  "text": "n allocator - one chunk, reused, working correctly. From\n  outside it looks exactly like the fault.\n\n- **A usage message is not proof a program works**, and for the class above it\n  is specifically misleading: a usage line proves only that **argument parsing\n  ran**. The failure is later, at first file I/O, and the exit status is still 0 -\n  so neither the banner nor `$?` can see it. **The sound test is whether a\n  redirect target was actually created and written**: give the program real input,\n  send its output to a file, and check the file. Better still, assert the\n  *content* of the answer - that `2^200` comes back as its 61 digits - rather\n  than that output merely exists.\n- **CLIB/CDEF must be set correctly** or the linker/preprocessor can't find\n  their inputs - errors here look like"
+}

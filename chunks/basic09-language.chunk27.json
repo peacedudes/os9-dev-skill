@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 27,
+  "text": "ensitive.** `READ var_list` (no `#path`) reads the next\n`DATA` items. `READ #path, var` (with `#path`) reads from an open file\ninstead - same keyword, two unrelated behaviors depending on whether a path\nnumber is given. (BASIC09 Reference Manual, Tandy ed., ch. 8 \"Disk Files\".)\n\n### Sequential vs. random access files\n\nBASIC09 has two file-access patterns that use different statement pairs and\nstore data differently - they are not interchangeable:\n\n| | Sequential | Random access |\n|---|---|---|\n| Statements | `WRITE`/`READ` | `PUT`/`GET` |\n| Storage format | ASCII text, CR (ASCII 13) delimits each record | Binary, exactly as BASIC09 stores it internally - no ASCII conversion |\n| Record length | Variable | Fixed |\n| Positioning | Sequential only - reaching EOF means reading through everythin"
+}

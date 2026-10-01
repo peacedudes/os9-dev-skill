@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 21,
+  "text": "s\nparticipate. The linker pads the body with one zero byte before the CRC\nwhen the length would be odd (68000 even-alignment). A valid module's full\naccumulation *including* the CRC bytes lands on `$800FE3`.\n\n- Kernel validates via F$CRC before directory entry - mismatch means not\n  loaded (`E_BMCRC`; `fixmod` repairs a hand-patched module). Checked once\n  at load/bootstrap, never re-verified afterward.\n- Time-critical code should pre-load modules rather than eat a CRC-checked\n  load mid-operation.\n- The C library `crc()` accumulates into a caller-supplied 3-byte array\n  (start at `$FFFFFF`; complement before storing as a module's CRC field).\n\n## Module directory mechanics\n\nBeyond the lifecycle basics (`os9-mental-model.md`). C wrappers:\n`modlink()` = F$Link, `modload()` = F$Load, `munlink"
+}

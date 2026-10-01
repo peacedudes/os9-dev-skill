@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 23,
+  "text": "e whatever was supplied at `F$IRQ`\ninstallation time). It may destroy only `d0, d1, a0, a2, a3, a6`, and\nreports whether it handled the interrupt via the carry flag: clear if\nserviced, set if not (kernel continues polling the next handler). This is a\n*different* register convention from the C-callable convention below -\ndon't mix the two up when an ISR calls into, or is called from, ordinary C.\n\n## Register conventions (ordinary program modules, C-callable convention)\n\nDocumented in the OS-9 Primer's assembly-interface chapter, for 68k:\n\n| Register(s) | Role |\n|---|---|\n| **D0, D1** | First two parameters in a subroutine call (D0 first, D1 second) |\n| **D0** | Return value register; for 64-bit returns, D0 holds low 32 bits and D1 holds high 32 bits |\n| **A5** | Frame pointer - used to addr"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 21,
+  "text": ". RBF\n(the disk file manager) locks byte ranges on its own as a side effect of\nordinary `Read`/`Write` on a path opened for **update** (`r+`/`w+`-style,\nnot read-only or write-only): a `Read` locks the bytes it just returned;\nthe next `Write` on that path releases them. Anything else touching those\nbytes meanwhile just blocks - same wait/wake plumbing as the rest of this\nfile, nothing new to learn there.\n\n**Why it's worth knowing, not just trusting:** it's not only a safety net,\nit's a design opportunity that is easy to overlook.\n- **Lost-update races vanish for free.** Two processes each doing\n  \"read a record, modify it, write it back\" on the same file cannot\n  corrupt each other's update - the read's auto-lock plus the write's\n  auto-release serializes them, with zero explicit locking c"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 5,
+  "text": "lang/type (0=any), X=pathlist | Same returns as Link, applied to the first module in the file. Path resolution follows the **execution**-directory search list, like `F$Fork`, not `I$Open` - a bare name present only in the current *data* directory fails `E$PNNF` (216). `Live` (NitrOS-9) |\n| F$UnLink | $02 | U=module header addr | Decrements link count; frees at zero. `Live` (NitrOS-9) |\n| F$Fork | $03 | A=lang/type, B=data pages, X=name, Y=param size, U=param start | Returns A=new PID, X=past name. Unlike `F$Link`, resolves via the filesystem - a name with no file behind it fails `E$PNNF` (216), not `E$MNF`. **A caller distinguishing \"not loaded yet\" from \"doesn't exist\" must know which of the two calls it used.** `Live` (NitrOS-9) |\n| F$Wait | $04 | - | Returns A=child PID, B=exit status. "
+}

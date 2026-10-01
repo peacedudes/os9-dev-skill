@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 11,
+  "text": "ted by assembler too new for\n  this linker`. This means the `l68` you're using and the `cstart.r` it's\n  linking against came from different SDK releases - get a matching pair\n  (same release's `l68` + `cstart.r`/`clib.l`), don't mix an older\n  compiler pipeline with a newer runtime lib or vice versa. On the 68k\n  SDK the sub-tool names are `cpp`/`c68`/`c68020`/\n  `o68`/`r68`/`r68020`/`l68`. **Resolved, not an unreconciled SDK variant**:\n  the toolchain-components table below listing different names\n  (`c.prep`/`c.pass1`/`c.link` etc.) is the separate 6809 toolchain's own\n  component naming, cross-architecture noise from this file's sole\n  C-compiler-manual source being the 1983 6809 edition - see that table's\n  own header note.\n- **Embedded assembly is compiler-generation-specific and eas"
+}

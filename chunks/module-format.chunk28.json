@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 28,
+  "text": "size; 0x38 NUL-terminated module name. Decoding two objects'\n  timestamps settles \"were these built by different compiler\n  generations?\" instantly.\n- **RMA library merge order (6809):** `c.link` resolves externals\n  first-found in merge order, so if library proc A calls library proc B,\n  B's ROF must be merged *after* A's - intra-library references must all\n  point forward. A property of this single-pass linker, not necessarily\n  of any 68k linker.\n\n## Inspection tools\n\n`mdir` (resident modules; `-e` adds address/size/owner/type/links),\n`ident` (header decode + CRC check; also reads S-record files),\n`binex`/`exbin` (module <-> S-record, validates as a side effect), `dump`\n(raw bytes), `fixmod` (recompute CRC/parity). Reach for these before\ndeeper debugging when a module won't load.\n\n---\nS"
+}

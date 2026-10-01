@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 9,
+  "text": "me scheme. It may be exactly what `OS9H0` names: a\n    symlink is a perfectly ordinary target for the variable, and deleting one\n    took out a working system here, because the variable pointed at the link\n    rather than at the image behind it. Read the configuration that launches the\n    emulator - the alias, script or `.zshrc` line - before deciding any path\n    beside it is unused.\n- **A device has to answer a *raw* open for `stat()` to work at all.**\n  Microware's C library opens the device's identification sector (`/h1@`) and\n  reads 256 bytes before it will describe any file on it - and a ported\n  `bash` finds commands, and answers `[ -f ]`/`[ -x ]`, through `stat()`. So a device that\n  refuses that raw open has no working command lookup even with `PATH`\n  correct and the files plai"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 15,
+  "text": "file-managers.md`.\n\n### Multi-port and multi-class drivers\n\n- **Multi-port**: a driver sharing one static storage area across several\n  ports on the same physical device, distinguished via the device-table\n  entry or `V_PORT`. Reduces memory overhead - one copy of driver code, with\n  per-port state kept in a static extension.\n- **Multi-class**: a driver associated with multiple device descriptors,\n  each pointing to a *different* file manager class (e.g. block mode and\n  character mode on the same intelligent controller).\n\n### Device static storage\n\nThe kernel allocates one static storage area per device driver, shared by\nthe file manager and driver:\n\n| Field | Purpose |\n|---|---|\n| `V_PORT` | Hardware base address (copied from descriptor's `M$Port`) |\n| `V_BUSY` | PID currently using the "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 5,
+  "text": "ured.\n\nOn subsequent opens, the kernel searches for an existing device-table entry\nmatching port, file manager, and driver:\n\n- **Exact match** (descriptor also matches): the entry's use count increments\n  and the path links to it. `INIT` is not called - the driver is already\n  active.\n- **Match on port/manager/driver, but different descriptor**: this creates a\n  **synonymous device** - a second device-table entry sharing the existing\n  driver's static storage and hardware, but with different initialization\n  parameters. One example: `/T1` configured for terminal mode and `/P1`\n  configured for printer mode both use the same serial port, same driver,\n  same storage, but different descriptors. Both get entries in the device\n  table. `INIT` is not called (the driver is already initialized).\n-"
+}

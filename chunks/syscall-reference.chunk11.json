@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 11,
+  "text": "ose | Key inputs | Key outputs | Notes |\n|------|---------|-----------|------------|-------|\n| **F$Mem** | Resize the data memory area | d0.l=desired size in bytes, rounded up to an allocation block (\"16 bytes in version 2.0\"); 0=information request | d0.l=actual size, (a1)=new end of the data area (+1) | Grows \"contiguously upward\", shrinks \"downward from the old highest address\": the base never moves (A6 points into it). Contracting to at or below the stack pointer is `E$DelSP` (223). An expansion may be refused with adequate memory free, because the space directly ABOVE the data area must itself be free (`Manual`, F$Mem page 1 - 43) - a C program built with `cc -I` loads `cio` right after entry and that module then sits above its data area, so `load` the trap handler first if a program'"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 3,
+  "text": "Plot / erase a point |\n| `$1A r` | Draw circle at current cursor, radius r |\n\nResolutions: two-color 256×192 (`G6R` mode), four-color 128×192 (`G6C` mode); CoCo 3 extends this considerably (see Window Types below). Color sets 1-2 (black/green, black/buff) work on any display; sets 3-4 are NTSC-only.\n\nExtended text formatting (CoCo 3, via `$1F` prefix): reverse video `$1F20`/`$1F21` on/off, underline `$1F22`/`$1F23`, blinking `$1F24`/`$1F25` (alpha only), insert/delete line `$1F30`/`$1F31`. Graphics extensions (`$1B` prefix): scale, font, bold, proportional-spacing switches, plus absolute/relative point/line/box/bar/circle/ellipse/arc primitives and window/buffer management (`DEFINE GRAPHICS BUFFER`, `GET/PUT BLOCK`, etc.) - CoCo 3 / Multi-Vue specific, substantially expanding on CoCo 1/2's"
+}

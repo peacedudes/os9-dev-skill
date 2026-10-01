@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 4,
+  "text": ", even if reused\nverbatim (`Live` (os9exec): a helper procedure with its own `PARAM b: BYTE` and its\nown print statement cannot affect a caller's counters). Procedures talk to\neach other only through parameters,\ninvoked with `RUN`.\n\n### Working at the prompts\n\n`Live` (os9exec), a whole session:\n\n```\nbasic          -> B: (system mode)\nB:e test       -> edit mode, * / E: prompt\nE: print \"hi\"  -> LEADING SPACE required - see below\nE:q            -> back to B:\nB:run test\nB:bye          -> back to the OS-9 shell\n```\n\n- **In the line editor, a leading space means \"insert this line.\"**\n  Without it the text is parsed as an editor command and usually fails\n  with `What?` - easy to misread as a BASIC09 syntax error. `list` works\n  from `B:`, not inside the editor. `Live` (os9exec).\n- **Memory:** `b"
+}

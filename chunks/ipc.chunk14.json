@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 14,
+  "text": "riod code relies on (`while (_ev_wait(id, 0,\n0) != 0);` as a mutex). A wait interrupted by a signal returns a value outside\nthe range instead, with no error (`Manual`; see `Ev$Wait` in\n`68k/syscall-reference.md`).\n\n**Relative-value variants:** `_os_ev_waitr()`/`_os_ev_setr()` behave like\n`_os_ev_wait()`/`_os_ev_set()` but treat the min/max range and the returned\nvalue as offsets from zero rather than absolute values - convenient for code\nthat thinks of an event as a signed delta rather than an absolute counter.\n\n---\n\n## Pipes\n\nA pipe is a FIFO memory buffer where one writer's output becomes one reader's input. The Pipe File Manager (PIPEMAN) coordinates access via a null driver, buffer size overridable via the `S_ISIZE` option to `_os_create()`. **Default buffer size:** the OS-9 manuals do"
+}

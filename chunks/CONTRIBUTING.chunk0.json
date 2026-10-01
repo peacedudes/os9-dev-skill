@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 0,
+  "text": "# Corrections and additions\n\n**Corrections are genuinely wanted.** These skills teach AI assistants about\na system whose documentation is scattered, partly OCR'd, and occasionally\nself-contradictory. Errors are expected, and a reader who hits one is better\nplaced to catch it than the author was.\n\n**Set your expectations honestly, though.** This is not an actively maintained\nproject. It was built for a purpose, it reached a usable state, and it may sit\nuntouched for long stretches. Corrections may be merged promptly, slowly, or\nnot at all. Nothing here is a commitment to respond, and a quiet repository is\nthe expected steady state rather than a sign something went wrong. If that makes\nforking the better route for you, [LICENSE](LICENSE) (MIT) permits it.\n\n## The most useful thing you can se"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 26,
+  "text": "brew), and a bare `timeout` does not exist. On Linux it is `timeout`. Harness\ncode that assumes the unprefixed name dies before it runs a single case, so pick\none and use it everywhere; the examples in this file all say `gtimeout`.\n\n`</dev/null` is explicit and harmless (a redirected host stdin returns\nend-of-file on its own, so a stdin-reader does not hang without it); the\ntimeout is still mandatory.\n\nThis tests **\"loads and starts\"** and nothing more - at that narrow question a\nusage message is a pass, and it is the right signal for auditing a disk full of\nbinaries, far faster than driving a shell. **Do not carry it further than that.**\nA usage line proves argument parsing ran and says nothing about whether the\nprogram's I/O works; for the case where that distinction bites hardest, and t"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 17,
+  "text": "AREA`): `OWSET(1,5,3,20,8,2,1)`\n  over an existing full-color `BAR` punched a rectangular hole at character\n  column 5, row 3, sized 20×8, filled with the overlay's own `bg` register\n  immediately on the call - no further drawing needed to see it.\n- `OWEND` *(no `path` - see Open ends)* - deallocates an overlay window\n  created with `OWSET`, restoring the previous screen contents if they\n  were saved. No source checked ever prints a formal `Syntax:` line for\n  this call, but five independent worked-example occurrences across two\n  manuals all invoke it bare, `RUN GFX2(\"OWEND\")`, never with a `path` or\n  any other argument - consistent enough across independent sources to\n  treat as the real call shape, not just an inference.\n  **`Live` (NitrOS-9) - call shape confirmed, but the documented "
+}

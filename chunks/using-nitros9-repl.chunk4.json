@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 4,
+  "text": "arried locally and offered upstream; a rebuild from upstream `main` silently\nrestores the crash, and a harness that locates its binary by \"newest build\"\nwill pick up that regression without saying so. So: pin the build, and when a\nguest goes quiet, establish that the *server* is still alive before\ndiagnosing anything guest-side.\n\nLaunch shape:\n\n```\nxroar -rompath <romdir> -machine coco3 -tv-input rgb -machine-cart ide \\\n  -cart-rom <idecart>.rom -load-hd0 <disk>.ide \\\n  -cart-becker -becker-port <port> -type 'DOS 0\\r' \\\n  [-ui null -ao null | -ui <real-backend>]\n```\n\nExactly **one** `\\r` in `-type`: a second one outlives DECB, lands in the\nbooting NitrOS-9, and silently breaks every later `basic09` fork - see the\n`#248 - Media Full` note in the BASIC09 section below.\n\n`-ui null -ao null` i"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 27,
+  "text": " it in the driver is a third thing, and\nreading the line is not evidence it executes.\n\n`check_absent_scope` was therefore proven along the whole chain, not just at the\nfunction. Removing the scope from one real `Absent` entry in\n`6809/utility-usage.md`:\n\n1. the **function**, called directly, reports the finding;\n2. the **CLI** exits 1 and names `os9-dev/references/6809/utility-usage.md:400`\n   under `[absent-scope]`;\n3. the **pre-commit hook** refuses the commit - *\"nothing committed\"* - with the\n   violation staged.\n\nReverting is silent again at all three. Step 2 is the one worth insisting on: it\nis what distinguishes a registered check from a defined one, and a unit test\ncannot see the difference. A sister project hit exactly this - a breaker function\nwritten but not added to its registr"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 21,
+  "text": "output is confined to; everything drawn afterward gets\n  rescaled into that smaller region - graphics geometry and any placed\n  images scale down with it, but text glyphs keep their original pixel\n  size rather than shrinking too. **`Live` (NitrOS-9)** - the parameters\n  are character-grid units, the same convention as `OWSET`/`CURXY`, not\n  pixels: `CWAREA(0,0,20,12)` on a 40×24-character window, followed by a\n  `BOX` at the full nominal `(0,0)`-`(639,191)` range, rendered compressed\n  into roughly the top-left half of the window - exactly the 20/40 × 12/24\n  shrink. **Test calls like this through `RUN GFX2(...)`, not a hand-built\n  raw escape**: guessing an argument's byte width in the `$1B` sequence\n  yields a corrupted result that reads as a real defect in the call.\n\n### Drawing primit"
+}

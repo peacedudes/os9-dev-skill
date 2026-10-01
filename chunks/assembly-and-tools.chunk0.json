@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 0,
+  "text": "# OS-9/6809 Assembly, Editor, and Debugger\n\nAssembler directives, MOD/EMOD module-header mechanics, the `SWI2`+code\ndispatch, and the full debugger command set are `Live` (NitrOS-9) against a real\ntoolchain. The Editor section is `Manual`.\n\nRegister set and calling convention: `syscalls-and-module-format.md`.\n\n## Before you assemble anything\n\nSix facts that decide whether your first build works. All are detailed\nbelow; they are collected here because each one bites *before* you have\nany output to debug.\n\n1. **You cannot `use /dd/defs/os9defs.a` with `asm`** - it is RMA source and\n   produces a cascade of `bad instr`. Define the constants you need yourself.\n2. **There is no `OS9` macro either** - the raw form is `swi2` followed by a\n   one-byte `fcb` call code.\n3. **Use `-O=<name>`, not `O="
+}

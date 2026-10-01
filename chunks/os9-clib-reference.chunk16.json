@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 16,
+  "text": "rgument repeatedly covers the *stream*, not the character, so this\nis a genuine departure from that convention rather than a hazard you were warned about.\n\nThe stream argument is multiply evaluated too, unconditionally - `putc(c,\n*fpp++)` is unsafe on any stream, and `getc(p)` evaluates `(p)` several times\nfor the same reason.\n\n**Which streams are line-buffered is the whole problem.** `Live` (os9exec), one\nbinary writing `ABCDEFGH` with `while (*p) putchar(*p++);`:\n\n| stdout is | output |\n|---|---|\n| a terminal | `ACEG` + a NUL |\n| a pipe | `ACEG` + a NUL - and it stays wrong downstream |\n| a file | `ABCDEFGH`, byte-exact |\n\nEvery second byte is eaten by the newline test, and the string's own terminating\nNUL is written as data at the end. The first byte survives because the buffer is\nnot y"
+}

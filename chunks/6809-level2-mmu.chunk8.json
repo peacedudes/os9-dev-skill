@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/6809-level2-mmu.md",
+  "chunk_index": 8,
+  "text": "t vectors and task-clear code (capping user space at 60-62K depending on block size); with it, user tasks get the full 64K.\n\n## Physical Memory Layout Conventions\n\n- RAM assumed contiguous from physical `$00000` upward, in 2K/4K-aligned blocks; OS-9 auto-scans for it at startup.\n- Bootstrap ROM: at least 4K at `$FF000-$FFFFF` (reset vector, MMU init, ~3K of kernel) - worth noting the Designers Guide is internally inconsistent here: its MMU-chip-selection discussion frames this same 4K figure as a not-to-exceed ceiling (\"should not exceed 4K bytes in total\"), while its system-memory-map section frames it as a floor (\"should be at least 4K bytes\"). The memory-map section's \"at least,\" 2K/4K-block-aligned framing is treated as authoritative here since it's the address-map-specific passage. Op"
+}

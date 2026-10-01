@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 24,
+  "text": "nd you can't tell if anything failed | four unrelated causes share this code; two of them mean the operation succeeded | `basic09/pack-and-runb.md` |\n| A listing is short, or something you know exists reads as absent | page pause ate the tail (`tmode pag=0`), or a filter dropped the marked entries | `common/utility-usage.md`, `common/using-os9exec-repl.md` |\n| Output stopped dead, no error, session otherwise alive | a stray `$13` (XOFF) reached the terminal; SCF swallowed it and is holding output until `$11` | `common/os9-tools-and-shell.md` |\n| Ctrl-C/Ctrl-E killed the wrong process | both go to the device's last writer, not a process you name - use `kill <pid>` | `common/using-os9exec-repl.md` |\n| Environment variables set before `login` are gone afterwards | a login starts fresh and inh"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 16,
+  "text": "ilds a pipeline with `F$Fork`,\ngiving each child redirected stdin/stdout and closing the unused ends to\nestablish one-directional flow between them.\n\n**Close behavior differs by kind:**\n\n| Pipe kind | On close |\n|---|---|\n| Unnamed | Path count decrements; at 0 paths, memory returns to the system |\n| Named | Path count decrements; a non-empty named pipe stays open, waiting for a reader - memory returns only once it's empty |\n\n**Blocking and deadlock:**\n- Writing to a **full named pipe** blocks until space frees (unless the\n  writer is interrupted by a signal). `Live` (os9exec): a C writer to a\n  named pipe with no reader blocks once the buffer fills; the block is\n  interruptible by Ctrl-C/Ctrl-E (see `common/using-os9exec-repl.md`).\n- For an **unnamed pipe**, a writer that fills the buffer"
+}

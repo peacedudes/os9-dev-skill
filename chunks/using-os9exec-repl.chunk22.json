@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 22,
+  "text": "getenv` is not evidence a library can see your variable\n\nTwo routes exist into a guest process's environment - the emulator's parameter\nblock (`@NAME=VALUE`, above) and the OS-9 shell's\n`setenv` - and **they are not equivalent to every consumer.** `getenv` consults\nboth. A library that walks the environment block itself need not.\n\n`Live` (os9exec), one program printing `getenv(\"TERM\")` and then calling\n`initscr()`, so nothing differs but how the variable was created:\n\n| route | `getenv(\"TERM\")` | `initscr()` |\n|---|---|---|\n| `@TERM=vt100` on the host command line, os9exec launching the program itself | `vt100` | `LINES=24 COLS=80` |\n| `@TERM=vt100` on the host command line, program started from a shell procedure | `vt100` | `Unknown terminal type ''`, `LINES=0 COLS=0` |\n| `setenv TERM vt1"
+}

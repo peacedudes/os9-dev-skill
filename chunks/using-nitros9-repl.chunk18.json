@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 18,
+  "text": "river behaviour, and `/N` is not\n  the console.\n- **Do not confuse that with the display-output table.** The Level 2 manual's\n  CoCo2-compatibility list (`$06` cursor right, `$08` cursor left, `$09` cursor\n  up, `$0A` cursor down, `$0C` clear screen) is what the driver does with bytes\n  it *receives*. The numbers overlap the keyboard table but do not match it -\n  `$09` is cursor-up on output and RIGHT ARROW on input.\n- **The first delete-line of a freshly-connected session is swallowed.** `Live`\n  (NitrOS-9), reproduced across fresh boots in both orders: the\n  first `$18` after connecting produces no echo and does not clear the line;\n  every subsequent one works and echoes BS-space-BS per character. Independent\n  of how the byte was produced - a literal Ctrl-X and a translated Shift-Left\n "
+}

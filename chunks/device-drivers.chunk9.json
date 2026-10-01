@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 9,
+  "text": "agers.md` for the path-descriptor side of this copy. |\n\nA single physical device can have **multiple descriptors** with different\nnames/parameters (the synonymous-device case above) - a driver should never\nassume one descriptor per physical port.\n\n## Multi-Port and Multi-Class Drivers\n\n- **Multi-port**: one driver instance/static-storage block serves several\n  independent ports of the same device class (e.g. a multi-line serial\n  card). Ports are distinguished via the device-table entry or the\n  `V_PORT` field rather than by separate driver copies - code is shared,\n  per-port state lives in a static-storage extension the driver defines.\n- **Multi-class**: one driver associates with several device descriptors\n  that each point to a *different file manager* (e.g. the same intelligent\n  contr"
+}

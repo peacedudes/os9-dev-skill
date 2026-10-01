@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 24,
+  "text": "es stdio's error flag - see the\nsection on that below, because the two together turn one timeout into a spinning\nloop.\n\nMicroware's own `intercept()` does run the handler: measured, it ran for a\nself-sent signal.\n\nSo when a ported program's timers appear dead, establish **which `signal()` it\nlinked** before suspecting the kernel. The two have the same name\nand different semantics, which is the whole difficulty.\n\n## Single-key input: `cbreak()` does not make the terminal raw\n\n`cbreak()` and `crmode()` **cannot affect stdio**, because they are not calls at\nall. The SDK's `DEFS/curses.h` defines them as `#define cbreak() crmode()` and\n`#define crmode() _crmode = TRUE` - a flag assignment. Nothing issues `SS_Opt`,\nnothing calls `tmode`, nothing reaches the SCF driver, so the path's line\ndiscip"
+}

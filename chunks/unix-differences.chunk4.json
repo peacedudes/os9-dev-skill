@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 4,
+  "text": "d to miss, easy to misread as a defect in the code.\n   Measured on a *short* LF file, `cpp` said **nothing at all** and the\n   failure surfaced at link time as `Symbol 'main' unresolved`, referenced by\n   `cstart_a` - because with everything on one line the leading `#include`\n   directive swallows the rest of it, so no `main` is ever compiled. That form\n   is the more misleading of the two: it points at your entry point, not at\n   your line endings. A long enough one-line file has also been seen to hang\n   `cpp` outright rather than diagnose anything. `Live` (os9exec). **A silent\n   `cpp` death is not diagnostic of line endings on its own** - an over-long\n   *logical* line kills it the same way, including one you believed you had\n   disabled inside `#if 0` (`c/os9-c-cheatsheet.md`). Both a"
+}

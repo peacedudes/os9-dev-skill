@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 27,
+  "text": "it convention appears elsewhere**, so recognise it rather than\nlearning it per-call: a record-lock timeout uses it too - zero sleeps forever,\none returns an error if the record is not free immediately, and with bit 31 set\nthe low bits convert from 256ths into ticks, \"so that programmed delays are\nindependent of the system clock rate\" (`Manual`, same TRM).\n\nTime-of-day alarms fire at the *corrected* time after a clock adjustment. A\nsystem-state variant runs a kernel subroutine instead of signaling; pending\nalarms die with their process, so a persistent one must be requested as the\nsystem process. A firing alarm wakes its own process out of `F$Sleep`,\nincluding an indefinite `F$Sleep(0)`.\n\n## Signals & traps\n\n| Call | Purpose | Notes |\n|------|---------|-------|\n| **F$Send** | Send signal to"
+}

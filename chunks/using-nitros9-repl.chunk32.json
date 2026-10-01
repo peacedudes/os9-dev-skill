@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 32,
+  "text": "arge, narrow it (list a\n  subdirectory, or `dir` without `-e`) or read it host-side with ToolShed\n  against the image instead of asking the guest to stream it.\n- **A `tee` that succeeds can still lose a line's CR under load.** `Live`\n  (NitrOS-9): typing content through raw keys at speed\n  occasionally dropped a trailing CR, silently\n  joining two lines in the written file. Nothing reports it - `tee` closes\n  cleanly and the file looks plausible - and the damage only surfaces much\n  later as a compile or parse error at a line the source doesn't seem to\n  contain. This is a harness pacing artifact, not an OS-9 behaviour. **Verify\n  content after writing it** (`list` the file back, or compare a byte count)\n  rather than trusting a clean-looking `tee`, and prefer the host-side\n  injection rou"
+}

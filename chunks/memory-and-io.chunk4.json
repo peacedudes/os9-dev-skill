@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 4,
+  "text": "via `F$Fork`. All data access is register-indirect from a base pointer (A6 for ordinary program modules), enabling ROM placement and concurrent multi-process execution against one code copy. Device drivers and file managers use kernel-supplied register convention (A1/A2/A4/A5/A6 each with specific pointer) - see `68k/os9-68k-assembly.md`.\n\n### Data modules (shared memory, mechanism level)\n\nA data module is a dynamically-created region of system memory obtained via\n`F$DatMod`: the kernel returns its address and a link count, and - since the\naddress isn't known at compile time - a process must reach it by pointer\n(C) or register-indirect addressing (assembly), unlinking later with\n`F$UnLink`. This is the underlying allocation mechanism for OS-9's shared\nmemory; for the usage patterns and got"
+}

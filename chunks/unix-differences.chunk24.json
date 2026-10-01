@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 24,
+  "text": "strings runs on into the descriptor-sector bytes. End a name at\nthe character with bit 7 set. A 29-character name is too long everywhere.\n\n### Priority + aging scheduler\n\nPreemptive, priority-driven, default 2-tick (20ms) timeslice. Aging is a\nsingle **system-wide** counter consumed at each process insertion, **not**\na per-process value that ticks up while a process waits (a commonly\nrepeated misreading) - a process queued earlier ends up with a more\nfavorable scheduling constant than one queued later at the same priority,\nwhich is what keeps low-priority work from starving. `D_MaxAge` is a\n**priority threshold**, not an age cap: processes at/above it are ordered\nby raw priority with aging switched off among themselves, and as a group\nfully preempt everything below for as long as any of th"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 29,
+  "text": "ers whatever data follows it in the file.\n\n```basic\nPROCEDURE addentry\n  DIM lp: BYTE\n  DIM entry: STRING[80]\n  ! open the existing file for read+write\n  OPEN #lp, \"notes\": UPDATE\n  ! read through every existing record to reach EOF - two here\n  READ #lp, entry\n  READ #lp, entry\n  WRITE #lp, \"checked equipment\"\n  WRITE #lp, \"logged off shift\"\n  CLOSE #lp\nEND\n```\n\n**Random access:** record N of a fixed `record_length` lives at byte offset\n`(N-1) * record_length` - `SEEK #path, (record_number-1) * SIZE(record)`\ncombines this with `SIZE()` to avoid hardcoding the length. `SEEK` can\ntarget any byte, not just record boundaries, so a partial record can be\nread/written mid-record. `PUT`/`GET` also work on whole arrays in one call -\nstoring or loading N records in a single bulk operation instead of"
+}

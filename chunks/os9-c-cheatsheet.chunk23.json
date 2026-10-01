@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 23,
+  "text": "e difference is\nwhat preceded it. A `cpp` that dies saying nothing is a candidate over-long line\neven when a slightly different file gave you a clean diagnostic.\n\n## flex: check where your skeleton sets `yyin` before using `freopen`\n\nThe documented flex idiom for scanning a named file - `freopen(name, \"r\", yyin)`\nin `main()` before the first `yylex()` - **works or silently does nothing\ndepending on which skeleton built your scanner**, and the two differ in one line.\n\n- A skeleton that initialises at declaration, `FILE *yyin = stdin, *yyout =\n  stdout;`, has a valid `yyin` before `yylex()` is ever called, and `freopen`\n  works (`Source`, the `LIB/flex.skel` shipped on one SDK disk).\n- **Skeleton 2.16 assigns `stdin` inside `yylex`'s initialisation block\n  instead**, so `yyin` is null until "
+}

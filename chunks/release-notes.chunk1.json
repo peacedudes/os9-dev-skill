@@ -1,0 +1,5 @@
+{
+  "source": "tools/release-notes.md",
+  "chunk_index": 1,
+  "text": "lls.zip` below, or clone the repository. Install the two skill folders where your assistant loads skills, or point any agent that reads files at `AGENTS.md`.\n\nCovers the early OS-9 line, from the 6809 through OS-9/68000 v2.4. Sibling projects: [os9exec](https://github.com/peacedudes/os9exec), an OS-9/68000 emulator, and [osk-freeware](https://github.com/peacedudes/osk-freeware), over a thousand programs written for OS-9/68000, runnable in a browser.\n\nThese skills come from OS-9's users, not from Microware. Corrections are welcome in the issue tracker.\n"
+}

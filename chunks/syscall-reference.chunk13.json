@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 13,
+  "text": "ers). v3.0 redefined it around a parameter block after OS-9000's `_os_SysID()`; that layout is not documented in anything available here. `Live` (os9exec): the pre-3.0 form, answering 68020/68020, 1/1, and its own strings (CONF68K t54). |\n| **F$SRqMem** | Request system memory | d0.l=size (rounded up to 16 bytes; `$FFFFFFFF`=request the largest available block) | d0.l=actual size, (a2)=block pointer | `Live` (os9exec) |\n| **F$SRtMem** | Return system memory | d0.l=size, (a2)=block pointer | - | Must pass back exactly the size `F$SRqMem` returned, or the block silently isn't freed. `Live` (os9exec) |\n| **F$SRqCMem** | Request colored system memory | d0.l=size, d1.l=color | d0.l=actual size, (a2)=block pointer | os9exec accepts the color but does not act on it. `Live` (os9exec) |\n| **F$CpyMe"
+}

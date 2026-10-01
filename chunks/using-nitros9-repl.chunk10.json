@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 10,
+  "text": " to one newline - drop LF then map CR to NL, which is chunk-safe; a plain\n  CR->NL translation double-spaces everything. A shell parked on a channel by\n  the boot script instead has neither flag set.\n- **Each connection is a separate session**: disconnecting ends that shell,\n  reconnecting forks a new one (new pid, cwd back at the root), nothing is\n  replayed. Don't rely on a session surviving a dropped client.\n- **End every session by logging out (Escape), never by just closing the\n  socket.** `Live` (NitrOS-9): the guest is never told its client\n  vanished, so the abandoned login parks on its `/N` channel *forever* - still\n  dead 45s later; only a reboot clears it - and each leak costs one of the few\n  channels until inetd answers every new connection with `tcp kill`. Symptom:\n  TCP conn"
+}

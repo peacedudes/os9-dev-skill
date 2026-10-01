@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 21,
+  "text": "creates a new file, otherwise synonymous with `I$Open` |\n| `I$Delete` | Searches for the file, removes it from the directory, returns its space to the free pool (multi-file managers only) |\n| `I$Read` | Returns the requested byte count into the caller's buffer; EOF error if no more data; generally no editing |\n| `I$ReadLn` | Like `I$Read` but stops at the first CR (end-of-record) and applies input editing. On SCF the terminator is PD_EOR, CR by default; the byte count truncates the line rather than ending the read - the excess is discarded (PD_OVF echoed) until PD_EOR arrives, so the tail is lost |\n| `I$Write` | Writes data (generally unedited); writing past EOF expands the file. On fixed-record devices (e.g. RBF) may need to pre-read a sector before a partial-sector write |\n| `I$WritLn` |"
+}

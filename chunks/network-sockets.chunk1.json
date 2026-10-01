@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 1,
+  "text": "d when it is\nnothing of the kind. Where this file is silent, the silence is a gap in the\ndocumentation, not permission to assume the BSD behaviour. When answering from\nthis file, say which calls it actually documents and which you are inferring.\n\nOS-9/Internet is Microware's TCP/IP stack - a BSD-flavored sockets API layered\non OS-9's own module/driver architecture, not a bolt-on. This file assumes\ngeneral TCP/IP and BSD sockets knowledge; it covers only what's specific to\nthis implementation: the module architecture, the actual supported API\nsurface (a deliberate subset of BSD), the config-file/compiled-database\nsystem, and the admin/diagnostic tooling.\n\n**68000-only, no 6809 support.** OS-9/Internet is a separate, later add-on\nproduct, not part of the base OS-9 kernel - this file document"
+}

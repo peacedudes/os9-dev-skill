@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 13,
+  "text": "t the next flush, to a file, a pipe and the console alike. **On a terminal it can also look corrupted when it is not.** A raw `write()` of `\"...\\n\"` ends in a bare CR with no LF (it is `I$Write`, which does no line editing), while `printf`'s line gets CR LF, so the next line overprints the raw one: `\"raw write with fflush first\\n\"` then `printf(\"after write\\n\")` reads on screen as `after writeith fflush first`. The bytes in a file are both lines, intact, in write order. |\n\n**`Live` (os9exec)** - the core File I/O behaviors above check\nout: `fwrite(\"ABCDE\",1,5)` returned `5` and `fread(...,1,5)` read back `ABCDE`\n(both return the item count); all three `fseek` place codes work - `0`/start\n(->`CD` at offset 2), `1`/current (a `+3` from offset 2 then read gave `56`), and\n`2`/end (a `-3` from "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 15,
+  "text": "er/driver/descriptor match increments use count; same port+code but different descriptor makes a \"synonymous device\"; no match allocates static storage and calls the driver's INIT (a failed INIT is rolled back via TERM, no entry left) |\n| **I$Detach** | Detach device | (a2)=entry | - | At zero use count, calls TERM and frees storage unless shared. Superuser only |\n| **I$Open** | Open path | d0.b=mode - a **bit field** `D S E W R`, so **0 requests no access** and reads then fail on a successfully opened path (see `common/unix-differences.md`; POSIX `O_RDONLY` is 0), (a0)=pathname | d0.w=path number, (a0)=updated past the pathname - to the first blank after it (`Live` (os9exec): `'fx   '` opens `fx` and returns a0 at name+2); trailing spaces are not stepped over | Allocates a path descriptor"
+}

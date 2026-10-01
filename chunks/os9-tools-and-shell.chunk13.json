@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 13,
+  "text": "the run.\n\n**That fallback has no guard, so any readable text file is a script.** `Live`\n(os9exec): naming a file of ordinary prose executed its first word and reported\n`shell: can't execute \"this\" - Error #000:216`, quoting a word from *inside* the\nfile rather than the file that was run. A mistyped path landing on a data file\ntherefore runs it, and the message points at the content instead of the\nmistake - where Unix would refuse the file outright.\n\n**Line endings are CR (0x0D), and a procedure file with LF endings misfires\nquietly** - `Live` (os9exec). OS-9 does not treat LF as a terminator, so the\nwhole file is *one line*: its first command runs with the rest of the file as\narguments (`makdir A` LF `makdir B` made both directories; any other commands\nin the file became more directory nam"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 12,
+  "text": "ling above is real for scripted\n  join/logout, and does **not** reliably survive an interactive client's\n  teardown - a pty master closing can SIGHUP the client mid-logout and\n  reproduce exactly this, which is why the true per-cycle budget is unknown\n  rather than \"three\". Recovery is a guest restart; nothing softer clears\n  it, and the mechanism is unexplained - treat it as a live limitation to\n  budget for, not a bug to chase. Two consequences: **restart rather than\n  retrying** when\n  a connection produces silence, and do not add a \"can it still hand out a\n  session?\" health probe - the only way to ask is to open a session, which\n  spends a channel, so probing helps cause the failure it checks for.\n- **A terminal bridge must not remap the codes SCF already owns.** `Live`\n  (NitrOS-9). "
+}

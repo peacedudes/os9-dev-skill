@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 9,
+  "text": "ing-area origin.\n  **`Live` (NitrOS-9) - substantially correct, but incomplete in a way\n  that misleads.** \"Screen-relative\" is right: with scaling **on** (the\n  default) a coordinate is in the **screen's** pixel space and is then\n  **rescaled into the device window**, not clipped to it. The scale factor is\n  therefore `window_width / screen_width`:\n\n  | Window | Screen | Coordinate -> window pixel |\n  |---|---|---|\n  | 320px, 40 col | 640px (type 5) | ÷2 |\n  | 320px, 40 col | 320px (type 6) | 1:1 |\n\n  Measured both ways: on the type-5 window, lines at x=0/160/320/480/639\n  landed at window columns 40/120/200/280/359 (exactly x/2) and a\n  40-character text row spanned the identical width; on the type-6 window a\n  `BOX` at x=20..200 landed at offsets 20..200 (1:1). With `SCALESW`\n  **off**,"
+}

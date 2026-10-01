@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 14,
+  "text": " 2 then read gave `56`), and\n`2`/end (a `-3` from end gave `78`); `puts` appends `\\n` while `fputs` does not\n(`puts(\"PUTSLINE\")` then `fputs(\"FPA\")`/`fputs(\"FPB\\n\")` produced `PUTSLINE`\non its own line followed by `FPAFPB`); and `gets` strips the trailing newline\nand NUL-terminates (input `HELLOWORLD` -> a 10-char string, no `\\n`). `getc`\nauto-select confirmed on the **disk-file** side: reading a file containing\n`41 08 42` (an `A`, a raw `0x08` backspace, a `B`) returned all three bytes\nintact (`COUNT=3`, no line-editing) - i.e. `getc` uses raw `read()` for a disk\nfile. The terminal side (line-edited `readln()`) isn't scriptable here, but the\ntype-based selection is demonstrated by the raw disk read.\n\n## `putchar`/`putc` evaluate the character twice when the stream is line-buffered\n\n**Neve"
+}

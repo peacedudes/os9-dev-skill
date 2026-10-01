@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 7,
+  "text": "d\nby `F$SigMask`; while nonzero the intercept routine is not invoked, and\noverflow past 255 / underflow past 0 is silently ignored), the\nexception-trap table, pointers to the primary module and any linked\nmodules, and saved register/stack state. `F$GPrDsc` retrieves a copy of a\nspecific process's descriptor by PID; `F$GPrDBT` retrieves the whole\nprocess descriptor block table (what the `procs`/`iprocs` utilities use to\nlist running processes).\n\n`P$PModul` (the pointer to a process's primary module) must be a valid\naddress, because a monitor reads the descriptor and follows it to the module\nheader to print the module name -- `devprc -a`, `top`, `sysmon` and `aprocs`\nall do. (os9exec's kernel process reports 0 here; see `os9-dev`'s\n`common/using-os9exec-repl.md`, \"What os9exec does not imple"
+}

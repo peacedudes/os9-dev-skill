@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 10,
+  "text": "beyond the default `CLIB`** (e.g. termcap\n  functions `tgetent`/`tgetstr`/`tputs`, which need `termlib.l`) needs an\n  explicit extra-library flag - `Live` (os9exec): `cc`'s own documented\n  `-L=<name>` is not forwarded to the linker as expected (`l68: error - unknown\n  option -L`). Use lowercase `-l=<full-path-to-file.l>` instead (matches\n  `l68`'s own flag, which `cc -?` doesn't fully list - run `l68 -?`\n  separately if a flag doesn't seem to exist): `cc -l=/h0/LIB/termlib.l\n  file.c`. A bare name like `-l=termlib` fails to open - needs the full\n  path.\n- **Mixing compiler/linker and runtime-library \"generations\" breaks with\n  a specific, identifiable error**, not a vague one: `l68: error - psect\n  'cstart_a' in file '<path>/cstart.r' created by assembler too new for\n  this linker`. This "
+}

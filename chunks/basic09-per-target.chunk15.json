@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 15,
+  "text": "N`/`JSR`/`RTS`\nround-trip.\n\n`Live` (os9exec) - a second example covering what the first can't: stack offsets for\nparameters after the first, and a by-value argument.\n\n```asm\n nam addmulmod\n ttl RUN addmulmod(a,b,sum,prod) - sum=a+b, prod=a*b\nSbrtn set 2\nObjct set 1\nReEnt set $80\nType_Lang set (Sbrtn<<8)+Objct\nAttr_Rev set (ReEnt<<8)+1\n psect addmulmod,Type_Lang,Attr_Rev,0,0,addmulmod\naddmulmod move.l d1,a0\n movea.l 8(a7),a1\n movea.l 16(a7),a2\n movea.l 24(a7),a3\n move.l (a0),d0\n move.l (a1),d1\n move.l d0,d2\n add.l d1,d2\n move.l d2,(a2)\n muls.w d1,d0\n move.l d0,(a3)\n moveq #0,d0\n rts\n ends\n```\n\n`a` is by-reference (a bare variable), `b` by-value (a literal), `sum`/`prod`\nby-reference outputs. `D1` holds `a`'s address per the base convention;\n`8(a7)`/`16(a7)`/`24(a7)` are `b`/`sum`/`prod` - *"
+}

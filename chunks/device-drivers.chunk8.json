@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 8,
+  "text": "esystem-protocol layer. |\n| `M$PDev` | `$3A` | Offset to the device driver's name string - what the descriptor selects for the hardware layer. |\n| `M$DevCon` | `$3C` | Pointer to an optional driver-specific configuration table (OEM constants, hardware parameters). **Available to the driver only during `INIT`/`TERM`** - unlike the standard init table, it is never copied into path descriptors, so any other driver routine needing it must search the device table for the descriptor itself. |\n| `M$Opt` | `$46` | Size of the descriptor's standard initialization table (theoretical max 128 bytes, though individual file managers may cap it lower). This table is what the kernel copies into every newly-opened path's 128-byte option area - see `file-managers.md` for the path-descriptor side of this cop"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 45,
+  "text": "(`'` + one\nprintable ASCII char), symbolic name, and `*` for the instruction counter at\nline start. Precedence, highest first: unary `-` and `^` (NOT); then `&`\n(AND) and `!` (OR); then `*`/`/` (unsigned only); then `+`/`-`. Logical ops\nare bitwise. Division by zero and multiplication overflowing 65535 are errors\nwith undefined intermediate results. A name used before its own definition is\ntreated as external to the PSECT (recorded for RLINK) - but assembler-\ndirective operands cannot contain external names at all, and instruction\noperands that do can only combine an external name with binary `+`/`-`.\n\n**RMA's macro facility** (ch. 2) is assembly-time text substitution and a\nseparate mechanism from the Editor's `.MAC` system below. `name MACRO ...\nENDM`, where the label on the `MACRO` line"
+}

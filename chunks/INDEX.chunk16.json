@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 16,
+  "text": "n someone else's memory - use `vsect` labels; under os9exec, `-W` names the write | `68k/os9-68k-assembly.md`, `common/using-os9exec-repl.md` |\n| `l68` says `operand size error` on an `(a6,dn)` operand that `r68` accepted | a `vsect` offset near `-$8000` does not fit the 8-bit index displacement - `lea` it into a register first; the module was written anyway | `68k/os9-68k-assembly.md` |\n| A procedure file stops partway with no error printed | a command exited with status 1: `-x` aborts on it, and the shell prints nothing for 1 | `common/os9-tools-and-shell.md` |\n| An event wait loop never exits though the event is signalled | the loop compares against the post-increment value; `Ev$Wait` returns the value that satisfied it, *before* the wait increment | `68k/syscall-reference.md` |\n| `^syn"
+}

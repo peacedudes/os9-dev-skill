@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 25,
+  "text": "ck, produce\nexactly three findings. Must-not-flag: the forms it has to accept -\n`Absent` (6809), `Absent` on real NitrOS-9, `Absent` from this SDK,\n`Absent`: untestable here.\n\n**The first version of the pattern passed the must-flag test and failed the\nmust-not-flag one.** It required the scope marker immediately after the tag, so\n`` `Absent` - from the v2.4 manuals `` and `` `Absent` -- on NitrOS-9 `` were\nflagged for obeying the rule. Both are now regression tests.\n\nWorth stating the asymmetry, because it decides which direction to test when time\nis short: **a false positive is the more expensive failure.** A check that misses\na violation costs one defect. A check that flags correct work teaches contributors\nthat the rule is arbitrary, and a gate nobody believes gets routed around,\ncommen"
+}

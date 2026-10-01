@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 1,
+  "text": "ep is the one you `SAVE`d.\nLosing source to `PACK` is not a trap you fell into, it is having skipped the\nstep the workflow assumes.\n\n- `PACK` converts a workspace procedure to a non-listable, non-editable\n  form. **It is one-way** - the packed form can't be `LIST`ed, edited, or\n  reloaded into the workspace. Always `SAVE` source first.\n- **Output goes to the current execution directory (CHX)**, under the\n  procedure name or an explicit `>pathlist`. If the file \"didn't appear,\"\n  check CHX - it was written, just not where you were looking. (`asm`\n  behaves the same way.)\n- **`SAVE` and `PACK` do NOT redirect to the same place** - `Live` (6809\n  and 68k). With a *relative* target, from the same workspace in the same\n  session: `SAVE proc >name` lands in **CHD** (the data directory),\n  `PACK "
+}

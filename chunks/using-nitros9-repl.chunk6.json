@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 6,
+  "text": "n.\n\n## Harness shape and its gotchas\n\nSame gated-send / raw-key-fallback pattern as the 68k side, but the transport\nis TCP to the DriveWire-exposed channel rather than a PTY.\n\n**These harness scripts are not in this collection.** `nitros9repl.sh` and\n`coco` belong to the **os9exec** source checkout, under its own `tools/`\ndirectory; nothing executable ships with these references. Locate that\nrepository before following the recipes below - a bare `tools/...` path here\nmeans *its* tools, not a directory you will find beside this file.\n\n- **Zero-config launch:** os9exec's `tools/nitros9repl.sh start` with no environment\n  boots a private scratch clone it creates itself\n  (`~/.cache/nitros9repl/eou-clone`, APFS `cp -c` of the golden master, reused\n  across runs and reboots - delete the directo"
+}

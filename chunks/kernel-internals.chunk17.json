@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 17,
+  "text": " above\nmean anything, and it is why a read-modify-write cycle can genuinely be cut in\nhalf by another process on real hardware. System-state code (kernel calls and\nI/O operations mid-call) is never preempted mid-operation: it must complete or\nvoluntarily sleep/yield, to protect kernel data-structure consistency.\n`Manual` (v2.4 Technical Reference Manual: \"User-state routines are\ntime-sliced\", p. 2-2; the tick, the two-tick slice and pre-emptive task\nswitching, p. 2-27; the system-state exception, p. 2-28).\n\n## Module Directory Internals\n\nThe module directory is a kernel-maintained table, one entry per loaded\nmodule, tracking: the module's memory address, a **link count**, a\n**group identifier** (the memory address of the first module loaded from\nthe same file - see \"module groups\" below), "
+}

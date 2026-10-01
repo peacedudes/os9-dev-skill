@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 17,
+  "text": "e max) |\n| 000:205 | E$BMID | Illegal module header | Module sync code is incorrect |\n| 000:206 | E$DirFul | Module directory full | Not enough memory, or memory too fragmented |\n| 000:207 | E$MemFul | Memory full | Not enough contiguous RAM, or process already at its block-allocation limit |\n| 000:208 | E$UnkSvc | Illegal service request | Unknown service code, or unknown Getstat/Setstat status code |\n| 000:209 | E$ModBsy | Module busy | Non-sharable module already in use by another process |\n| 000:210 | E$BPAddr | Boundary error | Invalid block address in a deallocation request, or memory not previously assigned |\n| 000:211 | E$EOF | End of file | EOF encountered on a read |\n| 000:212 | E$VctBsy | Vector busy | IRQ vector already in use by another device |\n| 000:213 | E$NES | Non-existin"
+}

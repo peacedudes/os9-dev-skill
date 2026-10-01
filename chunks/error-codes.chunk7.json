@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 7,
+  "text": "out of range - e.g. indexing a `DIM`'d array past its\nallocated bound), and `000:011` (e.g. from writing\n`LAND`/`LOR`/`LXOR`/`LNOT` as infix operators instead of function calls).\n\n## Error code table\n\nCodes below are grouped by numeric range, matching how the source manuals\npresent them. Rows marked †, ‡ or § point to **Known cross-manual\ndiscrepancies** further down; those notes are not optional footnotes, they\nrecord a genuine disagreement between two manual editions that was\ndeliberately not resolved.\n\n### 000:001 - 000:067 - Process, terminal, and math-trap errors\n\nNothing between 004 and 064 appears in either primary source - the gap below\nis the manuals' own, not a transcription loss.\n\n| Code | Symbolic name | Meaning | Cause |\n|---|---|---|---|\n| 000:001 | - | Process aborted | The "
+}

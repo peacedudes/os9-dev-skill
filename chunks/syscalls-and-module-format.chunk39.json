@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 39,
+  "text": "ve` (NitrOS-9) confirms it. **Trap when writing this call**: `U` is commonly also a program's own U-relative data-area base pointer - save it (`pshs u`/`puls u` around the `swi2`) or every later `,u`-relative reference breaks silently |\n| I$Read | $89 | A=path, X=buffer, Y=count | Returns Y=actual bytes; EOF error at end. A path number that was never opened fails `E$BPNum` (201), so path numbers are validated rather than trusted. `Live` (NitrOS-9) |\n| I$Write | $8A | A=path, X=buffer, Y=count | Past-EOF write expands the file. **Returns Y** - the actual byte count written. `Live` (NitrOS-9) |\n| I$ReadLn | $8B | A=path, X=buffer, Y=max | Reads to CR, with line editing. **The returned length in `Y` includes the CR terminator** (`Live` (NitrOS-9)) - which diverges from BASIC09's own `READ`/`L"
+}

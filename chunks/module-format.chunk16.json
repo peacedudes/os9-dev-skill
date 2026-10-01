@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 16,
+  "text": " want `lang == 1` (6809 machine code).\n  Numerically equal to 68k's Objct=1 but a mutually incompatible format -\n  never merge the two facts.\n- Pointer initializers are fixed up at load time via two tables (data-text\n  and data-data reference tables) that startup walks after copying\n  initializer data - the 6809 counterpart of 68k M$IData/M$IRefs, solved\n  differently.\n- The 6809 RMA assembler organizes source as PSECT (code) / VSECT (data,\n  optionally direct-page) / CSECT (offset counter); PSECT carries the\n  type/lang/attr/stack/entry info the older MOD directive held, consumed\n  by the linker rather than OS-9. **Confirmed a Microware-family\n  convention beyond RMA, `Live` (os9exec)**: the 68k assembler (`r68`) uses the\n  same lowercase `psect` directive with the identical argument shap"
+}

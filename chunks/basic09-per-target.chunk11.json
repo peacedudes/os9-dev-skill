@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 11,
+  "text": "eless decimal point (`value*2.` rather than\n  `value*2`) silently promotes the whole expression to REAL. Type discipline\n  is not optional in hot loops.\n\n## Calling 68000 machine-language procedures from BASIC09\n\nGenuinely 68k-only; the 6809 side has a different, C-specific `c-link`\nmechanism (`c/os9-c-cheatsheet.md`) that does not apply here.\n\n**The mechanism is just `RUN <name>(<params>)`** - the same statement used\nfor BASIC09-to-BASIC09 calls, no special syntax. If the named procedure isn't\nin the workspace, BASIC checks whether it's already a loaded OS-9 module,\nthen falls back to loading it from the current execution directory. It\ninspects the module's type: BASIC I-code gets interpreted, while **a 68000\nmachine-language module gets a `JSR` straight to its entry point**, returning\nvi"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 31,
+  "text": "(`/W1`, not just the no-path default target), all executed\n  without any OS-9 error, silently. Source-confirmed too: the handler\n  only checks BASIC09's parameter *count* before writing the raw values\n  out. The manual's presumed 0-15/0-63 ranges are therefore unenforced\n  by software in this implementation, not merely undocumented - see\n  Open ends for what this does and doesn't establish about the real\n  hardware behavior.\n- `BORDER(path,color)` - shorthand that sets palette register 0 (border)\n  directly, equivalent to `COLOR`'s third argument.\n- `LOGIC(path,\"function\")` - sets a persistent raster-op mode applied to\n  every subsequent drawing call until changed: `\"OFF\"` (none), `\"AND\"`,\n  `\"OR\"`, `\"XOR\"`. `XOR` is the one commonly used for toggle-effects (e.g.\n  drawing and re-drawing t"
+}

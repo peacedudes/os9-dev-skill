@@ -1,0 +1,5 @@
+{
+  "source": "AGENTS.md",
+  "chunk_index": 3,
+  "text": "ere a runtime and a Microware manual disagree, the manual is the\n   specification and the runtime is the candidate defect.\n\n4. Resolve paths the way the files write them. Inside a skill, a reference\n   such as `common/ipc.md` is relative to that skill's `references/`\n   directory; a reference into the other skill names it (`os9-dev`'s\n   `common/module-format.md`).\n5. Answer specifics from the files, not from memory. If a file cannot be\n   opened, say which claim went unchecked rather than filling the gap -\n   widely repeated claims about OS-9 are often wrong, and these files exist to\n   correct them.\n\n`SOURCE-AUTHORITY.md` (root) says what counts as Microware's word;\n`DIVERGENCES.md` (root) lists where a runtime disagrees with a manual. Both are\nreview material rather than part of either "
+}

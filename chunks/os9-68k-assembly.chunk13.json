@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 13,
+  "text": " *would* assemble, for the bare and `.w` spellings alike - but **not**\n  when the target is the very next instruction, where the short form cannot\n  encode it at all: shrinking the 4-byte word branch would put the target at\n  displacement 0, and 0 is the reserved encoding meaning \"use the word form\".\n  Which is why `bcs.s` to the immediately following label answers\n  `*** error - branch out of range ***` - it reads like \"too far\" and means\n  the exact opposite. `Live` (os9exec).\n- **After `l68 -o=exfio1` the program was not in the data directory** - it\n  landed in the execution directory, as the toolchain section above warns.\n  `dir` showed only the `.a` and `.r`; the linked module ran by bare name.\n\n### The rootless-object error (`Live` (os9exec))\n\n`l68`'s \"no root psect found\" is worth c"
+}

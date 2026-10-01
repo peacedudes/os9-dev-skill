@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 10,
+  "text": "dot-notation string -> 32-bit address (network order); -1 on malformed input |\n| `inet_ntoa()` | `in_addr` -> dot-notation string (static storage, overwritten each call) |\n| `inet_network()` | dot-notation string -> network number only (not a full host address) |\n| `inet_netof()` / `inet_lnaof()` | split an `in_addr` into network-number / local-host-number parts |\n| `inet_makeaddr()` | inverse of the split above - network number + host number -> `in_addr` |\n\n`inet_addr()`'s numeric parsing follows C literal conventions: no prefix is\ndecimal, a leading `0` is octal, `0x`/`0X` is hex - worth knowing since a\nconfig value like `010.0.0.1` doesn't mean what it looks like.\n\n### Database lookup functions\n\n`gethostby{name,addr}()`, `getservby{name,port}()`, `getnetby{name,addr}()`,\n`getprotoby{nam"
+}

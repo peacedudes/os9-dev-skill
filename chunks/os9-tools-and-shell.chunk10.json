@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 10,
+  "text": "execute bit at all -\nran correctly when invoked by name. The shell falls back to reading a\nnon-module as command text, and that path does not consult the execute bit\nthe way forking a real module does. So don't \"fix\" a working procedure file\nby granting it `e`; do set `pr` (and `pe` only if a module) when someone\nelse must run it. Not separately confirmed on 6809, though the mechanism is\nkernel-level rather than port-specific.\n\n**A procedure file stops at its first failing command, and nothing announces\nthat it did.** The shell's `-x` (abort on error) is on by default, so that\ncommand's own error prints, the remaining lines never execute, and the run then\nexits looking exactly like a completed one. `Live` (os9exec): a four-line file\nwhose second command failed produced line one's output, t"
+}

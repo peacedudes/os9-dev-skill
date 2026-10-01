@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 47,
+  "text": "nic) of body statements, replaced by the\nliteral actual-argument text. An actual argument containing a comma or\nbackslash must be double-quoted. Omitted trailing arguments become empty\nstrings - no substitution, not a zero value. Two read-only operators support\nvalidation: `\\Ln` = byte length of actual argument `n`; `\\#` = count of\narguments passed - typically paired with `IFxx`/`FAIL` to reject bad calls.\n\n**Macro automatic internal labels**: `\\@` (with an optional letter/digit\nsuffix placed either right after the `@` or right before the leading `\\`)\ngenerates a label unique to that expansion. The form is `@nnnX`, where `nnn`\nis a 3-digit sequence number incrementing once per expansion and `X` is the\nsuffix - a macro using `\\@A` and `\\@B` produces `@001A`/`@001B` on its first\ncall, `@002A"
+}

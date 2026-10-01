@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 29,
+  "text": "vs. unnamed.** On an *unnamed*\n  pipe, if every writer hits a full pipe, `I$Write` returns `E$Write` to each\n  of them. On a *named* pipe, there is no `E$Write` in that situation - the\n  writer instead sleeps until a reader opens the pipe and drains it. This\n  difference is what lets a named pipe double as a self-destructing\n  temporary RAM-disk file (non-empty, no paths open).\n- **6809 runtime arithmetic signals are a separate space.** The 6809 C\n  compiler's runtime adds three codes to `<errno.h>` that have no 68k\n  equivalent confirmed in these sources: `EFPOVR` (40, floating-point\n  overflow/underflow), `EDIVERR` (41, division by zero), and `EINTERR` (42,\n  overflow converting float to long). On any of these, the running program\n  signals *itself* with that number as the signal value; "
+}

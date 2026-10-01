@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 3,
+  "text": "ic storage itself, don't touch it.\n- **IRQ service routines may only destroy d0, d1, a0, a2, a3, a6** - every\n  other register must be preserved. Return carry clear if the interrupt was\n  serviced, carry set (and exit as fast as possible) if it wasn't yours.\n- Two patterns for waking a sleeping driver mainline from an IRQ routine in\n  OS-9: **signal-based** (copy `V_BUSY`->`V_WAKE` before sleeping; IRQ routine\n  clears `V_WAKE` and sends `S$Wake`) or **event-based** (mainline waits on an\n  event; IRQ routine signals it). Signal-based is more common for simple drivers.\n\n## Driver Lifecycle Under the Kernel's I$Attach/I$Detach\n\nApplication code never calls `INIT` or `TERM` directly - the kernel's\ndevice-table management does, following specific rules based on which\ndevice opens are happening"
+}

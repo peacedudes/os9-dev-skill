@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 17,
+  "text": "trap handler ****` triage\n\nThis banner + `Error #000:216 (E_PNNF)` has several distinct causes:\n\n1. **First `LOAD`/`RUN` touching numeric variables -> the `math` trap\n   module (TRAP #15) isn't reachable.** Fix: `load math` (put it in the\n   startup file); the lazy-linking mechanism is in\n   `basic09-per-target.md`. `Live` (os9exec): `load`'s `-s` flag silently fails\n   to make `cio`/`math` resident - `load -s cio csl math` in `/h0/startup`\n   left only `csl` in `mdir` after a fresh boot, and `load -s math` alone\n   fails the same way, while a plain `load math` succeeds every time.\n   Whether this is os9exec's command handling or the real Microware\n   `load`'s `-s` path is unestablished. Workaround: plain `load math` /\n   `load cio`, no flag, once per session.\n2. **`cio`/`csl` genuinely no"
+}

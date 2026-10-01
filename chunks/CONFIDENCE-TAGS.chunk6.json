@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/CONFIDENCE-TAGS.md",
+  "chunk_index": 6,
+  "text": "ombine - keep the higher tier plus `Flag`, so the\ndisagreement isn't silently erased (`Source, Flag` when a struct offset in\nos9exec's code contradicts the manual).\n\n**A `Live` observation does not clear a `Flag` against an authoritative\nmanual.** Running a reimplementation tells you what that reimplementation\ndoes; it is not evidence that Microware's manual is wrong.\n\n- `Live` clears a `Flag` only where **no authoritative manual speaks** - an\n  emulator-internal detail, a harness behaviour, a question the manuals don't\n  address.\n- Where a manual **does** speak and a runtime disagrees, the `Flag` stays and\n  the claim records **both readings at the point of use** - what the manual\n  specifies and what the runtime does - rather than picking one.\n- Only Microware, or a test on genuine OS-9 "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 7,
+  "text": "nly the\n  6809-era manual documents it.)\n\n## 68k-only\n\n### Toolchain\n\n`Live` (os9exec): 68k `basic` identifies itself as \"Microware Basic V2.1\", and `RunB`,\nthe standalone runtime-only interpreter, exists and works on a real `PACK`ed\nmodule. A packed module is a *subroutine* module; `runb <name>` runs it,\nand so does the bare `<name>` from the shell, which recognises I-code and\nforks RunB (see `pack-and-runb.md`). It resolves through the module\ndirectory (`F$Link`) first, then the *execution* directory (`F$Load`), never\nthe data directory. Module-format background: `common/module-format.md`;\npacking mechanics and the resolution rules in full: `pack-and-runb.md`.\n\n### Commands documented only in the 68k-era manual\n\nThese four appear in the *OS-9 BASIC User Manual* (Rev G, 1991) and not in\nt"
+}

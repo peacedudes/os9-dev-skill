@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 5,
+  "text": "-9's shared\nmemory; for the usage patterns and gotchas of using data modules for actual\ninter-process communication, see `ipc.md`.\n\n### `edata` / `end`\n\nTwo linker-defined symbols mark the end of a program's own static data:\n`edata` is one byte past the end of initialized data, `end` is one byte past\nthe end of uninitialized data. Neither is a variable - a C program takes\ntheir address (`&edata`, `&end`) to get the value; in assembler they're\nplain labels. Useful for a program that wants to know where its own static\nregion ends before doing its own `sbrk()`/`malloc()`-style allocation on top\nof it.\n\n### `malloc()` and the lower-level system-request calls\n\n`malloc()` doesn't turn every request into a fresh call to the kernel - it\nkeeps its own pool of memory already obtained from the system"
+}

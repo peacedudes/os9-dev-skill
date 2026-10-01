@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 19,
+  "text": " higher directory level\") and the form to use in anything you write, because\n**it is uniquely OS-9** and says so at a glance where a stack of `../` reads as\nborrowed Unix.\n\n**The rule underneath.** A component made only of periods climbs one level fewer\nthan it has dots, and **components compose** - a pathlist may chain any number of\nthem, and the arithmetic is simply addition. `../......./.././file` climbs\n1 + 6 + 1 + 0 = **eight** levels. Climbing is **clamped at the volume root**: you\ncannot walk off the top of a device.\n\n**`../..` is also accepted** - it is two one-level components and lands in the\nsame place. Worth knowing so that borrowed Unix code is not suspected wrongly,\nand so that a mixed pathlist is read correctly, but not worth writing.\n`Hearsay` (the author, from a real syste"
+}

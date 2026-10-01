@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 3,
+  "text": "butable); a bootable NitrOS-9 IDE\ndisk image (NitrOS-9 itself is open source, but bundled third-party software\nmay not be); a DriveWire server.\n\n**Which DriveWire build you run is part of the harness, not an implementation\ndetail.** `Live` (NitrOS-9): the DW4 server this project drives - DrPitre's\nSwift `drivewire-cli` - delivered its TCP-server callbacks on a private\ndispatch queue while the host object was mutated on the main queue, and\nsegfaulted under live guest traffic. Symptom is a *host* one and reads as a\ndead guest: the server answers `SUCCESS` to `tcp listen`, then its window\nvanishes and every later connection attempt finds nothing listening - look in\nthe host's crash reports, not at OS-9. A one-line queue confinement fixes it,\ncarried locally and offered upstream; a rebuild fro"
+}

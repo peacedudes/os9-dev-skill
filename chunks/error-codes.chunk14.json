@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 14,
+  "text": " | E$EvBusy | Event busy | Delete attempted on an event with nonzero link count, or create attempted on an already-existing named event |\n| 000:170 | E$EvParm | Impossible event parameter | Invalid parameters passed to `F$Event` |\n| 000:171 | E$Damage | System damage | Corruption detected in a kernel data structure |\n| 000:172 | E$BadRev | Incompatible revision | Software revision incompatible with the OS revision |\n| 000:173 | E$PthLost | Path lost | Network node down, serial carrier lost, or pipe broken via `SS_Break` |\n| 000:174 | E$BadPart | Bad partition | Partition table invalid, or no partition marked active |\n| 000:175 | E$Hardware | Hardware damage detected | Driver failed to detect a correct hardware response |\n| 000:176 | E$SectSize | Invalid sector size | RBF sector size must b"
+}

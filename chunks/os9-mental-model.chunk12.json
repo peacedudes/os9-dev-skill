@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-mental-model.md",
+  "chunk_index": 12,
+  "text": "ves a true LF). RBF stores exactly the bytes\n  written, no translation; SCF may append LF after CR on output as a\n  terminal nicety, but never rely on translation for files.\n\n## Why it matters - one-line index\n\n| Concept | Consequence |\n|---|---|\n| Modules, not files | Dynamic loading, ROM placement, reentrancy without MMU |\n| Link counts | One resident copy per program, dynamic-linker-style lifecycle |\n| File manager / driver / descriptor split | New hardware = small driver + tiny descriptor, no kernel change |\n| Path numbers | Disk, terminal, pipe, tape behind one I/O interface |\n| Priority + aging | Preemption without starvation |\n| Two current directories | Data lookup and command lookup are different searches |\n\n---\nSources: OS-9 v2.4 Technical Reference Manual; Technical I/O Manual v"
+}

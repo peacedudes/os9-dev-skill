@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 21,
+  "text": "ution\n  or data directory, respectively\" (`Manual`); bit 7 of `d0.b` only says\n  whether `d1.l` carries a memory colour. `Live` (os9exec): `$01` (`Read_`)\n  resolves a relative name in the data directory; `0`, `$80` and modes with\n  `Exec_` use the execution directory; `$0401` and `$FF01` behave as `$01`.\n  RunB's module lookup searches `chx` (application side in os9-dev's\n  `basic09/pack-and-runb.md`; the F$Load row of `68k/syscall-reference.md`).\n  The point worth adding for kernel/emulator work specifically: reading the\n  mode as a full word flips the decision, because RunB leaves its\n  type/language in the high byte (`Source`: os9exec's F$Load, which masks to\n  `d0.b` for that reason).\n\n### Header Integrity: Parity and CRC\n\nTwo independent checks protect a module, checked at different "
+}

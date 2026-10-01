@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 26,
+  "text": "ode and auto-resets to 0 once read; `POS` reports the current print\ncolumn.\n\n**`EOF()` is a position check, not C's sticky `feof()`.** `Live` (os9exec,\nhost directory and RBF image): reading a 2-line sequential file, `EOF(#path)`\nis `FALSE` after the first `READ` and `TRUE` straight after the last one.\n`SEEK` to or past the end makes it `TRUE`, and `SEEK #path,0` makes it\n`FALSE` again. So `WHILE NOT EOF(#path) DO READ #path,x ... ENDWHILE` stops\ncleanly after the last record. A `READ` past the end raises\n`Error #000:211 (E$EOF)`. That is a standard OS-9 I/O error code\n(`common/error-codes.md`), not one of BASIC09's own low-numbered errors, and\n`READ`/`WRITE` surface it through `ERR` like any other file-manager error.\n\n**`READ` is context-sensitive.** `READ var_list` (no `#path`) reads the"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 27,
+  "text": "ule** is the\nplatform-specific real-time-clock handler.\n\n## Linker & object-format facts (68k `l68`, 6809 `c.link`)\n\n- **`l68` error taxonomy (`Live` (os9exec)):** `file 'x.r' is not a\n  relocatable module` = the input does not start like a ROF (zeroed sync\n  word, a large text file); `error reading input file` = a truncated ROF;\n  `no root psect found` = nothing supplied an entry point - which an empty\n  file and a text file also get, so it says nothing about an object's\n  health. When exactly one input out of many is rejected, rebuild that\n  object before theorizing about linker limits.\n- **ROF header (`Live` (os9exec)):** 0x00 sync longword `$DEADFACE`;\n  0x0C-0x11 creation date (year-1900, month, day, hour, minute, second);\n  0x1C code size; 0x38 NUL-terminated module name. Decoding tw"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 11,
+  "text": " or in `file-managers.md` -\na skeleton for those entry points can only be written by unconfirmed\nanalogy to READ/WRITE's `(a1)/(a4)/(a5)/(a6)` pattern, not from\nattested content.\n\nKey behaviors a real RBF driver needs to get right:\n- **Sector-0 buffering** (fixed media only - removable media must detect\n  media changes): cache LSN 0 via `V_ScZero`/`V_ZeroRd` to skip physical I/O\n  on repeat reads; invalidate on any write to LSN 0.\n- **Variable sector size**: respond to `GetStat SS_VarSect` with no-error\n  if the driver supports sizes other than 256 bytes (via `PD_SSize`); return\n  `E$UnkSvc` if fixed at 256 - RBF then assumes 256-byte logical sectors, and\n  the driver is responsible for translating/deblocking if physical sector size differs.\n- **`SS_DSize`** (autosize devices): return medi"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 29,
+  "text": "asm` ... `#endasm` | 6809-era Microware C | Pass-through mode to assembler. Compiler generates PSECT; if your assembly uses VSECT, insert `ENDSECT` before `#endasm` to reset section context. |\n| `_asm()` | Ultra C (68k) | Function-style assembly embedding. The compiler does **not** optimize it; surrounding optimizations can damage it. Prefer separate assembly files. Supported in function bodies from Ultra C 1.2 onward. |\n\nSources: OS-9 C Compiler manual, \"Imbedded Assembly Language\", p. 1-4; *The\nOS-9 Primer*, Chapter 12 (\"Placing assembly directly within a C code\nmodule\").\n\n## Reference: Data Types - 6809 vs. 68k\n\nThe only C compiler manual behind this reference is the **1983 6809**\nmanual. Its data-representation claims are 6809-specific and do **not**\ncarry over to 68k - `Live` (os9exec"
+}

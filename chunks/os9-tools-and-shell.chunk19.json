@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 19,
+  "text": "ped material reads as foreign. Also noted for the 6809 utility set\nin `6809/utility-usage.md`.\n\n## Control keys and line editing\n\nDefault assignments - every one remappable per-device via `tmode`/`xmode`:\n\n| Key | Function |\n|---|---|\n| Ctrl-A | Recall previous input line, unexecuted, cursor at end - backspace and retype to edit, Return to submit. (This is the whole history mechanism: the line editor has no cursor movement, so there is nothing for an arrow key to drive. Do **not** read that as \"the terminal has no arrow keys\" - a CoCo has four, and its LEFT ARROW *is* Ctrl-H; see `6809/using-nitros9-repl.md`) |\n| Ctrl-D | Redisplay the line being typed (hardcopy-terminal aid) |\n| Ctrl-H / Backspace | Erase previous character |\n| Ctrl-X | Discard the whole line being typed |\n| Ctrl-W | Paus"
+}

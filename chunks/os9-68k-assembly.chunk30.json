@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 30,
+  "text": "s own RMA convention and are not\n  confirmed for the 68k toolchain.\n- **Ultra C (68k), `_asm()`:** embeds assembly inline inside C code, but the\n  compiler does not optimize the assembly, and surrounding C-code\n  optimization can inadvertently damage it. Prefer separate assembly files\n  or linking instead of embedding inside function bodies. (Ultra C 1.2+\n  reportedly supports macro-form assembly inside functions.)\n\n## Module structure an assembler/linker produces (68k)\n\nFull header layout/offsets, type/language/attribute-byte tables, the\ndata-initialization and pointer-relocation tables, CRC/parity mechanics,\nand the word-alignment padding rule: `common/module-format.md` - not\nrepeated here. What's specific to the assembler/linker's role in\nproducing this: an assembly-language program's `"
+}

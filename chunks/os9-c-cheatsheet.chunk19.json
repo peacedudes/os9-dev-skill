@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 19,
+  "text": "se it was.\nAdding `#undef getchar` on the line above fixed input entirely.\n\n### An object-like macro is not rescanned with the `(` that follows it\n\n`#define P putchar` and then `P(65)` fails:\n\n```\npobj.c : line 5 **** macro arguments required ****\nputchar\n         ^\n```\n\nThe echoed line shows why: `P` expanded to `putchar`, and the `(65)` sitting\nright after it in the source was never joined to it, so the function-like\n`putchar` macro from `<stdio.h>` was left without arguments. A conforming\npreprocessor rescans the replacement together with the rest of the source and\nfinds that `(`.\n\n**The fix is to make the macro function-like**: `#define P(x) putchar(x)`\ncompiles and prints as expected. The general rule - **an object-like macro whose\nexpansion names a function-like macro will not pick u"
+}

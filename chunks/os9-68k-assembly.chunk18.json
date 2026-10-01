@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 18,
+  "text": "ough `F$IRQ`; level 7 (vector 31) is non-maskable and should not be used for ordinary devices - reserved for hardware the kernel doesn't need to coordinate with (e.g. DRAM refresh); a level-7 ISR must never call a system call or touch kernel data |\n| 32 | `TRAP #0` - OS-9 system calls | See above |\n| 33-47 | `TRAP #1`-`#15` - user trap handlers | Installed via `F$TLink` |\n| 57-63 | 68070 on-chip autovectored interrupts, levels 1-7 | 68070 only |\n| 64-255 | Ordinary vectored interrupts | |\n\nError exception vectors all dispatch through `F$STrap` and are normally fatal -\nthe offending process is terminated. Exception: if the process was created\nvia `F$DFork`, its state is preserved rather than torn down, and control passes\nback to the parent debugger for a post-mortem look instead. The table "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 37,
+  "text": "ath | Returns new path number (lowest available), same underlying file. `Live` (NitrOS-9) |\n| I$Create | $83 | A=mode, B=attributes, X=pathlist | Returns A=path number; error if the file exists. `Source`, two-layer dispatch: NitrOS-9's `ioman.asm` shares one dispatcher between `I$Open`/`I$Create` that touches only A and X, leaving B untouched as it hands off to the file manager - RBF's own `Create` reads B as file attributes. `Live` (NitrOS-9) |\n| I$Open | $84 | A=access mode, X=pathlist | Returns A=path number. Requires an **existing** file - fails `E$PNNF` (216) against a nonexistent name; it does not create-on-open the way some Unix `open()` flag combinations do. `Live` (NitrOS-9) |\n| I$MakDir | $85 | B=attributes, X=pathlist | Auto-creates `.` and `..` entries. `Source`: NitrOS-9's `rb"
+}

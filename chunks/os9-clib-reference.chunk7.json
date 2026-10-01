@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 7,
+  "text": "\" below) |\n| `<errno.h>` | OS-9 error-code extensions. **The 6809 runtime's `EFPOVR`/`EDIVERR`/`EINTERR` (40/41/42) are not in the 68k header** - `Live` (os9exec): each is an \"undeclared identifier\" at compile. 68k uses different OS-9-style short names; read the header itself, or `common/error-codes.md`, for the actual FP/divide/overflow codes. |\n| `<module.h>` | OS-9 module linking |\n| `<sgstat.h>` | OS-9 file status/setstat (`I$SetStt`) |\n| `<modes.h>` | File status/mode bits (owner/public only, no group class). **`Live` (os9exec): `<stat.h>` does NOT exist on the 68k `DEFS` - use `<modes.h>`** (see File Permissions below) |\n\n**String functions live in `strings.h`, not `string.h`.**\n\n## File I/O\n\n| Function(s) | OS-9-specific behavior |\n|---|---|\n| `fopen`/`freopen`/`fdopen(char *name, c"
+}

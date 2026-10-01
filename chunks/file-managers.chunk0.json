@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 0,
+  "text": "# OS-9 File Managers\n\nBaseline `Manual`, cross-referenced across multiple manuals; path-descriptor\nbyte offsets are additionally `Source` against os9exec's C.\n\n**The entry-point conventions below are `Manual`**, and stay so short of\nreal hardware: os9exec, the 68k runtime available here, never runs an\ninstalled file manager's code (`os9-dev`'s `common/using-os9exec-repl.md`,\n\"What os9exec does not implement\"), so they could not be exercised.\nThe same holds for `device-drivers.md`.\n\nA file manager sits between application I$ calls and a device driver - the\nlayer that understands filesystem or protocol structure (directories,\nsegments, line editing) while the driver knows only raw sector or character\ntransfer. RBF, SCF and SBF are the three standard ones; PIPEMAN is a fourth,\nfor pipes. A cu"
+}

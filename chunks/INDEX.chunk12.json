@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 12,
+  "text": "xec-repl.md` |\n| `E_FNA` (214) opening a file that is present and readable | a leading space in the pathname - `F$PrsNam` does not skip one, and the failure surfaces at the open as a permission error | `68k/syscall-reference.md` |\n| Full-screen program refuses to start (`Unknown terminal type`) or draws only part of its screen | a modern `TERM` it does not know - try `TERM=vt100` first; if `vt100` is already set and the termcap file has it, the entry's first field must be two characters (`d0|vt100:...`) | `c/os9-clib-reference.md`, `common/using-os9exec-repl.md` |\n| A program's last line of output is missing, or the prompt sits on top of it | the message ended in a bare CR and the prompt overwrote it - append `; echo \"\"` | `common/using-os9exec-repl.md` |\n| EVERY line overwrites the last, "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/gotchas.md",
+  "chunk_index": 6,
+  "text": "g with\n  `! ...` above `PROCEDURE` loads on 68k and every procedure in it runs, but\n  the comment is not dropped: `LOAD` prints `Program Rewrite?:` and the\n  workspace gains an extra procedure named `Program` holding the comment as\n  `REM`, listed first; `PACK*` packs it along with the rest. The identical\n  file fails on 6809 with `Error #043 --\n  Unknown Procedure`, and the failure is not scoped to one procedure -\n  **nothing in the file loads**, including procedures defined after the\n  comment. It is genuinely about *position*: the same comment inside a\n  procedure body, or standalone between two procedures, loads cleanly on both\n  and normalizes to `REM`. **Fix: put `PROCEDURE` on line 1**, and if a\n  whole-file comment is wanted, place it after that line.\n- **No automatic variable init"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 14,
+  "text": "`), initialized from the device\n   descriptor's `M$Opt` table (above) and alterable via GetStat/SetStat.\n\n`I$Open`/`I$Create` allocate a new path descriptor and path-table entry with\nshare counter `PD_COUNT` (offset $1A per the manuals) set to 1. `I$Dup`\nskips the file manager and driver entirely - it just increments `PD_COUNT`\non the *existing* descriptor, letting multiple processes share one\nopen-file context cheaply. `I$Close` decrements `PD_COUNT`; only at 0 is the\ndescriptor actually deallocated and removed from the path table.\nA second count field, `PD_CNT`, sits at offset `$03`. These are **two genuine\nfields at two offsets, not a contradiction** - the manual lists both and marks\n`$03` obsolete. Full note: `os9-systems-dev` skill's `file-managers.md`.\n\n### Multi-port and multi-class"
+}

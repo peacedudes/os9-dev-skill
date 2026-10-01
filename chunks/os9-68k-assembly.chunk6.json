@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 6,
+  "text": "resses land\n  inside unrelated functions. Verify any address with `di <addr>` - a\n  function entry should look like a prologue. (`sc <module>` with an\n  argument fails even for valid names; use bare `sc`.)\n- `.` registers; `di <addr> [n]` disassemble without executing; `q` quit.\n- **`gs` is not single-step**: it runs to the *fall-through* address of\n  the current instruction. It steps over `bsr`/`jsr`, and on a taken\n  branch the child runs until the fall-through is reached by accident -\n  possibly a full loop iteration, possibly never (dead code after `bra`).\n  Ctrl-C recovers to a fresh `dbg:` prompt. Use `gs` for straight-line\n  code only; prefer `b <name>` + `g` to navigate.\n- Both behaviours (`sc` addresses, `gs` stepping) are attributed to the\n  `debug` binary itself rather than to o"
+}

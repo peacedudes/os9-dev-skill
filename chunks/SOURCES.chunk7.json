@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/SOURCES.md",
+  "chunk_index": 7,
+  "text": "-9 Assembler/Editor/Debugger Manual (fully mined - Editor, Assembler/`asm`/MIA ch. 2, and Debugger command-table chapters; a generic Microware manual despite shipping with Dragon systems); OS-9 Relocating Macro Assembler Manual (RMA options, input/listing format, expression evaluation, macro facility, PSECT/VSECT/CSECT semantics, data-area access, RLINK/linker options, RMA-vs-MIA differences appendix); 1982/1992 Quick References. Assembler/debugger core and I$WritLn/F$Exit `Live` on real NitrOS-9; open-source NitrOS-9 project files (os9defs.a, help texts) used as `Source` cross-checks |\n| 6809/coco-dragon-hardware.md | Tandy/CoCo Technical Reference; Radio Shack CoCo Level I manual; two Farna \"Mastering OS-9\" guides (1995/CoCo-3); OS-9 Hi-Res Screen Dump Utilities manual; \"OS-9 Level Two a"
+}

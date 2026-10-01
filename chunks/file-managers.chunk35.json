@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 35,
+  "text": " reason this layer exists: a program's `I$Read` is identical whether the\ndevice is a disk (RBF), a terminal (SCF), a tape (SBF), or a pipe (PIPEMAN) -\nthe *file manager* is what differs per device class, not the\napplication-facing system call. PIPEMAN needs no physical device at all: a\npipe's path descriptor uses a null driver backed by a plain FIFO memory\nbuffer - 90 bytes by default per the manuals, though os9exec ships 4096 (see\nthe `os9-dev` skill's `common/ipc.md`). When writing a new file manager, the 13-entry\ntable above is the complete contract the kernel expects; how \"Seek\" or \"Read\"\nmap onto your protocol is entirely up to the implementation.\n\n---\n\n**Sources:** OS-9 v2.4 Technical Reference Manual and Technical I/O Manual\nv2.4 (file-manager entry points, GetStat/SetStat dispatch,"
+}

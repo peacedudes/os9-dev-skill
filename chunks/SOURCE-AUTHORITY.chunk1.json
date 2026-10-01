@@ -1,0 +1,5 @@
+{
+  "source": "SOURCE-AUTHORITY.md",
+  "chunk_index": 1,
+  "text": "mportant, and the reason this project exists at all:** `os9exec` and\nNitrOS-9 are **reverse-engineered reimplementations by the user community**.\nNeither is a specification. Both have had real errors. Where a runtime and a\nMicroware manual disagree, the manual is the specification and the runtime is\nthe candidate defect - see `os9-dev/references/CONFIDENCE-TAGS.md`.\n\n## Filenames in this corpus are unreliable - classify by title page\n\nFour files carry third-party-sounding names but are **genuine Microware\nmanuals**. Anyone applying the \"Microware only\" rule by filename would wrongly\nthrow all four away:\n\n| Filename | What the title page actually says |\n|---|---|\n| `68k/M68000_Programmers_Reference_Archive_History.txt` | *OS-9/68000 Operating System Technical Manual*, Copyright 1984 Microwa"
+}

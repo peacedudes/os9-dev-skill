@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 22,
+  "text": "authenticates as user 0, the 6809 super user (a flat uid of 0,\n  not a 0.0 pair - `6809/syscalls-and-module-format.md`). `login` from an\n  already-logged-in shell works the same way and stacks a second shell; leave\n  it with `ex` rather than Escape. Being uid 0 does **not** get you past every\n  refusal, and a refusal that *names* permission is not proof you need uid 0 -\n  `deldir` prints `Error #214 - No Permission` in a case where privilege is not\n  the obstacle at all; see its entry in `6809/utility-usage.md` for what the\n  error actually indicates there. Establish which identity you hold before\n  reading anything into a 214.\n- **`.login` is 68k-only** (`Live` (os9exec); on 68k it sets `PATH`/`TERM`/`chx`/`chd` -\n  `common/os9-tools-and-shell.md`, \"Accounts and login\"). Nothing on 6809 r"
+}

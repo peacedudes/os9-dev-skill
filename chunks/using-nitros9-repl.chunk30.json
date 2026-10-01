@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 30,
+  "text": "ecome the bottleneck:\n\n```\nkey \"tee >progname\" Enter\nkey \"PROCEDURE progname\" Enter\nkey \" DIM x: INTEGER\" Enter\nkey \" PRINT x\" Enter\nkey Escape        # EOF for tee, consumed by tee - not a shell exit\n```\n\nThen `LOAD progname` inside `basic09` compiles the text directly. The Escape\nis consumed by whichever process is reading the channel at that moment; the\nshell prompt reappears normally afterward.\n\n- **Don't lead the file with a comment.** A `!` comment as the literal first\n  line, before `PROCEDURE`, makes `LOAD` fail the *entire file* with `Error\n  #043 -- Unknown Procedure` on 6809 - silently fine on 68k. Put `PROCEDURE`\n  on line 1. Full writeup: `basic09/gotchas.md`.\n- **A failed `tee >file` doesn't stop the shell accepting input, and that's a\n  trap.** If `tee` fails (`Error #218 - "
+}

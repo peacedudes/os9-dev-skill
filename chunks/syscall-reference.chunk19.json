@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 19,
+  "text": "ive` (os9exec) |\n| **I$MakDir** | Create directory | d0.b=mode, d1=access permissions (permit bits live in the low byte), **d2.l=initial allocation size (optional)**, (a0)=pathname | (a0)=updated past the pathname | Managers without directories refuse it: `Live` (os9exec), `/pipe/x` gives `E$UnkSvc` (208), `/term/x` and `/nil/x` give `E$BPNam` (215) |\n| **I$Dup** | Duplicate path | d0.w=path | d0.w=new path | Only bumps the existing descriptor's share count - file manager/driver never called. `Live` (os9exec) |\n| **I$ChgDir** | Change a current directory | d0.b=mode (what `chd`/`chx` invoke with data vs. execute mode), (a0)=pathname | (a0)=updated past the pathname | `Live` (os9exec) |\n| **I$GetStt** / **I$SetStt** | Status get/set | d0.w=path, d1.w=code, ... | per code | File manager hand"
+}

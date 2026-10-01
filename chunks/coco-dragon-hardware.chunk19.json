@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 19,
+  "text": "(`D0_35S`...`D3_35S`, the original CoCo drive spec, kept mainly for compatibility with older systems), 40-track double-sided (`D0_40D`...`DDD_40D` - `DDD` being the default-drive variant), and 80-track double-sided (`D1_80D`, `D2_80D`). Only 35-track and 40-track have a ready-made `DDD` default descriptor; there's no stock 80-track default - making an 80-track drive the boot default means cloning and editing an existing descriptor with `dmode` yourself. Most modern (post-1983) floppy mechanisms handle a 6ms step rate fine even though descriptors default to a conservative 30ms for compatibility.\n\n**Boot List Order Bug (\"BLOB\"):** the order device drivers/descriptors appear in an `OS9Boot` file can itself cause boot failure - a bad ordering can misallocate memory and produce error 207 or 237"
+}

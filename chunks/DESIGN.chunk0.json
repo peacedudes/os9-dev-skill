@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 0,
+  "text": "# Skill-doc consistency checker - design\n\nCovers both skills, os9-dev and os9-systems-dev. Entry:\n`check_doc_consistency.py`. Run from the repo root:\n\n```\npython3 tools/check_doc_consistency.py            # scan both skills' references/\npython3 tools/check_doc_consistency.py <dir>...   # scan given roots\npython3 tools/check_doc_consistency.py --memory-dir <dir>  # + orphaned [[memory]] links\npython3 -m unittest discover -s tools/tests       # the test suite (stdlib, no pytest)\n```\n\n**Scan both skills together, or cross-references false-positive.** The two\nskills point at each other's files on purpose (os9-dev's INDEX.md cites\n`6809-level2-mmu.md`, which lives in os9-systems-dev - a scope marker, not a\ndependency; shared content lives in os9-dev, see README). Narrowing a run to one\nroot - `"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 29,
+  "text": "ked writer wakes - a matter of retrying the conflict walk, not of mode.\n\nEither way a read-only path takes nothing and only ever waits: the manuals'\n\"reads or writes\" names the position, not a licence for a follower to lock the\nend, which would have the spooler block the assembler.\n\nUnder os9exec, locking exists only on RBF images, not on host directories -\nsee `os9-dev`'s `common/using-os9exec-repl.md`.\n\n### Implementing it - four things that bite\n\nFor anyone implementing the mechanism, in a file manager or an emulation of\none; all four apply on 6809 as on 68k.\n\n1. **Two paths on one file must actually see the same file.** Before locking\n   can matter at all, check this: if each path keeps its own copy of the FD\n   sector taken at open and its own data sector buffer, a reader never sees\n "
+}

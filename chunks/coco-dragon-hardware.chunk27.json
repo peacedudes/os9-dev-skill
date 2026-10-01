@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 27,
+  "text": "hly-copied module fails with error 214 (`EOS_FNA`, \"no permission\"),\nwhich is easy to misdiagnose as `load` itself being broken (its own\nminimal size in some kernel builds, ~36 bytes, doesn't help that\nimpression - but the utility is fine). The fix: `os9 attr -e -pe\nimagefile,path/to/module` immediately after copying any module you intend\nto `load` or `link` at runtime, granting execute to both owner and\npublic. Also note `load`/`link` resolve a bare module **name**, not a\npath - `load scdwv.dr` works if `CMDS` is on the exec-directory search\nlist; `load CMDS/scdwv.dr` fails (error 216, `EOS_PNNF`) since that's not\nhow these utilities expect their argument.\n\n**`dir -e` can silently under-report; plain `dir` is the complete list** -\n`Live` (ToolShed), i.e. `os9 dir` host-side, not the guest"
+}

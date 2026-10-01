@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 24,
+  "text": "d\n  is easy to miss. One, stop a *reader* concluding the file is finished.\n  Two, **stop two writers extending the file at the same time** - which the\n  documentation gives as the reason the EOF lock exists at all. So appenders\n  *are* serialized at the edge. A write-only sequential-output creator gains\n  the EOF lock as soon as it creates the file; that is what keeps a spooler\n  one step behind an assembler writing its listing through plain `>`.\n- **Which opens lock what**, since \"locks only happen in update mode\" is only\n  two-thirds true:\n  - *read auto-lock*: **update mode only** (read+write). A read-only path\n    cannot modify what it read, so it locks nothing.\n  - *EOF wait*: a reader blocks at end-of-file while **another path holds the\n    EOF lock**, and that lock is taken by whoev"
+}

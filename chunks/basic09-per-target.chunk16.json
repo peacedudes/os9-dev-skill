@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 16,
+  "text": "`8(a7)`/`16(a7)`/`24(a7)` are `b`/`sum`/`prod` - **verified offsets** for the\ndocumented \"4-byte length + 4-byte address per parameter after the first, in\ncall order, toward higher addresses\" layout, rather than derived-and-never-\nchecked arithmetic. `RUN addmulmod(a,b,sum,prod)` with `a=6, b=7` prints\n`13`, `42`; with `a=-3, b=10` it prints `7`, `-30`, confirming sign handling\nthrough `muls.w` for this range.\n\n### Calling a C function from BASIC09 (68k)\n\n`Live` (os9exec). BASIC09's convention (`D1` = address of first parameter) is *not*\nUltra C's compiled entry-point convention (`68k/os9-68k-assembly.md`), so a\nsmall assembly shim bridges the two. A minimal K&R C function:\n\n```c\naddone_c(n)\nint *n;\n{\n\t*n = *n + 1;\n}\n```\n\ncompiled `cc -r -s addonec.c` (relocatable, no stack-check prologue "
+}

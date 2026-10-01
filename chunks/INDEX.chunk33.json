@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 33,
+  "text": "match) | all | basic09/basic09-language.md |\n| Numeric widths/ranges/precision per target, INTEGER overflow, hex-constant sign flip, REAL formats and precision, 68k-only commands (SHELL/CHAIN/command-line PARAM), Graphics Interface Module, **calling 68k assembly or C from BASIC09** (worked `psect`/`r68`/`l68` examples) | both | basic09/basic09-per-target.md |\n| Digest of every trap, one line each with a pointer: porting hazards, fabricated syntax, surprising behavior | all | basic09/gotchas.md |\n| **\"BASIC09 ran out of workspace\"** - the fix is the shell's `#<size>k` modifier (`basic09 #32k`), not anything inside the language | all | common/os9-tools-and-shell.md |\n| PACK, RunB, packed-module resolution (F$Link/CHX), PARAM argument binding, \"Can't install trap handler\" triage | all | basic"
+}

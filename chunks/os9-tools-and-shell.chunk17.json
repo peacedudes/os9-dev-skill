@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 17,
+  "text": " data dir, initial program) and forks a genuinely separate process under\n  that identity. Exit with `logout` (not `bye` - that's BASIC09's).\n- A fresh login inherits nothing: without a `.login` in the account's data\n  directory setting `PATH` and `TERM`, even `procs` fails and `vi`\n  misbehaves.\n- **Per-account layout that works**: a personal execution directory\n  *inside* the shared `CMDS` (e.g. `/dd/CMDS/ALICE`) plus a personal home\n  elsewhere (e.g. `/dd/USR/ALICE`), with `.login`:\n\n  ```\n  chx /dd/CMDS\n  chd /dd/USR/ALICE\n  setenv PATH .:ALICE:SHARE\n  ```\n\n  **Park `chx` at the shared CMDS.** `PATH` entries resolve relative to\n  `chx`, so pointing it at a personal directory breaks ordinary interactive\n  command lookup, not just compiler sub-tool forking - `Live` (os9exec), `basic #32k`"
+}

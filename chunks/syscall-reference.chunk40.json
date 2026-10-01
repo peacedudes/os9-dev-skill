@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 40,
+  "text": "s9exec-repl.md`.\n\n- Signal 0 = kill (`kill` command; `kill 0` broadcasts within your\n  user/group).\n- Intercept-routine saved state: 72 bytes of MPU registers, 168 with FPU.\n- Async-safe techniques and single-instruction atomics (`tas`, `cas`,\n  `cas2`): `common/ipc.md`.\n- Kernel I/O bookkeeping: device table (per I$Attach) + path table (per\n  open path). Process and path descriptors are kernel-owned; user code\n  never touches them directly.\n\n---\nSources: OS-9 v2.4 Technical Reference Manual; a 1985 independent\nOS-9/68000 technical manual (F$DFork register table); The OS-9 Guru; The\nOS-9 Primer; OS-9 Insights; Technical I/O Manual v2.4; Disk File\nOrganization manual; OS-9 C Compiler manual; Using Professional OS-9 v2.4.\n"
+}

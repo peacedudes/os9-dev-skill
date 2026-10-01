@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 20,
+  "text": "RC),\npoint `M$Name` at it, add its length to `M$Size`, then recompute header parity\nand the CRC. Nothing already in the module moves, so `M$Exec` and both tables\nabove stay valid. `fixmod` alone will not do it, because `M$Size` changes.\nKeep the module an even number of bytes; every one measured was.\n\nDo this when two files answer to one module name - see the `argv[0]` note\nunder \"Reading a real module\", which is the other half of the same problem.\n\n## Module CRC\n\n24-bit trailer over everything from header start up to (not including) the\nCRC field; accumulator initialized all-ones, result one's-complemented for\nstorage. Sources describe the init as `$FFFFFF` (3-byte view) or\n`$FFFFFFFF` (`F$CRC`'s d1.l) - not a conflict, only the low 24 bits\nparticipate. The linker pads the body with one z"
+}

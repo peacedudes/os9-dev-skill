@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 26,
+  "text": "flag-only macro predicts, and `getch()` returning on the bare\nkey is `curses` doing its own single-character read.\n\nThe tell in the `getch()` capture is worth recognising: the echoed key and the\nprogram's output run together on one line (`kGOT 107`), because `getch()`\nreturned before any line discipline was involved.\n\nPractical consequence: a program that calls `cbreak()` and then reads with\n`getchar()` compiles, links, runs, and silently requires Enter after every\nkey - it reads as a broken game rather than a porting error. Read keys with\n`getch()`, or change the path's own editing with `tmode`/`SS_Opt`.\n\n**Building a curses probe**: if the link reports `wclrtoeol` unresolved *while\nnaming `curses.l` as the referencing file*, that is link order, not a missing\nsymbol - `curses.l` both refe"
+}

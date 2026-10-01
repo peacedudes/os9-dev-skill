@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 23,
+  "text": " be adjusted artificially (`link`/`unlink` utilities) -\n  don't treat them as exact.\n- **a6 bias:** the data-area base register is biased by `$8000` so indexed\n  addressing spans a full 64K; the linker compensates automatically for\n  `vsect` labels. This is why disassembled code shows data references offset\n  by `$8000` - and why a plain `(a6)` in hand-written assembly points 32 KB\n  past the start of the data, usually into someone else's memory. See\n  `68k/os9-68k-assembly.md`.\n\n## Trap libraries & subroutine modules\n\nA **TrapLib** (type 11) exposes subroutines reached via `TRAP #1`-`#15` +\nfunction word instead of linked addresses. Three entry points: execution,\ninitialization (run at F$TLink), termination (reserved, unimplemented in\nthis era). Installation (`F$TLink`) links the module, "
+}

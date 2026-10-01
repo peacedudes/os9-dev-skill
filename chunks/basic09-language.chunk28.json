@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 28,
+  "text": "nly - reaching EOF means reading through everything before it | Direct, via `SEEK` to any byte offset |\n\n**Sequential:** `WRITE #path, data` appends data plus a trailing CR;\n`READ #path, var` reads up to and including the next CR, stripping it. To\nappend to an existing sequential file, open with `UPDATE` mode and `READ`\nthrough all existing records first - that's the only way to position at\nEOF. **Gotcha:** using `INPUT` (not `READ`) against a file opened `UPDATE`\nwrites `INPUT`'s prompt text into the file itself, corrupting the data -\nuse `READ`/`WRITE`, not `INPUT`, for file I/O.\n\nOverwriting sequential data in place only works if the replacement is\nexactly the same byte length as the original (pad with spaces); a longer\nreplacement clobbers whatever data follows it in the file.\n\n```basi"
+}

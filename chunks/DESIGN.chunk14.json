@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 14,
+  "text": "e is one we own, so prose naming another\n   repo's document (`dogfood-report-*.md`, `ROADMAP.md`) is skipped rather than\n   false-positived - which is what confined check 4 to `INDEX.md` in the first\n   place. Bare basenames are check 4's job and are ignored here. Catches the\n   pointer left behind when a file moves between reference directories: the\n   target still exists, so check 4 stays silent, but the reader is sent to the\n   wrong place.\n\n**Near-verbatim paragraphs** (`find_duplicate_paragraphs`) is *not* a check -\nit is an opt-in report behind `--duplicates`, and never affects exit status.\nRepetition across these skills is often deliberate (restating a trap where its\nreader will meet it is this project's stated editorial goal), so every hit is a\njudgement call for a human. Jaccard o"
+}

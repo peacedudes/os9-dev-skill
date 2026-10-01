@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/reading-the-coco-screen.md",
+  "chunk_index": 8,
+  "text": " decoding.\nScope the capture to the emulator window rather than the desktop. XRoar's\nwindow ID changes on every restart, so always re-query it; XRoar also\npublishes auxiliary windows, and the emulator display is the one named exactly\n`XRoar` (~720x572). Capture needs no focus and does not raise the window.\nmd5-diffing successive captures is a cheap \"did anything change?\" check, and\nthe reliable way to prove a keystroke had *no* effect.\n\nKeystroke injection is the opposite: **XRoar must be frontmost or injected\nkeys are silently dropped** - an unfocused key press leaves the screen\nbyte-identical, and the same key works immediately once focused. So injection\nalways steals focus. XRoar maps host keys **by position**, so the US-layout\nkey at that location is what the CoCo sees. On macOS, high-"
+}

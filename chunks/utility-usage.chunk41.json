@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 41,
+  "text": "<n>` / `tabc=<h>` | tab stop spacing (default 4) / tab char (hex, default 09) |\n| `baud=<h>` | baud-rate/word-length/stop-bit byte, `Live` (NitrOS-9) - the primary manual's own table was OCR-corrupted; the cross-check sources' version was close but not quite right either - this supersedes both): bits 0-3 baud code - `0`=110, `1`=300, `2`=600, `3`=1200, `4`=2400, `5`=4800, `6`=9600, `7`=19200 (ACIAPAK driver only), `8`=32000 (SIO driver only); bit 4 reserved; bits 5-6 word length (`00`=8-bit, `01`=7-bit); bit 7 stop bits (`0`=1, `1`=2). Live examples: `baud=22` (hex) = 1 stop bit, 7-bit words, 600 baud; `baud=86` = 2 stop bits, 8-bit words, 9600 baud |\n| `type=<h>` | ACIA init byte (hex, default 00): parity codes are 000 none, 101 MARK, 111 SPACE, 011 even, 001 odd (even/odd only on ACIA-pa"
+}

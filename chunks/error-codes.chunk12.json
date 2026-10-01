@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 12,
+  "text": " |\n| 000:133-000:147 | E$Trap | Uninitialized user TRAP 1-15 † | User executed a TRAP #1-#15 instruction with no handler installed |\n| 000:148 | E$FPUnordC | FPCP unordered condition | FPCP branch/set on unordered condition |\n| 000:149 | E$FPInxact | FPCP inexact result | FPCP inexact result |\n| 000:150 | E$FPDivZer | FPCP divide by zero | FPCP divide by zero |\n| 000:151 | E$FPUndrFl | FPCP underflow | FPCP underflow error |\n| 000:152 | E$FPOprErr | FPCP operand error | FPCP invalid operand |\n| 000:153 | E$FPOverFl | FPCP overflow | FPCP overflow error |\n| 000:154 | E$FPNotNum | FPCP NAN signaled | Not-a-Number signaled |\n| 000:155 | - | FPCP unimplemented data type | Unsupported floating-point data type |\n| 000:156 | - | PMMU configuration error | PMMU configuration error |\n| 000:157 | - "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 31,
+  "text": " that's a\n  trap.** If `tee` fails (`Error #218 - File Already Exists`) and you type the\n  rest of the file blind, every line runs as a shell command, and the final\n  Escape meant as `tee`'s EOF hits the **shell**, which also treats it as EOF\n  and exits - killing the session shell. Confirm `tee >file` actually opened\n  first: a gated send blocks on a real `tee`, so a fast return means it failed.\n- **A large `dir` listing over the channel can kill the session.** `Live`\n  (NitrOS-9), reproducible: a directory listing big enough to fill the\n  channel crashed the guest session outright. This is an *output* hazard and\n  is distinct from the input-burst one above - sending nothing at all is no\n  protection. When you need a listing of something large, narrow it (list a\n  subdirectory, or `dir` w"
+}

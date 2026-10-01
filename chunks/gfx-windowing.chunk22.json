@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 22,
+  "text": " as a real defect in the call.\n\n### Drawing primitives\n\n- `POINT([path,][xcor,ycor])` - sets one pixel to the current foreground\n  color, at the draw pointer or at given coordinates.\n- **`Live` (NitrOS-9) - `LINE` does move the draw pointer, confirmed, but\n  mind the layer.** windint has *two* line opcodes and they differ: `WLine`\n  `$1b44` draws without moving the pointer, `WLineM` `$1b46` draws and moves\n  it (verified live - a following bare `CIRCLE` centered on the line's start\n  vs its end respectively). GFX2 exposes **only** the moving variant: its\n  `FuncTbl` has no `LineM` name, and the registered `\"Line\"` points at the\n  handler loading `#$46` (`gfx2.asm` L060D). So a raw-escape test of `$1b44`\n  will look like it contradicts this entry - it doesn't; it's a different\n  primitive.\n"
+}

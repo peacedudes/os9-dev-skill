@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 26,
+  "text": "ranslate), `cmp` (binary compare: offset, hex values, ASCII per mismatch; `-b` buffer\nsize, `-s` silent summary),\n`cfp` (apply a command template across many files), `grep`, `qsort`.\n\n**`pd` and `cfp` have no syntax entry in either `utility-usage.md`** - the\nsources behind those files don't cover them. Use `-?` or `help <name>` on a\nlive system rather than hunting for a table row that isn't there.\n\n**Modules and memory:** `load` (make a file's modules memory-resident),\n`link`/`unlink` (adjust a resident module's link count), `save` (write a\nresident module back to a file), `ident` (decode a module's header: type,\nlanguage, attributes, CRC check), `fixmod` (recompute a patched module's CRC\nand header parity), `mdir` (list the module directory; `-e` for details),\n`mfree` (free memory report)"
+}

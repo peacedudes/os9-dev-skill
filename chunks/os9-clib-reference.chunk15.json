@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 15,
+  "text": "ter twice when the stream is line-buffered\n\n**Never give `putchar` or `putc` an argument with a side effect.** `putchar(*p++)`\nis a bug here, and it is a bug that hides from the obvious test.\n\n`Source` (SDK `<stdio.h>`):\n\n```c\n#define putc(c, p)\t\\\n\t(((p)->_ptr >= (p)->_end || (((p)->_flag & _IOLBF) && (c) == '\\n')) \\\n\t? _flshbuf((p), (c)) : ((p)->_flag |= _WRITTEN, *(p)->_ptr++ = (c)))\n#\tdefine putchar(c)\tputc(c, stdout)\n```\n\n`(c)` appears in the guard and again in whichever branch runs. When `_IOLBF`\n(`0x0800`) is clear the guard short-circuits before reaching `(c)`, so it is\nevaluated once. **When `_IOLBF` is set it is evaluated twice** - once to ask\nwhether it is a newline, once to store it. The usual licence for `putc` to\nevaluate its argument repeatedly covers the *stream*, not the ch"
+}

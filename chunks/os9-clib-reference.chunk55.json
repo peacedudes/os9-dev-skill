@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 55,
+  "text": "l(\"/h0/CMDS/echo\", \"echo\", \"CHILD-RAN\", 0)`, then\nprinting `AFTER` produced `BEFORE execl` and `CHILD-RAN` and **never printed\n`AFTER`** - control does not come back. A Unix idiom that forks and then `exec`s\nin the child will, transcribed literally, terminate the parent.\n\n**Why, and how to get the other behaviour.** `os9exec()` takes its process-\ncreating function as its first argument (see the `os9exec()` entry above), and\n`chain`/`chainc` are the chaining counterparts of `os9fork`/`os9forkc` -\n`Source`, declared beside them in `os9lib/stdlib.h` in the same unprototyped\nstyle, with `chain` exported by `clib.l` and `chainc` by `unix.l`. A `unixlib`\n`execl` built as `exit(os9exec(chainc, ...))` therefore chains by construction.\n**Pass the fork function instead of the chain function and the "
+}

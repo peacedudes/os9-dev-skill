@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 30,
+  "text": "]register,color)` - installs one of the 64 available\n  colors into a given palette register. Re-checked directly against the\n  primary source's own `PALETTE` section (parameters, function\n  description, and example) - genuinely never states the register's\n  valid numeric range anywhere in that section (presumably 0-15, matching\n  the 16-register hardware limit noted under \"Concepts\" above, but not\n  explicitly confirmed by any source checked). **`Live` (NitrOS-9)**:\n  this GFX2 build's client-side implementation performs **no range\n  validation** on either `register` or `color` - calls with `register`\n  up to 99 and `color` up to 200 (both far outside the presumed\n  0-15/0-63 hardware ranges), including against a real, opened window\n  path (`/W1`, not just the no-path default target), all "
+}

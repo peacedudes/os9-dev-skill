@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 23,
+  "text": ") that wants that.\n\nThe mode rule is two rules, and conflating them is an easy trap:\n\n- **A read locks only on an update-mode path.** Reading a path opened\n  read-only or execute-only locks nothing, because such a path cannot\n  update the record it read. A read-only path only ever *encounters* a\n  lock and waits on it.\n- **A write locks nothing - except at end of file, in any write mode.**\n  A write landing at the current EOF always gains the EOF lock; that is\n  the sole case where a write locks any part of a file. It is *not*\n  gated on update mode: a plain write-only sequential-output creator\n  gains the EOF lock as soon as it creates the file, which is exactly\n  what makes the spooler case work - the write-only producer holds the\n  ghost, and the read-only consumer sleeps against it.\n\nS"
+}

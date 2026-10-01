@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 42,
+  "text": "SPACE, 011 even, 001 odd (even/odd only on ACIA-pak/Mod-pak hardware), and bit 4 toggles auto-answer modem support. **Which bits hold the parity code is unresolved - `Manual, Flag`:** this row says bits 5-7, the OS-9 Technical Reference (Tandy) puts it in bits 0-2, and the two have not been reconciled. Full discussion: `coco-dragon-hardware.md`'s Serial (ACIA) Configuration section. Device-specific meanings: on TERM-VDG, bit 0 enables true lowercase; on TERM-WIN, `type=80` marks it as a window device. |\n| `par`, `cs`, `stop` | parity / character size / stop bits - **display-only via `tmode`**, must go through the `deiniz`->`xmode`->`iniz` cycle to actually change |\n| `normal` | reset every parameter above to its default |\n\nValues are hex for character codes and the `baud`/`type` bitfields,"
+}

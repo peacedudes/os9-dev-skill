@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 65,
+  "text": "e**, `Error #nnn:nnn (E_NAME)\n  description`, where a stock system prints a bare `ERROR #mmm.nnn` - and in\n  the `E_` spelling, against the `E$` the DEFS declare. A code missing from its\n  table prints `(E_???) <<unknown error code>>`, a useful tell that the number\n  is **not** an OS-9 kernel error; that is how 68k BASIC09's own error 43 was\n  identified.\n\n## Zeroed emulator memory can make someone else's bug look like the emulator's\n\nThis is the failure mode to hold in mind whenever os9exec looks at fault, and it\nis the mirror of the rule that a `Live` claim is evidence about a\nreimplementation: the emulator's memory is more uniform than a real machine's,\nso a third-party bug may not present the way it would on real hardware.\n\n**os9exec `calloc`s the guest arena** (`Source`: `memstuff.c` "
+}

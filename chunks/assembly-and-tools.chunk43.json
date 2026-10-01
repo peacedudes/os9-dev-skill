@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 43,
+  "text": "e RLINK, not the assembler,\nhandles all data/DP allocation.\n\n**Direct page selection** (`asm` only): the assembler tracks direct-page\nstate and auto-selects direct vs. extended addressing based on whether an\naddress's high byte matches the current `SETDP` value; force with a `<`\n(direct) or `>` (extended) prefix on the operand.\n\n## RMA Source Format, Expressions, and Macros\n\n**Input file format** (ch. 1.5): free-form ASCII lines terminated by return,\n**max 256 characters**. Four fields: label (must start in column 1; if\nabsent, the line's first character must be a space), operation mnemonic,\noperand, comment - separated by one or more spaces. A line whose first\ncharacter is `*` is a full-line comment. Empty lines are skipped for assembly\nbut occupy a listing line.\n\n**Assembly listing forma"
+}

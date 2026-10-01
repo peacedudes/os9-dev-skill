@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 26,
+  "text": " like it\n  silently failed. `del` anything you're about to regenerate, or use a fresh\n  name each attempt.\n- **XRoar edits the `.ide` image in place**, so two harnesses booting the same\n  image corrupt each other and their servers fight over one becker port.\n  Concurrent sessions need a private disk clone, a unique session name, and\n  unique ports. On APFS `cp -c` clones a 134 MB image in ~5 ms. **Verify with\n  `lsof` which image XRoar actually has open** - a survivor process from a\n  previous run gets reused and silently writes to whatever disk *it* booted.\n- **\"Unresponsive\" is usually just slow.** `Live` (NitrOS-9): a 5000-iteration `SIN`/`COS`\n  BASIC09 loop takes **237 seconds** of guest time. A 30-second wait looks\n  exactly like a wedged channel, and restarting on that misreading lo"
+}

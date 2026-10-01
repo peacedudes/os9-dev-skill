@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 22,
+  "text": "` (startup process, sets up initial shell, inherits boot user ID).\n- **Dragon 64**: `KBVDIO`, `DDisk`, `SYSGO` - thinner extraction than CoCo; Dragon-specific material in the source library was sparse, mostly \"same shape as CoCo, different driver module names.\" Treat any Dragon-specific claim here as lower-confidence than the CoCo material until a Dragon-focused source is found.\n\n## Boot Configuration & Patching Tools (CoCo-specific)\n\nOS-9 allocates memory to loaded modules in 8K blocks regardless of a module's actual size - a merged file under 8K wastes nothing, but splitting related modules across separate loads costs a full block each. This is why the standard shell (just under 8K on its own) is typically merged with other frequently-used commands up to, but not past, the 8K boundary. T"
+}

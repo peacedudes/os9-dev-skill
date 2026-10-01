@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 17,
+  "text": "`psect` directive with the identical argument shape\n  (`psect name,type_lang,attr_rev,edition,stacksize,entrylabel`),\n  consumed by `l68` at link time to build the module header.\n\n## Program-module extended header (68k, offset 0x30+)\n\n| Field | Offset | Size | Purpose | Symbol |\n|-------|--------|------|---------|--------|\n| Execution offset | 0x30 | 4 | Entry point relative to module start | `M$Exec` |\n| Trap entry offset | 0x34 | 4 | Default handler for an unhandled TRAP (lazy binding, below) | `M$Excpt` |\n| Min data space | 0x38 | 4 | Required data-area size | `M$Mem` |\n| Min stack | 0x3C | 4 | Linker's assumed max stack depth; default 3K, linker option overrides. Fork memory = M$Stack + M$Mem + parameter size + caller extra | `M$Stack` |\n| Data init offset | 0x40 | 4 | -> data-initiali"
+}

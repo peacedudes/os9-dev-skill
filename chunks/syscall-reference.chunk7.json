@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 7,
+  "text": "0.l=remaining ticks if woken early | `Live` (os9exec). Both Microware manuals document the `d0.l` output (68k: \"remaining number of ticks if awakened prematurely\"; 6809: `(X)` decremented by ticks slept), so a process woken by a signal can tell how much sleep was left |\n\n## Module management\n\n| Call | Purpose | Key inputs | Key outputs | Notes |\n|------|---------|-----------|------------|-------|\n| **F$Link** | Link resident module | d0.w=type/language byte (0=any), (a0)=name | d0.w=type/language, d1.w=attr/rev, **(a0)=updated past the module name**, (a1)=entry, (a2)=header | Increments link count, no disk I/O. Fails if the module's access word does not give the process read permission (`Manual`) - `E$Permit`, judged by owner, group or public field as the caller relates to the module's own"
+}

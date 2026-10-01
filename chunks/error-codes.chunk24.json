@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 24,
+  "text": " a file that's currently open\": the Technical Manual's `I$Delete` says the file \"may not already be open\" (`Manual`). `Live` (os9exec): a delete refuses with 253 whether the other path holds the file for writing or only for reading, and the file stays intact. NitrOS-9 was seen to refuse the writer case (`Live` (NitrOS-9)) |\n| 000:254 | E$DeadLk | I/O deadlock | Two processes each hold one of two disk areas the other needs |\n| 000:255 | E$Format | Device is format protected | Format attempted on a format-protected disk (commonly set on hard disks) |\n\n## Known cross-manual discrepancies\n\n`Manual, Flag`. The two primary sources - the **OS-9 v2.4 Technical\nReference Manual** and the independent **OS-9/68000 Operating System\nTechnical Manual (July 1985, Revision S)** - were cross-checked card b"
+}

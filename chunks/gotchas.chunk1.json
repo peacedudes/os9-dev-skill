@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/gotchas.md",
+  "chunk_index": 1,
+  "text": "ry without an explicit cast.\n- **REAL precision differs** - ~9 decimal digits on 6809, ~14 on 68k. Code\n  relying on accumulated rounding or near-equality needs tolerance\n  comparisons, not `=`.\n- **Binary `PUT`/`GET` files are not cross-target safe** if they contain\n  INTEGER or REAL fields - the field widths differ, so a 68k-written file\n  decodes to wrong values on 6809 and vice versa. Use text-format\n  `WRITE`/`READ` for portable data exchange.\n- **`PACK` output is target-specific I-code.** A packed 6809 module will not\n  run on 68k or vice versa. Keep the source; recompile per target.\n- **Graphics Interface Module is 6809-only** (CoCo/Dragon). Calling `GFX`/\n  `GFX2` on 68k fails silently - no error, just a no-op or a crash depending\n  on context. Guard or strip before porting.\n- **`P"
+}

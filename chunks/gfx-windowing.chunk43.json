@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 43,
+  "text": "- **`COLGR` is not a function at all** - it's a plain BASIC09 variable name\n  the manual's own example programs declare (`DIM X,Y,R,T,COLGR: INTEGER`),\n  apparently short for \"color group\", reused across several unrelated\n  `PALETTE`/`COLOR` listings. Never a documentation gap, just a string\n  appearing near color-related code.\n\n---\nSources: OS-9 Level 2 Operating System Manual (GFX/GFX2 chapter, Chapter 9)\nis primary; the BASIC09 Reference Manual (Tandy) reprints the same appendix\nand served as an independent second OCR pass to cross-check function names\nand syntax the primary source's scan had garbled - it showed no behavioral\ndisagreements with the primary, only heavier OCR noise (notably on the module\nname `GFX2` itself). All text here is paraphrased, not quoted.\n"
+}

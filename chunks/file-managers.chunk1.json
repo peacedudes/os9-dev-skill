@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 1,
+  "text": "tandard ones; PIPEMAN is a fourth,\nfor pipes. A custom file manager (module type `FlMgr`, code `$0D`) follows\nthe same entry-point shape and must be owned by the super-user with the\nsystem-state attribute bit set, like a driver. `Manual, Flag`: os9exec's\n`load` accepted a custom file manager owned by `0.259` rather than UID 0 -\neither os9exec does not enforce the requirement at load time, or OS-9 checks\nit somewhere other than `load`.\n\n## Entry Point Table (13 subroutines)\n\nCalled by the kernel with `(a1)`=path descriptor, `(a4)`=process descriptor,\n`(a5)`=caller's register stack, `(a6)`=system globals:\n\n```\n+0   Create   Allocate buffers, init path descriptor, parse pathname, create file\n+2   Open     Same as Create but for an existing file\n+4   MakDir   Create a directory file (multi-fil"
+}

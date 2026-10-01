@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 8,
+  "text": " never wake to service the signal it's waiting for otherwise.\n\n**Async safety inside a handler:** the intercept routine auto-masks on entry (not re-interruptible), so it must be short - no atomicity beyond single instructions. Keep mainline data safe:\n\n1. Use algorithms with no shared mutable state.\n2. Mask signals around mainline critical sections.\n3. Use single-instruction atomic ops: `move`, `addq`, `subq`, `bset`, `bclr`, `tas`. 68k additionally has `cas` (atomic compare-and-swap, singly-linked) and `cas2` (doubly-linked).\n\n**Send restrictions:** most signals can be sent to any process, but Kill is\nrestricted to same user/group - only the super-user (group 0 on 68k; flat\nuser ID 0 on 6809 - `6809/syscalls-and-module-format.md`) can Kill\nacross groups. Sending to PID 0 broadcasts to eve"
+}

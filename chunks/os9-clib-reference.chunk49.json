@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 49,
+  "text": "e relying on it.**\n`Live` (os9exec), one binary built with the SDK's `cc` and run unchanged in two\nenvironments:\n\n| Where | Child ran? | `system()` returned |\n|---|---|---|\n| SDK disk, Microware's `shell` | **yes** - output appeared, redirect file created | 0 |\n| freeware disk, `bash`, `SHELL=/dd/CMDS/ksh` | **no** - no output, no redirect file | 0 |\n\nSo the return value is worthless as a signal: the failing case returned **0**,\nwhich reads as success. A large address-like value (640552) has also been seen\nfrom the failing case. Neither tells you anything.\n\n**The reliable diagnostic is a redirection inside the command string.** Put one\nthere and check whether the file appears:\n\n```\nsystem(\"list pctl.c >sysprobe.out\")   -> no sysprobe.out  =>  no shell ran\n```\n\nThat distinguishes \"nothing r"
+}

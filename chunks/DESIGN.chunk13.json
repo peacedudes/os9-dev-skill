@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 13,
+  "text": "md` are exempt from the duplication rule - each\n   skill legitimately has its own.\n\n   Deliberately mechanical: it checks that a citation **resolves**, not whether\n   it is a dependency or a scope marker (\"drivers are the sibling's job\"). No\n   regex separates those, and os9-dev names the sibling legitimately and often.\n   This is the one check that must see `SKILL.md`/`SOURCES.md`, so `run()`\n   reads them into the doc set - they are still never scanned as claim sources.\n\n6. **Stale directory-qualified pointers** (`check_qualified_references`). Where\n   check 4 asks \"does this file exist at all\" and is scoped to `INDEX.md`, this\n   asks \"is the path right\" and runs over **every** payload file. A reference\n   is judged only when its basename is one we own, so prose naming another\n   repo's"
+}

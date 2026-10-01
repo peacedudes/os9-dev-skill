@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 18,
+  "text": "the device itself, so its path is a\n  *different* path from the one the terminal normally reads through. Matching\n  only the main path leaves the armed process asleep forever.\n\n**NitrOS-9's own `tsmon` does not use this** (`Source`, `level1/cmds/tsmon.asm`):\nit installs an `F$Icpt`, closes stdin/stdout/stderr and `I$Dup`s the opened\ndevice onto them, then blocks on an ordinary `I$ReadLn` before forking the\nlogin program. So the armed-signal shape above is one valid implementation of a\nterminal monitor, not the only one - don't infer from a monitor's behaviour\nwhich mechanism it used.\n\n## SBF (Streaming Block, e.g. Tape) Driver Specifics\n\nAdds buffered vs. unbuffered transfer modes and tape-specific `SetStat`\ncodes (`SS_Feed`, `SS_Reset`, `SS_Reten`, `SS_RFM`/`SS_WFM` file-mark\nhandling, `S"
+}

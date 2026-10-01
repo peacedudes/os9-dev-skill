@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 13,
+  "text": "s were linked against Microware's\nproprietary `cio` C-I/O trap handler; on a disk without it they die\nimmediately with `**** Can't install trap handler **** / **** cio ****`.\n`Live` (os9exec).\n\n- **Classify by running it, not by reading the binary** - `Live` (os9exec).\n  Run each program against a disk with `cio`, `csl`, `csl020`, `math` and\n  `math881` removed, and match the banner, which names the handler that could\n  not be installed (`cio`, `csl`, or a program's own, such as `Graph`).\n  Searching the file for the string `cio` is a proxy that can fail in both\n  directions - a name can appear without the module being needed, and a\n  program can need it without the name appearing where a search looks. Only\n  `cio`/`csl` are fatal - `math`/`math881` are the optional floating-point\n  handle"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 12,
+  "text": "`/`=-`/`=*`\n- [ ] Check every `\\n` - CR here, not LF\n- [ ] No direct struct assignment - use `strass()` instead\n- [ ] `<strings.h>`, not `<string.h>`\n- [ ] Source files need CR-only line endings before compiling (`tr '\\n' '\\r' < in > out` on a Unix host)\n- [ ] Assume string literals are read-only\n- [ ] Count **two** shapes: the declarations (`ansi2knr` never converts them)\n      and the definitions whose return type shares a line with the name (it\n      skips those too). Both are hand work; \"is it ANSI\" predicts neither\n- [ ] Join adjacent string literals (`\"a\" \"b\"`); nothing here concatenates them\n- [ ] Keep joined logical lines well under 500 characters - the limit is not\n      fixed, earlier content in the file lowers it, and `\\` continuations do not help\n\n---\n\n**Sources:** Official Mic"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 28,
+  "text": "t\n  sessions; deliberate attempts to reproduce it from either condition alone\n  failed, so the trigger is not established. Mitigation costs one command:\n  send a cheap probe (`dir`), confirm fresh output, and go straight to restart\n  if it comes back stale or garbled rather than retrying blind.\n- **Benchmarking: don't trust a single timed run.** XRoar is a real-time CPU\n  emulator sharing host cores, so run-to-run variance tracks host load. Run\n  timing-sensitive benchmarks 2-3 times and average.\n\n## Authoring a BASIC09 program on the disk\n\nThe disk is a real IDE image, not a host-native directory, so the 68k trick of\nediting host-side and converting into place doesn't apply - there is no\nhost file to touch. Two routes:\n\n**BASIC09's own editor**, usually least work for a short program: raw"
+}

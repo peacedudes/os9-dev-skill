@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 14,
+  "text": "d module:** resolves via\n   **F$Link against the module directory**. Loading a packed group file\n   registers every member procedure as a module by name; sibling calls link\n   to those.\n\n## Residency contamination (context 3 hazard)\n\n`Live` (os9exec). **Running a packed file leaves nothing behind**: after\n`runb grp`, or `RUN grp` inside `basic` followed by `BYE`, `mdir` shows none\nof its members. **Loading one does**: after `load grp` from the shell, every\nmember stays in the module directory until unlinked. A later `runb` of a\n*different* packed file that reuses those procedure names then runs the\nresident copies, entry point included, and never the file you named. With\n`first` and `second` resident from one file, `runb` of a second file defining\nits own `first` and `second` printed the o"
+}

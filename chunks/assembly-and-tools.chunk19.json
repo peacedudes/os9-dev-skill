@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 19,
+  "text": " `MOD`/`EMOD` - it uses `PSECT`/`VSECT` and leaves header generation to RLINK |\n| `EMOD` | **`asm` only.** Closes the module; computes and emits the final 3-byte CRC accumulated over every byte since `MOD` |\n| `ORG expr` | **`asm` only.** No label. Repoints whichever counter is active: data counter in normal mode, program counter in Motorola-compatible mode. OS-9 modules carry no load-record table, so relocating the program counter mid-file only makes sense for Motorola-mode output meant for bare 6809 hardware - under OS-9 it breaks loading. RLINK owns all placement in an RMA build |\n| `RMB n` | Reserves `n` bytes. In `asm`, the label gets the *data* counter's value in normal mode, the *instruction* counter's in Motorola mode. In RMA: legal only inside a `VSECT` or `CSECT` - **illegal dire"
+}

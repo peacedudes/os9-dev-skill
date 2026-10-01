@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 28,
+  "text": "hain`\n- file descriptor -> path number\n- pipe syntax is **`!`**, not `|`; `>>` redirects **stderr**, not append -\n  append is **`>+`** (`>-` truncates, plain `>` fails if the file exists)\n- climbing: write `...` (one dot per level plus one) - runs compose and add; `../..` also works but the dotted form is the OS-9 one\n- Ctrl-C backgrounds; **Ctrl-E** is the kill key; ESC on a blank line\n  exits the shell\n- shared memory -> data modules; `/dev` + VFS -> descriptors + file managers\n- more memory for a program (BASIC09 especially): `cmd #32k` modifier\n- Full mappings and traps: common/unix-differences.md (Tier 1 first)\n\n## Common (both architectures)\n\n| Question about... | Read |\n|---|---|\n| General concepts: modules, link counts, process model, scheduler (priority+aging), two current directo"
+}

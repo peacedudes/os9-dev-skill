@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 40,
+  "text": " table or a standard math-library routine. `SQR` and `SQRT` are the same function - `Live` (NitrOS-9): source typed as `SQR(x+1.)` is stored and `LIST`ed back as `SQRT(x+1.)`, confirming `SQR` is just an accepted abbreviation, not a distinct function. |\n| `ABS`/`SGN`/`SQ` | Basic numeric functions |\n| `MOD` | Remainder. **Call shape unresolved** - `Manual, Flag`, see the operator note above |\n| `RND(0)` / `RND(n>0)` / `RND(n<0)` | Random 0-1 / random 0-n / reseed with `ABS(n)` as the new seed. **`RND(n>0)` returns a REAL in `[0,n)`, NOT necessarily an integer** - `Live` (os9exec): `RND(5)` returned `1.75959429`, a fractional value. Don't assume `RND(n)` gives a random integer 0..n-1 the way it does in some other BASICs; use `FIX(RND(n))` for that. **Reseeding is fully deterministic** (`Liv"
+}

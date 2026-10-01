@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 0,
+  "text": "# OS-9 Shell and Utilities\n\nShell syntax, line editing, terminal configuration, and the standard utility\nset. Architecture-independent unless a row says otherwise - except the\nutility catalog at the end, which is the 68k set with 6809 noted alongside.\n\n## Shell model\n\n- The shell is an ordinary unprivileged program, not part of the kernel.\n  Multiple shells run concurrently; the default shell can be replaced (e.g.\n  `MShell`).\n- Each shell has private state: current directories (`chd`/`chx`), prompt,\n  options. Child shells start with defaults - a child's changes never\n  propagate back to the parent.\n- The login shell executes `.login`/`.logout` in its own context, so their\n  environment changes persist for that shell. Any shell forked afterward is\n  a separate instance.\n\n## Command line a"
+}

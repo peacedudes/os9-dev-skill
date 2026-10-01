@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 18,
+  "text": "ream\nis binary and replaces real output with `Binary file matches`, silently\nfabricating batch results (a failing program's error text vanishes and it\n\"passes\"). Always `grep -a`; distrust suspiciously clean output in batch runs.\n\n**Set `tmode pag=0` before reading any listing.** With page pause on, output\nlonger than one screen stops and waits for a key; the harness's next send\nanswers the pause instead of running, and the tail of the listing is lost. A\ndirectory or `mdir` entry that exists then reads as absent - the same class of\nsilent truncation as the `grep` case, and just as easy to build a wrong\nconclusion on.\n\n## Passing environment variables in: the `@` prefix\n\n**A host variable reaches the emulated process only if its name starts with `@`.**\n`Source` (os9exec, `prepParams` in `os"
+}

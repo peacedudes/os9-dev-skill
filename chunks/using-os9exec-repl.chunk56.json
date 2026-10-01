@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 56,
+  "text": "ted session\n\nBoth look ordinary in the call table and are not:\n\n- **`F$SysDbg`** drops os9exec into its own *interactive* meta-debugger. A\n  scripted harness has nobody to answer its prompt, so the session hangs.\n- **`F$RTE`** kills the caller unless it is genuinely inside an intercept\n  routine - and `F$Icpt` alone does not put you there.\n\nNeither has been exercised live for that reason. Call them only from a forked\nchild, or where losing the session is acceptable.\n\n## What os9exec does not implement, and how it says so\n\nA missing call is not a crash. `F$SSpd`, `F$Trans` and `F$UAcct` return a\nclean `E$UNKSVC` (208) and change nothing; `F$SchBit`, `F$AllBit` and\n`F$DelBit` are implemented. `Live` (os9exec). Of the three, only `F$SSpd` is\none the v2.4 manual itself marks \"currently not imp"
+}

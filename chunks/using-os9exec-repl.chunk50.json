@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 50,
+  "text": "nd ownership are only real on an RBF image.** A host\n  directory cannot carry OS-9 ownership at all. Attributes do map to Unix mode\n  bits in both directions (`Live` (os9exec): `attr f -e` -> host `+x`; `chmod 400` ->\n  `-------r`), but Windows cannot represent them and reports read/write/exec\n  forced on. Crucially the `e` attribute is *reported, never enforced* - a\n  module with no `e` still runs from a host mount, because only the RBF path\n  checks attributes before an open. Test permission behaviour on an RBF image.\n\n**Name lookup on a host directory is not what OS-9 does**, `Live` (os9exec) and\n`Source` (its own `CaseSens` path lookup). The exact host name is tried first;\nfailing that, the directory is scanned and the **first** entry whose *shown* name\nmatches wins - where \"shown\" mea"
+}

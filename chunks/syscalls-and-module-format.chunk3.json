@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 3,
+  "text": " The\n  debugger's `E progname ARGS` is the outlier: it prepends a literal space\n  (`$20`) before the same text. A program reading its own parameters should\n  expect the trailing CR and skip a leading space only if the first byte\n  actually is one.\n\n## Syscall Reference\n\nCodes `$00-$1D` are ordinary user-mode `F$` calls (System Programmer's Manual\nAppendix C, Table C.1); `$28-$52` are privileged system-mode calls (Table\nC.2); `$80-$8F` (plus `$90`, added in a later revision) are I/O `I$` calls.\nThe `$1E-$27` range is documented in the manual's prose rather than either\nsummary table - occupied by `F$Alarm`($1E), `F$NMLink`($21), `F$NMLoad`($22),\n`F$VIRQ`($27). `$1F`/`$20`/`$23`-`$26` are unconfirmed by any source checked:\ntreat silence on those four as \"unknown\", not \"free\".\n\n### User-mode F"
+}

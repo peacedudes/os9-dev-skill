@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 33,
+  "text": "year:16)(month:8)(day:8)` - **not** decimal-digit \"yyyymmdd\" despite that\ndoc naming) -> d0.l=seconds since midnight, d1.l=Julian day number.\n**F$Gregor** is the inverse. `Live` (os9exec) - a round trip reproduces the original\ninput bit-for-bit, which pins the register contract without independently\nverifying the internal Julian-day epoch.\n\n## Utility\n\n**F$CmpNam** (d1.w=pattern length, (a0)=pattern, (a1)=target -> carry clear\non match): wildcard compare (`?` one char, `*` any string),\ncase-insensitive - the primitive behind shell wildcard expansion. `Live` (os9exec).\nTwo details not stated in the manuals: **the target string must be\nplain-NUL-terminated** (a literal `0x00` byte), *not* sign-bit-terminated the\nOS-9-module-name way despite that convention applying elsewhere in this call\nfam"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 15,
+  "text": "e()`. **Default buffer size:** the OS-9 manuals document a **90-byte** default (`Manual`, PIPEMAN). os9exec's default differs; see `common/using-os9exec-repl.md`.\n\n**Unnamed pipes** are created fresh by `I$Open` and shareable only across processes related by `F$Fork` inheritance - how the shell builds pipelines with `!`. Two unrelated processes each opening `/pipe` get two separate, unconnected pipes.\n\n**Named pipes** (`/pipe/<name>`) are file-based, allowing unrelated processes to connect: `I$Open` searches a linked list for that name and returns the *existing* path (like `I$Dup`) if found. A named pipe persists while open, making it useful for temporary-data handoffs between unrelated processes.\n\n**Shell-style construction:** the shell builds a pipeline with `F$Fork`,\ngiving each child r"
+}

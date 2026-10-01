@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/SKILL.md",
+  "chunk_index": 7,
+  "text": "direct page\" is 6809-only, full stop. When\n  a foundational claim (type size, register convention) looks off, verify\n  live against the 68k toolchain rather than trusting one passage.\n"
+}

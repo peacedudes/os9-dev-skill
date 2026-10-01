@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 5,
+  "text": "` loaded alike: `.1+.2` stores the IEEE\ndouble `3FD3333333333334`. Whether `.1+.2-.3` comes out zero depends on how\n`.3` was produced, which makes it a poor test:\n\n- **Operands computed at run time** (`1./10.`, `2./10.`, `3./10.`) under the\n  software `math` module: the residual is `5.55111512e-017` and `.1+.2 = .3`\n  compares **unequal**, as IEEE double arithmetic predicts.\n- **Operands written as literals** (`.1`, `.2`, `.3`), under either module: the\n  residual is `0.` and the comparison is **equal**, because the literal `.3`\n  is stored as `3FD3333333333334`, one unit above the nearest double\n  (`3FD3333333333333`).\n- Under `math881` the computed case gives the same `5.55111512e-017`.\n\nAt `DIGITS 15`, `1./3.` prints `.333333333333333` under both modules;\n`EXP(1.)` prints `2.71828182845"
+}

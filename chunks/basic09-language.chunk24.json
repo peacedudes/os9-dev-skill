@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 24,
+  "text": "` is accepted at edit time\nand run time. A BYTE *variable* passed to it arrives intact (42), and a write\nto `b` reaches the caller. Anything else is not converted: the parameter reads\nthe **first byte of the argument's storage**. An INTEGER 300 or a literal `7`\nreads as `0` (the high byte of a 4-byte integer), and `$05000000` reads as\n`5`. No error at any point. So the mistake the manual forbids looks like a\nparameter that was never bound.\n\n## I/O\n\n**Standard paths:** `#0` keyboard (input), `#1` screen (output), `#2`\nerror (output).\n\n```basic\nINPUT [ #path, ] [ \"prompt\", ] var_list        ! Line-based; retype on error\nPRINT [ #path, ] output_list                   ! To terminal or file\nPRINT USING fmt_string, output_list            ! Formatted output - see below\nGET #path, var_or_array    "
+}

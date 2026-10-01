@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 28,
+  "text": "ne feeds the terminal never adds | a **file** - the bytes are exactly as written | a **terminal** |\n\nNote that the first two point opposite ways: the pipe that reveals one conceals\nthe other. **So \"always capture through a pipe\" is not the rule** - the rule is\nthat a harness redirecting everything to files and comparing checksums will\npronounce all three classes clean, and a harness that only ever pipes will miss\nthe second. Exercise the real invocations: a named file argument, a pipe, and at\nleast a spot-check on a terminal. `Live` (os9exec), all three.\n\n## An internal command can BE the boot program - no shell needed\n\n`Live` (os9exec). os9exec's own built-ins run as the boot program, so a disk\nimage can be built and populated before any shell or SDK is available:\n\n```\nos9exec mount -k=36"
+}

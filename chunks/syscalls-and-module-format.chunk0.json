@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 0,
+  "text": "# OS-9/6809 System Calls and Module Format\n\nSame OS as 68k - see `common/` for the concepts (module directory,\nposition-independent code, process states, file manager architecture, error\ncodes). This file is the 6809-specific *encoding* of those concepts: different\nregister set, different syscall dispatch, different byte layout.\n\nMost call codes are `Manual`, cross-referenced across 8+ independent primary\nsources and internally consistent; ~70 of the ~93 documented `F$`/`I$` calls\nare additionally `Live` (NitrOS-9). Rows carry their own tags. Where a\ncall is marked unimplemented, that is a fact about **this NitrOS-9 build**,\nnot about OS-9.\n\n## Register Set and Calling Convention\n\n6809 registers: `A`, `B` (or combined `D` = A:B), `X`, `Y`, `U`, `S` (hardware\nstack), `DP` (direct page), `CC"
+}

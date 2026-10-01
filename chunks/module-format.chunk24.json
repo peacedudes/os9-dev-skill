@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 24,
+  "text": " era). Installation (`F$TLink`) links the module, allocates *private\nper-client static storage*, runs init; max 15 trap links per process.\n**Lazy binding:** a `tcall` before F$TLink jumps through the module's\nM$Excpt entry, which installs the handler and re-executes the call (zero\nM$Excpt aborts instead).\n\n**Subroutine modules** (type 2) by contrast have no static storage -\nroutines are reached through an index table of offsets, state passed by\nparameter; they run in the *caller's* CPU state, while a trap module runs\nin the state its own attributes declare. No limit on subroutine links.\n\n**The Math module** is the canonical TrapLib (trap 15): floating point,\nextended integer ops, conversions, transcendentals, shared by every\nlanguage. `Math881.l` (68881/882 hardware FP) substitutes for `Ma"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 43,
+  "text": " `Live` (os9exec): a\nsubscript-out-of-range error correctly transferred control to the trap\ntarget and `ERR` correctly held the triggering error code.\n\nNon-fatal errors trigger the trap (if set) or drop into Debug Mode\notherwise. **The claim that \"a trap clears itself after firing once\" does\nNOT match live behavior.** Cleanly confirmed with a two-error test (two\nseparate `arr(99)=1` subscript-out-of-range triggers in the same\nprocedure, no `ON ERROR` call between them): the trap fired both times\n(`hits=1`, then `hits=2`), with no re-arming in between. Treat\n`ON ERROR GOTO` as remaining armed indefinitely until explicitly disabled\nwith a bare `ON ERROR` - it does not need to be (and is not) re-armed\nafter each trip.\n\n**Divide-by-zero outcomes differ by operand type and by target - neither\ng"
+}

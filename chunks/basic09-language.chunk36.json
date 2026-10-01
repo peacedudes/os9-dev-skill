@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 36,
+  "text": "SIC output; `PRINT USING` adds\na format string (field width, decimal places, etc.) controlling exact\nlayout - available identically in program code and in Debug Mode's\ninteractive `PRINT` command.\n\n## Operators & Functions\n\nPrecedence, highest to lowest: `NOT` / unary negate; `^`/`**`\n(right-to-left); `*`, `/`, `MOD` (call shape `Flag` - see below); `+`, `-`; comparisons; `AND`; `OR`;\n`XOR`. Equal-precedence operators evaluate left-to-right except\nexponentiation. **A negative base is not accepted for exponentiation\nin BASIC09** (BASIC09 Reference Manual, Rev H) - the specific runtime\nerror code is unverified.\n\n**AND/OR/XOR/NOT vs. LAND/LOR/LXOR/LNOT - easy to mix up.** AND/OR/XOR/NOT\nare Boolean-only **infix operators** (`a AND b`, operands and result\nTRUE/FALSE). LAND/LOR/LXOR/LNOT are **"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 5,
+  "text": " the BASIC09 section below.\n\n`-ui null -ao null` is headless - fine for text-only work; a real `-ui`\nbackend is mandatory for graphics or screenshots. **XRoar takes the last\n`-ui` flag given**, so a later one overrides an earlier hardcoded default.\n`-no-ratelimit` runs unthrottled: a disk that takes ~40 s to boot throttled\nboots in about 4. Default to full speed unless a test genuinely depends on\nreal-time pacing.\n\nTwo shells exist on one boot: the DriveWire channel shell (what the harness\ndrives) and a **second, independent shell on the real local console**\n(`Term!NN`), visible only if XRoar has a window. Commands sent over the\nchannel never reach the console shell; typing into that one means sending real\nkeystrokes to the XRoar application.\n\n## Harness shape and its gotchas\n\nSame gated-s"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-mental-model.md",
+  "chunk_index": 9,
+  "text": "le-format.md` covers the ways a file name and a module\nname come apart.\n\n## I/O architecture: one path API, layered modules\n\nDevices and files share one namespace and one API: `I$Open` returns a\n**path number** (OS-9's file descriptor), then `I$Read`/`I$Write`/`I$Seek`/\n`I$GetStt` behave identically whether the target is a disk file, terminal,\npipe, or tape. Swapping a file for a device is path redirection, not a code\nchange.\n\nAn I/O request flows **kernel -> file manager -> device driver**, with\n**device descriptors** supplying per-device configuration:\n\n| Module | Role |\n|---|---|\n| File manager | Logic for a whole device *class*, hardware-independent |\n| Device driver | Register-level control of one hardware controller; no idea why bytes move |\n| Device descriptor | Small data-only modu"
+}

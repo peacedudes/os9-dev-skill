@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 14,
+  "text": "t (`Live`\n  (NitrOS-9)). RMA's equivalent is `-o=`.\n- **`rma`** (20,143 bytes, module name `rma`, identifying itself in listings as\n  `Microware OS-9 RMA - V1.1`) - the Relocating Macro Assembler the\n  PSECT/VSECT/RLINK section below describes. **`Live` (NitrOS-9): works,\n  including a full `rma` -> `rlink` -> run multi-file build** (its silent\n  failure modes are easy to mistake for a hang - chiefly that **`rma` writes\n  no object file without `-o=`**, and that a label must carry a **trailing\n  colon** to be exported to RLINK). Full recipe and traps:\n  `using-nitros9-repl.md`.\n  `rma_orig`/`rma.6809` are byte-identical copies; **`rma.6309` is not** - it\n  is a different module, name `r63`, 23,591 bytes.\n\n**`asm`'s `O=<name>` output goes to the execution directory (`CMDS`), not\nthe current"
+}

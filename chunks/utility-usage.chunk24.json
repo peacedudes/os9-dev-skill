@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 24,
+  "text": "(default) |\n|---|---|\n| `upc`/`noupc` | force upper-case echo / mixed case (default) |\n| `echo`/`noecho` | input echo (on) |\n| `lf`/`nolf` | auto line feed after CR (on) |\n| `bsb`/`nobsb` | echo backspace as BS-space-BS (on) |\n| `bsl`/`nobsl` | erase line by backspacing (video, on) / newline (hardcopy) |\n| `pause`/`nopause`, `pag=<n>` | screen pause; page length in lines |\n| `null=<n>` | NUL padding count after CR (0) |\n| `tabs=<n>`, `tabc=<h>` | tab stop spacing (4); tab char (09) |\n| `bsp=<h>`, `bse=<h>` | input/output backspace char (08) |\n| `del=<h>` | delete-line char (18 = ^X) |\n| `eor=<h>` | end-of-record char (0D = CR) |\n| `eof=<h>` | end-of-file char (1B = ESC) - `eof=04` moves it to Ctrl-D |\n| `reprint=<h>` | reprint-line char (04 = ^D) |\n| `psc=<h>` | pause char (17 = ^W) |\n| `a"
+}

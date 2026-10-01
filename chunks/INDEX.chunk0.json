@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/INDEX.md",
+  "chunk_index": 0,
+  "text": "# Reference Index - read the matching row before answering\n\n| If the task involves... | Read |\n|---|---|\n| Writing a device driver: entry points, static storage, IRQ handling, RBF/SCF/SBF-specific driver conventions | device-drivers.md |\n| Writing a file manager: entry points, Create/Open/Read/Write contract, GetStat/SetStat dispatch, path descriptor internals, RBF disk structure (identification sector, file descriptors, directories, allocation bitmap), record locking, file security | file-managers.md |\n| Kernel structures (System Globals, Process Descriptor, Path Descriptor), the scheduler algorithm (priority + aging, D_MaxAge), module directory internals, trap-handler mechanics, memory-allocation internals, exception/interrupt vector layout | kernel-internals.md |\n| 6809 Level 1 vs Level"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 21,
+  "text": "hics Interface Module note.\nOS-9 BASIC User Manual (Rev G, 1991) - ch. 2 p. 20/25, ch. 3 \"Command Line\nParameters\" p. 55-56, ch. 4 \"Optimum Use of Numeric Data Types\" p. 62, ch. 5\nSystem Mode command summary p. 5-20, ch. 9 \"Data Types and Data Structures\"\np. 97-98 (INTEGER wraparound, REAL IEEE-754), ch. 11 p. 11-15 to 11-17 (RUN,\nCalling External Procedures, the machine-language stack-frame diagram, KILL),\nAppendix A p. A-19 (the \"SysCall\" example, described but not reproduced).\nLanguage mechanics shared by both targets: `basic09-language.md`.\n"
+}

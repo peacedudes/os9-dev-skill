@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 5,
+  "text": " are where RBF's record locking happens** - see Record\n  Locking below, and `os9-dev`'s `common/error-codes.md` (`E$DeadLk`) for the\n  deadlock-detection this produces at the application level.\n\n## GetStat/SetStat Dispatch Model\n\n`GetStat`/`SetStat` are open-ended rather than fixed enumerations: the file\nmanager handles codes it recognizes (file size, EOF position, record-lock\ncontrol, path options, ...) and **passes unrecognized codes straight through to\nthe device driver** for hardware-specific handling (formatting a track, tape\nmotion control, baud rate). This lets RBF or SCF work with diverse\ncontrollers without hardcoding their status codes.\n\n## Path Descriptor Internals\n\nPath descriptors are created at open time and freed when the last reference\ncloses. Each is a composite structure "
+}

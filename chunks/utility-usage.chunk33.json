@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 33,
+  "text": "s-and-module-format.md`'s Signals section) rather than\n  68k's named-event-object model (`F$Event` with `Ev$Signl`/`Ev$Wait`\n  subfunctions - see `68k/syscall-reference.md`).\n- `tape`, `tapegen`, `diskcache` - `Absent` (6809).\n- `code` - `Absent` (6809).\n\n## Level 1 vs Level 2: user-visible differences\n\nThe manual states outright: **Level 1 commands and Level 2 commands are\nnot interchangeable** - don't run one system's command set against the\nother. Beyond that blanket warning, the concrete differences a user\nactually notices:\n\n- **Windowing is Level-2-only.** Level 1 has one physical screen and no\n  windowing subsystem at all - `wcreate`/`wmode`/`montype`/`tuneport`\n  and the whole `GFX2` module (see `6809/gfx-windowing.md`) don't exist\n  there; Level 1 programs use the `GFX` module's si"
+}

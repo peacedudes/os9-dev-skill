@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/INDEX.md",
+  "chunk_index": 2,
+  "text": "s, not a contradiction | file-managers.md |\n| A new terminal device is dead to keypresses - `tsmon` never wakes, nothing errors | the armed `SS_SSig` signal isn't delivered to the *arming process's own* path, only the device's main one | device-drivers.md |\n| Under os9exec, a correct, CRC-valid `Drivr`/`FlMgr` installs and is **never called at any entry point** | os9exec has no driver/file-manager dispatch at all - not your bug, and not fixable from the module side | device-drivers.md, file-managers.md |\n| Under os9exec, `iniz` appears to do nothing | it has no emulator-side implementation | device-drivers.md |\n| Under os9exec, record locking measures nothing; concurrent read-modify-write silently loses updates | you tested on a host directory - locking is RBF-only, so use a `mount -k` ima"
+}

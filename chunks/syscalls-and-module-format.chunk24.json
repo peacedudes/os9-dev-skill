@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 24,
+  "text": "fset | | Checks header parity/CRC, then on a same-name/type collision keeps the higher revision (ties favor the already-resident module); returns U=module directory entry addr; errors E$KwnMod/E$DirFul/E$BMID/E$BMCRC (+E$BMHP on LII only). `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`) |\n| F$Find64 | $2F | A=block number, X=base-page addr | | Find a 64-byte memory block by number (numbered 1..N); returns Y=block addr. Untested - depends on `F$All64` |\n| F$All64 | $30 | X=page-table base addr (0=allocate a new base page) | | Splits 256-byte pages into four 64-byte sections (the first section is a page table holding each page's MSB); returns A=block number, X=page-table base, Y=block addr; error E$PthFul. The first byte of each block holds its own block number - don't overwrite it. `Live` (N"
+}

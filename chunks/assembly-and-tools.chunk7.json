@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 7,
+  "text": " bytes |\n| `000D` @ `$04` | name offset | `$0D`, where `ExFileI` sits |\n| `11` @ `$06` | type/language | `Prgrm`(`$10`) + `Objct`(`$01`) - the `mod` operand |\n| `81` @ `$07` | attributes/revision | `ReEnt`(`$80`) + 1 |\n| `07` @ `$08` | header parity | one byte here, not the 68k's word |\n| `0014` @ `$09` | exec offset | entry 20 bytes in |\n| `00C9` @ `$0B` | data size | 201 - the `rmb` block, see below |\n\nNote `fcs /ExFileI/` starting at `$0D`: its final byte, at `$13`, is `C9` -\n`'I'` with bit 7 set. That high bit *is* the terminator; `fcs` is not\nNUL-terminated. (The `C9` at `$0C` is unrelated - that one is the low byte\nof the data size.)\n\n### `*` is the program counter, `.` is the data counter\n\n`asm` in its normal mode keeps **two separate location counters**, and the\n`mod` directive's l"
+}

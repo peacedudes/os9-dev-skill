@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 13,
+  "text": "locates the boundary between the two checks precisely:\n\n| Byte corrupted | Where | `ident` reports |\n|---|---|---|\n| `$17` | `M$Edit`, inside the universal header | **Bad parity** *and* Bad CRC |\n| `$3F` | `M$Stack`, in the type-specific fields | Good parity, **Bad CRC** |\n| `$60` | program code | Good parity, **Bad CRC** |\n\nSo \"protects the header only\" means the **universal** header - the words\nbefore `M$Parity` at `$2E`. The type-specific fields from `$30` on are\ncovered by the module CRC alone, exactly like the code. A corrupt\n`M$Stack` or `M$Exec` therefore passes the parity check.\n\nPractical consequence: a module that fails its CRC is refused at load time,\nso a hand-patched module needs `fixmod` before it will run again. Do not\nread a successful parity check as \"the header is intact."
+}

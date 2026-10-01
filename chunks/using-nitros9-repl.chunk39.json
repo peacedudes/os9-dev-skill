@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 39,
+  "text": "you own, or be user 0.\n4. **A label is local unless it carries a trailing colon.** `helper` exports\n   nothing, `helper:` does. Without it both files assemble without complaint\n   and `rlink` says `linker fatal: unresolved references` - an accurate\n   diagnostic, and the first evidence the toolchain was fine all along.\n\nTiming, for reference: the disk's own 54,507-byte `/dd/DEFS/os9defs.a`\nassembles in about 6 s at full emulator speed. ~10 invocations at 272K and at\n1808K (`-ram 2048`), as an ordinary user and as user 0, all returned promptly.\n\n**This `rma` calls itself `asm` in its own diagnostics** - `rma` with no\nargument prints `asm: no input file`. Listings identify it correctly as\n`Microware OS-9 RMA - V1.1`, and it carries macro-assembler strings (`nested\nMACRO definitions`, `ENDM w"
+}

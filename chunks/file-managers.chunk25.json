@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 25,
+  "text": "he\n    EOF lock**, and that lock is taken by whoever last wrote at the end - in\n    any write mode. Both the waiting reader's mode and the producer's are\n    irrelevant: a follower opens plain `READ`, and a producer using plain `>`\n    holds the ghost just as an update-mode one does. This is the correction\n    below: there is no way for a sequential writer to opt *out* of being\n    followed by choosing its open mode.\n  - *explicit `SS_Lock`*: **no mode restriction is stated.** The manual's\n    update-mode rule governs the automatic lock a read takes (`Manual`, v2.4\n    Technical Reference Manual p. 7-9); its `SS_Lock` entry locks from the\n    file pointer, or the whole file for `$FFFFFFFF`, and says nothing about\n    the path's mode (p. 2-25). Released programs rely on that: the OS-9 port\n"
+}

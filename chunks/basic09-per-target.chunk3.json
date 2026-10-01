@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 3,
+  "text": "t.\n\n**Hex constants carry the width, and the sign meaning flips with it.**\n`$` prefix on both. On 6809 the literal is 16-bit, so **`$8000`-`$FFFF` read\nas negative** (`Live` (NitrOS-9): `PRINT $FFFF` prints `-1`). On 68k the same literal\nlives in `$0`-`$FFFFFFFF` with no sign-flip zone. Never compare a hex literal\nacross a 6809/68k boundary without an explicit cast.\n\nThis mirrors the C compiler's `int` widening from 2 bytes (6809) to 4 bytes\n(68k) - same direction, independent source.\n\n## REAL: proprietary 5-byte -> IEEE-754 double\n\n**6809** REAL is a proprietary 5-byte float: an 8-bit two's-complement\nexponent plus 4 mantissa bytes (31 bits + sign). The BASIC09 Reference Manual\nstates the range directly as ~±1×10³⁸, ~9 decimal digits. A tighter-looking\n\"2.94e-39 to 1.70e38\" figure is calc"
+}

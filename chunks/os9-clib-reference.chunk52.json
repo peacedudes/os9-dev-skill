@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 52,
+  "text": "fork(...)` call.** The two take\n  different arguments in every position, and under K&R rules the wrong one\n  compiles silently and misbehaves at run time rather than failing to build.\n- **The fork function has more than one name, and period code mostly uses the\n  other one.** `os9forkc` sits in that slot in five of six archive sources\n  measured on one disk (smail, `eo`, netpbm, `sc`, forum9), `os9fork` in the\n  sixth. Both work, as a function-pointer argument should.\n\nThe trailing `0, 0, 3` is **measured as used, not documented**: the prototype\ngives the types, six independent period sources pass exactly these values, and\nit works - but what the `unsigned int` and the two `short`s select has not been\ntraced here, and the library header leaves the fork prototypes commented out.\n\nThe honest"
+}

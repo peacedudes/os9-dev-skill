@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 1,
+  "text": "-dev, see README). Narrowing a run to one\nroot - `... check_doc_consistency.py os9-dev` - reports those legitimate\npointers as broken cross-refs. The no-arg form scans both and is what a\nclean-run claim must be based on.\n\nExit status is nonzero if there are any presence/hygiene **findings**; the\n`Flag` **inventory** is informational and never fails the run.\n`--no-inventory` suppresses the inventory, leaving findings only.\n\n## Pre-commit hook\n\n`hooks/pre-commit` runs the checker and the test suite before every commit and\nrejects the commit if either fails. Both together take well under a second, so\nit always runs rather than trying to guess which edits matter.\n\nEnable it once per clone - the hook is tracked, but which hooks directory git\nconsults is local config:\n\n```\ngit config core.hooksP"
+}

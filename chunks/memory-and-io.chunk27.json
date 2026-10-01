@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 27,
+  "text": "f a new function's stack request would push that\n  watermark down into the data area, the program halts with `**** STACK\n  OVERFLOW ****` on stderr instead of continuing. Disable entirely with the\n  `-S` compiler flag once stack usage is verified safe, for time-critical\n  code.\n- **4K default runtime memory pool** - unless `-M=` overrides it, the\n  linker's default runtime pool is a program's variables/strings size plus\n  a flat 4K (parameter area + stack + stdlib file buffers). Requests for\n  less than 256 bytes via `-M=` are\n  ignored. Both the 4K default and the 256-byte floor are this specific\n  compiler/linker's defaults, not confirmed for a 68k linker.\n- **POKE/PEEK (BASIC)** - direct memory read/write from BASIC09, typically\n  used only for OS-9 system globals or hardware access; da"
+}

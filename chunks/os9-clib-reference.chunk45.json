@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 45,
+  "text": "t code. It's not a single cross-architecture enum where one number always means \"6809.\" Returns child PID or -1. Parent does **not** automatically wait - pair with `wait()`. **`modname` resolution - `Live` (os9exec)**: a bare name (no leading `/`) resolves via the exec-directory search, same as `F$Fork`/Shell - confirmed forking `\"childprg68k\"` by bare name, correct child PID and exit status returned (the target module must actually be present in the current execution directory). **`datasize` is headroom, not a total**: `F$Fork` takes it as *extra* memory (`68k/syscall-reference.md`), and it (plus `paramsize`) is *added* to the module's own declared `_mdata`+`_mstack` - `Source` (os9exec's `F$Fork`). So a figure such as 4096 bytes succeeds because it is added to whatever the module already"
+}

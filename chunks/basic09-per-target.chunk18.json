@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 18,
+  "text": "s at runtime.**\n`r68` accepts a bare `jsr` to an external symbol and only warns `*** warning\n- absolute addressing ***`; `l68` links it cleanly. But OS-9/68K modules are\npure position-independent code with no load-time base relocation: an\nabsolute-long JSR (`4eb9 <file-offset>`) jumps to that literal address in\nreal memory, landing wherever the module happens *not* to be loaded, and\ncrashes with an illegal instruction. **Any cross-object call inside a\nreentrant module must use explicit PC-relative addressing** - `jsr\naddone_c(pc)`, which `r68` encodes as `4eba <16-bit displacement>` with no\nwarning. Treat \"absolute addressing\" as a hard error, not a stylistic nit.\n\n**Gotcha - a crashed module stays resident and shadows your rebuild.** After\na `RUN` crashes and aborts the process, the modul"
+}

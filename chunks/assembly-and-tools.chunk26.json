@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 26,
+  "text": "o a single program counter, behaving\nlike a plain absolute 6809 assembler - for programs targeting bare hardware\nwith no OS-9. Switch with the `M` option or `OPT M`; `-M` returns to normal,\nand modes can be toggled mid-file. Mode affects `RMB`'s label value, `ORG`'s\ntarget counter, and `MOD`/`EMOD` reliability.\n\n**RMA command-line options** (ch. 1.4): up to 10, each a single letter\nprefixed `-` (on) or `--` (off). An unspecified option keeps its default; an\nin-source `OPT` overrides the command line.\n\n- `-o=path` - write the relocatable object file (ROF) here (mass storage);\n  omit for a syntax-check-only run\n- `-l` - formatted listing to standard output (default off - errors only)\n- `-c` - suppress conditional-assembly lines in the listing (**default on**)\n- `-f` - eject pages with a form"
+}

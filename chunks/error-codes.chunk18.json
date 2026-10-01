@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 18,
+  "text": "y another device |\n| 000:213 | E$NES | Non-existing segment | Disk file segment not found - possibly a damaged file structure |\n| 000:214 | E$FNA | File not accessible | Open attempted without correct access permissions - check attributes and owner ID |\n| 000:215 | E$BPNam | Bad path name | Syntax error in the pathlist (illegal character, etc.) |\n| 000:216 | E$PNNF | Path name not found | Pathlist not found - misspelling or wrong directory |\n| 000:217 | E$SLF | Segment list full | File too fragmented to expand further; copying the file/disk can help |\n| 000:218 | E$CEF | File already exists | Create attempted with a name already in the current directory |\n| 000:219 | E$IBA | Illegal block address | Invalid pointer/block size, or damaged device file structure |\n| 000:220 | E$HangUp | Teleph"
+}

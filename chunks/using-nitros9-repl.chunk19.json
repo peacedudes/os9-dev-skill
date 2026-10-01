@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 19,
+  "text": "d - a literal Ctrl-X and a translated Shift-Left\n  behave identically - so it belongs to the guest session, not the bridge. Budget\n  one throwaway Ctrl-X after connecting, and do not diagnose a key-mapping\n  change on the strength of its first delete-line.\n- **`WHAT?` from the shell after typing punctuation is not lost characters.**\n  `Live` (NitrOS-9): `~!@#$%^&*()_+\\`` round-trips through the channel\n  byte-perfect (confirmed by `tee`+`dump` *and* by the guest's own echo), and\n  the shell still rejects the line - `!` is its pipe, `&` backgrounds, `#` is\n  the memory modifier, `*` globs. Check the transport with `dump` before\n  suspecting the harness of eating keys.\n- **The listen port does not exist until the guest has booted far enough to\n  run inetd**, so a client started with the emul"
+}

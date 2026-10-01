@@ -1,0 +1,5 @@
+{
+  "source": "README.md",
+  "chunk_index": 9,
+  "text": ".\n`DIVERGENCES.md` lists the few places where a manual contradicts itself or a\nMicroware program.\n\nThe material comes from published or freely distributed documentation,\npreservation archives, and running programs. No Microware source code was\nused. Facts are stated as facts and the surrounding wording is our own. Short\nquotations, attributed by chapter and page, appear only where a manual's exact\nwording is itself the evidence.\n\n## Corrections\n\nIf your assistant told you something wrong because of these files, or OS-9 did\nsomething they say it does not, [please report it](CONTRIBUTING.md). A bare\n\"this line is wrong, here is what I saw\" is enough. A report from real\nhardware is the most valuable thing this project can receive.\n\n## Related projects\n\n- **os9exec** (https://github.com/peaced"
+}

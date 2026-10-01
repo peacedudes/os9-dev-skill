@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 16,
+  "text": "at instead of a character if so); otherwise\npull from the FIFO. If software flow control is in effect and the FIFO has\ndrained below its low-water mark, send `V_XON` to the remote end.\n\nA driver must **not** disable the input interrupt - it's expected to stay\nenabled for the life of the attachment.\n\n### Signal-on-data-ready (`SS_SSig`) - what a terminal monitor arms\n\nA process that wants to be told when input arrives, without holding a blocking\nread, arms **`I$SetStt` `SS_SSig` (`$1A`)** with the signal number to send.\n`SS_SEvent` (`$3E`) is the event-based counterpart. This is the mechanism a\nlogin monitor uses: it arms the signal, sleeps, and **never reads the device\nitself** - so if the path never delivers, the terminal is simply dead to\nkeypresses with nothing reporting an error.\n\nFour"
+}

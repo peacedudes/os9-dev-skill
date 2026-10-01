@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 6,
+  "text": "mment above PROCEDURE** if the same\n  source might ever run on 6809 - fine on 68k, but 6809 fails the whole\n  `LOAD` with `Error #043`. See `gotchas.md`.\n- Packed modules, RunB, PACK output location, `PARAM` argument binding,\n  and trap-handler error triage: `pack-and-runb.md`.\n- A named pipe (`/pipe/<name>`) makes good read-once scratch storage - no\n  cleanup needed. `Live` (os9exec).\n\n## One Complete Example\n\n`[clean-room]` - original, not copied from any manual.\n\n```basic\nPROCEDURE grades\nPARAM count: INTEGER\nDIM score(20): INTEGER\nDIM i, total: INTEGER\nDIM avg: REAL\n\ntotal = 0\nFOR i = 1 TO count\n  INPUT \"Score: \", score(i)\n  total = total + score(i)\nNEXT i\n\navg = FLOAT(total) / FLOAT(count)\nPRINT USING \"'Average: ',R6.2\", avg\n\nIF avg >= 70.0 THEN\n  PRINT \"Class passes\"\nELSE\n  PRINT \"Cl"
+}

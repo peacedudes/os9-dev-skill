@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 56,
+  "text": " reality in `unix-differences.md`). Two\nbuffers (primary/secondary) with `P`/`G` to move lines between them, `B n` to\nswitch primary.\n\nThe vintage Microware line editor this section describes was not found on the\nEOU test disk: its `ed` is an unrelated mouse/joystick-driven full-screen GUI\neditor needing a 640×192×2 graphics window, and a second candidate, `edt`,\nidentifies itself as \"6EDT Version 2.0 11-30-86\" but did not clearly answer\nto the command shapes below.\n\nCore navigation/edit: `L n` (list forward) / `X n` (list backward) / `+n`/`-n`\n(move by lines) / `>n`/`<n` (move by characters) / `^` (buffer start) / `/`\n(buffer end) / `K n` (kill n chars) / `D n` (delete n lines) / `I n str`\n(insert) / `E n str` (extend/append) / `U` (unextend/truncate line) /\n`C n str1 str2` (change) / `S "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 27,
+  "text": "ay `remote`;\n- whether **initialized** remote data is accepted in a program module. There is a\n  lead rather than an answer: Microware's Enhanced OS-9 release notes record that\n  `l68` \"will now correctly report when remote initialized data exists as well as\n  non-remote initialized data, **when it is not allowed for certain module\n  types**\", fixed in `l68` edition 151. That says such a restriction exists and\n  that older linkers mis-reported it - it does not say which module types, and\n  those notes document a **v3.2-era** system that this reference otherwise keeps\n  out of scope, so treat it as a pointer for testing rather than as the rule\n  here. `Flag`.\n\n## Reference: Calling Conventions (68k)\n\nRegister usage when C calls (or is called from) assembly:\n\n| Register | Role |\n|---|---|\n| "
+}

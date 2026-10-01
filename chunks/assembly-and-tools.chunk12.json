@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 12,
+  "text": "ry - see the note under \"Two assemblers\".\n- **Only the first 8 characters of a label are significant.** `asm` accepts a\n  longer label without complaint and then treats any two that share their\n  first 8 characters as the same symbol, so `setupfail` and `setupfail2`\n  collide and the second definition fails with `redefined name` - an error\n  that points at a line whose label is distinct past character 8. `Source`\n  (NitrOS-9 `level1/cmds/asm.asm`, whose own comments read \"Arbitrary-length\n  labels allowed. (first 8 chars must be unique)\" and \"First 8 characters of\n  label MUST be unique\", with `max symbol length` set to 8), and `Live` (NitrOS-9).\n  **`lwasm` does not share this limit**, so cross-assembled source that builds\n  clean on a development host can fail under OS-9's own `asm`. Tha"
+}

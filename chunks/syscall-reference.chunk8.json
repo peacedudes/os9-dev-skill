@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 8,
+  "text": "ic field as the caller relates to the module's owner (the Guru 3.2.4). A module that is not re-entrant may be linked by only one process at a time, else `E$ModBsy` (`Manual`). `Live` (os9exec) |\n| **F$Load** | Load from file | d0.b=access mode, d1.l=memory \"color\" type (optional - documented in the v2.4 Technical Manual (1994), absent from the 1984 one, so a later addition rather than a disagreement), (a0)=pathname | d0.w=type/language, d1.w=attr/rev, **(a0)=updated beyond the path name**, (a1)=entry (of the *first* module loaded), (a2)=module pointer | Registers every module in the file (a \"module group\" - resident until the group's combined count is zero), then links. `Live` (os9exec) |\n| **F$UnLink** | Unlink by address | (a2)=header | - | Free at zero unless sticky (bit 6) - sticky nee"
+}

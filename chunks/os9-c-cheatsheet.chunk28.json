@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 28,
+  "text": " from) assembly:\n\n| Register | Role |\n|---|---|\n| D0, D1 | First two parameters passed to a subroutine call (D0 first, D1 second) |\n| D0 | Also doubles as the function return value (low 32 bits, for a 64-bit return value; D1 holds the high 32 bits in that case) |\n| A5 | Frame pointer - locals and parameters are addressed relative to A5, set up by the `link` instruction |\n| A6 | Global variable pointer - initialized to the base of globals plus `0x8000`, so 16-bit signed A6-relative offsets can reach a full 64KB of globals |\n\nSource: *The OS-9 Primer*, Chapter 12 (\"Register conventions\").\n\n## Reference: Embedded Assembly\n\nTwo unrelated mechanisms, from two different compiler generations:\n\n| Mechanism | Compiler | Behavior |\n|---|---|---|\n| `#asm` ... `#endasm` | 6809-era Microware C | Pass-t"
+}

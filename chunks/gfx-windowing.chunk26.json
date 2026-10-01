@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 26,
+  "text": "ed rectangle outline,\n  confirming the direction codes compose and the path closes correctly\n  when the N/S and E/W magnitudes cancel.\n- **`Live` (NitrOS-9)** - `FCIRCLE`, `FELLIPSE`, `ARC` (8-argument form) and\n  `FILL` all render as documented: the F-variants come out solid, `ARC` draws\n  an arc, and `FILL` from a point inside a `BOX` outline fills it completely.\n  Documented argument counts accepted in every case.\n- `FILL([path,][xcor,ycor])` - flood-fills the connected region of\n  same-colored pixels touching the draw pointer (or the given coordinates,\n  which reposition the draw pointer first) with the current foreground\n  color.\n\n### Cursor and text functions\n\n- `CURHOME(path)` - text cursor to 0,0 (window's absolute top-left).\n- `CURXY(path,column,row)` - text cursor to a given colu"
+}

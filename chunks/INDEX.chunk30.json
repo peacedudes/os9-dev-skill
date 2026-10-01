@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 30,
+  "text": "d **syntax and options** for every v2.4 utility (dir -e, copy -w, del -f, load -d, dsave/fsave/frestore flags, format/os9gen, fixmod -u, grep/pr/qsort/tr, tape...), the `-z`/`-x`/`-b=` conventions, `tee >file` heredoc, full tmode/xmode parameter table (eof=, abort=, quit=, pag=, baud...), the 68k baud code table and what `tmode baud=` really writes, `kermit` flag traps (`l`, `i`-not-`8`) | common/utility-usage.md |\n| Module header fields/offsets, type/language/attribute codes, permissions, header parity, CRC, module directory mechanics, module groups, a6 bias, trap libraries vs subroutine modules, Math module, data modules, boot-time module discovery, INIT module, l68/ROF/linker facts, ident/fixmod/mdir | common/module-format.md |\n| Memory allocation (first-fit/buddy, colored memory, 32-se"
+}

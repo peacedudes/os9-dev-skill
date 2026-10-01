@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 37,
+  "text": "tination** - `strhcpy(buf,\"AB\")` copied `41 42 00 44 4F 4E 45 20` (`AB\\0DONE ...`, straight into the next string literals) and with a small `buf[8]` corrupted the stack and bus-errored (`Error #000:102`) deterministically. **Only ever pass a genuinely sign-bit-terminated source**; to convert a C string, set bit 7 on its last char first. |\n| `index(s, ch)` / `rindex(s, ch)` | OS-9/BSD names instead of ANSI's `strchr`/`strrchr`. **`Live` (os9exec)**: `index(\"hello\",'l')`->`\"llo\"`, `rindex(...)`->`\"lo\"` both link and work; `strchr` fails to link (`Symbol 'strchr' unresolved`, `l68: error - unresolved references`) - the ANSI names genuinely aren't in `clib.l`. |\n\n**No bounds checking** - caller must ensure buffers are large enough. No `strstr()`.\n\n**`Live` (os9exec) - actual 68k `clib.l` symbo"
+}

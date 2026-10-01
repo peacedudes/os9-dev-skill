@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 18,
+  "text": "ly\n  need \"fail, don't clobber\" semantics.\n- **`OPEN` on a not-yet-existing named pipe fails outright - `CREATE` is\n  what actually establishes it.** `Live` (os9exec): `OPEN` of a named pipe\n  nobody has created fails with `Error #000:216 (E_PNNF)`, like any missing\n  path. It is an ordinary error: BASIC09's `ON ERROR GOTO` catches it\n  (`ERR` = 216) and C's `open()` returns -1 with `errno` 216. A program\n  without a handler dies of it, which is easy to misread as the pipe\n  mechanism failing. If a reader might run before any writer has created\n  the pipe, it must `CREATE` (or otherwise ensure the pipe exists) rather\n  than assume `OPEN` will find/make it.\n- The shape that *isn't* automatically caught: a process holding the write\n  end of one pipe while blocked reading from another, in a c"
+}

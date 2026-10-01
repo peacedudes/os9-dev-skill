@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 8,
+  "text": "ike macro name - give the wrapper parameters | `c/os9-c-cheatsheet.md` |\n| `cpp` dies with no diagnostic at all | an over-long joined source line - no fixed limit, earlier content lowers it; keep lines well under 500 and note `#if 0` does not exempt one. If lines are short, an `#include`d data file still has LF endings (the `.dat` row below) | `c/os9-c-cheatsheet.md`, `common/unix-differences.md` |\n| `PC` unresolved at link in a termcap port | it is `PC_` here - and check `BC`/`UP`, which link silently as the wrong type | `c/os9-clib-reference.md` |\n| A flex scanner prints nothing for a named file but works when you pipe into it | `freopen(name,\"r\",yyin)` before the first `yylex()` - some skeletons leave `yyin` null until then | `c/os9-c-cheatsheet.md` |\n| A variable you exported on the ho"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 47,
+  "text": " program** - it prints the banner\n  then exits the emulator with no error. Boot to a shell or tsmon first.\n- A custom prompt set at login breaks a harness's gated send - switch to raw\n  keys.\n\n## Fork lookups use chx, not PATH\n\nThe rule, the `deldir`-forks-`pd` symptom and the disks whose `sh` cannot fork\nan absolute pathname: `os9-mental-model.md`, \"Two current directories, not one\".\n(os9exec detail: the top-level process's chx comes from `OS9CMDS`,\ndefault `$OS9DISK/CMDS`, interpreted as a *host* path - set chx from\ninside OS-9 or via startup/`.login` instead.)\n\n## RBF images vs. host-native directories\n\nTwo different things behind the same device names:\n\n- A **real RBF image** behaves like OS-9: `..` clamps at the device root\n  (real root inode), and genuine RBF mechanics (allocation bi"
+}

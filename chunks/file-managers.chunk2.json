@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 2,
+  "text": "e\n+4   MakDir   Create a directory file (multi-file devices only)\n+6   ChgDir   Search the directory, save its address in the process descriptor (P$DIO)\n+8   Delete   Search directory, remove entry, deallocate sectors\n+10  Seek     Reposition (meaningful for RBF; no-op/error on sequential devices)\n+12  Read     Copy bytes to caller's buffer, handle EOF, apply record locks in update mode\n+14  Write    Copy bytes to media, release record locks, acquire an EOF lock if writing at end\n+16  ReadLn   Read to end-of-line, with input line editing (backspace, etc.)\n+18  WriteLn  Write to end-of-line, with output formatting (linefeeds, nulls)\n+20  GetStat  Get status\n+22  SetStat  Set status\n+24  Close    Close the path\n```\n\n## Notes on Individual Entries\n\n- **`Open`/`Create`** allocate whatever buff"
+}

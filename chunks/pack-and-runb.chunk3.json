@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 3,
+  "text": "The *first* procedure in workspace order (the top of `DIR`) - **not** the one `DIR` marks with `*`. `Live` (os9exec) |\n\n  Both outputs contain every packed procedure's code; only the entry\n  differs. If the entry point matters, name the list explicitly.\n\n  **`*` never decides the entry.** `Live` (os9exec): with `first` and\n  `second` loaded in that order, `PACK*` enters at `first` whether `*` sits\n  on `second` (as it does after `LOAD`) or on `first` (after `e first`). Load\n  the source with the entry procedure first, or name the list.\n- **Packing is destructive to the workspace copy - this is why the manual\n  says to always `SAVE` first.** `Live` (os9exec). `PACK` does not merely write a\n  file; it converts the *in-workspace* procedure too. With `aaa` and `bbb` in\n  the workspace and `bbb"
+}

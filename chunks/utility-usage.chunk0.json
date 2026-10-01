@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 0,
+  "text": "# OS-9 Utility Usage: Syntax and Options\n\nPer-command syntax and option reference for the Professional OS-9 v2.4\n(68k) utility set. 6809 editions of the same-named utilities often differ\nin options - on any live system, `<name> -?` or `help <name>` is ground\ntruth. Notation: `[..]` optional, `{..}` repeatable. One-line \"what it's\nfor\" descriptions: `os9-tools-and-shell.md`.\n\n## Conventions shared by many utilities (stated once, not repeated below)\n\n- **`-?`** - prints the utility's own function/syntax/options. The OS-9\n  **convention**, and the right first try: across a freeware collection of 609\n  programs whose help output was captured individually, **545 answer `-?`**.\n  `Live` (os9exec). The remaining tenth needs something else, and the families\n  are specific enough to be worth knowin"
+}

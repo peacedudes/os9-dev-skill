@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 13,
+  "text": "xample: modeling exclusive access to one resource with value=1, wait\nincrement=-1, signal increment=+1 - a plain binary semaphore, expressed as\nan event.\n\n**Readers/writers:** implemented by managing separate reader and writer\nsemaphores plus a control semaphore (three semaphores total) - allowing\nmultiple concurrent readers, or one exclusive writer, never both at once.\n\n**ISR note:** since Wait/Signal are direct kernel primitives, signaling an\nevent from an interrupt handler to release a waiting process is a fast,\ndirect path - prefer it over routing the same wakeup through a signal when\nyou're in interrupt context and cycles matter.\n\n**What a wait returns is the event value that satisfied it** - before the\nwait increment is applied, as period code relies on (`while (_ev_wait(id, 0,\n0) !="
+}

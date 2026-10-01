@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 21,
+  "text": "dler used that way must never call an OS-9 system call\n  or touch system data structures. Levels 1-6 are maskable and safe for\n  ordinary device use; OS-9 masks interrupts to protect critical sections\n  at the CPU level (via the status register), not merely with a software\n  flag.\n- **Interrupt latency** increases whenever signals are masked, an\n  interrupt-masking system call is active, or the kernel is inside a\n  critical section - a driver author budgeting worst-case response time\n  needs to account for this, not just the ISR's own instruction count.\n\n---\n\n**Sources:** OS-9 v2.4 Technical I/O Manual (primary - this is by far the\nmost detailed of the sources for driver internals); cross-checked against\nthe OS-9 v2.4 Technical Reference Manual, an independent 1985-era\nOS-9/68000 technical"
+}

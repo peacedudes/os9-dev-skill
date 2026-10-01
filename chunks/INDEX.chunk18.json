@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 18,
+  "text": "several | a host directory translates nothing: LF endings, and `I$ReadLn` stops only at CR | `common/using-os9exec-repl.md` |\n| `c68` says `; expected` / `expression with little effect` on correct-looking C | adjacent string literals - nothing under `cc` joins them (the `gcc2` driver does) | `c/kandr-vs-ansi.md` |\n| `**** multiple definition ****` on parameter declarations that look right | `ansi2knr` was run on an already-K&R tree and rewrote its own output | `c/kandr-vs-ansi.md` |\n| \"Can't find\" a command that is plainly present | fork lookups use `chx`, not `PATH` | `common/os9-mental-model.md`, `common/using-os9exec-repl.md` |\n| Redirect produced error text, or clobbered the file | `>>` is **stderr**; append is `>+`; plain `>` fails if the file exists | `common/os9-tools-and-shell.md` "
+}

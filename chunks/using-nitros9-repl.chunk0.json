@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 0,
+  "text": "# Driving a live NitrOS-9 (6809) system\n\nWhen a real CoCo or Dragon is not at hand, NitrOS-9 (the community-maintained\ndescendant of Microware's OS-9 Level 1 and Level 2 for the 6809) running on\nan emulated CoCo3 is one way to get a 6809 OS-9 system to work in. This page\ncovers operating a text-driven harness against that stand-in; where it and a\nMicroware manual disagree, the manual is the specification. The 68k\nequivalent (os9exec) is `common/using-os9exec-repl.md`; seeing the actual\ndisplay is `6809/reading-the-coco-screen.md`.\n\n## Why 6809 needs a bridge\n\nXRoar is a real CoCo3 hardware emulator running real ROM firmware, and its\nconsole is a video+keyboard GUI,\nnot stdio. A plain PTY/pipe harness has nothing to attach to, so a text-channel\nbridge is mandatory. The established one is **"
+}

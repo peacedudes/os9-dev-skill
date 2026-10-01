@@ -1,0 +1,5 @@
+{
+  "source": "SOURCE-AUTHORITY.md",
+  "chunk_index": 2,
+  "text": "g System Technical Manual*, Copyright 1984 Microware Systems Corporation |\n| `6809/Gimix_OS-9_Programmers_Manual_Jan83.txt` | *Microware OS-9 Operating System System Programmer's Manual*, Copyright 1980, 1982 Microware |\n| `6809/Gimix_OS-9_Users_Manual_1983.txt` | *Microware OS-9 Operating System User's Manual*, Copyright 1980 Microware |\n| `6809/OS-9_Interactive_Debugger_Users_Manual_ROUG.txt` | *Microware Interactive Debugger User's Manual*, (C) 1980, 1981, 1982 Microware |\n\nAnd two are misleading in the other direction:\n\n| Filename | Reality |\n|---|---|\n| `6809/OS-9_Quick_Reference_1982.txt` | Copyright **1992** by F. G. Swygert - a third-party quick reference, not a 1982 document |\n| `6809/OS-9_Quick_Reference_1st_Farna_CoCo.txt` | Professional OS-9/**68000** documentation, not CoCo/68"
+}

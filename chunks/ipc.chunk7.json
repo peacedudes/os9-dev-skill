@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 7,
+  "text": "the process descriptor) suppresses intercept calls while nonzero. `F$SigMask` with d1=1 increments, d1=-1 decrements, **d1=0 clears entirely**. Footgun: 0 \"unmasks everything\" inside nested code - nest with ±1 always. Overflow/underflow past 255/0 is silently ignored.\n\nEntering an intercept routine auto-masks (sets `P$SigLvl` to 1). The\nnon-recursive (fast) path stores its one saved state in system state;\nrecursive intercept calls instead spill onto the user stack. Saved state\ncovers all MPU registers (72 bytes), or 168 bytes total if the FPU is\nactive.\n\n**Mainline pattern:**\n```\nmask -> do work -> sleep (auto-unmasks) -> service queued signals -> repeat\n```\n`F$Sleep` auto-unmasking prevents deadlock - a process masked before sleeping would never wake to service the signal it's waiting for"
+}

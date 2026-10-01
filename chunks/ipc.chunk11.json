@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 11,
+  "text": "wise-unbounded wait; it fires a\n  timeout signal that breaks the wait. Classic pattern: arm an alarm, issue\n  a blocking `I$Read`; if the alarm fires first, the read returns an error;\n  if the read completes first, cancel the alarm.\n- **Ticker** - multiple alarms at different intervals simulate thread-like\n  concurrency inside a single process, each driving a different piece of\n  work.\n\n**Time-of-day sensitivity:** a time-of-day alarm is sensitive to clock\ncorrections - if the system clock is adjusted, the alarm fires at the\ncorrected time, not at the originally-scheduled offset. This means \"alarm at\n5:00\" and \"alarm in 1 hour\" can diverge if the clock changes in between.\n\n---\n\n## Events (the one synchronization primitive)\n\nOS-9's **event** is a counter that processes block on until it rea"
+}

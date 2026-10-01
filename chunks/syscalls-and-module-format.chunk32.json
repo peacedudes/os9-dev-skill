@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 32,
+  "text": "| $49 | B=task#, X=data ptr | Yes | Load A from `0,X` in task `B`; returns A=data byte. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`) |\n| F$STABX | $4A | A=data byte, B=task#, X=logical addr | Yes | Store A at `0,X` in task `B`. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`) |\n| F$AllPrc | $4B | - | Yes | Allocates a 512-byte process descriptor (first 256 bytes cleared, system state set, up to 60-64K of DAT image marked unallocated); returns U=descriptor ptr. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`). Every descriptor-dependent call above was therefore only reachable with an unreal descriptor |\n| F$DelPrc | $4C | A=process ID | | Deallocates a process descriptor - architecture-generic on its face, but internally calls the Level-2-only `F$DelTsk`. Deliberately untested: the only PID a"
+}

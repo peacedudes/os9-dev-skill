@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 11,
+  "text": "ted open mode against `M$Mode`.\n\nUnlike `M$DevCon`, the table described by `M$Opt` **is** copied - every time\na path opens, it's copied into the path descriptor's 128-byte option area\n(`PD_OPT`, offset $80). Path options control per-path I/O behavior\n(buffering, echo, parity, flow control, backspace/delete key codes, etc.); a\nuser can inspect the whole area via `I$GetStt(SS_Opt)`, and modify some of\nit via `I$SetStt` - the file manager protects certain values from\ninappropriate changes.\n\nA single physical device may have **multiple descriptors** with different\nnames/parameters - e.g. one descriptor for terminal mode (`/T1`) and another\nfor printer mode (`/P1`) on the same serial/parallel port. These are\n\"synonymous devices\" in the kernel's matching logic below.\n\n### Kernel I/O tables and `"
+}

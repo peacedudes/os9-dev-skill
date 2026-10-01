@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 42,
+  "text": "h PSECT's assigned base address (a distinct option from `-M=size`; case is the only difference - verify before scripting) |\n| `-s` | Print final assigned addresses for all symbols |\n| `-b=ept` | Link a C function so BASIC09's `RUN` can call it directly, entering at symbol `ept` |\n| `-t` | Allow static data in a BASIC09-callable module, assuming the caller has already sized a static area pointed to by `Y` |\n\n**RMA vs. `asm` - the manual's own comparison** (Appendix A): RMA has no\ninteractive mode, disk-file input only; RMA emits a ROF that RLINK must\nprocess into an executable module, where `asm` emits an executable module\ndirectly via `MOD`/`EMOD`; RMA's `PSECT`/`VSECT` exist specifically to\nreplace those; RMA has no `SETDP` equivalent since RLINK, not the assembler,\nhandles all data/DP al"
+}

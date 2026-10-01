@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 20,
+  "text": "code | Trap code unavailable (in use) or invalid in a `TLINK` call |\n| 000:228 | E$PrcAbt | Process aborted | Process aborted by the kill signal code |\n| 000:229 | E$PrcFul | Process table full | Too many running processes, or no contiguous memory to expand the table |\n| 000:230 | E$IForkP | Illegal fork parameter area | Invalid parameters passed to a fork call |\n| 000:231 | E$KwnMod | Known module | Install attempted on a module already resident in memory |\n| 000:232 | E$BMCRC | Incorrect module CRC | Bad CRC value - regenerate with `FIXMOD` |\n| 000:233 | E$USigP / E$Signal | Unprocessed signal pending / signal error | An unprocessed signal is pending. **Renamed across releases** (`Source`, os9exec): `E$USigP` in OS-9 before 2.2, `E$Signal` from 2.2 on - same code 233. os9exec returns it "
+}

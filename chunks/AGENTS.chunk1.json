@@ -1,0 +1,5 @@
+{
+  "source": "AGENTS.md",
+  "chunk_index": 1,
+  "text": "chanics, and 6809 Level 2 MMU/DAT.\n  Consult it for kernel/driver work rather than ordinary applications.\n\nThey are siblings and cross-reference each other; keep both.\n\n**Scope:** the early OS-9 line - 6809 Level One and Level Two, and OS-9/68000\nup to version 2.4. Nothing here covers OS-9000, later OS-9 releases, or other\nMicroware products such as MAUI, and networking is covered only in outline.\nCD-RTOS is OS-9 and the 68000 material applies to it, but CD-i itself (the\nGreen Book standard) is not covered, and hardware-specific detail beyond some\nCoCo/Dragon notes is largely absent.\nFor those, say so and point to the right manuals - Microware's for its\nsoftware, the hardware maker's for CD-i and machine-specific detail - rather\nthan answering from these files.\n\n## How to use them\n\n1. Star"
+}

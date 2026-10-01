@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 8,
+  "text": "e button `$FF`=pressed / `$00`=released.\n\n## Sound\n\n**`Hearsay` throughout this section** - no manual documents CoCo/Dragon sound;\nevery address and bit layout below comes from retrocomputing web sources (see\nthe Sources footer). Weakest material in this file.\n\n6-bit DAC on the same PIA chip pair as keyboard/joystick/cassette I/O, at `$FF20-$FF23` (`Manual, Flag` on naming it \"PIA0\" vs \"PIA1\"; the address range is unambiguous). `$FF20` bits 7-2 = DAC output value (0-63); `$FF23` bit 3 enables audio through an analog mux shared with cassette-input and cartridge `FSND` - only one of the three can be routed to the output at a time. A separate on/off-only bit (`PB1`) drives square-wave beeps without touching the DAC/mux. Same hardware on CoCo 3 and Dragon, no dedicated sound chip; CoCo 3's GIM"
+}

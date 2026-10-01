@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 53,
+  "text": "` and `E` only find modules already in the live module directory.**\n`Live` (NitrOS-9): neither registers a module merely opened as `debug <file>`'s own\ncommand-line target, so both fail `Error #221 - Module Not Found` right after\n`debug <file>` even with the module's correct case-sensitive internal name\nfrom its `fcs` name field. `E`'s own act of loading-for-execution doesn't\nsatisfy a *subsequent* `L`/`E` lookup either. Treat both as reliable only for\nindependently resident modules.\n\n**A module linked multiple times needs one `unlink` per link, not one total** -\n`Live` (NitrOS-9): after a sequence of `L`/`E`/shell-run calls, `mdir` kept showing\nthe module resident until four separate `unlink` calls, matching the number\nof linking events.\n\n**`mdir`'s listing isn't exhaustive** - `Live` (Ni"
+}

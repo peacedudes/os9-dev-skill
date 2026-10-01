@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 13,
+  "text": "h` beside\nit is the 6809 sibling (NitrOS-9 under XRoar plus DriveWire). Its own header\ncomment is the authority on the full command set; the shape of it is:\n\n| Verb | Does |\n|---|---|\n| `start` | boot via `/dd/startup` - preloads the toolchain, then `tsmon` to `User name?:` |\n| `send <cmd>` | send one command, wait for a prompt, print the new output |\n| `key <keys...>` | raw keystrokes, no Enter (`Escape Enter Up Down Left Right`) |\n| `snap [label]` | labelled snapshot of the pane |\n| `vi <file> <seq>` | run `vi` and walk a key sequence, showing the screen at each step |\n| `peek` | the whole current pane - the one to reach for after a crash |\n| `stop` / `restart` | kill the session / stop, rebuild and start |\n\n**Right after `start`, send the bare account name** (`send dog`, not\n`login dog`"
+}

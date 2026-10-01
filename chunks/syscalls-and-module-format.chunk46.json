@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 46,
+  "text": "nalog of 68k's `$4AFC` (`Source`) |\n| $02-$03 | 2 | Module size | Total including CRC |\n| $04-$05 | 2 | Name offset | Sign-bit-terminated string, can sit anywhere in the module body |\n| $06 | 1 | Type/Language | High nibble = type, low nibble = language (see below) |\n| $07 | 1 | Attributes/Revision | Bit 7 = reentrant/sharable, low 4 bits = revision (0-15) |\n| $08 | 1 | Header parity | One's-complement XOR of the preceding 8 bytes |\n\nProgram/Subroutine modules (type $1/$2) have 4 more bytes: $09-$0A execution\noffset (relative to the sync byte), $0B-$0C permanent storage requirement\n(minimum data area size). `Live` (NitrOS-9): in a real assembled Program module the name\nfield lands at offset `$000D` - exactly 9 generic + 4 Program-type bytes.\n\n**Type codes** (high nibble of byte $06): $1=Pr"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 1,
+  "text": "nt as raw bytes through the standard SCF output path (`I$Write`/`I$WritLn`) - there's no termcap/terminfo abstraction (see `unix-differences.md`); a program hardcodes these directly, same situation as any other pre-curses terminal programming.\n\n**Alpha mode** (character ranges): `$00-$0E` cursor/screen control, `$20-$5F` uppercase, `$60-$7F` lowercase (displayed in reverse video - green on black), `$80-$FF` semigraphics block patterns.\n\n| Code | Effect |\n|---|---|\n| `$01` | HOME (cursor to upper-left) |\n| `$02 x y` | CURSOR XY (x,y each offset by 32) |\n| `$03` | ERASE LINE |\n| `$04` | ERASE TO END OF LINE |\n| `$05 c` | ALTER CURSOR (cursor code) |\n| `$06`/`$08`/`$09`/`$0A` | CURSOR RIGHT/LEFT/UP/DOWN |\n| `$0B` | ERASE TO END OF SCREEN |\n| `$0C` | CLEAR SCREEN, home cursor |\n| `$0D` | RETUR"
+}

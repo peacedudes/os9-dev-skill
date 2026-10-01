@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 32,
+  "text": "anything, this is the fastest way to inspect or edit a NitrOS-9\ndisk's `STARTUP` procedure file, kernel module list, or any other file -\nincluding removing an interactive prompt (e.g. a `setime` call whose\ninput/output is redirected onto the console, `setime<>>>/1`) that would\notherwise block an unattended boot indefinitely, no matter how carefully\ntimed the injected keystrokes are.\n\n**`setime`'s interactive prompt format** - `Live` (NitrOS-9): when no real-time clock\nmodule is present, `setime` (with no arguments) prints `>> No Clock module found\n<<` then repeatedly prompts `Time ?` expecting an answer in\n`yyyy/mm/dd hh:mm:ss` format (4-digit year, space between date and time,\nno comma). Whether an `a`/`p` AM/PM suffix or 24-hour military time is also\naccepted here is unverified. The non-"
+}

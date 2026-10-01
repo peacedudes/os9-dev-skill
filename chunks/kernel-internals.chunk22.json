@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 22,
+  "text": "ent checks protect a module, checked at different times:\n\n- **Header parity** (`M$Parity`, offset `$2E`): one's complement of the\n  word-by-word XOR of every preceding header word. XORing all header words\n  including parity yields `$FFFF` on an intact header. Checked at module link\n  time; mismatch returns `E$BMHP`.\n- **Module CRC**: 24-bit CRC over the entire module body (header through the\n  byte before the CRC field), computed once when first entered into the directory\n  (ROM coldstart scan or RAM load) and **not re-verified on subsequent use** -\n  an in-memory module can theoretically drift from its on-disk state without\n  detection. Where the body's length would leave the total odd, the linker pads\n  it with a single zero byte before the CRC field (68000 instructions require\n  even ad"
+}

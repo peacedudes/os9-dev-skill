@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 28,
+  "text": "g `-`; an in-source `OPT` overrides the command\nline. `#memsize` (Shell-processed) sets the assembler's own data area for its\nsymbol table - the default 4K holds ~200 symbols, each additional 4K adds\n~273 more (15 bytes/entry); a `Symbol Table Full` error means bump it. A\ntrailing `>listing` (also Shell-processed) redirects listing output anywhere.\n\n| Option | Effect | Default | |\n|---|---|---|---|\n| `C` | Print conditional-assembly source lines in the listing | on | |\n| `Dnum` | Page depth: lines per listing page | `D66` | `Live` (NitrOS-9) |\n| `E` | Print error messages; when off, a suppressed error still shows as an `E` flag in that line's info field and the summary still counts it | on | `Live` (NitrOS-9) |\n| `F` | Eject listing pages with a form-feed | off | |\n| `G` | Print every obje"
+}

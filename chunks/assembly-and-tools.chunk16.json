@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 16,
+  "text": "sm`/MIA's own manual (ch. 2.8) cross-checked against RMA's.\nDirectives described near-identically in both (`END`, `EQU`, `SET`, `FCB`,\n`FDB`, the `IFxx` family, `NAM`/`TTL`, `OS9`, `PAG`/`SPC`, `USE`) are\nunmarked; only genuine differences or single-assembler directives are tagged.\n\n| Directive | Purpose |\n|---|---|\n| `END` | Optional - end-of-file alone ends a program. No label |\n| `FCB n{,n}` | Byte constants (error if value >255 or <-128) |\n| `FDB n{,n}` | Word constants; values with absolute value <256 get a zero-filled high byte |\n| `FCC /str/` | ASCII string. **Delimiter set differs between assemblers**: RMA's is `! \" # $ % & ' ( ) * + , = . /`; `asm`'s is the same but with `-` in place of `=`. Open/close delimiters must match and can't appear inside the string |\n| `FCS /str/` | Same"
+}

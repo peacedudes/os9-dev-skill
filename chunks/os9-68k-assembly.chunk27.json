@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 27,
+  "text": "rest Live: **D0 = the\nPID**, **D1 = packed owner** (`0` for a `0.0` super-user), and every\n**undefined** register holding its sentinel - **D4=`DDDDDDD4`, D7=`DDDDDDD7`,\nA0=`AAAAAAA0`, A2=`AAAAAAA2`, A4=`AAAAAAA4`** (the `$DDDDDDDn`/`$AAAAAAAn`\nfill). The defined-vs-undefined split is also `Source` (os9exec's fork\nregister setup).\n\n**`A5`'s actual content, `Live` (os9exec)**: a NUL-terminated string holding\nexactly the typed command-line tail (e.g. `\"hello\"` for one argument -\nconfirmed via sanitized hex dump: `68 65 6C 6C 6F 00 0D 00 \"PORT=\"...`),\nsafe to pass directly as a syscall's pathname pointer with no copying.\n**With zero arguments, the first byte is a bare CR (`$0D`), not a NUL** -\nchecking only for a leading NUL to detect \"no argument\" misses this case\nsilently (wrong behavior at "
+}

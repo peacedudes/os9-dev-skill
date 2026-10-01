@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 12,
+  "text": "er alone.\n- **`-r` also destroys any animation built from carriage returns**, `Live`\n  (os9exec). Removing the pacing removes the only thing that made successive\n  frames distinguishable in time, so a program that redraws a line per frame -\n  a spinner, a counter, a progress bar, anything CR-per-frame - **collapses to\n  its last frame**. Run without `-r` before describing what a program's output\n  looks like, or you will document a still image as the whole behaviour.\n\n## REPL harness: what it is, and two send modes\n\nThe harness is **`tools/os9repl.sh`** in the os9exec checkout - a tmux helper\nthat drives the emulator one command at a time and prints only the output that\ncommand produced, instead of the whole scrollback. `tools/nitros9repl.sh` beside\nit is the 6809 sibling (NitrOS-9 under X"
+}

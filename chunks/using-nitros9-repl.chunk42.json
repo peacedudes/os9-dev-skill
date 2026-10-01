@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 42,
+  "text": ", but no OP_SERREAD ($43) polls ever\n  arrive, so host->guest input is never fetched - no error on either side.\n- **A SERWRITEM ($64) addressed to an unopened channel is followed by exactly\n  2 more bytes, with no count byte.** A server that expects a count field\n  desyncs and swallows the guest's next real message (its SERINIT). An\n  EOU-style boot emits ~20 of these during startup.\n\nGuest-side driver architecture (`Source`, `Live` (NitrOS-9)): `scdwv.dr` is the SCF\ndriver (SERINIT carries the port number at open; FASTWRITE = $80 + port for\noutput); the SERREAD polling loop lives in the `dwio` subroutine module's VIRQ\nhandler at 3/6/40-tick adaptive rates - which is why the DWINIT response gates\nwhether polling happens at all. `/N<n>` is wire channel n; channel 0 is unused.\nOpening the ba"
+}

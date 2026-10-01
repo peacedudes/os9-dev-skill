@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 33,
+  "text": " `F$DelTsk`. Deliberately untested: the only PID available to pass is the caller's own live one, making this a self-termination risk rather than a bounded experiment |\n| F$ELink | $4D | B=module type, X=ptr to module directory entry | | Links via a module directory entry pointer rather than by name; returns U=header addr, Y=entry point. Untested - needs a pointer from `F$VModul`, which fails first |\n| F$FModul | $4E | A=module type, X=name ptr, Y=DAT image ptr for the name | | Finds a module directory entry by name/type (type 0 matches any); returns A=type, B=rev, X=past name, U=directory entry ptr. Internally calls the Level-2-only `F$DATLog`/`F$LDAXY`/`F$LDDDXY`. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`) |\n| F$MapBlk | $4F | B=block count, X=beginning block# | Yes | Maps blocks into"
+}

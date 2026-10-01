@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 8,
+  "text": "nknown option 'y'`,\n    and so does `\"-y\"` (the shell strips the quotes), and so does a `-y` line\n    in a `del -z` list. `./-y` is not a valid pathlist (`E$PNNF`). **Use the\n    full pathlist**: `del /h2/-y` works, because the argument no longer\n    starts with `-`.\n  - A `*` or `?` is expanded by the shell even inside a full pathlist, and\n    **that deletes more than you meant**: `del /h2/*x` removed `*x`, `-x`,\n    `?x` and `ax`. **Double-quote it**: `del \"/h2/*x\"` removed exactly `*x`.\n    A `del -z` list removed `?x` but silently skipped `*x`.\n  - The shell cannot create a name starting with `-` by redirection: `>-x`\n    is its overwrite redirect, so `echo a >-x` writes a file named `x`.\n- `deldir [<opts>] {<path>}` - recursive; `-f` ignore write protection,\n  `-q` no confirmation pro"
+}

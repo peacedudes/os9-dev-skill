@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 1,
+  "text": "68k are numeric type widths/ranges/precision and a\nhandful of platform-specific facts - those live in `basic09-per-target.md`,\na delta file, not a second copy of this one.\n\n**Verification status:** baseline is `Manual` - claims are cross-referenced\nacross the BASIC09 Reference Manual (Rev H) and the OS-9 BASIC User Manual\n(Rev G, 1991), which document the language identically apart from the\nnumeric deltas. Every `Live` tag names the implementation it ran on:\n`Live` (os9exec) for OS-9/68k, `Live` (NitrOS-9) for real 6809, and both\nwhere a claim was confirmed twice. Most here are os9exec - see\n`gotchas.md` for the 6809-confirmed list, and `CONFIDENCE-TAGS.md` for\nwhat the qualifiers mean.\n\n**Notation:** the *syntax templates* below annotate their forms with a\ntrailing `! text` for readabilit"
+}

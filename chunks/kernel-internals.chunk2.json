@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 2,
+  "text": "l values are also `Source`: os9exec's 16-byte minimum allocation\nunit and 100Hz default tick rate agree with OS-9's documented values. The\n**Module Directory** entry shape (address / group / size / link-count) is\n`Source`, matching os9exec's structure; os9exec simplifies module groups (its\ngroup field holds the module's own address rather than the first module\nloaded from the same file), so its group behaviour is no evidence about\nOS-9's.\n\nStructures and algorithms below the level any ordinary I$/F$ call exposes -\nrelevant if you're inspecting/modifying kernel state directly, writing a\n`Procs`-style utility, or working on `os9exec`'s own emulation of the\nkernel. OS-9 ships two kernel variants per processor: a standard kernel\nwith full development facilities, and a smaller/faster \"atomic\" k"
+}

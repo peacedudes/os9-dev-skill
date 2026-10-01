@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 2,
+  "text": " for the `mod` directive's data-size operand\nassembles cleanly and yields a module with a zero-sized data area.\n\n## A complete worked program (`Live` (NitrOS-9))\n\nAssembled with `asm` and run on NitrOS-9. It creates a file, writes a line,\ncloses it, then deliberately opens a file that does not exist. The 68k\ncounterpart is in the sibling `68k/os9-68k-assembly.md`; comparing the two\nis the fastest way to see what does and does not carry across.\n\n**It defines its own constants on purpose.** `/dd/defs/os9defs.a` on this\ndisk is RMA-format - it opens with `psect` and declares call codes as\n`RMB` entries - and `asm` cannot parse any of it. See \"Why not `use`\nos9defs.a\" below.\n\n```\n        nam ExFileI\n* Constants are defined here rather than pulled from /dd/defs/os9defs.a,\n* which is RMA-format "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 37,
+  "text": " and result\nTRUE/FALSE). LAND/LOR/LXOR/LNOT are **function calls, not operators** -\n`LAND(a,b)`/`LOR(a,b)`/`LXOR(a,b)`/`LNOT(a)` - operating on integer values\nbit-by-bit. **Writing `6 LAND 3` as if it were infix is a syntax error** -\nuse `LAND(6,3)`. The code it reports depends on where the mistake sits\n(`Live` (os9exec)): `#000:011` in an assignment (`x=6 LAND 3`), `#000:029`\nin a `PRINT`, `#000:037` inside parentheses. The `*NOT` member\nof each family takes one operand, the rest take two. The names invite\nconfusion precisely because they look like variants of each other rather\nthan a different call shape entirely.\n\n**`MOD` - infix operator or function? Unresolved (`Manual, Flag`).** It\nappears in the precedence list above at `*`/`/` level, which implies\n`a MOD b`, and also among the nume"
+}

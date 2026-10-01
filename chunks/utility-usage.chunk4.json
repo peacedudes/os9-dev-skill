@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 4,
+  "text": "clears* it on 6809 -\n  `6809/utility-usage.md`. `-a` suppress\n  attribute printout. Owner = same group ID; only owner/superuser may\n  change. Can clear `d` on an emptied directory (never set it - only\n  `makdir` creates directories). Bare `attr <path>` prints an 8-character\n  string, `Live` (os9exec)-decoded: positions 1-4 are `d`/`s`/`pe`/`pw`\n  (directory, sharable, public-execute, public-write) and 5-8 are\n  `pr`/`e`/`w`/`r` (public-read, owner-execute, owner-write, owner-read),\n  each either the letter or `-`; e.g. `----r-wr` = no directory/sharable/\n  public-exec/public-write bits, public-read granted, owner has write+read\n  but not execute. `attr -e` needs more privilege than the bare form -\n  `Live` (os9exec): it failed `E$FNA`/214 in a session where the plain form\n  succeeded on th"
+}

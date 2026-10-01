@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 26,
+  "text": "5). Released programs rely on that: the OS-9 port\n    of nethack whole-file-locks its log through a write-only path, and\n    os9exec accepts an explicit lock from a path in any mode (`Source`\n    (os9exec)). A *release* (`SS_Lock` of 0) is always allowed.\n- A lock is released by the next read, the next write, a path close, or an\n  explicit `SS_Lock` SetStat. A zero-byte read or write drops every lock that\n  path holds - record, EOF, or whole-file. `seek()` never affects locking.\n- `SS_Lock` locks or releases part of a file directly; `SS_Ticks` sets how\n  long a caller waits for someone else's lock before giving up.\n\n**The EOF lock is not gated on mode, and getting that wrong breaks the\nspooler.** A write landing at end of file gains it in *any* write mode - it is\nthe only case where a writ"
+}

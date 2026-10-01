@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 12,
+  "text": " be adopted, and a fork becoming the active copy is a\ngood outcome rather than a failure.** The author's preference is for it to end up\nmaintained by people who use it, and to step back. Nothing here depends on him\ncontinuing.\n\nWhat a successor inherits is unusually self-sufficient for a documentation\nproject, and it is worth knowing before you decide:\n\n- **The claims carry their own evidence.** Every statement has a confidence tag\n  naming what backs it, so a new maintainer can tell measured fact from read-it-\n  in-a-manual without re-deriving the whole corpus. That is the thing that\n  normally rots first and here it is explicit.\n- **The quality rules are mechanical, not cultural.** `tools/check_doc_consistency.py`\n  enforces tag hygiene, cross-file numeric drift, dump-decode claims, erro"
+}

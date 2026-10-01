@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 6,
+  "text": "SP) value - every subsequent exception dispatch uses this vector to\nrelocate the base address of system global storage, which is why at least\n4K of RAM must exist both below and above it. Vector 1 holds the reset\ninitial PC (the coldstart entry point); after startup its only remaining\nuse is restarting the system after a catastrophic failure. Neither vector\nshould be touched by ordinary code.\n\n## Process Descriptor (one per process, allocated dynamically)\n\nTracks: process ID, group/user ID, priority, current state (Active /\nWaiting-for-child / Sleeping), memory allocation pointers (code and data\nareas), the open-path list, the signal-intercept routine pointer and its\nnesting level (`P$SigLvl`, an unsigned byte incremented/decremented/cleared\nby `F$SigMask`; while nonzero the intercept rout"
+}

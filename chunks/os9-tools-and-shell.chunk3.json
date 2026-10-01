@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 3,
+  "text": "ever touched.\n\n| Form | Redirects | Notes |\n|---|---|---|\n| `<path` | stdin | **Nothing may come between `<` and the path.** `Live` (os9exec): `list < zzprobe.txt` is rejected before the program runs - the shell echoes the line and marks the column with `^syntax error` - while `list <zzprobe.txt` parses and runs. A Unix reflex that fails here, and the caret is the tell |\n| `>path` | stdout | **Create only - fails if the file already exists** |\n| `>+path` | stdout | **Append** to an existing file, or create it. The Unix `>>` |\n| `>-path` | stdout | Truncate an existing file, or create it. The Unix `>` |\n| `>>path` | **stderr** | *Not* append |\n| `>>>path` | stdout **and** stderr | Both into one target |\n| `<>>>path` | stdin, stdout, stderr | All three |\n\nCombine freely: `cmd >out >>err` sen"
+}

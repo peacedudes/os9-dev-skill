@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 3,
+  "text": "nly* form the compiler\naccepts; there is no prototype syntax.\n\n## The `\\n` escape sequence: the OS-9-specific gotcha\n\n**`\\n` means carriage return (CR, 0x0D) here, not linefeed (0x0A)** - it\nmatches OS-9's own text-line convention, but it's the opposite of Unix and\nwill surprise anyone porting code either direction.\n\n```c\nprintf(\"Line 1\\nLine 2\\n\");    /* outputs CR, not LF */\nprintf(\"Line 1\\eLine 2\\e\");    /* \\e (lowercase) is this compiler's true-linefeed escape */\nprintf(\"Value: %d\\x0D\");       /* or just be explicit with \\x0D / \\x0A */\n```\n\n`Source` (OS-9 C Compiler manual, Microware, 1983, 6809 edition - the\ncompiler's own \"Control Character Escape Sequences\" section, extending\nK&R p.181): `\\e` is documented explicitly \"to distinguish LF from `\\n`\nwhich on OS9 is the same as `\\r`.\"\n\n#"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 25,
+  "text": " reaches the SCF driver, so the path's line\ndiscipline is untouched.\n\nMeasured, `Live` (os9exec), sending one bare keystroke and only then an Enter:\n\n| Reader, after `initscr(); cbreak();` | Bare keystroke | Enter |\n|---|---|---|\n| `getchar()` | echoed, still blocked | returned |\n| `getchar()` after `crmode()` instead | echoed, still blocked | returned |\n| `getchar()` with no curses at all (control) | echoed, still blocked | returned |\n| **`getch()`** | **returned immediately** | not needed |\n\n**So `cbreak()` is honoured by curses and invisible to stdio** - it is not\ninert, and it is not a no-op; it simply only means something to the one reader\nthat consults the flag. The three `getchar()` rows agreeing with the no-curses\ncontrol is what a flag-only macro predicts, and `getch()` returning "
+}

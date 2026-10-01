@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 21,
+  "text": "full CoCo 3 + OS-9 Level 2 + windowing setup needs at least 512K of RAM. Error #207 or #237 during operation doesn't necessarily mean memory is full - it commonly means a single request needs more than 64K of *contiguous* memory, which more total free RAM elsewhere can't fix if it's fragmented into smaller pieces.\n\n## Keyboard Quirks\n\n- CoCo 1/2 have no separate Ctrl key - **CLEAR acts as Ctrl**.\n- **Ctrl+0** toggles shift-lock state - CoCo-specific, absent from the general control-key table.\n- Every other shell control key behaves unmodified (Ctrl-E abort, Ctrl-C interrupt-to-background, ...) - `unix-differences.md` Tier 1.\n\n## OS9Boot Module Differences\n\n- **CoCo 3**: `CC3IO` (keyboard/video driver), `WindInt`, `VDGInt`, `CC3Disk`, `CC3Go` (startup process, sets up initial shell, inherit"
+}

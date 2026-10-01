@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 35,
+  "text": "rogram driven\n  non-interactively wants an `ON ERROR` so a fault reports instead of spinning.\n- **`SHELL` exists in 6809 BASIC09 and really forks** - some 68k-era\n  documentation implies it is 68k-only. It costs a process fork per call,\n  roughly a quarter of a call per second on a 2 MHz 6809. A burst of writes to\n  `/nil` is far cheaper but does **not** yield long enough to let another\n  process interleave, so it's no substitute when the point is a scheduling\n  window.\n- Watch total memory when backgrounding several `#32k` jobs that each fork\n  `SHELL`: `Error #237 (RAM Full)` on a CoCo3 is easy to reach. Stagger the\n  launches or shrink the footprint.\n\n## Syscalls that end the session, despite benign-looking names\n\nMost dangerous calls announce themselves (`F$Boot` reboots; `F$IRQ` insta"
+}

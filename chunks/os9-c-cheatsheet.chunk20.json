@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 20,
+  "text": "ansion names a function-like macro will not pick up arguments from the call\nsite** - so give the wrapper the parameters instead of relying on the rescan.\n\nThis one is worth knowing by name because the error names `putchar`, which is\ncorrect and unhelpful: the macro at fault is `P`, and `P` appears nowhere in the\ndiagnostic.\n\n### Long source lines: the limit moves, and `#if 0` does not exempt one\n\n`cpp` joins backslash-continued lines **before** measuring them, and it measures\nlines in a conditional group it is discarding. Moving an over-long line into\n`#if 0` with a short `#else` does not help; only deleting it does.\n\n**There is no single safe length, because content earlier in the file lowers the\nlimit.** `Live` (os9exec), two rigs and two line constructions agreeing:\n\n| file | joined lin"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 18,
+  "text": "m gets a clean binary stream out of a terminal - and it is worth\n    knowing what that costs, because **the damage does not look like an I/O\n    problem.**\n\n    With `PD_ALF` off every line ends in a bare CR, so the cursor returns to\n    column 0 without advancing and each line is drawn over the last. What you\n    *see* is a program that \"printed almost nothing\", or one missing a few\n    characters from the front of a line - overwritten in place by whatever was\n    written next, typically the shell prompt, which eats as many characters as\n    it is long - two for the shell's `$ `. **No bytes are lost**, which is why looking for where the\n    characters went never converges.\n\n    **The one-step diagnostic is the CR:LF ratio of the raw byte stream.**\n    Healthy is roughly one LF per CR; `PD"
+}

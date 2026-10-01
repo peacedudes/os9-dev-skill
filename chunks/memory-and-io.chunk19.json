@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 19,
+  "text": "tream.**\n    Healthy is roughly one LF per CR; `PD_ALF` off is many CRs and almost no LFs.\n\n    **How far the setting reaches is the open question, `Flag`.** Measured\n    `Live` (os9exec): an option set on one path to a terminal affected other\n    paths on that device, so one program can leave the terminal - and the shell,\n    and everything run afterwards - in this state. The manual cuts the other way\n    on its face: the option table lives in the **path descriptor**, copied from\n    the device descriptor when each path is opened, which reads as per-path. But\n    a path descriptor also carries **`PD_PATHS` ($16), the list of open paths on\n    the device**, so a file manager has the means to apply a change across all of\n    them, and inherited standard paths share a descriptor outright. Wh"
+}

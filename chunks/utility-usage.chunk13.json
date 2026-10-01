@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 13,
+  "text": "at first difference, summary only.\n- `grep [<opts>] [<expr>] {<path>}` - `-c` count only, `-l` filenames\n  only, `-n` line numbers, `-v` invert, `-s` silent (exit status only),\n  `-e=<expr>` explicit pattern, `-f=<path>` patterns from file.\n- `qsort [<opts>] {<path>}` - sort lines; `-f=<num>` sort field (one\n  only), `-c=<char>` field separator.\n- `tr [<opts>] <str1> [<str2>] [<path1>] [<path2>]` - transliterate;\n  `-d` delete matches, `-s` squeeze repeats, `-c`/`-v` complement of\n  `<str1>`.\n- `compress` / `expand [<opts>] {<path>}` - de/re-huffman text; `-n`\n  write output file (else stdout), `-d` delete the original.\n- `code` - prints the hex value of each key pressed (keyboard probe;\n  exit with `q`).\n\n## Module and memory utilities\n\n- `load [<opts>] {<path>}` - make a file's modules r"
+}

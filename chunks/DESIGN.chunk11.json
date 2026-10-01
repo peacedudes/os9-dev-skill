@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 11,
+  "text": "r it is not\n   claiming: one tagged `Flag`, one carrying a `DIVERGENCE D-NNN` marker (a\n   retired convention - the skip rule is kept as harmless dead code rather\n   than re-tested away), and\n   one whose wording disowns the value it quotes (`scan error`, `OCR`, `typo`,\n   `misread`, `garbl`, `obsolete`, `stale`, `incorrect`). The corpus really\n   does quote bad values on purpose - `module-format.md` prints `M$Parity` at\n   `$28` specifically to warn the reader that that scan is wrong.\n\n7. **Skill boundary** - a citation that stops resolving once a skill is\n   installed on its own. Each skill is symlinked into `~/.claude/skills/`\n   individually, so anything it names must be findable from inside that one\n   directory. Three ways that breaks, all of which really happened:\n   a **root doc** "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 43,
+  "text": " it is evidence that the\n  sequence works, which the manual alone is not.\n- **A period-built binary is a control.** This is the more valuable one. When\n  something you built misbehaves, a program built by its author in the 1980s or\n  90s, run on the same disk in the same shell, differs from yours in exactly one\n  way: who compiled it. That comparison is what narrowed `system()` from \"this\n  call is broken\" to \"our builds differ from period builds\" (see\n  `c/os9-clib-reference.md`), and it is the cheapest way to find out whether a\n  fault is yours or the system's.\n\nThe corollary is worth stating because it has bitten: **a program failing is not\nevidence the system is at fault until a period binary fails the same way.** Most\nof the C-toolchain traps in these references - link mode, line endi"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 16,
+  "text": "ion for one\n  window so others can be placed over it, `ON` restores it (the default).\n  **GOTCHA:** removing protection can destroy the unprotected window's\n  contents when something else draws over it - use with care.\n- `OWSET([path,]save_switch,xpos,ypos,xsize,ysize,fg,bg)` - establishes an\n  overlay window on top of an existing device window (same size or\n  smaller). `save_switch` `0` = don't preserve the covered area, `1` =\n  save it and restore it when the overlay ends. `xpos`/`ypos` = character\n  column/row of the overlay's upper-left corner; `xsize`/`ysize` = its\n  width/depth in characters; `fg`/`bg` = its initial colors.\n  **`Live` (NitrOS-9)** - `xpos`/`ypos`/`xsize`/`ysize` confirmed as\n  character-grid units (matches `CURXY`/`CWAREA`): `OWSET(1,5,3,20,8,2,1)`\n  over an existing"
+}

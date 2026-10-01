@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 34,
+  "text": "count, X=beginning block# | Yes | Maps blocks into a process's DAT-mapped address space via `F$FreeHB`/`F$SetImg`, from the top down into the highest available addresses; returns U=addr of first block. `Live` (NitrOS-9) - **genuinely implemented**, unlike most of its Level-2-flagged siblings here |\n| F$ClrBlk | $50 | B=block count, U=addr of first block | Yes | Marks blocks unallocated in a process's DAT image. Untested - the one attempt passed a bogus `U` and its `E$IBA` result says nothing |\n| F$DelRam | $51 | B=block count, X=starting block# | | Deallocate RAM blocks. `Live` (NitrOS-9) - freeing exactly the block `F$AllRAM` granted |\n| F$GCMDir | $52 | none | | Squeezes out gaps in the module directory's entry list. Takes no register parameters at all - reserved for the kernel's own use"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 18,
+  "text": " OS-9 Technical Reference (Tandy)'s per-call\nEntry/Exit listings; the System Programmer's Manual doesn't cover this range.\n\n| Call | Code | Params | Notes |\n|---|---|---|---|\n| F$Alarm | $1E | D=mode (`0`=clear, `1`=system-wide, `2`=query, any PID=arm for that process), X=addr of a 5-byte time packet (read only when arming) | Sets a timed signal for the caller - a 15-second bell ring at the specified time, using `F$STime`'s time-packet layout. Only whole-minute alarms are honored; at most one alarm pending at a time. `Live` (NitrOS-9): D genuinely acts as a mode selector - `D=0` and `D=2` both returned cleanly with X unset, while `D=99` failed, under identical unset-X conditions. Confirms NitrOS-9's `clock.asm` over the Technical Reference's silence on the D-register mode byte. `D=1` (arm)"
+}

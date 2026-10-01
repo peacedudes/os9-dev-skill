@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 17,
+  "text": "\nkeypresses with nothing reporting an error.\n\nFour properties a driver has to honour. These come from os9exec's\nimplementation (`Source`, os9exec: its `SS_SSig` handling and input path)\nrather than from a manual:\n\n- **The signal number arrives in `d2`**, and is recorded per *path*, together\n  with the arming process's PID.\n- **Arming checks readiness immediately.** If data is already waiting, the\n  signal fires on the `SetStt` call itself rather than waiting for the next\n  byte - \"tell me when there is input, including right now\".\n- **It is one-shot.** The pending signal is cleared as it fires; a monitor\n  re-arms after each wake.\n- **Deliver to every path bound to that terminal, not just the device's main\n  one.** The arming process opens the device itself, so its path is a\n  *different* "
+}

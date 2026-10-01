@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 31,
+  "text": "aight at such a file fails with\nerror 216 (`EOS_PNNF`): not a broken tool, just the wrong byte offset.\nCheck the image's own documentation for its header/partition layout, then\ncarve out the real filesystem with `dd if=container of=raw.img bs=512\nskip=<sectors>` before handing it to ToolShed, and write changes back with\n`dd if=raw.img of=container bs=512 seek=<sectors> conv=notrunc` -\n`conv=notrunc` is essential, since a plain `dd of=` truncates the\ncontainer to the partition's size. Sanity-check the extraction: an RBF\nLSN0's first 3 bytes are a total-sector count that, times the sector size\n(256 bytes for RBF), should equal the extracted file's exact byte size.\n\n**Why this matters for autonomous testing**: because it works without\nbooting anything, this is the fastest way to inspect or ed"
+}

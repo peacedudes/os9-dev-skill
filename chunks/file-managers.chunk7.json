@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 7,
+  "text": "lobal pointer), then `PD_FST` $2A and `PD_OPT` $80.\n\n`PD_CNT` and `PD_COUNT` are two genuine fields at two offsets, not a\nconflict - the manual lists both, marking `$03` obsolete.\n\nBeyond the header sits a **file-manager-defined working area** (`PD_FST`)\nwhose layout varies by file-manager type. RBF uses it for file pointers,\ncurrent logical sector number, and record-lock tracking; SCF for line-buffer\nstate and input editing. A custom file manager defines this section for its\nown needs - the kernel allocates the space, the file manager owns it.\n\nFinally a fixed **128-byte options region** (`PD_OPT`, offset `$80`) holds\ndevice-specific and I/O-behavior parameters: baud rate, parity, flow control,\nterminal echo, backspace/delete codes, buffering strategy. At open time the\nkernel populates it"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 4,
+  "text": "lly reads at run time: `D_SPUMem` ($3D8), the\nSystem Security Module's static storage, is read by every Microware-C start-up\nto detect an SSM, and a machine without one shows 0 -- which is what os9exec\nreturns (`Live` (os9exec)). `D_Julian` ($30) is today's Julian day.\n\n**`D_Second` ($34) counts the seconds LEFT UNTIL midnight - the opposite of\n`F$Time`'s Julian form, which gives seconds since.** The Guru states it twice,\nonce with the reason: the tick handler only has to decrement it and test for\nzero to know the day has turned. Two freeware programs written for real\nOS-9 agree: `getsys` labels the field \"system time seconds\nleft until midnight\", and `aprocs` computes process ages on that assumption.\nMicroware's v2.4 manuals document `F$Time`/`F$STime`, which are the syscalls,\nnot this gl"
+}

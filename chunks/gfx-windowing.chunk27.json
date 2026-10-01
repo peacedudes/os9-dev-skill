@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 27,
+  "text": "XY(path,column,row)` - text cursor to a given column/row.\n- `CURUP` / `CURDWN` / `CURRGT` / `CURLFT` `(path)` - move the text cursor\n  one line/character in the named direction.\n- `CUROFF` / `CURON` `(path)` - hide/show the text cursor.\n- `SETDPTR(path,xcor,ycor)` - sets the draw pointer (X 0-639, Y 0-191 -\n  the primary source's own copy showed \"0-194\" for Y, corrected here from\n  the coordinate space every other function agrees on).\n- `CRRTN(path)` - carriage return: cursor down one line, to the window's\n  left edge.\n- `INSLIN(path)` - inserts a blank line at the cursor, pushing the lines\n  below it down one.\n- `DELLIN(path)` - deletes the cursor's line and closes the gap (lines\n  below move up). Works on both text and graphics screens.\n- `ERLINE(path)` - deletes the cursor's line **with"
+}

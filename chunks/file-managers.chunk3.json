@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 3,
+  "text": "ries\n\n- **`Open`/`Create`** allocate whatever buffers the file manager needs,\n  initialize path descriptor variables, and parse the pathname; on\n  multi-file devices this includes searching the directory to locate the\n  file. Where a file manager has no multi-file support, `Create` is treated\n  as synonymous with `Open`.\n- **`MakDir`** is unusual: it's never preceded by `Create` or followed by\n  `Close` the way every other entry point implicitly is - a one-shot\n  operation. A file manager without directory support returns carry set /\n  unknown-service.\n- **`ChgDir`** doesn't change the *caller's* current directory by itself - it\n  searches the target directory and stashes its address in the process\n  descriptor; shell-level `chd`/`chx` semantics are built on top of this, one\n  layer up.\n- "
+}

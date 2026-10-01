@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 21,
+  "text": " record, change it,\n   write it back\" on one file cannot silently corrupt each other's update -\n   the classic lost-update race - because the kernel serializes them without\n   either program calling `SS_Lock`. Write a database this way *on purpose*\n   and concurrency safety is free.\n2. **A plain growing file can coordinate a slow producer and a slow consumer\n   as if it were a pipe, with a persistent on-disk record.** A write landing\n   at the current end of file takes an EOF lock - a \"ghost lock\" past the\n   last byte, not a lock on any real data - specifically so a reader catching\n   up to a live writer stalls at the edge instead of mistaking \"caught up to\n   current EOF\" for \"the writer is done.\" A spooler appending output over a\n   long run and a slow consumer feeding a printer can be "
+}

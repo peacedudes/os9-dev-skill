@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 38,
+  "text": "fixmod` or a reboot). Both\ncommands share the same parameter vocabulary and auto-adjust their own\ndisplay for 32- vs. 80-column terminals. Naming a parameter bare, with\nnothing after it, snaps that one setting back to its factory default;\ngiving it `=0` instead switches the feature off entirely.\n\n**One real difference that matters:** `tmode` can only *display*\n`type`/`par`/`cs`/`stop`/`baud` (the underlying serial hardware settings) -\nit cannot change them. `xmode` can change them, but only across a\n`deiniz <dev>` -> `xmode ...` -> `iniz <dev>` cycle; changing them on an\nalready-open device has no effect until that cycle runs. `Manual`, and\nsingle-sourced on the 6809 side (the genuinely-CoCo Farna 2nd edition;\nthe \"1st edition\" file also cited in this document turns out to be\nOS-9/68000 ma"
+}

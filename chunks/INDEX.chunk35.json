@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 35,
+  "text": "TRAP mnemonics, `r68`/`l68` gotchas, the OS-9 `debug` command (sc/gs defects) | 68k/os9-68k-assembly.md |\n| **Working `psect` syntax for a hand-written 68k module** (the assembly file flags this as a manual gap; the only live-verified example lives here) | basic09/basic09-per-target.md |\n| TCP/IP sockets, SOCKMAN/IFMAN/mbuf, hosts/inetdb config, ifgen/ipconfig/routed, ftp | 68k/network-sockets.md |\n\n## 6809\n\n| Question about... | Read |\n|---|---|\n| Driving live NitrOS-9 as an agent (nitros9repl.sh), stock-inetd `tcp listen`/`join` bridge, per-connection login and session ownership, no `.login` on 6809, DriveWire facts, SCF Escape=EOF, echo/auto-LF gotchas | 6809/using-nitros9-repl.md |\n| Registers, SWI2 syscall convention, F$/I$ code catalog, which calls need supervision before you automat"
+}

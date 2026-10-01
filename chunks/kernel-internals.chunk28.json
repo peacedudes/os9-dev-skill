@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 28,
+  "text": " systems, DMA transfers\n  from a user buffer require explicit address translation (DMA hardware does not\n  respect virtual-to-physical mappings). OS-9 provides translation services; a\n  driver on such a system must not pass raw user virtual addresses to the controller.\n- OS-9 does not require an MMU for basic operation - register-indirect\n  addressing provides process isolation without it. A System Security Module\n  optionally adds an MMU for memory *protection* on top of that baseline.\n\n## Exception and Interrupt Vector Layout\n\n- Vector 0/1: reset SSP/PC (see System Global Memory above).\n- Vectors 2-5: CPU hardware error exceptions - bus error (`T_BUSERR`,\n  access to non-existent/privileged memory), address error (`T_ADDERR`,\n  misaligned access), illegal instruction (`T_ILLINS`), zero d"
+}

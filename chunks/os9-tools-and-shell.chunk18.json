@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 18,
+  "text": " sub-tool forking - `Live` (os9exec), `basic #32k`\n  fails with `Error #000:216 (E_PNNF)` right after such a `chx`. `chx` is a\n  per-session identity set once at login, not a scratch variable; to make a\n  directory runnable, extend `PATH` instead.\n- Tradeoff: with `chx` at shared CMDS, compilers *default* their output\n  there - name outputs explicitly (`cc -F=ALICE/<name>`). And `copy prog\n  ALICE/prog` resolves against `chd`, not `chx` - install with a full path.\n\n## Naming convention: capitalized directories\n\nOS-9 convention capitalizes directory names and leaves file names lowercase -\n`CMDS/`, `SYS/`, `DEFS/` beside `startup`, `password`, `motd`. Not\nenforced by the filesystem, but followed throughout the system disk; ignoring\nit in shipped material reads as foreign. Also noted for the "
+}

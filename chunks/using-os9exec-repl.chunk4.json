@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 4,
+  "text": "ol rather than a corruption anyone here has\n    reproduced, and the failure it predicts is the nastiest kind - a damaged\n    volume discovered much later, with nothing to say when it happened.\n    Until someone measures it, treat it as a rule and not a risk to weigh.\n\n    The practical check before starting any harness: **`lsof` the image** and\n    confirm no long-lived session - somebody's interactive shell, a REPL left\n    running - is holding it. If one is, build a fresh image under another name\n    and point the harness at that. Cheaper than the alternative, and it is the\n    one hazard here whose symptom does not arrive while you are watching.\n- **Prefer an RBF image over a host directory** for anything but the most\n  basic testing. File permission attributes are enforced, and record "
+}

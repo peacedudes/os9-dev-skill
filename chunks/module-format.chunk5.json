@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 5,
+  "text": "tem component |\n| 13 | FlMgr | file manager |\n| 14 | Drivr | device driver |\n| 15 | Devic | device descriptor |\n| 16-255 | - | user-definable |\n\nThe kernel validates type against use: forking a non-`Prgrm` module returns\n`E_NEMOD`.\n\n### Language codes (M$Lang)\n\n| Code | Symbol | Meaning |\n|---|---|---|\n| 0 | - | wildcard |\n| 1 | Objct | 68000 machine language |\n| 2 | ICode | compiled BASIC09 I-code |\n| 3 | PCode | Pascal |\n| 4 | CCode | C |\n| 5 | CblCode | COBOL |\n| 6 | FrtnCode | Fortran |\n| 7-15 / 16-255 | - | reserved / user-definable |\n\nThe language code tells the kernel/shell which runtime, if any, must\ninterpret the module (this is how typing a packed BASIC09 module's name\nlaunches RunB).\n\n### Attribute byte (M$Attr)\n\n| Bit | Meaning |\n|---|---|\n| 7 | Sharable/reentrant - clear limit"
+}

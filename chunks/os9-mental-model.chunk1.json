@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-mental-model.md",
+  "chunk_index": 1,
+  "text": "copy serves every process running it.\n- Header starts with a sync word - `$4AFC` on 68k (an illegal 68000\n  instruction, so coldstart can cheaply scan ROM word-by-word for module\n  boundaries); `$87,$CD` on 6809. 68k header is minimum 48 bytes; 6809's\n  is 9 bytes. Full field layouts: `module-format.md`.\n- **Position-independent and ROMable**: no absolute addresses; code uses\n  PC-relative jumps and register-indirect data access. Load address is\n  chosen at run time. Code can live in ROM; each process gets its own RAM\n  data area - **reentrancy without an MMU**. Data modules are the\n  deliberate exception (shared, mutable).\n\n### Module directory lifecycle\n\nEach entry: memory address, **link count**, group ID (modules loaded from\none file free together), parity. `F$Link` finds a resident mo"
+}

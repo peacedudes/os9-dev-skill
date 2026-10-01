@@ -1,0 +1,5 @@
+{
+  "source": "README.md",
+  "chunk_index": 3,
+  "text": " |\n  |---|---|\n  | `Manual` | Stated in published Microware documentation |\n  | `Live` | Run and observed; the tag names what it ran on |\n  | `Source` | Read from an implementation's source, not run |\n  | `Absent` | Looked for and confirmed not to exist |\n  | `Hearsay` | Someone said so; lowest confidence |\n  | `Flag` | Sources disagree; unresolved |\n\n- **Told not to guess.** The skills tell the assistant to answer specifics\n  from the files rather than from memory. If it cannot check a claim, it must\n  say so. A confident wrong answer is the failure these files exist to\n  prevent.\n- **The manual outranks the emulator.** Most practical claims were checked\n  by running them: 68000 programs under os9exec, 6809 programs on NitrOS-9.\n  Neither emulator is OS-9, so a `Live` result is evidence a"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 54,
+  "text": "s (deleting one name leaves the other's content), and a symlink\nthat stays inside the device resolves normally. **A symlink pointing outside\nthe device is refused**: `dir`, `list` or `chd` through it gives `E_PNNF`, as\ndoes `deldir`, which therefore deletes nothing. `del` of the link itself fails\nwith `E_BPNAM` and leaves it in place, so remove such links on the host.\n\n`deldir -q` on an in-device link to a directory deletes everything inside the\ntarget - OS-9 has no link concept, so it cannot tell - and then removes the\nlink. The target directory itself stays, empty. Symlink cycles can crash\nthe emulator after ~40-60 hops.\n\n## Launching two concurrent background processes\n\n`Live` (os9exec): sending a second `key` command (to launch process B) while process\nA's backgrounded job is actively "
+}

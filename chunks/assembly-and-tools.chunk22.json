@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 22,
+  "text": "9 expr` | Convenience macro: emits `SWI2` + the function-code byte, for use with `OS9Defs` symbolic names (`OS9 I$Read`) |\n| `PSECT {name,typelang,attrrev,edition,stacksize,entry} ... ENDSECT` | **RMA only.** Opens the program's single relocatable code section; location counter restarts at zero |\n| `VSECT {DP} ... ENDSECT` | **RMA only.** Opens a relocatable data section inside a PSECT; RLINK assigns real addresses at link time. Optional `DP` switches to the direct-page counter set; a PSECT may repeat the block, each counter set accumulating across repeats |\n| `CSECT {expr}` | **RMA only.** Sets the CSECT base-offset counter (default 0). Each `RMB` inside assigns its label the current counter value then advances it - a convenience for enumerated field offsets without hand-written `EQU`s |\n"
+}

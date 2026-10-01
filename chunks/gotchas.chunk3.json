@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/gotchas.md",
+  "chunk_index": 3,
+  "text": "** - `R8.2` real, `I4` integer, `S8` string, `H4` hex,\n  `B8` boolean, `E12.3` exponential - with optional `<`/`>`/`^` justify.\n  This is the single most dangerous \"looks like something I already know\"\n  trap in the language.\n- **`PRINT USING`'s path number goes after `PRINT`, before `USING`** -\n  `PRINT #path USING fmt, list`. The reverse is a syntax error.\n- **There is no multi-line `TYPE`/`ENDTYPE` block, and no `ENDPROC`.** Both\n  are fabrications that appear in no manual. `TYPE` is always one\n  semicolon-separated line; a `PROCEDURE` ends with an optional, executable\n  `END`, or simply runs out of statements.\n- **Two distinct `IF` forms - don't mix them.** Type 1: `IF cond THEN\n  linenum`, a bare line number, no `GOTO` keyword, no `ENDIF`. Type 2:\n  `IF cond THEN` / statements / `ENDI"
+}

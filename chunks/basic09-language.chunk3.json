@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 3,
+  "text": " then executes. Within System Mode, `$` runs an OS-9 shell\ncommand without exiting BASIC; with no argument, `$` alone suspends BASIC\nfor a full interactive OS-9 session (EOF or ESCAPE resumes).\n\n`Live` (os9exec, \"Microware Basic V2.1\"): `e <name>` switches\nthe prompt from `B:` to `E:`\nand auto-headers the new procedure (`PROCEDURE <name>`); `BYE` at the `B:`\nprompt exits BASIC09 back to the OS-9 shell prompt cleanly.\n\nA procedure name starts with a letter, continues with alphanumeric\ncharacters only (no underscores, dollar signs, or periods); names are\ncase-insensitive. Maximum length unspecified in source manuals. Each\nprocedure has its own private namespace: line numbers and variables\ndeclared in one procedure never collide with another's, even if reused\nverbatim (`Live` (os9exec): a hel"
+}

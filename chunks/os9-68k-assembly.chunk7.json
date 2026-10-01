@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 7,
+  "text": "ed to the\n  `debug` binary itself rather than to os9exec; neither has been checked on\n  real hardware.\n\n## A complete worked program (`Live` (os9exec))\n\nEverything else in this file is a contract; this is the idiom. The tables\nbelow give the right register names but not the `psect` preamble, the\n`trap #0` sequence, or the error convention - code written from the tables\nalone names the right registers and still won't assemble. This is the\nsmallest program that exercises all three: it creates a file, writes a line,\ncloses it, then deliberately opens a file that does not exist.\n\n```\nPrgrm     set 1\nObjct     set 1\nReEnt     set $80\nType_Lang set (Prgrm<<8)+Objct\nAttr_Rev  set (ReEnt<<8)+1\n\nICreate   set $83\nIOpen     set $84\nIWrite    set $8A\nIClose    set $8F\nFPErr     set $0F\nFExit     set "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 16,
+  "text": "ame symbol it correctly gives 201 - which is a typo in that one edition, not two codes sharing a name |\n| 000:201 | E$BPNum | Illegal path number | Path number out of range, or no open path by that number |\n| 000:202 | E$Poll | Interrupt polling table full | Too many IRQ devices for the system INIT module's limit |\n| 000:203 | E$BMode | Illegal mode | I/O function attempted that the device/file can't perform (e.g. reading an output-only file). `Live` (os9exec): enforced on disk files both ways - writing to a path opened read-only, or reading one opened write-only, returns 203. os9exec's console paths do not enforce it; see `common/using-os9exec-repl.md` |\n| 000:204 | E$DevOvf | Device table full | Device table exhausted (INIT module sets the max) |\n| 000:205 | E$BMID | Illegal module heade"
+}

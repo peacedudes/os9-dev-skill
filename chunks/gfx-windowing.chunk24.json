@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 24,
+  "text": "the draw pointer if\n  coordinates are omitted. X range 0-639, Y range 0-191.\n- `ELLIPSE([path,][xcor,ycor,]xrad,yrad)` - same centering rule as\n  `CIRCLE`; `xrad`/`yrad` are the horizontal/vertical radii.\n- `BAR([path,][xcor1,ycor1,]xcor2,ycor2)` - filled rectangle between two\n  diagonal corners; does not move the draw pointer.\n- `BOX([path,][xcor1,ycor1,]xcor2,ycor2)` - rectangle outline, same corner\n  convention as `BAR`; also does not move the draw pointer.\n  **`Live` (NitrOS-9)** - confirmed on all counts: `BOX` renders as an\n  outline and `BAR` as a solid fill; after a box drawn (100,50)->(400,150) a\n  following bare `CIRCLE` centered on (100,50), proving the draw pointer never\n  moved. Bare `CIRCLE`/`ELLIPSE` centering on the draw pointer, and\n  `ELLIPSE`'s separate x/y radii, are co"
+}

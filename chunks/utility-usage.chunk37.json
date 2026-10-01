@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 37,
+  "text": "erges by Level;\n  `Manual` (the Level 2 manual's own worked example: `copy #8` and\n  `copy #2K` given as equivalent, both 2048 bytes).\n\n## tmode / xmode parameters\n\n`tmode [.<pathnum>] [<params>]` / `xmode <devname> [<params>]` (SCF-type\ndevices only - video, printer, RS-232, window) - same open-path-vs-\ndevice-descriptor scope/persistence mechanism as 68k (see\n`common/os9-tools-and-shell.md`). 6809-specific: `tmode`'s path number\ndefaults to standard input; inside a procedure file, specify `.1`/`.2`\nexplicitly, since the procedure file's own redirection has already\nclaimed `.0`. Permanence for `xmode` changes means editing the\ndescriptor file and relinking, or baking the change into a new boot file\nvia `cobbler` (68k instead uses `moded`+`fixmod` or a reboot). Both\ncommands share the same"
+}

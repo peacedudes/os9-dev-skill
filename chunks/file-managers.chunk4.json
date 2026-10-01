@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 4,
+  "text": "ntics are built on top of this, one\n  layer up.\n- **`Seek`** is purely logical: it repositions the file pointer with no\n  physical device access and no error past EOF. File managers without random\n  access (e.g. SCF) no-op it.\n- **`Read`** returns the requested byte count or an EOF error, generally with\n  no editing of the bytes transferred. **`ReadLn`** stops at the first CR and\n  applies whatever input editing suits the device class.\n- **`Write`** expands the file when past current EOF. On RBF, a\n  partial-sector write triggers a read-modify-write cycle unless the entire\n  sector is replaced. **`WriteLn`** stops at the first CR and applies output\n  editing (SCF appends a linefeed after CR, plus nulls, where configured).\n- **`Read`/`Write` are where RBF's record locking happens** - see Re"
+}

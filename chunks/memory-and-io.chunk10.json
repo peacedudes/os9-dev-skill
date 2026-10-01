@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 10,
+  "text": " to an *optional* driver-specific config table (OEM constants); **never** copied into the path descriptor - available to the driver only during INIT/TERM |\n| `M$Opt` | $46 | Byte count spanning the standard device-configuration table (`M$DTyp` onward); extends to 128 bytes maximum by design, though some file managers impose stricter limits |\n\n(`M$Port`/`M$FMgr`/`M$PDev` `Source` (os9exec's own device-descriptor\nheader); see `os9-systems-dev` skill's `device-drivers.md` for the driver-authoring\nangle on these same fields.)\n\n`M$Mode` bit layout:\n\n| Bit | Meaning |\n|---|---|\n| 0 | Read access |\n| 1 | Write access |\n| 2 | Executable access |\n| 6 | Single-user (non-sharable) |\n| 7 | Directory-file access |\n\nThe kernel validates a caller's requested open mode against `M$Mode`.\n\nUnlike `M$DevCon`"
+}

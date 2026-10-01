@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 71,
+  "text": "1`\n(trace to terminal) or `-o /file`, `-d 2` (syscall tracing; `-dh` lists\nmask bits), `-j <pid>`/`-w <pid>` include/exclude a process, `-d 0` off.\n`idbg -d=2 -o=/h5/trc` (the `=` form) works the same. **A bare number is not\na mask**: `idbg 0002` opens the interactive debug menu (os9exec's release\nnotes), which in a procedure file waits for input.\n\n**Finding a stray write: `-W`.** Launching `os9exec -W ...` makes a user-state\nwrite outside the process's own memory - its data area, the blocks it\nrequested with `F$SRqMem`, and loaded modules - a bus error, and prints where\nit happened. It is off by default. `Live` (os9exec): a program writing through\na plain `(a6)` (32 KB past its data; see `68k/os9-68k-assembly.md`) ran to\ncompletion silently without it, and with it stopped at the write:\n\n`"
+}

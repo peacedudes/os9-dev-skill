@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 26,
+  "text": "o be there. os9exec fills them with\nsentinel patterns (`$AAAAAAA0+n` in address registers, `$DDDDDDD0+n` in data\nregisters) so the mistake surfaces: an out-of-arena access through such a\nregister raises a 68k **bus error**. (The `pwrstat` utility has exactly this\nlatent fault: `MOVEA.L $4C(A0),A0` with `A0` still holding its `$AAAAAAAx`\nsentinel.)\n\nSlot assignments for the *informational* registers (which datum is in D2 vs\nD5, etc.) vary between manual passages; **measured `Live` (os9exec)** via a debugger\nregister dump of a forked program: **D2 = priority (`$80` = 128, the default), D3 = # inherited paths\n(`3` = stdin/out/err), D5 = param-area size, D6 = total memory** - exactly the\norder the table above lists. The same dump confirmed the rest Live: **D0 = the\nPID**, **D1 = packed owner**"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 35,
+  "text": "ng later, not your program failing. The correct forms:\n\n  ```\n   vsect\n  count: ds.l 1\n  buf:   ds.b 16\n   ends\n  ...\n   lea    buf(a6),a0       the linker biases vsect offsets for the $8000\n  ```\n\n  `Live` (os9exec): the linked offset of the first `vsect` variable is\n  `-$8000`, and `buf(a6)` reaches the right bytes. An explicit negative\n  constant (`BUF equ -32700`) also works, but the `vsect` keeps the linker in\n  charge of the layout.\n- **Indexing from A6 needs a second register.** Because a `vsect` offset is\n  near `-$8000`, the indexed form `tab(a6,d0.w)` (8-bit displacement) cannot\n  encode it. `Live` (os9exec): **`r68` assembles it with `Errors: 00000`**,\n  and only `l68` objects - `operand size error. The value ($ffff8000) is too\n  large for a byte operand` - **and writes the modu"
+}

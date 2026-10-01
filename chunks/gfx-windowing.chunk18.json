@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 18,
+  "text": "rOS-9) - call shape confirmed, but the documented restore\n  did not reproduce.** `RUN GFX2(\"OWEND\")` right after the `OWSET` above\n  left the punched-out area still background-colored - the original bar\n  content underneath was not restored, contradicting \"restoring the\n  previous screen contents if they were saved.\" Reproduced on a second\n  geometry (type-7, 640×192, 80-column, proportionally scaled), with a\n  `save_switch=0` control confirming nothing was erased to restore in that\n  case, and both calls' arity independently confirmed - so it is\n  specifically the restore that is suspect. A black-box finding about\n  NitrOS-9's own CoCo3 windowing driver; `windint`'s implementation wasn't\n  available to settle it the way `gfx2.asm` settled `LINE`/`LINEM`.\n- `SELECT([path])` - makes a windo"
+}

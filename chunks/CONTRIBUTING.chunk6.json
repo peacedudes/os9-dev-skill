@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 6,
+  "text": "y, plus the conventions that keep the corpus\ntrustworthy. Both gates must pass: a tracked pre-commit hook enforces them\nlocally, and the same checks run on every pull request.\n\n```sh\ngit config core.hooksPath tools/hooks     # re-run after a fresh clone\npython3 tools/check_doc_consistency.py\npython3 tools/tests/test_check.py\n```\n\nThen:\n\n- **Tag every claim.** `Hearsay`, `Manual`, `Source`, `Live`, `Absent`, `Flag` -\n  defined in `os9-dev/references/CONFIDENCE-TAGS.md`. An untagged assertion\n  cannot be weighed by the next reader, so it will need a tag before it lands -\n  and if you are unsure which applies, say what you did and leave the tag to\n  whoever merges it. That is not a reason to hold the patch back.\n- **A `Live` tag names what it ran on** - `Live` (os9exec), `Live` (NitrOS-9),\n  "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 55,
+  "text": "B) while process\nA's backgrounded job is actively streaming output to the same terminal is\n**unreliable** - sends can be silently dropped, land seconds late, or land\ncharacter-interleaved mid-line. Retrying a send that looks like it didn't\nland is risky: it sometimes *did* land, launching a duplicate. **Fix**:\nlaunch both in a single combined command line in one send (`procA & procB\n&`) while the terminal is idle.\n\n`Live` (os9exec): an unthrottled polling loop in two concurrent processes can generate\n1000+ retries/second combined and starve a concurrent process of CPU for 60+\nreal seconds. Give any tight retry/poll loop a small busy-wait when running\nit alongside another process that needs to make progress.\n\n## Two syscalls that end a scripted session\n\nBoth look ordinary in the call table "
+}

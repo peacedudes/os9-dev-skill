@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 26,
+  "text": "in no manual checked |\n| F$IODel | $33 | X=I/O module addr | | Deletes an I/O device if its use count is zero; error E$ModBsy if busy. LI runs the driver's Term routine here, LII defers it to `DETACH`. `Source` (NitrOS-9 `ioman.asm`): the mechanism is a scan of the live device table for any entry still pointing at the module, not a literal reference count |\n| F$SLink | $34 | A=module type, X=name ptr, Y=DAT image ptr for the name | | Link by name to a module already in the system's address space; returns A=type, B=rev, X=past name, Y=entry point, U=module ptr. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`) |\n| F$Boot | $35 | - | | Bootstrap system: links and calls the Boot module (or the one named in `INIT`) |\n| F$BtMem | $36 | D=byte count | | Contiguous, block-rounded bootstrap memory re"
+}

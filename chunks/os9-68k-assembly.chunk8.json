@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 8,
+  "text": "IClose    set $8F\nFPErr     set $0F\nFExit     set $06\n\nREAD      set 1          access mode: read\nWRITE     set 2          access mode: write\nATTRS     set $03        new file attributes: owner read + owner write\nSTDOUT    set 1          path 1 is always standard output\n\n psect exfileio,Type_Lang,Attr_Rev,0,1024,start\n\nstart\n* I$Create(d0.b=mode, d1.b=attrs, d2.l=size hint, (a0)=path) -> d0.w=path\n lea    fname(pc),a0\n moveq  #WRITE,d0\n moveq  #ATTRS,d1\n moveq  #0,d2\n trap   #0\n dc.w   ICreate\n bcs    failed\n move.w d0,d7           keep the path number; d0 is scratch from here on\n\n* I$Write(d0.w=path, d1.l=count, (a0)=buffer)\n move.w d7,d0\n lea    line(pc),a0\n move.l #linelen,d1\n trap   #0\n dc.w   IWrite\n bcs    failed\n\n* I$Close(d0.w=path)\n move.w d7,d0\n trap   #0\n dc.w   IClose\n bcs    f"
+}

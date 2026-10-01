@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 10,
+  "text": "ly handled this by *asking the human to remember* to\n   cross-check. Platform-scoped exactly like check 1, so a 6809 call code\n   legitimately differing from its 68k namesake is not a finding. Fails the run.\n\n   A symbol is recognised only with an internal `_`, `$` or `.` (`PD_COUNT`,\n   `M$Opt`, `SS.Size`) - that separator is what keeps ordinary capitalised\n   prose out. The connector between name and value is a **closed** set (table\n   pipe, comma, paren, `=`, `:`, `offset`, `at`), because arbitrary text\n   between the two would let an unrelated nearby number bind to the symbol.\n   Values are normalised (`$0A` = `$a` = `$A`) so notation is never mistaken\n   for disagreement.\n\n   Three kinds of line are skipped, because each states a number it is not\n   claiming: one tagged `Flag`, one ca"
+}

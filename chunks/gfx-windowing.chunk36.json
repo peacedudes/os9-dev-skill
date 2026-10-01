@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 36,
+  "text": " the last one\n  drew. **`Live` (NitrOS-9)** - `FCIRCLE(50,50,20)`, `DEFBUFF(1,1,2000)`,\n  `GET(1,1,30,30,40,40)`, `PUT(1,1,150,100)` produced two identical\n  filled circles: the original plus a second copy at the `PUT` target,\n  confirming both the capture and the block-copy.\n- `GPLOAD(group,buffer,format,xdim,ydim,size)` *(no `path` argument)* -\n  loads externally-prepared image data straight into a Get/Put buffer,\n  the way `GET` does from a live window but from data supplied directly\n  instead. `format` is a screen-format code (same family as `DWSET`'s).\n  Creates the buffer if it doesn't exist yet; if it already exists, new\n  data can't exceed the existing buffer's size.\n- `PATTERN([path,]group,buffer)` - points subsequent drawing calls at a\n  previously loaded Get/Put buffer to use as"
+}

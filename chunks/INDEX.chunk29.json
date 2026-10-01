@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 29,
+  "text": "l, scheduler (priority+aging), two current directories (chd/chx; fork lookups use chx, not PATH), I/O layering (file manager / driver / descriptor), CR line endings, big-endian | common/os9-mental-model.md |\n| \"How do I do `<Linux thing>` in OS-9?\", Unix-habit traps, K&R-not-ANSI, mknod/directory-open surprises, signal contract vs Unix | common/unix-differences.md |\n| Shell syntax (`;` `&` `!` separators, `<` `>` `>>` redirection, `#nk` memory modifier), wildcards, built-ins (chd/chx/ex/profile/setenv/set), PROMPT, procedure files, accounts/login/`.login`/`SYS/password`, control keys and line editing (Ctrl-A recall, Ctrl-W pause, ESC=EOF), page pause, the standard utility catalog (attr...xmode) | common/os9-tools-and-shell.md |\n| Per-command **syntax and options** for every v2.4 utility (d"
+}

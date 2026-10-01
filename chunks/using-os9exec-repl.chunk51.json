@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 51,
+  "text": "hose *shown* name\nmatches wins - where \"shown\" means cut to 28 characters with spaces rendered as `_`, compared **case-insensitively**. Consequences, none of them OS-9 semantics:\n\n- **Case-insensitive even on Linux.** `list /h5/sub/file.txt` opens `Sub/File.txt`\n  on a case-sensitive host filesystem. Code that relies on case to distinguish\n  two files will not behave here as it does on the host.\n- **A host name longer than the cut opens by its cut name**, and its *full*\n  name gives `E_PNNF` - the reverse of the intuition that the full name is the\n  real one.\n- **Two host names that agree up to the cut are indistinguishable**:\n  `dir` lists both identically and only the one earlier in host order can be\n  opened. The other is unreachable without renaming it on the host.\n- **A name containin"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 32,
+  "text": " BASIC09-internal errors 10-80, errno/ERR conventions, cross-manual discrepancies | common/error-codes.md |\n| Driving the os9exec emulator/REPL as an agent: launch/OS9DISK gotchas, gated-vs-raw send, grep -a, editing files (vi/tee/tr), compiling C end-to-end, the BASIC09 trap-handler race, booting as superuser vs tsmon, top-level chx from `OS9CMDS`, RBF image vs host directory, symlink quirks, stopping runaways, idbg | common/using-os9exec-repl.md |\n\n## BASIC09 (same language on both targets - read basic09-language.md first)\n\n| Question about... | Target | Read |\n|---|---|---|\n| Syntax, types, PROCEDUREs, I/O, operators, functions, error handling, debug mode, working at the prompts (leading-space line insert, `What?`, `LOAD`'s literal name match) | all | basic09/basic09-language.md |\n| Num"
+}

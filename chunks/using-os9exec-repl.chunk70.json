@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 70,
+  "text": " a blank line** exits the shell; a harness restart is the\n  reliable reset when state is unknown. EOF is a per-path setting a site\n  may have retuned (see the dual-environment tip in\n  `common/os9-tools-and-shell.md`), so a harness should not assume ESC:\n  prefer the emulator's own `stop`, which sets `quitFlag` directly and\n  never consults the path's EOF char. (`stop` needs group 0 or `OS9STOP`.)\n\nFrom os9exec's own debugger (`idbg` - emulator-level, distinct from the\nOS-9 `debug` command): `break` halts timesharing into the idbg prompt\n(`g` resumes cleanly); `s 1` auto-enters the debugger on bus/address\nerrors and unimplemented syscalls *before* the process dies; `k <pid>`\nkills; `q` quits the emulator. Tracing without stopping: `idbg -o 1`\n(trace to terminal) or `-o /file`, `-d 2` (sysc"
+}

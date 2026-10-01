@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 10,
+  "text": "de`'s `type=` is this\nvalue in hex, and its `par=` (odd/even/none), `cs=` (8/7/6/5) and `stop=`\n(1/1.5/2) edit the fields; none takes effect until the device is `iniz`ed\n(*Using Professional OS-9* v2.4, `xmode`).\n\nDevice-descriptor offsets, `Source`: `M$Port` (hardware interface port\naddress) `$30`, `M$Mode` `$37`, `M$FMgr` (offset to file manager name string)\n`$38`, `M$PDev` (offset to device driver name string) `$3A`, `M$DevCon`\n`$3C`, `M$Opt` `$46`. `M$DTyp` is not a distinct field - it's byte 0 of the\n128-byte options table starting at `$48`, exactly as `PD_DTP` is byte 0 of\nthe path descriptor's options section.\n\nPath descriptors support sharing through `PD_COUNT`. `I$Open`/`I$Create`\nstart it at 1. `I$Dup` doesn't involve the file manager or driver - it simply\nincrements the count, l"
+}

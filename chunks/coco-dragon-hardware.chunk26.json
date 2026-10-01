@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 26,
+  "text": "omma\ndelimits a host path from a path inside the disk image; a bare trailing\ncomma means the image's root directory. `copy -l` performs CR<->LF\ntranslation for text files (OS-9 text uses bare CR, not CRLF/LF); `copy\n-r` overwrites an existing file. `attr` (get/set OS-9 file attributes)\nonly operates on paths *inside* a disk image (`imagefile,path`) - it\ncannot be pointed at a plain host file, since a host file has no OS-9\nattribute byte to read or set at all.\n\n**Copying in an executable module leaves it non-executable - a real\ngotcha**: `os9 copy` does not set the execute-permission bit on the file\nit creates inside the image, even for a compiled module. The kernel's\n`load` utility (and `link`) enforce that bit - attempting to `load` a\nfreshly-copied module fails with error 214 (`EOS_FNA`,"
+}

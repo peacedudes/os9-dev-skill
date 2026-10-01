@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-mental-model.md",
+  "chunk_index": 8,
+  "text": "annot fork an absolute pathname at all** - the workaround is\n`load` the module first, then fork it by bare name. That is a property of the\nshell on a given disk rather than of the emulator: `Live` (os9exec), one disk\nrequires it while another forks bare names and absolute paths alike. Worth\ntrying before concluding a program is unrunnable, and worth not mistaking for an\nemulator difference when two setups disagree.\n\nA consequence of that last step, easy to miss: a file found and run this way\nhas **all** its modules loaded and the **first** one executed, so the name of\nthe file need not be the name of the module that actually runs - `Manual` (the\n*OS-9 Intermediate* training manual). `mdir` is what tells you which name\nbecame resident; `module-format.md` covers the ways a file name and a mo"
+}

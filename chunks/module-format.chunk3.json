@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 3,
+  "text": "tring | `M$Usage` |\n| Symbol table offset | 0x1C | 4 | Offset to symbol table if present | `M$Symbol` |\n| Reserved | 0x20 | 14 | - | - |\n| Header parity | 0x2E | 2 | Integrity check over the header words | `M$Parity` |\n\nType-specific fields begin at 0x30. Offsets are from the v2.4 Technical\nReference Manual's header figure; per-field sizes are derived from the\ngaps between documented offsets. **`Source`:** every offset in\nthis universal-header table, and the 0x30 total, matches os9exec's\nmodule-header definition field for field. M$Attr at 0x14 is additionally `Live` (os9exec): real 68k C-runtime startup\ncode tests bit 5 of offset 0x14 against the module base.\n\n**Independently confirmed against a second Microware manual:** the\n*OS-9/68000 Technical Manual*'s own header figure (ch. 1) lists "
+}

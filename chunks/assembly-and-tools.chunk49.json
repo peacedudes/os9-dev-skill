@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 49,
+  "text": " convention (ch. 2.2): `asm` lives in `CMDS` and the `DEFS`\ndirectory sits at the root of the system disk - programs `USE` it with a full\npathlist like `/D0/DEFS/OS9Defs`. On-disk DEFS filenames vary by\nsystem/release (a Level Two system's may be `os9defs.lii` rather than plain\n`os9defs`).\n\n`Source` (the EOU disk's real `DEFS/os9defs.a`): `Prgrm`=$10, `Objct`=1,\n`ReEnt`=$80 - matching `syscalls-and-module-format.md`'s type/attribute\ntable, and cross-validated against `ident`'s decode of real system modules.\n**Implementation trivia**: `os9defs.a` doesn't define `I$`/`F$` call codes as\nliteral `EQU` values - each name is an `RMB 1` entry in a running counted\ntable (`I$Read: RMB 1`, `I$ReadLn: RMB 1`, ...), so a call's numeric code is\nits *position* in that table, assigned by the location cou"
+}

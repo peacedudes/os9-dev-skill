@@ -1,0 +1,5 @@
+{
+  "source": "README.md",
+  "chunk_index": 1,
+  "text": "uals, editions and scans, so\na model has seen little of it and fills the gaps with Unix habits and\nrepeated folklore. Those habits fail here. Text lines end in CR, not LF.\nMicroware C is K&R C, with no prototypes, no `const` and no `string.h`.\nBASIC09 is structured and typed, and turns its procedures into I-code; it is\nnot line-numbered BASIC. A program is a module with a header and a CRC, not a\nflat executable. Facts about the 6809 and the 68000 get blended together. The\nanswer comes out fluent and plausible, and it is wrong.\n\nThese files supply what the model lacks: about 13,000 lines of OS-9 fact,\neach claim tagged with the source that stands behind it. They are laid out so\nan assistant loads only the part a task needs.\n\n## Built for an assistant\n\nA person can read these files, since th"
+}

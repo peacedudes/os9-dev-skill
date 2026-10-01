@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/INDEX.md",
+  "chunk_index": 5,
+  "text": "gorithm, System Global memory, the Module Directory | `Manual` |\n| `6809-level2-mmu.md` | `Manual` only |\n\nEntry-point calling conventions are **untestable** under os9exec, not merely\nuntested there; they run only on OS-9 itself - SKILL.md -> Verification.\n"
+}

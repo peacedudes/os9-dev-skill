@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 7,
+  "text": "EFUSED` to the connecting client. |\n| `connect()` | Standard TCP connect; 0/-1 return. |\n| `accept()` | Returns a new path number for the accepted connection; original listening socket keeps listening. |\n| `read()`/`write()` | Work directly on `SOCK_STREAM` paths - byte count is a maximum, not a minimum (short reads return immediately with whatever's available). This is the BSD/Unix convention, and a deliberate departure from ordinary OS-9 file I/O semantics. `readln()`/`writeln()` are **not** supported on sockets. |\n| `recv()` | Blocks unless the path is non-blocking (`EWOULDBLOCK` then). Requires a connected path - `ENOTCONN` if not connected, `E_BMODE` (OS-9 code) if not even bound. Returns actual byte count, not padded to the buffer size. |\n| `recvfrom()` | Like `recv()` but works on a"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/gotchas.md",
+  "chunk_index": 7,
+  "text": "it after that line.\n- **No automatic variable initialization** - uninitialized variables hold\n  garbage, not zero. `DIM` and initialize explicitly.\n- **The manual forbids BYTE parameters, and nothing enforces it.**\n  `PARAM b: BYTE` is accepted with no error at edit time or run time. On 68k a\n  BYTE variable passed to it arrives intact, but an INTEGER or a literal is not\n  converted: the parameter reads the argument's first storage byte, so `7`\n  arrives as `0`. Pass a BYTE array, as the manual says.\n  See `basic09-language.md`.\n- **Division truncates based on the OPERAND types, not the destination's.**\n  `r = i / 3` with `i: INTEGER` does truncating INTEGER division first, then\n  widens the already-truncated result into the REAL destination. A REAL\n  operand (`i / 3.0`) is what forces rea"
+}

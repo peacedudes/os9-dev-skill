@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 19,
+  "text": " pointers into TEXT (fixed up with the module base), second marks\n  pointers into DATA (fixed up with the data base). Walked by F$Fork.\n\n**The name string sits immediately after this header, and has no slack** -\n`Live` (os9exec), read off the program modules on a real freeware disk: of\n1047 program headers, 1021 had `M$Name` = `$48`, i.e. the NUL-terminated name\ndirectly after `M$IRefs`, with the first instruction close behind it. Two\nhad it at `$4C`, and 24 carried a name appended by the recipe below. So a *longer* name\ncannot be written where the old one is without moving every byte of code.\n\nTo rename a module in place: append the new NUL-terminated string after the\n`M$IRefs` zero terminator (before the linker's pad byte and the 3-byte CRC),\npoint `M$Name` at it, add its length to `M$Si"
+}

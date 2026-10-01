@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 13,
+  "text": "a temporary copy BASIC09 made. Writing through\n  a by-value parameter's address never propagates back, exactly as within\n  pure BASIC09.\n\n**Module header requirement:** type **`Sbrtn`** (subroutine), language\n**`Objct`** (machine code), reentrant, with the module's own name as its\nentry-point label.\n\n**No worked example is reproduced from the manual** - its Appendix A\n\"SysCall\" example is copyrighted Microware source. The examples below are\noriginal.\n\n`Live` (os9exec) - a minimal by-reference subroutine, assembled with `r68`, linked with\n`l68`, called from a real BASIC09 procedure:\n\n```asm\n nam addone\n ttl RUN addone(n) - increments n by reference\nSbrtn set 2\nObjct set 1\nReEnt set $80\nType_Lang set (Sbrtn<<8)+Objct\nAttr_Rev set (ReEnt<<8)+1\n psect addone,Type_Lang,Attr_Rev,0,0,addone\naddon"
+}

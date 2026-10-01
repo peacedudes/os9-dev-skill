@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 43,
+  "text": "r character codes and the `baud`/`type` bitfields,\ndecimal for counts (`null=`, `pag=`, `tabs=`).\n\n## Not covered here\n\n- **Utilities the Level 1 manuals document but the Level 2 manual's command\n  chapter omits**: `binex`/`exbin`, `dump`, `login`/`tsmon`, `printerr`,\n  `save`, `sleep`, `tee`, `verify`. That omission is a gap in *that manual*,\n  **not** evidence they are Level-1-only - `dump`, `tee`, `login`, `save` and\n  `verify` are each used against NitrOS-9 elsewhere in this skill. Their\n  syntax is simply out of this file's Level 2 scope.\n- **`format`'s density letters** (`-sd`/`-dd` vs. bare `S`/`D`) remain\n  `Manual, Flag`: the vintage sources disagree, and NitrOS-9's own `format`\n  uses no dash-prefixed density letters at all, so this may be a\n  vintage-Microware-only detail that c"
+}

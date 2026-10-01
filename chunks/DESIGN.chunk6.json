@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 6,
+  "text": "named nearby. Explicit bound phrases still count for any call, subject or not,\nbut never bind across clause punctuation (`,;:()`), so a later clause's\n\"unimplemented\" cannot attach to an earlier call.\n\n## Checks\n\n1. **Presence contradiction** - per platform (6809, 68k; neutral applies to\n   both), a call asserted *present* by one location and *absent* by another.\n   Cross-platform differences never conflict. Fails the run.\n2. **Tag hygiene** - a backticked word that looks like a miswritten confidence\n   tag (case variant like `LIVE`, or an adjacent transposition like `Manaul`).\n   Conservative: general edit-distance-1 is avoided so real words one\n   substitution from a tag (`Line` vs `Live`) don't false-flag. Fails the run.\n3. **Open-`Flag` inventory** - every line carrying an open `Flag`,"
+}

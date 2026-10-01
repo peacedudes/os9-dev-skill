@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 66,
+  "text": "alloc`s the guest arena** (`Source`: `memstuff.c` allocates\n`emul_base` with `calloc`, and `fcalls.c` carries a comment to the same effect),\nso unwritten guest memory is reliably zero. A program that scans past the end of\na buffer therefore finds neither a terminator nor accidental garbage that happens\nto match - it reads zeros, for as long as you let it. On real hardware the same\ncode would more likely fault, or stop by luck on whatever was lying in memory.\n\nA worked instance, `Live` (os9exec): a de-ANSIfier with an unbounded scan loop\n(see `c/kandr-vs-ansi.md`) spun at 100% CPU and never returned. It was first\nreported as an os9exec defect, on two pieces of circumstantial evidence that both\ndissolved:\n\n- **Output stopped at exactly 20,480 bytes.** The roundness of the number looked\n  lik"
+}

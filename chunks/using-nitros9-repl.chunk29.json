@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 29,
+  "text": "tor**, usually least work for a short program: raw-key `e\n<name>` Enter drops into `E:` (leading space means insert, `q` returns to\n`B:`) - same editor and behavior as 68k.\n\n> **`Error #248 - Media Full` from `E`, bare `E` or `LOAD` means a stray CR\n> reached the booting guest, not that anything is full** (`Live` (NitrOS-9)).\n> A second `\\r` after `DOS` in the XRoar autotype leaves every later\n> `basic09` fork with `0 free` workspace, at any `#nk` size, on the CoCo\n> console and `/N` alike - while `MEM`, `mdir`, `procs`, `asm` and `runb` all\n> look normal. Type exactly one `\\r`. PACK is unavailable while this holds,\n> so a guest booted the wrong way needs a restart, not a workaround.\n\n**An OS-9-native heredoc**, better once per-line sends become the bottleneck:\n\n```\nkey \"tee >progname\" Ent"
+}

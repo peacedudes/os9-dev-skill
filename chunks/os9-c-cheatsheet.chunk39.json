@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 39,
+  "text": "<full-path-to-file.l>` instead (bare names fail - needs absolute path). |\n| `-C` | Emit source as comments alongside assembler output |\n| `-S` | Suppress stack-checking code - only with time-critical code whose stack usage is fully understood |\n| `-D<id>` | Equivalent to `#define <id>`, for `#ifdef`-controlled compilation |\n\n## Reference: Calling C from BASIC09 (6809 only - see below for 68K)\n\n**This entire section is 6809-only.** Its source, the C Compiler\nmanual's \"Interfacing to BASIC09\" appendix, is a Radio-Shack/CoCo 6809\ndocument (explicit 6809 references, zero 68000 mentions) despite\nsometimes circulating in 68k archive folders. `c-link`, named throughout\nbelow, is a 6809 tool - it does not exist on 68k SDKs (exhaustively\nsearched on a real 68k disk image). **For 68K, use the `Live`"
+}

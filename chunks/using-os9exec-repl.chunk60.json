@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 60,
+  "text": " them. It mounts `/dd`, `/hN` and `/term` without them: `imdir` lists only `OS9exec`, `init`, a built-in\n`socket` descriptor and what you have loaded. So anything that *links* a\ndescriptor by name to read or change its options fails with\n`Error #000:221 (E_MNF)`, although the device itself works - Microware's own\n`xmode /term` gives `xmode: can't link \"term\"`, and `link dd` fails the same\nway. `Live` (os9exec). Tools that go through the descriptor rather than an\nopen path (`xmode`, and third-party ones such as `dmode`) often exit 221\nwith little else said. To inspect a descriptor, `load` one from the SDK's\n`CMDS/BOOTOBJS` (`r0`, `dd_r0` and others); it is then resident and linkable.\n\n**The emulator's own diagnostics share the running program's stderr.** They\ncarry a `# ` prefix - `# No mor"
+}

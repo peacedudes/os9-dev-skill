@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 11,
+  "text": "ew connection with `tcp kill`. Symptom:\n  TCP connects fine, **no banner ever arrives**. A session ended with Escape\n  (SCF EOF -> shell exits) is retired properly and the channel recycles\n  immediately - proven by consecutive join/logout cycles reusing one channel.\n  os9exec's `tools/nitros9repl.sh connect` sends the Escapes itself on Ctrl-] detach.\n- **Logging out is necessary but has not proved sufficient: channels still\n  run out after a few interactive connect/detach cycles.** `Live`\n  (NitrOS-9), measured: across repeated attach-then-detach cycles the session\n  channel climbed `N2` -> `N4` and by roughly the third launch no banner\n  arrived at all, even though each detach ran the two-Escape logout\n  epilogue. So the clean-logout recycling above is real for scripted\n  join/logout, and"
+}

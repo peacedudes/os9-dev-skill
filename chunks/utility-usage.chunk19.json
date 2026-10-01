@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 19,
+  "text": "ootfile;\n  `-e` extended (>64K or non-contiguous) boot, `-q=<file>` point sector\n  0 at an existing file, `-r` remove the boot pointer.\n- `backup [<opts>] [<srcpath> [<destpath>]]` - device-to-device image\n  copy; `-r` continue past read errors, `-v` skip the verify pass.\n- `fsave [<opts>] [<dir>]` - incremental tree backup to tape/device:\n  `-l=<n>` backup level, `-d=<dev>` target (default `/mt0`),\n  `-f=<path>` to a file, `-g=<n>`/`-u=<n>` only this group/user,\n  `-m=<path>` date-log file, `-t=<dir>`/`-x=<n>` temp-index\n  location/pre-extension, `-s` list what needs saving, `-e` no per-file\n  echo, `-p` no first-volume prompt, `-v` no volume verify, `-j=<n>`\n  minimum memory request.\n- `frestore [<opts>] [<path>]` - restore from fsave media: `-s` restore\n  all non-interactively (`-q` ove"
+}

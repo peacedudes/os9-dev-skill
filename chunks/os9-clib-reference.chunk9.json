@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 9,
+  "text": "e the first read if you need to force one. `gets()` replaces the trailing `\\n` with a null. |\n| `putc`/`putchar`/`putw`/`puts`/`fputs` | `puts()` appends `\\n`; `fputs()` does not. |\n| `printf`/`fprintf`/`sprintf` | **No marker call is needed on 68k** - `Live` (os9exec): `%ld` and `%f` both print correctly with nothing called first (a bare `printf(\"%f\", 3.14159)` gives `3.141590`). The `_pfltinit()`/`_prfloat()` markers some documentation requires before printing a `long`/`double` **don't exist in 68k `clib.l`** at all: calling either fails to *link* (`Symbol '_pfltinit'`/`'_prfloat' unresolved`). They're a 6809-era artifact - with a 16-bit `int` and a proprietary float format a width-disambiguating marker is meaningful, but on 68k, where `int`/`long` are both 32-bit and floats are IEEE, th"
+}

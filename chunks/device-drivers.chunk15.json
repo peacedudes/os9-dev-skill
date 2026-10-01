@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 15,
+  "text": "Storage offset table\nabove, SCF's fields below (`V_PAUS`, `V_XON`, `V_BUSY`, `V_WAKE`) are named\nin prose only - no offsets, sizes, or total static-storage size are\ndocumented anywhere in this skill. A byte-accurate SCF driver static\nstorage layout can't be written from this content alone.\n\n**Polled READ**: check hardware for data, strip parity if configured, check\nfor the three special input characters (pause -> sets `V_PAUS` on the paired\necho device; interrupt -> sends `S$Intrp` to the last process; abort/quit ->\nsends `S$Quit`), return the character.\n\n**Interrupt-driven READ**: if the input FIFO is empty, copy `V_BUSY`->`V_WAKE`\nand sleep indefinitely; on wake, check whether it was a deadly signal or the\nprocess was condemned (return that instead of a character if so); otherwise\npull f"
+}

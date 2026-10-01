@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 7,
+  "text": " cio-linked programs on one collection, **no** program from the 70-entry library\n  calls `$41`/`$42` and **all 41** that do came from the 69-entry one.\n\n  Two consequences worth knowing before you debug this:\n\n  - **Comparing module CRCs will tell you nothing.** The modules are identical\n    between SDK and collection; the mismatch is between a module and the\n    *library* a program was linked against. `ident` cannot see it.\n  - **`cio020` fails differently** - its table stops at `$40`, so it cannot serve\n    `$41` at all and wild-jumps rather than flooding.\n\n  And one false lead: a program making many large identical allocations is not\n  necessarily this. `ksh` issues 188 requests of ~262 KB from `malloc` (`$3B`)\n  reaching the module's own allocator - one chunk, reused, working correctly"
+}

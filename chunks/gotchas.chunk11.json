@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/gotchas.md",
+  "chunk_index": 11,
+  "text": "it is not an emulator artifact. Whether the manual overstates\n  or shipping code always diverged is unresolved.\n\n## Packing and running\n\n- **`PACK`/`RunB` have their own gotcha set** - output goes to CHX (not\n  CHD, unlike `SAVE`), the entry-point rule differs between `PACK a,b` and\n  `PACK*`, only bare names ever resolve, a packed group you `load`ed shadows\n  a later one reusing its names, and the `Can't install trap handler` banner has several\n  distinct causes. All of it: `pack-and-runb.md`.\n"
+}

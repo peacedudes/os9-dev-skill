@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 7,
+  "text": " inventory** - every line carrying an open `Flag`, as a standing\n   \"investigate\" worklist. Line-level (flags cover behaviours/layouts, not just\n   calls). Skips flags narrated as resolved (\"`Flag` resolved\") and the\n   convention's own explanation (\"tagged `Flag`\"). Informational only.\n4. **Cross-reference integrity** - an `INDEX.md` row naming a `.md` file that\n   doesn't exist. Scoped to `INDEX.md` only: prose elsewhere in the corpus\n   routinely names files that live in a different repo entirely (dogfood\n   reports under os9exec's `test/`, that repo's gitignored\n   `ROADMAP.md`) and scanning them would false-positive on legitimate\n   cross-repo mentions - exactly the \"fragile general-prose claim-matching\"\n   this checker deliberately avoids. Resolution is **by basename**: `INDEX.md`\n  "
+}

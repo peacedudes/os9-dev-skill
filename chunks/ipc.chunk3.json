@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 3,
+  "text": "ly record the signal and defer your handler to a `check_signal()` poll,\nin which case the read is still interrupted here exactly as described while the\nhandler does not run. The layers disagree without either being wrong; see\n`c/os9-clib-reference.md` before treating a handler that never fires as a\nkernel fault.\n\nFor `F$Sleep`/`F$Wait` the wait resumes via a queued call. **For blocked I/O it\ndoes not**: `Manual` (v2.4 TRM, ch. 4, \"Relative Time Alarms\") documents aborting\na read on a deadline as a supported technique - *\"Relative time alarms are\nfrequently used to cause an `I$Read` request to abort if it is not satisfied\nwithin a maximum time. Do this by sending a keyboard abort signal at the maximum\nallowable time, and then issuing the `I$Read` request. If the alarm arrives\nbefore the inp"
+}

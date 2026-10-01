@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 32,
+  "text": "d`).\n\n## os9exec's scheduler and idle loop - for work on the emulator\n\nEverything above describes OS-9. This section describes os9exec's\nimplementation instead (`Source` (os9exec)), for anyone extending its kernel\nlayer; none of it is evidence about OS-9. os9exec does **not** implement the\n`D_ActAge`/`P$Sched` priority-age machinery; it runs a simpler round-robin in\n`do_arbitrate()` (`procstuff.c`).\n\n- **The OS-9 clock is real host wall-clock time** - `GetSystemTick()`\n  (`funcdispatch.c`) reads `gettimeofday()` on UNIX (`GetTickCount()` on\n  Windows), not a counter incremented by the emulation loop. So blocking the\n  host (`nanosleep`, `select`, a syscall) does **not** stall OS-9 time: on\n  return, ticks/alarms/sleeps reflect the real elapsed interval. This is what\n  makes an idle host-si"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 24,
+  "text": "rig the same comparison passes on all three routes - `@`-passed, `setenv`, and a\nreal `SYS/login` session - so the builds differ. Two candidate explanations for\nthe split were tested here and **eliminated**: forking the program by absolute\npath versus by bare name makes no difference, and `TERMCAP` holding a file path\nversus the entry string makes no difference. On the rig that fails, what moves\nit is whether the program is the first process or a shell's child.\n\n**What to take from it regardless of which build you have:**\n\n- **Do not use `getenv` to prove a variable reached a library.** It is the one\n  check that cannot distinguish these routes, which makes it worthless for\n  exactly this fault and reassuring while you chase the wrong thing.\n- **If a terminal library reports an empty name*"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "CLAUDE.md",
+  "chunk_index": 0,
+  "text": "# Claude Code\n\nClaude Code reads this file; every other agent reads `AGENTS.md`. They say the\nsame thing, so this one only imports it:\n\n@AGENTS.md\n\nTo use the two skills from any directory rather than only inside this\ncheckout, install them as skills; see README.md, \"Using it\".\n"
+}

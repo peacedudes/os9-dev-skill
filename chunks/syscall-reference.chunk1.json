@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 1,
+  "text": "en exercised on an\nimplementation.\n\n## Calling convention\n\nExecute **TRAP #0** followed immediately by a constant word holding the\nfunction code. **I$** calls route to file managers/drivers; **F$** calls\nrun in the kernel (some user-state, some system-state/privileged).\n\n```asm\n    move.w  path0(a6),d0\n    trap    #0\n    dc.w    I$Close\n    bcs.s   fail\n```\n\n`path0` here is a `vsect` label; a plain `(a6)` is not the start of the data\narea (`68k/os9-68k-assembly.md`).\n\nThe `OS9` assembler pseudo-instruction emits the trap+word pair:\n`OS9 I$Close`. A custom trap library is reached the same way via `tcall\nT$Math, T$DMul` (expands to `TRAP #<n>` + `dc.w`), for handlers installed\non TRAP #1-#15 via F$TLink.\n\n- Parameters/results in documented D/A registers per call.\n- Error: carry set, error co"
+}

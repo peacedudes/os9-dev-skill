@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 22,
+  "text": "ks** until\n  `min <= value <= max`, then adds the wait-increment; returns \"actual event\n  value\" in d1.l (`Manual`) - **the value that satisfied the wait, before\n  the increment.** The manual's signal case confirms the reading: a waiter\n  woken by a signal instead gets a value \"not within the specified range\",\n  with the increment not applied. Period code depends on it: TOP's `os9lib`\n  (1988) takes a mutex with `while (_ev_wait(id, 0, 0) != 0);` on an event\n  created at 0 with wait-increment +1. A bad event ID returns `E$EvntID`\n  immediately. `Live` (os9exec): an event at 0 with increment +1, waited on\n  0..0, returns 0; a second wait on 1..1 returns 1.\n- **Ev$Signl**: d0.l=event ID, d1.w=8 - adds the signal-increment to the\n  counter, then wakes the first waiting process whose range the"
+}

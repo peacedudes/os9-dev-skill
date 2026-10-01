@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 8,
+  "text": "get` | clean `Ready` | correct |\n  | `PACK proc >target` | `Error #000:043` (twice) | valid module - `ident` gives Good CRC + Good parity, `Ty/La $202` |\n  | `PACK >target` (no procname) | clean `Ready` | valid module |\n  | `PACK* <path>` (documented all-form, no `>`) | clean `Ready` | valid module |\n\n  **`PACK` prints it exactly twice, however many procedures the list names** -\n  two errors is not two failed procedures, and the count carries no\n  information. Verify the file rather than trusting the message. **Error 51 here means\n  something different and is NOT this spurious message** - see \"Packing is destructive to\n  the workspace copy\" above; a `#000:051` from `PACK` means you are re-packing\n  an already-packed procedure, and it **truncates the target to 0 bytes**\n  before failing. **"
+}

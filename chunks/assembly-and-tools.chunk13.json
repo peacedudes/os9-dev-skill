@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 13,
+  "text": "elopment host can fail under OS-9's own `asm`. That asymmetry is invisible until\n  something rebuilds with the native assembler: keep labels unique within 8\n  characters in anything you expect an OS-9 system to reassemble.\n\n## Two assemblers\n\n- **`asm`** (module name `Asm`, ~7KB) - \"Standard NitrOS-9 6809/6309\n  Assembler\" per its own `help asm`. A smaller, non-relocating assembler,\n  and an older, separate tool from `rma`/RLINK. `Live` (NitrOS-9) end-to-end: assemble\n  a real MOD/EMOD program, run it, get correct output. Syntax: `Asm filename\n  [<opts>] [>list] [#xxK]`; `O=<name>` generates the object file, and a\n  leading `-` (`-O=<name>`) means silent overwrite - without it, an\n  existing output file fails the run. Case is not significant (`Live`\n  (NitrOS-9)). RMA's equivalent is `-o=`"
+}

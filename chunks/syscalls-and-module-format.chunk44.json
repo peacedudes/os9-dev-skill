@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 44,
+  "text": "iled chain cannot return.**\n  The caller's image is torn down before the new name is resolved, so there is\n  no process left to hand an error to, and the bare kernel error you see is\n  not the program's. That is faithful behaviour on both targets, not a defect -\n  see the `F$Chain` row above.\n\n## Signals\n\nSame design as 68k (numbered codes, tiny non-reentrant handlers, `F$Sleep`\nauto-unmask pattern - see `common/ipc.md`), with 6809-specific numbering:\n\n- 0 = Kill (uninterceptable), 1 = Wakeup (does not invoke the intercept\n  routine), 2 = Abort (Ctrl-E), 3 = Interrupt (Ctrl-C). Sources disagree on\n  where the user-definable range starts (some say 4-255, one CoCo-specific\n  source says 128-255), but `Live` (NitrOS-9): codes 50 and 200 sent to a process with an\n  installed `F$Icpt` handler w"
+}

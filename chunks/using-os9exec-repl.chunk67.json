@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 67,
+  "text": " bytes.** The roundness of the number looked\n  like a write ceiling in the emulator. It was the last full stdio buffer flushed\n  before the program stopped writing anything at all - an artefact of buffering,\n  not a limit.\n- **The hang was perfectly reproducible** and the program was well known, so the\n  new variable in the system looked like the likely cause. The actual new\n  variable was a zeroed arena turning an out-of-bounds read into an infinite one.\n\nSo: a round number in a byte count is usually a buffer boundary, not a ceiling;\nand a \"deterministic emulator bug\" in a long-established program is worth one look\nat that program's bounds checking before it is filed.\n\n## Stopping a runaway program\n\n- **Ctrl-C** depends on whether the child has written to the terminal, as\n  the manual des"
+}

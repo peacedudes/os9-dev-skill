@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 10,
+  "text": "es; a listing's header and footer carry no name and the claim\n    does not cover them.)\n\n    ```\n    0.0     26/08/03 1900   ---wr-wr   6E3B8       318 bench.f\n    0.0     26/09/13 0016   d-ewrewr      90        96 .ELM/\n    ```\n\n    Worth knowing because programs do parse this listing by column, and the\n    question \"is my column index brittle or wrong?\" turns on whether the fields\n    move. They do not. Check the **year format** before trusting a column count\n    against some other `dir`, though: this one prints a two-digit year\n    (`26/08/03`), and a listing showing `126` for 2026 is a different utility\n    with its own layout.\n- `dsave [<opts>] [<path>]` - emits a copy script for a whole tree; run\n  it (or `-e` execute immediately). `-d`/`-d=<date>` copy only newer\n  files, `-f`/`-r` "
+}

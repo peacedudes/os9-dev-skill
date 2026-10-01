@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 53,
+  "text": "ves the fork prototypes commented out.\n\nThe honest limitation of the whole approach: no shell is involved, so a\nredirection or pipe written *inside* the command line is not interpreted. Build\nthe argument vector instead.\n\n### The Unix process surface is mostly absent - check before you plan a port\n\nThe first thing to establish about a Unix program is whether the calls it is\nbuilt on exist here at all. Most of the process and job-control surface does\nnot. `Source`, scanning `clib.l` and `unix.l` for exported symbols:\n\n| Unix call | here? | what there is instead |\n|---|---|---|\n| `fork()` | **no** | `os9fork()` (clib) - see the entry above for its arity |\n| `wait()` | **no** | pair `os9fork` with the OS-9 wait; see `common/ipc.md` |\n| `pipe()` | **no** | named pipes, `/pipe` (`common/ipc.md`"
+}

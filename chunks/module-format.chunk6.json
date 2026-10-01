@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 6,
+  "text": "|\n|---|---|\n| 7 | Sharable/reentrant - clear limits the module to one simultaneous link (one open path, for a descriptor) |\n| 6 | Sticky - survives link count 0; removed at count -1 or under memory pressure |\n| 5 | Supervisor state - module runs in 68000 supervisor mode (set on all OS components) |\n\nBits 0-4 undocumented in the surveyed manuals.\n\n### Permissions (M$Accs) and security\n\nLow 12 bits: owner rwx (bits 0-2), group rwx (4-6), public rwx (8-10);\nbits 3/7/11 reserved. Read/execute gate load/link/fork; write matters only\nwith memory-protection hardware. Group 0 (superuser) bypasses permission\nchecks entirely; everyone else is evaluated against exactly one field -\nowner, group, or public, by best identity match. A superuser-owned program\ncan hand a narrow capability to ordinary calle"
+}

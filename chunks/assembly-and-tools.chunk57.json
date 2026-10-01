@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 57,
+  "text": "nd/truncate line) /\n`C n str1 str2` (change) / `S n str` (search) / `T n` (tab to column) /\n`A n` (anchor search/change to column n).\n\n**Macro system** - the Editor's own facility, a different mechanism from\nRMA's assembly-time `MACRO`/`ENDM`: `.MAC \"name\"` opens a macro for editing;\nparameters are `#var` (numeric) or `$var` (string); `[commands]n` loops the\nbracketed commands n times (or `*` = as many as possible, exiting early if\nany command fails); `:` is a conditional - skip to end of loop/macro unless\nthe fail flag is set, then clear it. Test commands that set or clear the fail\nflag: `.EOF`/`.NEOF`, `.EOB`/`.NEOB`, `.EOL`/`.NEOL`, `.STR str`/`.NSTR str`,\n`.ZERO n`, `.STAR n` (true if n = 65535, the wildcard value). `.S`/`.F`\nforce-exit a loop or macro with the fail flag cleared/set.\n\n"
+}

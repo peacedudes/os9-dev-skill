@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 30,
+  "text": "and do **not**\ncarry over to 68k - `Live` (os9exec) (verified via `sizeof()` on a real 68k\ntoolchain): `int`, `long`, and pointers are all 32-bit there, not the\n16-bit `int` the 6809 manual describes.\n\n| Type | 6809 compiler (1983 manual) | 68k (`Live` (os9exec) where noted) |\n|---|---|---|\n| `char` | 1 byte | 1 byte |\n| `int` | 2 bytes | **4 bytes** (`Live` (os9exec)) |\n| `unsigned` | 2 bytes | presumably 4 bytes (follows `int`; not independently spot-checked) |\n| `long` | 4 bytes | 4 bytes (`Live` (os9exec)) |\n| `float` | 4 bytes - proprietary sign-magnitude binary format (exponent biased by 128, 3-byte mantissa with implied leading 1), **not IEEE 754** | **4 bytes, IEEE-754 single (`Live` (os9exec))** - a C `float`=1.0 stored `3F 80 00 00` (big-endian), textbook IEEE single. NOT the 680"
+}

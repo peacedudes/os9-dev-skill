@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 4,
+  "text": "  costliest trap in the C toolchain, it does not announce itself, and on at least\n  one SDK a `-qixm` build fails **by construction rather than by choice**.\n\n  The mechanism, `Source` (both sides disassembled): a cio-linked program reaches\n  the C library through `TRAP #13` with a selector word. Two library vintages\n  exist and the maximum selector in a program's stub table identifies which it\n  linked - **`$45` is the 70-entry library and matches the modules; `$44` is the\n  69-entry library and does not.** Every `cio` module agrees with the stub table up\n  to `$40` and then carries **five memory routines at `$41`..`$45`**, where the\n  69-entry library expects `_flshbuf` and `_filbuf`.\n\n  So a program calling `$41` to flush a buffer lands on the module's raw\n  allocator, which reads `d0` a"
+}

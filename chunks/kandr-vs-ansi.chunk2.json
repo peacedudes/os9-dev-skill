@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 2,
+  "text": ">` - different API (`index`/`rindex`, not `strchr`/`strrchr`) |\n| Modifying a string literal (`char *s = \"x\"; s[0] = 'y';`) | Undefined behavior - a `char *` literal like this lives in the module's shared, read-only TEXT section (see `common/module-format.md`), not DATA; writing to it risks a real fault, not just silent corruption. (Contrast `char array[] = \"x\"` - that form gets its own per-process, mutable DATA storage and is safe to write) | Copy to a `char[]` buffer first with `strcpy` |\n\n## Function definitions (the one syntax you actually need to get right)\n\n```c\nint add(a, b)\nint a;\nint b;\n{\n    return a + b;\n}\n```\n\nOld-style definition - parameter names in the parens, types declared\nseparately before the opening brace. This is the *only* form the compiler\naccepts; there is no protot"
+}

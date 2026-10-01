@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 27,
+  "text": "order, not a missing\nsymbol - `curses.l` both references and defines it, so a single-pass linker has\nalready passed the definition. Listing `-l=.../curses.l` **twice** resolves it.\n\n**A curses program needs `TERM` set.** `initscr()` reads the terminal type from\nthe environment and, without it, fails with `Unknown terminal type ''` - an\n**empty** name, which is the tell. A login normally sets it (`setenv TERM\n<type>` in the user's login procedure); a program started some other way, from a\nboot procedure or a background job, inherits no `TERM` unless one was set. A run\nthat shows the message has measured nothing about curses, because `initscr()`\nnever succeeded. `Live` (os9exec). Under an emulator there are further routes by\nwhich a variable can reach or miss a program; see \"A working `geten"
+}

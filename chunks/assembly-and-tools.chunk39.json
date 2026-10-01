@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 39,
+  "text": " offset (0 for non-mainline). Exactly one `PSECT` per\nassembled file.\n\n**Directives legal inside or outside any section** (ch. 3.1): `nam`, `opt`,\n`ttl`, `pag`, `spc`, `use`, `fail`, `rept`, `endr`, the `ifxx` family,\n`endc`, `else`, `equ`, `set`, `macro`, `endm`, `endsect`.\n\n**Data-area register conventions** (ch. 6): one index register holds the data\narea's base address and `DP` holds its lowest page number; RLINK auto-adjusts\nindexed and direct-page operands to match. **No-initialized-data programs**\nget `U`=data-area start, `Y`=data-area end, `SP`=`Y`+1 (parameters land above\n`Y`), `DP`=start page number; with no parameters, `Y`=`X`=`SP`. **This is\nuniversal OS-9 process-invocation behavior, not an RLINK artifact** - `asm`'s\nown manual (ch. 2.9.4) describes the identical setup for a pl"
+}

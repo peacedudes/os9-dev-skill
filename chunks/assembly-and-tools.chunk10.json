@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 10,
+  "text": " **The disk's own `hello.a` fails this way too** (47\nerrors), so a sample that looks canonical is not evidence that `use` works\nhere. Define the handful of constants your program actually needs, as above.\n\nConsequently there is no `OS9` macro either - the raw mechanism is `swi2`\nfollowed by a one-byte `fcb` call code, which is what the macro expands to\nanyway. It reads much like 68k's `trap #0` plus an inline `dc.w`.\n\n### Assembler and toolchain traps (all `Live` (NitrOS-9))\n\n- **`asm` writes an object file even when the assembly reports errors.** A\n  source with one bad mnemonic still produced a module that `ident` decoded\n  happily (`Prog mod, 6809 obj, re-en, R/O`); running it failed with\n  `Error #215 - Bad Path Name`, an error with no relationship to the actual\n  mistake. **Check the "
+}

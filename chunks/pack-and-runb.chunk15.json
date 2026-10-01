@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 15,
+  "text": "efining\nits own `first` and `second` printed the old program's output. Nothing warns.\nAudit `mdir` when results look impossible, and `unlink` stale members or\nreboot.\n\n## Command-line arguments\n\nArguments after the module name bind positionally to the entry procedure's\n`PARAM` list (`Live` (os9exec), strings and numerics):\n\n- `runb report hello` + `PARAM n$:STRING` -> `n$=\"hello\"`.\n- Numeric conversion works: `runb calc 42` + `PARAM n:INTEGER` -> 42.\n- Each whitespace-separated token maps to one PARAM slot in order; a\n  STRING param never swallows more than one token.\n- **PARAM syntax:** per-variable type suffixes (`PARAM a$:STRING,\n  b$:STRING`) are a compile error (`#000:011`). Group like `DIM`:\n  `PARAM a$, b$: STRING`, one PARAM statement per type.\n\n## Ctrl-C and Ctrl-E under RunB\n\nUnd"
+}

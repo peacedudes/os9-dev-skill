@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-mental-model.md",
+  "chunk_index": 7,
+  "text": "ch `PATH` entry,\nthen the data directory (as a procedure file) - `Manual` (Microware's *OS-9\nAdvanced* training manual). `chd` alone never makes a program findable.\nPrefer `PATH` over moving `chx`; `chx` matters when a tool forks co-located\nsub-tools by bare name (compiler drivers do - see `c/os9-c-cheatsheet.md`).\n\n**Fork lookups use `chx`, not `PATH`.** When a program forks another by bare\nname (`F$Fork`), the kernel resolves against the caller's **execution\ndirectory** - `PATH` is purely the shell's interactive search list. Classic\nsymptom, `Live` (os9exec): `deldir` forks `pd` and dies with \"can't determine\ncurrent directory\" despite a perfect `PATH`. Fix `chx`, not `PATH`, whenever\n\"command X can't find helper Y.\"\n\n**Some disks' `sh` cannot fork an absolute pathname at all** - the wor"
+}

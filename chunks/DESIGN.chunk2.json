@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 2,
+  "text": "sults is local config:\n\n```\ngit config core.hooksPath tools/hooks\n```\n\nSilent when green; on a failure it prints the findings and stops, having\ncommitted nothing. `git commit --no-verify` bypasses it for the one commit.\nThe checker is invoked with `--no-inventory` there: on a failure the ~16-line\n`Flag` worklist would otherwise sit between the finding and the prompt and\nscroll the one line the author needs off the top.\n\n## Problem\n\nSkill-doc claims about OS-9 system calls can drift out of sync across files.\nMotivating case: two docs asserted \"os9exec has no `I$Dup`\" while the 68k\nsyscall table had `I$Dup` `Live`-confirmed working - found by luck, not design.\n\n## Guiding truth: neither runtime is an oracle\n\nThe 6809 (NitrOS-9) and 68k (os9exec) are **independent implementations of a\nshared "
+}

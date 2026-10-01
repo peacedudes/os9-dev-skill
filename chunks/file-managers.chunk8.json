@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 8,
+  "text": "ing strategy. At open time the\nkernel populates it by copying the device descriptor's initialization table\n(`M$DTyp` through `M$Opt` - see `device-drivers.md`). A user program can read\nthe whole region via `I$GetStt(SS_Opt)` and modify selected fields via\n`I$SetStt`, subject to write-protection rules the file manager enforces.\n\nSCF field offsets, `Manual` (Technical I/O Manual §3), matching os9exec's\nSCF option structure. **Offsets here are relative to the option region**, while the\nmanual lists the same fields as absolute path-descriptor offsets - each\nmanual value is `$80` plus the value here: `PD_DTP` byte 0, `PD_EOR` `$0B`,\n`PD_INT` `$10` (keyboard interrupt char), `PD_QUT` `$11` (keyboard abort),\n`PD_PAR` `$14` (parity/stop-bits/bits-per-char), `PD_BAU` `$15` (baud\n**code**, not a lit"
+}

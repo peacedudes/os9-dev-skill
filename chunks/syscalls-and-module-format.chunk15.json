@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 15,
+  "text": "byte `F$Load` returns in `A`. Unresolved |\n\n### Cross-target trap: the 6809 user ID has no group field\n\n**On 6809 the user ID is a single flat integer, 0-65535, and the superuser is\nID 0 outright.** The System Programmers Manual says both: F$ID (11.1.9,\np.81) describes \"the user ID which is a integer in the range 0 to 65535\",\nand F$Send's notes name \"the superuser (ID number 0)\". Ownership fields\n(`FD.OWN`, `DD.OWN`) are 2-byte user numbers, not packed pairs.\n\n**68k is the divergence, not 6809.** There a user ID is `group<<8 | user`\nand the superuser is *any* user in group zero - so the 68k test \"is the high\nbyte zero?\" applied on 6809 declares every ID below 256 to be the superuser,\ni.e. essentially every ordinary account. `Live` (NitrOS-9): a guard written\nthat way SKIPped every account "
+}

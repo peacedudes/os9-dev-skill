@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 34,
+  "text": "lf the time.\n- Piping the same commands into an interactive `shell` works too (`Live`\n  (os9exec)): a redirected or piped host stdin delivers end-of-file, so the\n  shell runs the piped commands and then exits. The procedure file is still\n  the tidier route - it gives CR-ending control and a named artifact.\n\n## Stamping non-super ownership on an RBF image\n\n`Live` (os9exec). Files are stamped with the creating process's ID, so ownership is set\nby *who creates them*, not by any later command. Inside a build procedure:\n\n```\nmount -k=360k h7\nlogin claude          <- every file created after this line is owned 1.7\nmakdir /h7/CMDS\n```\n\n`dir -e` confirms it - `0.0` for anything created before the `login`, `1.7`\nafter. Two consequences worth knowing before shipping an image:\n\n- **Copy into the imag"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 23,
+  "text": "en wakes the first waiting process whose range the value is\n  in; with the MS bit of d1 set it wakes every process in range (`Manual`).\n- **Ev$Delet**: a0=name, d1.w=3 (by name, not ID).\n\nA blocking wait is woken cross-process (`Live` (os9exec)): process A parks on an\nout-of-range Ev$Wait, process B does Ev$Link + Ev$Signl to push the counter\ninto range, A wakes and returns. Exercising this needs two processes, and the\nsignaller must retry Ev$Link - the waiter has to Ev$Creat first, which is a\nstartup race.\n\nThe other six functions - Ev$WaitR, Ev$Read, Ev$Info, Ev$Pulse, Ev$SetR,\nEv$Set - are listed in the manual's table above. `Ev$Pulse` wakes a process\nalready waiting and puts the value back before it returns, so only a waiter\nparked at the moment of the call ever sees the pulsed value. "
+}

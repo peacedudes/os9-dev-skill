@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 34,
+  "text": "n `os9 copy` against the raw partition, `dd` it back with\n  `conv=notrunc`. XRoar must be stopped throughout.\n\n## Running multi-process tests\n\n- **A `What?` flood is BASIC09's debugger spinning on EOF** - not the shell,\n  not lost data. `Live` (NitrOS-9): a program launched as `basic09 <script` that hits an\n  **uncaught runtime error** breaks into the interactive debugger, whose stdin\n  is the redirected script file, now at EOF. It reads past EOF endlessly and\n  emits `What?` on every empty read, hanging the job with its output file\n  unwritten - which reads exactly like the filesystem dropping every write.\n  The same program with stdin on a terminal drops to `D:` and blocks properly.\n  So: `What?` means \"find the uncaught error\", and any program driven\n  non-interactively wants an `ON ERR"
+}

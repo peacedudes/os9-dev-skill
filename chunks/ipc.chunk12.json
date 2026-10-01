@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 12,
+  "text": " is a counter that processes block on until it reaches a target value/range - one mechanism covering mutex, condition variable, and counting semaphore (a binary mutex is an event constrained to (1,1); a condition variable is wait/signal on an event). Unlike Unix/POSIX's three separate concepts, one API (`F$Event`) covers all three.\n\n**Wait/Signal are atomic w.r.t. time-slicing** - this prevents races on guarded resources:\n- *Wait* suspends until the event's value is within the target range, then adds a wait increment.\n- *Signal* adds a signal increment and checks whether any waiter can now proceed.\n\nBoth operations live behind a single `F$Event` syscall specifically to\nminimize the number of kernel calls a synchronization operation needs.\nExample: modeling exclusive access to one resource "
+}

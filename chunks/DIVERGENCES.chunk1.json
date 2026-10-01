@@ -1,0 +1,5 @@
+{
+  "source": "DIVERGENCES.md",
+  "chunk_index": 1,
+  "text": "s\n  exactly the contribution `CONTRIBUTING.md` asks for.\n\n## Internal contradictions within a manual\n\n- **`F$Load`'s \"POSSIBLE ERRORS\" list is incomplete.** The v2.4 Technical\n  Reference gives only `E$MemFul` and `E$BMID`, yet the same entry's prose\n  says an error \"can indicate an actual I/O error, a module with a bad parity\n  or CRC, or that the system memory is full\" - and `F$VModul`, which performs\n  exactly that check and is named in `F$Load`'s SEE ALSO, lists `E$BMCRC` and\n  `E$BMHP`. The list also omits `E$MNF`/`E$PNNF`, which `F$Load` must be able\n  to return for a missing file. So the manual does not state which code a\n  caller sees for a corrupt module.\n- **The 68k *OS-9 BASIC User Manual* prints `2,147,483,648`** (ch. 9, p. 9-2) -\n  positive, and a value a signed 32-bit INTEGER"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 9,
+  "text": "ory-dir <dir>` since that path is project- and machine-specific and\n   is never hardcoded into the tool. A `` `[[name]]` `` wrapped in backticks\n   is read as quoting the convention itself (as this very sentence in the\n   plan does), not as a real link, and is skipped - same idea as check 3's\n   \"tagged `Flag`\" self-reference guard. Fails the run when active.\n\n6. **Shared-fact agreement** - one OS-9 symbol documented with two different\n   hex values by files that describe the same platform. A fact repeated across\n   files is a maintenance hazard the corpus had no guard for: `M$Mode`,\n   `M$Opt`, `M$FMgr` and `M$DevCon` are each stated in three files\n   (`memory-and-io.md`, `device-drivers.md`, `file-managers.md`), and\n   `INDEX.md` previously handled this by *asking the human to remember* "
+}

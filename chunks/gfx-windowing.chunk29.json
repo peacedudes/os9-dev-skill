@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 29,
+  "text": "g.\n  Default off.\n- `BLNKON` / `BLNKOFF` `(path)` - character blink on/off. **Hardware text\n  windows only** (`/W1`-`/W7`); no effect on graphics windows. `BLNKOFF`\n  only stops *new* characters from blinking - characters already blinking\n  keep blinking.\n\n### Color and palette\n\n- `COLOR(path,fg[,bg[,border]])` - changes any combination of foreground/\n  background/border via palette register numbers; doesn't move the draw\n  pointer. **GOTCHA:** changing a window's border color changes it for\n  *every* window sharing that physical screen - border is a screen-global\n  palette register, not a per-window setting.\n- `DEFCOL(path)` - resets a window's palette registers to their default\n  values (actual hues depend on `montype`).\n- `PALETTE([path,]register,color)` - installs one of the 64 availab"
+}

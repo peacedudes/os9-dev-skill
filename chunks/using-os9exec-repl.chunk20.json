@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 20,
+  "text": "**What a non-crossing variable looks like inside is build-dependent, `Flag`.**\nMeasured here, `TERM` and `TERMCAP` arrive as **empty strings** - non-NULL\npointers to `\"\"`. Measured on a different os9exec build (263b94a, started via\n`bash`), `TERM` instead arrives as **`dumb`** while `TERMCAP`, `USER` and `HOME`\nare genuinely **NULL**. Both were measured with probes that distinguish NULL from\nempty, so this is a real difference between builds or invocations and not a\nreporting artefact; which it is has not been established.\n\n**The consequence survives the difference, and is the part to act on.** A guard\nlike\n\n```c\nif ((t = getenv(\"TERM\")) == NULL) { fprintf(stderr, \"TERM not defined\\n\"); exit(1); }\n```\n\npasses in *both* worlds, because the variable is present - just useless. The\nprogram the"
+}

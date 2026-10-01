@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 20,
+  "text": " to bring the screen forward.\n  - But it **is required**. A backgrounded BASIC09 procedure that did\n    `DWSET` and drew *without* calling `SELECT` produced a screen that\n    could not be found by cycling at all - the drawing simply never became\n    visible. Adding `RUN GFX2(p,\"SELECT\")` after `DWSET` made it appear\n    (and then one CLEAR reached it).\n\n  So: call `SELECT` after `DWSET`, and still expect to need CLEAR to\n  actually see the screen. Omitting it loses the output silently.\n  Commonly chained with `DWSET`/`DWEND`: open a path to a window, `DWSET`\n  to configure it, `SELECT` to display it, draw, then `DWEND` + `CLOSE` to\n  tear it down.\n- `CWAREA(path,xcor,ycor,sizex,sizey)` - shrinks (never grows) the portion\n  of a window that output is confined to; everything drawn afterward "
+}

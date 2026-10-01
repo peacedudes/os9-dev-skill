@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 21,
+  "text": "No labels; they nest freely |\n| `USE pathlist` | File inclusion, nestable (~13 levels, matching OS-9's open-path limit minus standard I/O). For DEFS files, interactive input during assembly (`USE /TERM`), and shared subroutine libraries. No label |\n| `NAM str` / `TTL str` | Listing header program name / title. No label, no trailing comment |\n| `OPT option` | **Both assemblers have `OPT`, with different letter sets.** `asm` (ch. 2.8.8): `C`/`Dnum`/`E`/`F`/`G`/`L`/`M`/`N`/`O[=filename]`/`S`/`Wnum`. RMA (ch. 4.7): `l c f g x e s d w` only - no `M` (no Motorola mode), no `O` (ROF output is unconditional). For both: bare letter turns an option on, leading `-` turns it off; numeric options need a trailing number. No label or comment field |\n| `OS9 expr` | Convenience macro: emits `SWI2` + the fu"
+}

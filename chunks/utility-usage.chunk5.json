@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 5,
+  "text": "n a session where the plain form\n  succeeded on the same file.\n- `build <path>` - prompts `?` per line, writes each to the file; empty\n  line/EOF ends.\n- `copy [<opts>] <path1> [<path2>]` - `-a` abort on first error, `-f`\n  overwrite write-protected destinations, `-r` overwrite existing (**without\n  it an existing destination is not a failure but an interactive `Overwrite\n  (yes/no/all/quit)?` prompt after `Error #000:218`, which swallows the rest\n  of an unattended script** - `Live` (os9exec), see `os9-tools-and-shell.md`,\n  \"Procedure files\"), `-v`\n  verify result, `-w=<dir>` copy multiple sources *into* a directory\n  (`-p` suppresses the per-file listing in that mode), `-b=<size>` use a\n  larger transfer buffer (e.g. `-b=20k`; bigger buffers speed up large\n  copies - the manual's own ex"
+}

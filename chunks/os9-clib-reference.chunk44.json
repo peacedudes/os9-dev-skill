@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 44,
+  "text": " small, directly-addressed variables - that's\na 6809 hardware feature with no 68000 equivalent; don't expect it on\n68000.)\n\n**Compile-time sizing:** the linker adds 4KB by default for data/stack/\nparameters/buffers - override with `-m=<n>` (`-m=2` = 512 bytes, `-m=10k`\n= 10KB) if a program needs more.\n\n## Process/Exec Functions\n\n| Function | Notes |\n|---|---|\n| `os9fork(char *modname, int paramsize, char *paramptr, int type, int lang, int datasize)` | Not a standard C function - direct OS-9 process creation. `type`=1 is \"program\". `lang`=1 is native object code for whatever CPU the running system is (the module header's `M$Lang` field) - on a 6809 system that's 6809 object code (code 4 there is C I-code instead); on 68k, code 1 is 68K object code. It's not a single cross-architecture enum "
+}

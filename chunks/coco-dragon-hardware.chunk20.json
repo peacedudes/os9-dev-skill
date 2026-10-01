@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 20,
+  "text": "an misallocate memory and produce error 207 or 237, or simply fail to boot, with no other symptom pointing at \"reorder the boot list\" as the fix. Known by that name in the CoCo OS-9 community; not documented as a defect anywhere formal, just a practical gotcha when hand-building a boot file.\n\n## Monitors and Memory\n\nComposite monochrome gives the sharpest text but no color; RGB unlocks full color at real cost premium over composite. The CoCo's sync output is positive; an Atari-ST-style monitor (negative sync) needs the pulses inverted to work, and some Sony multisync monitors need the two sync signals combined and inverted (doable with a single NOR gate). IBM-style TTL monochrome monitors are flatly incompatible, not just lower quality.\n\nA full CoCo 3 + OS-9 Level 2 + windowing setup needs"
+}

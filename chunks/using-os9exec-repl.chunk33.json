@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 33,
+  "text": "ure file -\n  LF-terminated.**\n  `Live` (os9exec): `./os9exec shell < cmds`, or the same commands through a\n  pipe, needs `\\n` endings. A CR-only stdin file is echoed as **one line** with\n  only the first command taking effect - typically surfacing as a complaint from\n  that first command alone (`setenv requires two arguments`) while everything\n  after it silently never runs.\n\n  **The two rules are opposites and it is the same session that needs both**: a\n  file named as an *argument* is read by OS-9 and wants CR; bytes arriving on\n  *stdin* cross the host boundary and want LF. Which rule applies is decided by\n  how the commands reach the shell, not by what the file is called - so a\n  generator that emits one ending for both uses is wrong half the time.\n- Piping the same commands into an in"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 5,
+  "text": "me`/`F$STime`, which are the syscalls,\nnot this global, so they do not bear on it. Convert with `86400 - D_Second`\nbefore comparing it to anything stated as seconds since midnight - a process\ndescriptor's `P$TimBeg`, or `F$Time`'s `d0`.\n\nGetting the direction backwards is expensive and easy to recognise: with\n`D_Second` answered as seconds *since* midnight, `aprocs` reported every process as roughly 2³²\nseconds old (`1193028:33:46`, a small negative difference wrapped) while\nMicroware's `procs -e` said `Age 0:00`. `Live` (os9exec). **If `aprocs` ages every process\nby about 2³² seconds, suspect whatever sets `D_Second` - a clock driver, say -\nbefore anything else.**\n\nException vector 0 holds the reset-time initial supervisor stack pointer\n(SSP) value - every subsequent exception dispatch us"
+}

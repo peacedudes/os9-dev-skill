@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 44,
+  "text": "t occupy a listing line.\n\n**Assembly listing format** (`-l`/`OPT L`, ch. 1.6), left to right: sequence\nnumber, location-counter value, generated object bytes (`=` here flags an\nexternal reference in the operand; `+` in the label-field column flags a\nmacro-generated line), then label, mnemonic, operand, comment.\n\n**Expression evaluation** (ch. 1.7 - assembly-time syntax, distinct from the\ndebugger's calculator below). All arithmetic is 16-bit (0..65535 unsigned /\n-32768..32767 signed); byte-sized contexts require -128..127 or 0..255.\nEvaluated left-to-right within a precedence tier; parentheses override.\nOperand forms: decimal (optional leading `-`, 1-5 digits, no prefix), hex\n(`$` + 1-4 digits), binary (`%` + 1-16 bits), character constant (`'` + one\nprintable ASCII char), symbolic name, a"
+}

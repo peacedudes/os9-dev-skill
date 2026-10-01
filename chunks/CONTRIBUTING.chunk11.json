@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 11,
+  "text": "t** - a diff line count is usually enough to see it.\n\n## What is likely to be declined\n\n- An assertion with no stated evidence, however plausible.\n- A claim about OS-9 drawn from emulator behaviour alone and presented as\n  OS-9's behaviour. Tag it as the emulator's and it is welcome.\n- Material copied from a manual at length. Short attributed quotations are\n  used here where the exact wording *is* the evidence; reproduced passages,\n  verbatim code examples, and anything mirroring a source's structure are\n  deliberately kept out. See `SOURCE-AUTHORITY.md` for why that line is drawn\n  where it is.\n- Large new sections on topics nobody has tested. The corpus is sized to what\n  could be verified.\n\n## Taking this over\n\n**This project is built to be adopted, and a fork becoming the active copy i"
+}

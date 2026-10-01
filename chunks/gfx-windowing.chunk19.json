@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 19,
+  "text": "`LINE`/`LINEM`.\n- `SELECT([path])` - makes a window the active display target; if\n  omitted, defaults to the standard input/output/error paths (0/1/2).\n  Whether the switch is visible right away depends on which window the\n  calling code is currently running from - from inside the window being\n  switched to, it shows immediately; from elsewhere, the switch is\n  deferred and only takes visible effect on the next CLEAR keypress.\n  **`Live` (NitrOS-9) - necessary, but not sufficient**, in two parts:\n  - It does **not** display the window by itself. Writing `WSelect` ($1b21)\n    to a window changed nothing, including when the writing process had\n    *all* its std paths on that window (`display 1b 21 <>/w4`). A CLEAR\n    keypress is still needed to bring the screen forward.\n  - But it **is requ"
+}

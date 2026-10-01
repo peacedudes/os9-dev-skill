@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 22,
+  "text": " run and a slow consumer feeding a printer can be built around a plain\n   file rather than an actual pipe, and unlike a pipe the data persists after\n   both processes exit. Unix of that era had no equivalent.\n\n### Mechanics\n\n- A **read** (or `ReadLn`) on a path opened for update locks the bytes it\n  requested, from the file pointer it started at - a `ReadLn` asking 256\n  bytes locks 256 regardless of where the CR landed. **Clamped to the end of\n  the file**, which is not optional: a read that locks past EOF holds ground\n  belonging to whoever is appending, and the result is a genuine deadlock\n  that no `E$DEADLK` catches, because the two paths are different processes.\n  The invariant is **no path ever locks a byte that does not exist yet**.\n  Consequence: BASIC09 asks 511 bytes on every `R"
+}

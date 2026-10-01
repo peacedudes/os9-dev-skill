@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 25,
+  "text": "s9-clib-reference.md`: **the convenient way to drive a program under\ntest is the way that conceals the defect.**\n\n## Big data: the 64K wall, and `remote`\n\nTwo walls stop a port with large buffers, and they are the same wall twice:\n\n- **Static data over 64K** - `l68` refuses with\n  `non-remote data allocation exceeds 64k`.\n- **A stack local past a 16-bit displacement** - the assembler refuses with\n  `*** error - value out of range ***`.\n\nThe cause is the addressing mode, and it is already documented in\n`68k/os9-68k-assembly.md`: globals are reached A6-relative, with A6 biased by\n`+0x8000` so that a **16-bit signed** offset spans a full 64K and no more. Stack\nlocals are reached the same way from the frame pointer. Anything that will not fit\nin that window cannot be addressed by the ordinary "
+}

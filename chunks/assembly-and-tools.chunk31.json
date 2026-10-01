@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 31,
+  "text": "ode\") is the only hint that `I` may mean interactive/terminal input.\n\n**Addressing-mode warnings** (ch. 2.7.4.4-5, `asm`): extended and\nextended-indirect addressing (absolute addresses baked into the instruction)\nget a `W` flag in the listing, since OS-9 programs normally shouldn't use\nabsolute addresses - direct-page or PC-relative is preferred. A long branch\n(`LBxx`) whose destination was within short-branch range also gets `W`.\n**The opposite direction is a hard error**: `Live` (NitrOS-9) - a short conditional\nbranch whose target is out of 8-bit signed range (±127 bytes) fails assembly\noutright (`***** Error: out of range`). This commonly appears after an edit\npushes an error handler further from its callers; switch to the `L`-prefixed\nlong form.\n\n## Position-independent code\n\nUse `BRA`"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 41,
+  "text": "e C Compiler manual's \"Interfacing to BASIC09\" appendix documents a\ndistinct build path for a C function BASIC09 can call directly via `RUN`.\nThis is a genuinely different workflow from an ordinary standalone C\nprogram - a normal `cc`/`l68` build won't produce something BASIC09 can\nlink to.\n\n**Build steps:**\n1. Compile with `-r` (leave a relocatable `.r` file, don't link) and `-s`\n   (suppress stack-checking code - required, since the module won't have\n   the normal stack-check runtime support).\n2. Link with **`c-link`**, not the ordinary linker - `c-link <file.r>\n   -b=<entry-function> -o=<output-module-name>`. `-b=` names which C\n   function is the entry point BASIC09's `RUN` calls; `-o=` names the\n   resulting OS-9 module. `RUN <output-module-name>(...)` from BASIC09\n   then invokes it."
+}

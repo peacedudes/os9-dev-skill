@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 14,
+  "text": "\n  just yours. `F$Sleep` auto-unmasks - this is what makes\n  mask->request->sleep->service safe.\n\nPatterns and deadlock shapes: `ipc.md`.\n\n### Events are counted semaphores - one primitive, not three\n\nAn event is a counter with waiters blocked on a target value. Binary mutex\n= event with range (1,1); condition variable = wait/signal on an event.\nOne primitive (`F$Event`) covers what Unix splits into three.\n\n### Shared memory is a data module\n\n`F$DatMod` creates a named, shared, mutable region accessed by ordinary\npointer addressing - the \"processes see the same live bytes\" mechanism (vs.\na pipe, which moves bytes, or a signal/event, which carries no payload).\nUnlike a program module, a data module is allowed to be non-reentrant\n(mutated in place) - that's the whole point of it. No implicit"
+}

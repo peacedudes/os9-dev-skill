@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 16,
+  "text": "s (3-byte LSN + 2-byte sector count) to the end of the sector - 48 entries at 256-byte sectors. Unused entries must be zero |\n\n**`FD_ATT` bit layout**: 0x01 owner-read, 0x02 owner-write, 0x04\nowner-execute, 0x08 public-read, 0x10 public-write, 0x20 public-execute, 0x80\ndirectory. There is no \"group\" class - only owner and public. Bit 0x40\ncontrols shareability: `Live, Flag` - an os9lib `<stat.h>` mapping treats it\nas `S_ISHARE` (set = sharable), while the Disk File Organization manual's own\nprose labels it \"non-sharable\" (set = single-user). Treat this bit's polarity\nas unresolved.\n\n**Segments**: OS-9 uses multiple-contiguous-segment file structure - each\nsegment is a run of physically contiguous sectors. A file that outgrows one\nsegment gets additional segments, kept in close physical pro"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 4,
+  "text": "e/Update/Dir only) | 51 | Line with compiler error |\n| 16 | Illegal number | 52 | Value out of range for destination |\n| 17 | Illegal prefix | 53 | Subroutine stack overflow |\n| 18 | Illegal operand | 54 | Subroutine stack underflow |\n| 19 | Illegal operator | 55 | Subscript out of range |\n| 20 | Illegal record field name | 56 | Parameter error |\n| 21 | Illegal dimension | 57 | System stack overflow |\n| 22 | Illegal literal | 58 | I/O type mismatch |\n| 23 | Illegal relational | 59 | I/O numeric input format bad |\n| 24 | Illegal type suffix | 60 | I/O conversion: number out of range |\n| 25 | Too-large dimension | 61 | Illegal input format |\n| 26 | Too-large line number | 62 | I/O format repeat error |\n| 27 | Missing assignment statement | 63 | I/O format syntax error |\n| 28 | Missing path n"
+}

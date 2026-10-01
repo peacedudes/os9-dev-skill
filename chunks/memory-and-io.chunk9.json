@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 9,
+  "text": "ical device usually needs only a new\ndriver + descriptor when an existing file-manager class fits. **I$** calls\nroute through file managers/drivers; **F$** calls execute in the kernel,\nsplitting further into user-state and system-state (privileged-only).\n\n### Device descriptors\n\nA device descriptor is a small data module holding hardware config and\nmodule names. Key fields:\n\n| Field | Offset | Contents |\n|---|---|---|\n| `M$Port` | $30 | Hardware interface port address, pre-loaded into the driver's `V_PORT` static-storage slot before INIT runs |\n| `M$Mode` | $37 | Access-mode bits (below) |\n| `M$FMgr` | $38 | Offset to the file manager's name string |\n| `M$PDev` | $3A | Offset to the device driver's name string |\n| `M$DevCon` | $3C | Pointer to an *optional* driver-specific config table (OE"
+}

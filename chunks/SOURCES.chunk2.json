@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/SOURCES.md",
+  "chunk_index": 2,
+  "text": "9 System Programmer's/Level 2 manuals; Gimix \"OS-9 GMX III Support ROM User's Manual\" Rev C (1983). `Manual` only |\n\n`Live` findings exist in `device-drivers.md` and `file-managers.md` - see\neach file's own header and the INDEX confidence note.\n"
+}

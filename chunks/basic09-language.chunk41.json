@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 41,
+  "text": "r that. **Reseeding is fully deterministic** (`Live` (os9exec)): calling `RND(-42)` then three `RND(0)` calls, twice in a row, produces the exact same 3-value sequence both times - useful for reproducible test data. |\n| `LEN`/`MID$`/`LEFT$`/`RIGHT$`/`STR$`/`VAL`/`CHR$`/`ASC` | String functions |\n| `DATE$` | Current date/time as `\"YY/MM/DD HH:MM:SS\"`. **Y2K-class fault on 68k** (`Live` (os9exec)): for years >= 2000 the year's tens digit is corrupt (`\"<6/07/14\"` where `\"26/07/14\"` was correct - first byte reads ASCII 60 `'<'`, a +10 offset from the un-reduced year value). `Absent` on real 6809 NitrOS-9 - the fault lies on the 68k side, not in logic shared with 6809. Don't trust the 68k year field past 1999. Details: `gotchas.md` |\n| `TRIM$(str$)` | Removes **trailing** spaces only - leading/"
+}

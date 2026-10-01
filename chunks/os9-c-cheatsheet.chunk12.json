@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 12,
+  "text": "d assembly is compiler-generation-specific and easy to get\n  burned by.** The old 6809-era `#asm` / `#endasm` pragma just switches the\n  compiler into pass-through mode (copy lines verbatim to the assembly\n  output); Ultra C's 68k `_asm()` function is a different, later mechanism\n  entirely - and critically, the compiler does *not* optimize the assembly\n  inside it, so surrounding-code optimization can inadvertently damage it.\n  Prefer separate assembly files/linking over embedding assembly in a C\n  function body; only from Ultra C 1.2 onward is macro-form assembly\n  inside functions supported. See the reference section below for both\n  mechanisms' details.\n\n## The `cio` trap handler divides archived binaries\n\nMost archived OS-9/68k programs were linked against Microware's\nproprietary `cio"
+}

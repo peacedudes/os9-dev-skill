@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/reading-the-coco-screen.md",
+  "chunk_index": 7,
+  "text": "`WDWSet` device window set | `$1b42` | `WPoint` |\n| `$1b22` | `WOWSet` overlay window set | `$1b44` | `WLine` |\n| `$1b32` | `WFColor` foreground color | `$1b48` | `WBox` |\n| `$1b33` | `WBColor` background color | `$1b4a` | `WBar` (filled) |\n| `$1b31` | `WPalette` | `$1b50` | `WCircle` |\n| `$1b39` | `WGCSet` graphics cursor | `$1b51` | `WEllipse` |\n\nCoordinates are **16-bit big-endian pairs**. Example - box then ellipse on an\nalready-created graphics window:\n\n```\ndisplay 1b 32 02 1b 40 00 20 00 20 1b 48 00 c0 00 a0 >/w7\ndisplay 1b 40 00 70 00 60 1b 51 00 50 00 30 >/w7\n```\n\n## Host-side observation\n\nCapturing XRoar's window renders through XRoar's own video path, so every GIME\nmode, palette and window comes out correct with no host-side video decoding.\nScope the capture to the emulator windo"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 45,
+  "text": "rces:** Official Microware C Compiler manual (1983, 6809,\nRadio-Shack/CoCo-branded) and \"The OS-9 Primer\" (documents the later\n\"Ultra C\" 68k compiler and its register conventions). 68k data-type\nsizes: `Live` (os9exec), measured on the 68k toolchain; the 1983 manual describes\nthe 6809 compiler. The\n68K way to call C from BASIC09 (`basic09/basic09-per-target.md`)\nis `Live` (os9exec), not `Manual`.\n"
+}

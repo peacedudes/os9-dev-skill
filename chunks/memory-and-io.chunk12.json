@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 12,
+  "text": "matching logic below.\n\n### Kernel I/O tables and `I$Attach`/`I$Detach`\n\nThe kernel keeps two tables:\n\n- **Device table** - one entry per attached device (created on first\n  `I$Attach`): file manager/driver names, the driver's static storage\n  pointer, a use count.\n- **Path table** - one entry per open path (created on `I$Open`, destroyed\n  on `I$Close`).\n\n`I$Attach` matching logic when a device is opened:\n\n| Match | Result |\n|---|---|\n| Port, manager, driver, *and* descriptor all match an existing entry | Increment use count |\n| Port/manager/driver match but descriptor differs | Create a new \"synonymous device\" entry |\n| Nothing matches | Allocate driver storage, set `V_PORT`, call driver's INIT |\n\nShould INIT fail, the kernel rolls back symmetrically: it calls TERM, frees\nwhatever it had "
+}

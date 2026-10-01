@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 32,
+  "text": ";\n```\n\nTwo things follow, and the dangerous one is silent.\n\n**The pad character is named `PC_`, not `PC`.** Period termcap code declaring\n`PC` fails to link. That is the *safe* failure: the linker names it, you rename\nit, it works.\n\n**`BC` and `UP` are `char *`.** Code of the era commonly declares them as small\narrays - `extern char BC[2], UP[2], PC;` - and against this library the array\ndeclarations **link cleanly**, because the symbols exist and a linker cannot see\nthe type disagreement. Writing `BC[0]`/`BC[1]` then overwrites termlib's pointer\nrather than filling a buffer, and what breaks is whatever uses that pointer\nlater.\n\nSo the trap is the shape of the diagnostic: **the one symbol that fails to link\nis the one that is harmless to fix, and fixing only it leaves two silent memory\ncor"
+}

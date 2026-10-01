@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 60,
+  "text": "ront of the link file list automatically. This\nmodule - built from `C/SOURCE/cstart.a` - supplies a root psect holding\nthe program's real OS-9 entry point: it runs startup initialization and\nthen calls `main()`.\n\nPart of what that startup code does is convert OS-9's single parameter\nstring into `argc`/`argv` for `main(int argc, char *argv[])`: it splits on\nwhitespace, and a quoted substring (single or double quotes; use the other\nquote type if the string itself contains one) is kept together as one\nargument. E.g. the OS-9 parameter line `foo \"bar baz\" qux` becomes `argv =\n{progname, \"foo\", \"bar baz\", \"qux\"}`, `argc = 4`.\n\n## Process Memory Model\n\n**Stack:** reserved per function call (locals, return address, register\ntemps); collision with the data area halts the program with `*** stack\nov"
+}

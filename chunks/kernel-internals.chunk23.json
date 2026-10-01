@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 23,
+  "text": "he CRC field (68000 instructions require\n  even addresses).\n\n### Boot-Time Module Discovery\n\nOn reset/coldstart, the kernel scans ROM (and the boot file) word-by-word\nfor the sync bytes `$4AFC` - deliberately an illegal 68000 instruction, so\nscanning is cheap and unambiguous. On a hit, it verifies header parity,\nreads the module's size from the header, computes its CRC, and - if both\nchecks pass - enters it into the module directory. This is how every ROMed\nmodule (system and user-supplied alike) ends up automatically linked and\nalready present in the directory before user code ever runs. Only after\nthis population phase does coldstart link the INIT configuration module,\ninitialize kernel tables/paths/directories, and fork the initial process\n(`SYSGO`).\n\n## Trap Handler Mechanics\n\nA trap h"
+}

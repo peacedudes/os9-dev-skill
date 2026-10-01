@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 17,
+  "text": "me | d0.w=path | **Not `creat()`**: an existing name is an error (`E$CEF`, 218), never truncate-and-reopen, and it cannot make a directory - that is `I$MakDir` (`Manual`). On non-multi-file devices behaves as I$Open. `Live` (os9exec) |\n| **I$Close** | Close path | d0.w=path | - | Decrements share count; descriptor freed at zero. F$Exit closes leftovers. `Live` (os9exec) |\n| **I$Read** / **I$Write** | Raw transfer | d0.w=path, d1.l=count, (a0)=buffer | d1.l=transferred | No editing - a bare CR alone does not advance the terminal; CR+LF is needed. Reads return EOF error when exhausted; writes past EOF extend the file (RBF may pre-read a sector for partial-sector writes). `Live` (os9exec) |\n| **I$ReadLn** / **I$WritLn** | Line transfer | same | same | Stop at first CR; apply device line editi"
+}

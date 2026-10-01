@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 35,
+  "text": ",1),m(1,2),m(2,2),m(1,3),m(2,3)`, the\nfirst subscript varying fastest, confirming BASIC09's column-major layout.\n\nSources: OS-9 C Compiler manual, \"Data Representation and Storage\nRequirements\", p. 1-5, and \"Interfacing to BASIC09\", p. C-1\n(cross-checked against the same appendix restated cleanly at\nhttps://hathaway3.github.io/nitros9A/ccguide/basic09/ - surviving OCR\nscans of this appendix mangle the string \"BASIC09\" badly).\n\n## Reference: Toolchain Components (6809 - do not blend with the live 68k chain above)\n\n**This table is 6809-specific**, not this file's 68k subject: it's sourced\nfrom the 1983 6809 C Compiler manual (this file's only C-compiler-manual\nsource - see `Sources:` below), and its component names don't match the\n`Live` (os9exec)-verified 68k sub-tool chain used throughout "
+}

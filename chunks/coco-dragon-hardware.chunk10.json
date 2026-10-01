@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 10,
+  "text": " exists; its source wasn't read, so no specific register sequence beyond the above is attested from it.\n\n## Screen Dump Utilities (CGSDUMP/BWSDUMP)\n\nTwo related utilities capture the active graphics buffer to a printer or file: `CGSDUMP` (color) and `BWSDUMP` (monochrome). Both need an active graphics mode with an allocated display buffer - dumping with no graphics mode active and no picture file given fails with error 246 (device not ready). Both support `-s <path>` to redirect the dump to a disk file instead of a printer. Vertical resolution is fixed at 192 pixels in every mode; `CGSDUMP`'s horizontal resolution is 128 pixels for most color options, with a subset of its ten color/option presets (indexed 0-9) extending to 256 pixels wide. `BWSDUMP` adds an inverse mode (`-i`, swaps black/"
+}

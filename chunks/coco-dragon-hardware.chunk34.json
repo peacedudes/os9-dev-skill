@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 34,
+  "text": "nce, and community references to the `SOUNDRV2` OS-9 utility\narchive. These are hardware facts (addresses, bit layouts) cross-referenced\nacross several independent sources, but by this skill's own legend that is\n`Hearsay`, not `Manual` - neither manual-derived nor run. Treat the whole\nsection as the weakest material in this file and confirm against hardware\nbefore depending on it.\n"
+}

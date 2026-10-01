@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 9,
+  "text": "amage it had just\n  caused, and the only reason neither was \"fixed\" is that the previous capture was\n  committed and could be compared byte for byte. Both turned out to be\n  long-standing behaviour. Preserve the old reading in a `Flag` if you cannot\n  reconcile it.\n- **Reference files carry no dates, commit hashes, host paths, or narrative**\n  about their own history. State the rule positively; provenance belongs in the\n  tag and the `Sources` footer, not in a story about what the file used to say.\n- **Where the manual and an emulator disagree**, the manual is the\n  specification and the emulator is the candidate defect. Record both; see\n  `SOURCE-AUTHORITY.md`.\n- **If you script an edit across many files, check what each match *does*, not\n  only what it *is*.** A pattern can identify the "
+}

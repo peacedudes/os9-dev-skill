@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 47,
+  "text": ".\n\n**Type codes** (high nibble of byte $06): $1=Program, $2=Subroutine,\n$3=Multi-module, $4=Data, $5-$B=user-defined, $C=System, $D=File Manager,\n$E=Device Driver, $F=Device Descriptor. $0 is illegal.\n\n**Language codes** (low nibble): 0=Data (non-executable), **1=6809 object\ncode**, 2=BASIC09 I-code, 3=Pascal P-code, 4=C I-code, 5=COBOL I-code,\n6=FORTRAN I-code (the last three reserved/unimplemented).\n\nThe type/attribute byte encoding (`Prgrm`=$10, `Objct`=1, `ReEnt`=$80) is\n`Source` - from the real `DEFS/os9defs.a` and independently via `ident`'s\ndecode of real system modules.\n\n**CRC**: 24-bit, polynomial `$800FE3`, one's-complement-accumulator mechanism.\nInitialize the accumulator to `$FFFFFF`, process every byte from header start\nthrough the byte before the CRC, then complement before s"
+}

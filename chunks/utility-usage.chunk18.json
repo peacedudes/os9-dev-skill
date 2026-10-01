@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 18,
+  "text": ", `events` - tables of attached devices / IRQ polling /\n  active events. No options.\n- `free [<opts>] {<devname>}` - free disk space.\n- `dcheck [<opts>] <devname>` - filesystem check; `-r` interactive\n  bitmap repair, `-y` repair answering yes to everything, `-d=<num>`\n  print directory paths `<num>` deep.\n- `format [<opts>] <devname>` - `-ss`/`-ds` sides, `-sd`/`-dd` density,\n  `-t=<n>` cylinders, `-c=<n>` sectors/cluster, `-i=<n>` interleave,\n  `-v=<name>` volume name (<=32 chars), `-np` skip physical format,\n  `-nv` skip verify, `-nf` no fast verify, `-e` show verify time, `-r`\n  no ready prompt. Requires the `fmt`-enabled descriptor (`/h0fmt`);\n  plain `/h0` is format-inhibited.\n- `os9gen [<opts>] <devname> {<path>}` - build/install a bootfile;\n  `-e` extended (>64K or non-contiguous) "
+}

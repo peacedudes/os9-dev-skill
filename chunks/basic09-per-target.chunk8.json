@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 8,
+  "text": "OS-9 BASIC User Manual* (Rev G, 1991) and not in\nthe 6809-era *BASIC09 Reference Manual* (Rev H). That is a 68k-manual-only\n**documentation** footprint, not proof the 6809 edition lacks them - treat\n6809-side absence as unconfirmed except where noted.\n\n- **SHELL** - runs an OS-9 shell command from inside a *running* procedure,\n  returning to BASIC once it completes. Distinct from `$`, which both manuals\n  document identically as an interactive System-Mode-only gateway; SHELL\n  looks like a genuine 68k addition exposing that gateway to program code.\n  **It does exist on 6809 and really forks** (`Live` (NitrOS-9)) - at a cost of roughly\n  a quarter-call per second on a 2 MHz 6809; see `6809/using-nitros9-repl.md`.\n- **CHAIN** - loads and runs another BASIC program in place of the current\n  o"
+}

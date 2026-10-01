@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 46,
+  "text": "Guard divisors that could be zero:\na trap is not a recovery, and on 68k there may be no trap.\n\n## Debug Mode\n\n| Command | Prompt/context | Effect |\n|---|---|---|\n| (interactive session) | `B:` System, `E:` Edit, `D:` Debug | The three modes - a reliable way to tell which mode a session is in |\n| `PAUSE` (in source) | enters `D:` | Intentional breakpoint-like suspend, for inspection/single-stepping |\n| `TRON` / `TROFF` | Debug | Trace: shows each statement before execution + its expression results on the next line; local to a procedure, stops at a call unless the callee also has trace on |\n| `BREAK <procname>` | Debug | One breakpoint per active procedure, triggered when returned to via nesting; removes itself after firing once |\n| `STATE` | Debug | Lists the call-nesting order - innermost "
+}

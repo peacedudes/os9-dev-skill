@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 41,
+  "text": "Unimplemented\n  Routine`, and `gfx2.asm`'s ~60-entry function table contains no such\n  name. Not merely undocumented: genuinely absent from this real build. The\n  one worked example mentioning it is mistaken, not a syntax source.\n  Whatever selects a `PUTGC` cursor shape in practice - beyond `GCSET`,\n  which *is* real - remains unknown.\n- **`PALETTE`'s register-number range** - `Live` (NitrOS-9): not bracketable, because\n  nothing tested was rejected. `register` up to 99 and `color` up to 200,\n  both far past the presumed 0-15/0-63 hardware ranges, all executed with no\n  error against a real opened window path. `Source`-confirmed: the handler\n  validates BASIC09's parameter *count* only, never the values, before\n  writing them straight out via `I$Write`. So this implementation performs\n  *"
+}

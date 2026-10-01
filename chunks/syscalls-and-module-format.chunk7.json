@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 7,
+  "text": "hs. **`B` must be explicitly cleared first** or a stale value produces a cosmetic `Error #001 -- Unconditional Abort` after your own output. `Live` (NitrOS-9) |\n| F$Mem | $07 | D=new size (0=query) | Returns Y=new upper bound, D=actual size. `Live` (NitrOS-9) |\n| F$Send | $08 | A=dest PID (0=all same group), B=signal code | Signal 0=Kill, 1=Wakeup, 2=Abort, 3=Interrupt, rest user-defined (see Signals below). `Live` (NitrOS-9) |\n| F$Icpt | $09 | X=intercept routine, U=routine's storage | Handler gets U=storage, B=signal code; exits via RTI. `Live` (NitrOS-9) |\n| F$Sleep | $0A | X=ticks (0=indefinite) | Returns X=remaining ticks; woken early by signal. `Live` (NitrOS-9), `Flag`: `X=50` returned `remaining=23` with no signal sent, so the returned remainder does not simply mean \"woken early\" -"
+}

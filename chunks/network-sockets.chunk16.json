@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 16,
+  "text": "or terminator.\n\n---\n\n## `ftp` utility\n\n- Invoked as `ftp [hostname] [options]` - with a hostname it connects\n  immediately; without one it drops into an interactive prompt where `open\n  hostname` connects later.\n- Transfer parameters: **Mode** (only `stream` is implemented), **Type**\n  (`ascii` or `binary`), **Form** (only `non-print`), **Structure** (only\n  `file`) - all fixed except Type, unlike full BSD `ftp`'s wider option set.\n- Session toggles: verbose responses, completion bell, per-file confirm\n  prompt (batch transfers), remote wildcard globbing, hash-mark progress\n  output, active vs. passive (`PORT`) mode.\n- A local filename argument starting with `!` is instead run as a shell\n  command, with `ftp` reading/writing its stdin/stdout. Remote filenames are\n  glob-expanded only for `"
+}

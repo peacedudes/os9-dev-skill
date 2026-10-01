@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 16,
+  "text": "'s call names must be\n  hand-defined as numeric `EQU`/`SET` constants in your own source before\n  assembling - they aren't pulled in from anywhere automatically. Numeric\n  values match the standard published table (cross-checked against\n  os9exec's call-number header, an independent reimplementation rather than\n  Microware material): `I$Open=$84,\n  I$Read=$89, I$Write=$8A, I$Close=$8F, F$Exit=$06`.\n- If a program executes any `TRAP #1`-`#15` for which no handler has\n  been installed, the kernel calls the module's own default trap-entry\n  routine instead (the module header's `M$Excpt` field - lazy-binding\n  mechanics: `common/module-format.md`'s Trap libraries section).\n\n## Exception vector table (68k)\n\n| Vector(s) | Name | Notes |\n|---|---|---|\n| 0 | Reset: initial SSP | Kernel uses this t"
+}

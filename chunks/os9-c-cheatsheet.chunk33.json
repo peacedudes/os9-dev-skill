@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 33,
+  "text": "e two languages, and this bites\nin practice.** A C string is NUL-terminated (`0x00`); a BASIC09 STRING is\nterminated by a sentinel byte **whose value differs by target** - and\n**`$FF` is the 6809 value, NOT 68k's.** `Live` (byte-dump of a\n`PUT` on 68k os9exec): a `STRING[8]` set to `\"XY\"` after being filled with\n`\"ABCDEFGH\"` stored `58 59 00 44 45 46 47 48` - i.e. `\"XY\"` then a **`00`\n(NUL)** terminator (overwriting the old `C`), so **68k BASIC09 terminates a\nSTRING with NUL, not `$FF`.** **A BASIC09 string at its declared maximum\nlength still has no terminator byte at all** (`Live` (os9exec): a `STRING[3]` set to\n`\"XYZ\"` stored exactly `58 59 5A`) - so a C function reading a BASIC09 STRING\nmust check the declared length as well as scanning for the terminator, and\nthe terminator to scan fo"
+}

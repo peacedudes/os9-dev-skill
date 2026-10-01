@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 45,
+  "text": "est tell is the usage text**: run the binary with\nno arguments and compare its usage line, option letters and version string\nagainst the source. A mismatch settles it in seconds and costs nothing to check\nbefore you spend an evening on the wrong question.\n\n## When `vt100` is right and the program still says \"Unknown terminal type\"\n\n**First rule out the file you think it is reading.** A device you did not\nconfigure falls back to another tree, so a termcap you corrected under `OS9H0`\nis not what a program opening `/dd/sys/termcap` sees - that trap is described\nunder \"Launching and disks\" above, and it produces this identical message. Once\nthe program is provably reading your file, the termcap reader\nitself is the suspect: see `c/os9-clib-reference.md`, \"A termcap reader that\nskips modern ent"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 33,
+  "text": " yield points, and a waiter that tries the same bytes. The\n  waiter must not return until the holder writes - and compare the *values*:\n  a waiter that returns the stale pre-update record is the lost update caught\n  in the act.\n- **`SS_Lock` needs assembly** - there's no BASIC09 route to a SetStat.\n- **Single-process deterministic tests are worth more than they look**: one\n  process with two paths covers visibility, cache invalidation, the\n  writer-closes-first lifecycle, and the deadlock refusal, with no timing at\n  all.\n\nNeither os9exec nor NitrOS-9 matches the design intent above in full, and\nthey fail differently - do not treat either as a reference for this\nmechanism, and do not read either one's behavior as evidence about what\ngenuine Microware OS-9 did.\n\n## File Security\n\nEvery file"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 13,
+  "text": "exec-repl.md` |\n| EVERY line overwrites the last, or programs seem to print almost nothing | `PD_ALF` cleared on the device - no LF follows CR. Check the raw CR:LF ratio; no bytes are lost | `common/memory-and-io.md` |\n| Shell says `User abort` / `Error #000:002` / `E_???` and nobody pressed a key | a child's non-zero exit status is printed through the error table as though it were an error code - a GNU port that prints usage and `exit(2)` does this every time | `common/os9-tools-and-shell.md` |\n| `r68`: `branch out of range` on a branch to the very next line | it is too **close**, not too far - the short form would need displacement 0, which is the reserved \"use the word form\" encoding; drop the `.s` | `68k/os9-68k-assembly.md` |\n| `r68` error points at an instruction that is plainly corr"
+}

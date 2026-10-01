@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 2,
+  "text": "applies to that one command only. C programs use the extra purely as stack. Classic use: `basic09 #32k` when a program blows the default workspace. The user manual says a value \"smaller than would otherwise be used\" is ignored (`Manual`), but Microware's shell under os9exec *adds* it: `#1` took a 23.01k default to 24.01k and `#64` to 87.01k (`Live` (os9exec)), which is what `F$Fork`'s \"additional memory size\" in `d1` describes. `Flag` |\n\n### Redirection - `>>` is stderr, and append is `>+`\n\n**To append to a file, use `>+`.** `>>` does *not* append on OS-9; it\nredirects the standard error path. This is the single most common Unix\nreflex to get wrong here, and it fails quietly - you get a log full of\nerror text and an original file that was never touched.\n\n| Form | Redirects | Notes |\n|---|-"
+}

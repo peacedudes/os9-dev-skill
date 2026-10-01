@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 23,
+  "text": "\n  Consequence: BASIC09 asks 511 bytes on every `READ` whatever the target\n  string's size, so two records closer together than that can never be held\n  independently - fine for record-oriented code that asks for its record\n  size, coarse for BASIC09. Reads on read-only or execute-mode paths never\n  lock anything, since those modes can't update records anyway; prefer\n  read-only opens when writing isn't needed, both for that reason and speed.\n- A **write** always releases any record currently locked by that path, and\n  locks nothing itself *unless* it lands at EOF, in which case it takes the\n  EOF lock - **in any write mode, not only update**. Nothing real is locked:\n  the range covers bytes that do not exist. It has two jobs, and the second\n  is easy to miss. One, stop a *reader* concludi"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 3,
+  "text": "can be added later without touching SOCKMAN or the existing ones. |\n| **TCP / UDP / IP** | Each a separate subroutine module. SOCKMAN binds to and calls them on the program's behalf. |\n| **IFMAN** | Interface manager. Unlike a normal OS-9 file manager, IFMAN is *passive* - it only holds per-interface configuration data; it has no active I/O path. Protocol modules call the device drivers directly, using IFMAN's data to know how. |\n| **Device drivers** | One per NIC (`le0`, `le1`, `ENP0`, ...) - ordinary OS-9 drivers at the bottom of the stack. |\n\nCall path: **user program -> SOCKMAN -> TCP/UDP/IP protocol module -> IFMAN\n(lookup only) -> device driver -> hardware.**\n\n**Memory:** the stack uses its own allocator (`mbuf`), not general kernel\nmemory. IFMAN/SOCKMAN carve one contiguous block ou"
+}

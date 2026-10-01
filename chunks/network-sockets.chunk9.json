@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 9,
+  "text": "ller pre-sets the buffer-length field, gets the actual size back. |\n| `getsockopt()` / `setsockopt()` | `SOL_SOCKET`-level and per-protocol options; unknown/unsupported option returns `ENOPROTOOPT`. |\n\n**Errors beyond BSD `errno`:** calls can also return ordinary OS-9 errors\n(`E_PERMIT`, `E_PTHFUL`, `E_MEMFUL`, etc.) alongside the BSD-style codes\nabove - the manual only calls out the \"interesting\" ones per function, not\nan exhaustive list.\n\n### Byte-order and address conversion\n\n`htonl()`/`ntohl()`/`htons()`/`ntohs()` exist for portability but are defined\nas no-op macros on a big-endian target like the 68000 - host and network\nbyte order are already the same, so there's nothing to swap.\n\n| Function | Direction |\n|---|---|\n| `inet_addr()` | dot-notation string -> 32-bit address (network ord"
+}

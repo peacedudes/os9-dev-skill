@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 22,
+  "text": "tor before a partial-sector write |\n| `I$WritLn` | Writes up to and including the first CR, with output editing (e.g. SCF appends LF after CR). On SCF the terminator is PD_EOR; the auto LF follows a CR, so once PD_EOR is moved the two stop coinciding |\n| `I$Seek` | Random-access devices only; logical repositioning, no physical effect, no error going past EOF; no-op elsewhere |\n| `I$GetStt` / `I$SetStt` | Wildcard status get/set; file manager handles known codes, passes unknown codes to the driver |\n| `I$MakDir` | Creates a directory (multi-file devices); unsupported managers return carry-set + unknown-service error |\n\n### I/O call flow\n\n**Open:** application calls `I$Open` -> kernel's `I$Attach` links descriptor/\nmanager/driver, allocates device static storage on first open and calls the\nd"
+}

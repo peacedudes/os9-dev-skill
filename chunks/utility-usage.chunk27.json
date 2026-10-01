@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 27,
+  "text": "ps | Code | bps | Code | bps |\n|---|---|---|---|---|---|\n| 0 | 50 | 6 | 600 | C | 4800 |\n| 1 | 75 | 7 | 1200 | D | 7200 |\n| 2 | 110 | 8 | 1800 | E | 9600 |\n| 3 | 134.5 | 9 | 2000 | F | 19200 |\n| 4 | 150 | A | 2400 | 10 | 38400 |\n| 5 | 300 | B | 3600 | FF | external |\n\nos9exec follows it for `0`-`10` and adds two codes of its own, 21 (`$15`) for\n57600 and 22 (`$16`) for 115200. `Source` (os9exec).\n\nThe 6809 encoding is a different scheme over a shorter, differently-numbered\nrate list, so neither target's numbering can be read for the other.\n\n---\nSources: Using Professional OS-9 v2.4, \"The OS-9 Utilities\" chapter\n(syntax lines and option letters are the manual's facts; descriptions\nare original wording). 6809 utility sets differ - verify options live\nvia `help`/`-?` there.\n"
+}

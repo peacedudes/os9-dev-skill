@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 29,
+  "text": "s a process's DAT image into its descriptor; sets the image-change flag so hardware DAT updates on return. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`) |\n| F$FreeLB | $3D | B=block count, Y=DAT image ptr | Yes | Searches a DAT image for a free low block; returns A=beginning block#. Untested - needs a working `F$AllPrc` descriptor |\n| F$FreeHB | $3E | B=block count, Y=DAT image ptr | Yes | Searches a DAT image for a free high block; returns A=beginning block#. Untested, same reason |\n| F$AllTsk | $3F | X=process descriptor ptr | Yes | Allocates a DAT task number if not already assigned, then copies the DAT image into DAT hardware. Untested, same reason |\n| F$DelTsk | $40 | X=process descriptor ptr | Yes | Deallocates a DAT task number. Untested, same reason |\n| F$SetTsk | $41 | X=process "
+}

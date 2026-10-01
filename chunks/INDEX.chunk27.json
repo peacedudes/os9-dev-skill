@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 27,
+  "text": "ng or read the image host-side | `6809/using-nitros9-repl.md` |\n| Session ended while sending ordinary content | Escape (`$1B`) is SCF's EOF - the shell exited normally on it | `6809/using-nitros9-repl.md` |\n| File written through the harness fails to parse at a line that looks fine | `tee` dropped a trailing CR under load, joining two lines silently | `6809/using-nitros9-repl.md` |\n| Transfer traffic appears on your own terminal; the device argument did nothing | `kermit` needs `l` to aim at a device, and ignores it silently without | `common/utility-usage.md` |\n\nError *codes* (number -> meaning) are a different lookup: `common/error-codes.md`.\n\n## Quick rosetta (inline - check before loading a file)\n\n- `fork()`/`exec()` -> `F$Fork` / `F$Chain`\n- file descriptor -> path number\n- pipe synt"
+}

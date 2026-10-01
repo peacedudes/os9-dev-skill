@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/CONFIDENCE-TAGS.md",
+  "chunk_index": 7,
+  "text": " one.\n- Only Microware, or a test on genuine OS-9 hardware, resolves a divergence.\n\nPhrasing follows from this: write \"os9exec and NitrOS-9 both do X, the manual\nspecifies Y\" - not \"the manual is wrong\". Two community reimplementations\nagreeing with each other is not the manual being wrong.\n"
+}

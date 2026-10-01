@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 51,
+  "text": "s through memory sequentially |\n| `= expr` | Write to the address at Dot, verify the write, advance Dot |\n| `:` | Show all registers: `SP CC A B DP X Y U PC` |\n| `:reg` | Show one register |\n| `:reg expr` | Set one register (8-bit registers error if the value doesn't fit) |\n| `B` / `B expr` | List breakpoints / set one (max 12) |\n| `K` / `K expr` | Clear all breakpoints / clear one |\n| `G` / `G expr` | Resume execution / resume at a specific address |\n| `M expr1 expr2` | Hex+ASCII memory dump between two addresses |\n| `C expr1 expr2` | Walking-bit RAM test + clear between two addresses - **destructive**, RAM only. `Manual`: it clears the RAM it tests, which is why it is the one command here never run. Establishing a range that is genuinely scratch is hard on a Level 2 system with DAT mappi"
+}

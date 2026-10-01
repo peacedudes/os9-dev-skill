@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 23,
+  "text": "error | Physical seek to a non-existent sector |\n| 000:248 | E$Full | Media full | Insufficient free space on the media |\n| 000:249 | E$BTyp | Wrong type | Media incompatible with the drive (e.g. double-side disk in a single-side drive) |\n| 000:250 | E$DevBsy | Device busy | Non-sharable device already in use |\n| 000:251 | E$DIDC | Disk ID change | Media changed with open files - RBF's disk ID in the path descriptor no longer matches the driver's current disk ID |\n| 000:252 | E$Lock | Record locked out | Another process holds the record, or a timed lock wait expired |\n| 000:253 | E$Share | Non-sharable file busy | Single-user file/device (attribute bit, or opened single-user) already in use by another process. Also the classic \"can't delete a file that's currently open\": the Technical Manu"
+}

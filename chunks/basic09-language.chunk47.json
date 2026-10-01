@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 47,
+  "text": " Debug | Lists the call-nesting order - innermost (suspended) procedure at top, outermost at bottom |\n| `STEP` / `STEP n` / bare CR | Debug | Executes 1 (or n) source statements; a FOR/NEXT structure line executes once per STEP, so loop \"top\"/\"bottom\" lines may not appear to repeat as expected |\n| `LET var := expr` | Debug | Sets an existing variable (must exist in source already; no new vars, no record types) |\n| `r [start[,incr]]` / `r*` | Edit | RENUMBER - default start 100, increment 10 |\n| CONTROL-Q | any | Terminates execution, returns to System Mode - unlike CONTROL-C, does *not* enter Debug Mode; trappable via `ON ERROR GOTO` in RunB |\n\nBASIC09's I-code interpreter does its own runtime checking (array bounds,\ncall-nesting depth, arithmetic errors, etc.) that a native machine-code\nc"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 19,
+  "text": "ion sector and allocation bitmap, and any read past that\nreturns EOF.\n\n## Record Locking\n\n**What it is.** RBF hands out short-term exclusive access to *part* of a file -\na byte range, not the whole file - and does it by itself, as a side effect\nof ordinary reads and writes. A read on a path open for update locks the\nbytes it just returned; the next write on that path releases them. Anything\nelse touching those bytes meanwhile waits. No locking calls appear anywhere\nin the program. The same mechanism, applied past the last byte where no data\nexists yet, is what makes a reader wait at end-of-file for a writer that has\nnot finished - so \"record locking\" and \"EOF lock\" are one feature, not two.\n\n**This is not a defensive feature you invoke; it's a design opportunity.**\nRBF's locking is automat"
+}

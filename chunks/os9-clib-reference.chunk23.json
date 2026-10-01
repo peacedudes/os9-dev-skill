@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 23,
+  "text": "ets()`:\n\n| time | what happened |\n|---|---|\n| 0.0s | blocked in `gets()` |\n| 3.0s | **`gets()` returned early**, with no key pressed - the alarm interrupted the read |\n| - | the handler had *not* run |\n| 3.1s | handler ran, on the next `check_signal()` |\n\nSo a ported program can time out at exactly the right moment and print exactly\nthe right message while its handler has never been entered - the timeout it is\nreporting came from the interrupted read, and whatever it prints next is\nordinary code after `gets()`. **Do not read a correct-looking timeout as evidence\nthat asynchronous delivery works.** Conversely, a program that only ever waits,\nwith no poll and no read to interrupt, gets nothing.\n\nAn interrupted read is also the case that latches stdio's error flag - see the\nsection on that be"
+}

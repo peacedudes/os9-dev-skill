@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 13,
+  "text": "dmin edits `if_devices` with the interface's Internet address,\n  broadcast address, and hardware parameters, and `ifgen` produces the actual\n  descriptor module.\n- **`ipconfig`** is a compiled data module holding static IP routing: a\n  gateway flag (set = this host routes/forwards; clear = ordinary host), a\n  host-routes table, and a network-routes table (each null-entry-terminated).\n  Loaded by the IP module at startup to seed initial routing.\n- **`routed`**, once running, listens for routing broadcasts from other\n  `routed` instances and updates the live routing table dynamically -\n  static `ipconfig` entries matter less once it's up. **`ispstart`** is a\n  lighter alternative that just opens a socket and initializes the stack,\n  for setups that don't want a full `routed`.\n- **`mbinstall`"
+}

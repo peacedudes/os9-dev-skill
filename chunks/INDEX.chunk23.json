@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 23,
+  "text": "uilt for a 68000, where reading SR is user-legal; it is privileged from the 68010 on, and the system is not emulating it. | `68k/os9-68k-assembly.md`, exception vector table |\n| `Error #001 - Unconditional Abort` printed after output that was correct | `F$Exit` called with `B` never cleared - cosmetic, not a real failure | `6809/syscalls-and-module-format.md` |\n| Breakpoint or examine lands at the wrong address | `sc`'s listing double-applies an offset - never take an address from it | `68k/os9-68k-assembly.md` |\n| `-d 2` trace shows a `<<<` return under the wrong call name | a nested call overwrote the per-process current-call field - pair returns to entries by position | `common/using-os9exec-repl.md` |\n| `Error #000:043` from BASIC09 - and you can't tell if anything failed | four unrela"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 1,
+  "text": "s9exec) unless marked\notherwise.\n\n## Data types by target\n\n| Type | 6809 | 68k |\n|---|---|---|\n| BYTE | 1 byte, 0-255 unsigned | same |\n| INTEGER | 2 bytes, -32,768 to 32,767 | 4 bytes, -2,147,483,648 to 2,147,483,647 |\n| REAL | 5 bytes, ~±1×10³⁸, ~9 decimal digits | 8 bytes, ~±2.2e-308 to ±1.8e308, ~14 digits |\n| STRING | `STRING[len]`, default max 32; extends to 2880 chars | `STRING[len]`, default max 32 |\n| BOOLEAN | 1 byte, TRUE / FALSE | same |\n\nThe STRING *terminator* differs as well - `$FF` on 6809 (`Manual`), NUL on 68k\n(`Live` (os9exec), byte dump in `basic09-language.md`'s Data Types section),\nand none at all on either when a string fills its declared maximum. Only the\n68k value has been dumped; the 6809 one rests on the manuals.\n\n## INTEGER: 16-bit -> 32-bit\n\n**Overflow is ordin"
+}

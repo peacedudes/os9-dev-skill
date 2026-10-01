@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 18,
+  "text": ". Error-handling conventions cross-referenced\nagainst `68k/syscall-reference.md` and `common/ipc.md`.\n"
+}

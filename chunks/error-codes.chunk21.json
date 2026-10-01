@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 21,
+  "text": "` from 2.2 on - same code 233. os9exec returns it from `F$Send` as the pre-2.2 `E_USIGP` |\n| 000:234 | E$NEMod | Non-executable module | Attempted execution of a module that isn't type program/object |\n| 000:235 | E$BNam | Bad name | Syntax error in the specified name |\n| 000:236 | E$BMHP | Bad module header parity | Module header parity error |\n| 000:237 | E$NoRAM | RAM full | No free system RAM, or not enough contiguous memory for a fork request |\n| 000:238 | E$DNE | Directory not empty | Attempted to strip the directory attribute from a non-empty directory (`Live` (os9exec): `attr <dir> -nd`). `del` aimed at a directory, empty or not, gets `E$FNA` (214) instead (`Live` (os9exec)); use `deldir` |\n| 000:239 | E$NoTask | No task number available | A new task was requested but every task nu"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 10,
+  "text": "ly\n  detects a *missing* argument (`Error #056 -- Parameter Error`), proving the\n  shell-to-`PARAM` plumbing is present - but a *supplied* numeric argument is\n  never decimal-parsed. Its raw ASCII bytes land in the `INTEGER` variable's\n  2-byte storage: `progname 42` -> `13362` (`$3432`, the bytes `'4'`,`'2'`),\n  `progname 99` -> `14649` (`$3939`). `STRING` `PARAM`s are unaffected (no\n  parsing needed). 68k parses correctly. Not root-caused; `runb <name>\n  <numeric-arg>` fails differently (`Error #000`), so treat that as a\n  separate, undiagnosed failure mode.\n- **INTEGER vs REAL performance** - 68000 machines run INTEGER operations as\n  native instructions while REAL goes through library calls, roughly an order\n  of magnitude slower. A careless decimal point (`value*2.` rather than\n  `val"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 8,
+  "text": "ing string literals on the\nway (commas inside them became `;`). The same shape with balanced parentheses\nconverted and exited. There is no error and no exit status to test.\n\nThe cause is visible in the source (`Source`): `convert1()` scans with\n`for ( ; end == NULL; p++ )`, switching only on `,` `(` `)`, with **no NUL check\nand no bound** against a 5000-byte buffer (`#define bufsize 5000 /* arbitrary\nsize */`), so it walks off the end of the text. Note the tool documents the\n*confusion* and not the consequence: it warns that it will be confused by *\"any\nother construct that starts at the left margin and follows the above syntax (such\nas a macro or function call)\"*, and separately that *\"there are no error\nmessages\"* - it just never says that being confused means hanging. The cure is to\ndro"
+}

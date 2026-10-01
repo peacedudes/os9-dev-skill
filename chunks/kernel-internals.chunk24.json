@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 24,
+  "text": "ss\n(`SYSGO`).\n\n## Trap Handler Mechanics\n\nA trap handler module (type `TrapLib`) is installed via `F$TLink`, which links\nto the module, allocates **private static storage** for that handler, and runs\nits one-time initialization entry point. (Subroutine modules have no private\nstatic storage.) A process may link at most 15 trap modules simultaneously,\nmatching the 15 available user trap vectors (33-47, `TRAP #1`-`#15`). Trap\nmodule code executes in the CPU state its module attributes declare, regardless\nof the calling process's state.\n\nA trap module exposes three named entry points: **`TrapInit`** (run once per\nprocess that links to the module, for setup), **`TrapEnt`** (the actual\nhandler invoked on each `tcall`), and **`TrapTerm`** (reserved for per-link\nteardown; not implemented in this "
+}

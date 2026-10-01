@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 36,
+  "text": "dress space has left over; Level 2\n  because even though DAT gives each task its own *isolated* 64K logical\n  space, a chunk of every task's map still has to mirror interrupt\n  vectors and kernel entry points unless the hardware does automatic\n  task-switching (see `os9-systems-dev`'s `6809-level2-mmu.md`, IRQ-masking\n  section). So the\n  practical per-program ceiling barely moves between levels - what Level\n  2 actually buys is running several such programs *simultaneously* in\n  physically separate memory, not a bigger ceiling for any one of them.\n- **The `#n`/`#nK` memory modifier is identical on both levels** - `n`\n  256-byte pages, or `nK` 1024-byte increments, added to whatever a\n  command's own module header requests. Nothing here diverges by Level;\n  `Manual` (the Level 2 manual's o"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 23,
+  "text": "evice static storage on first open and calls the\ndriver's INIT -> kernel creates the path descriptor from the device\ndescriptor's options section -> the file manager's OPEN routine searches the\ndirectory (RBF) or sets up the line buffer (SCF).\n\n**Read/Write:** file manager validates mode/position/locks -> translates\nlogical position to sector/offset -> calls the driver's READ/WRITE routine\nwith an LSN and buffer address -> driver translates LSN to a physical\naddress and issues the hardware I/O -> driver returns bytes transferred or\nan error.\n\n### Device naming\n\n| Name pattern | Device |\n|---|---|\n| `/d0`, `/d1` | Floppies |\n| `/h0`, `/h0fmt` | Hard disk (with/without format protect) |\n| `/mt0` | Tape |\n| `/nil` | Null device |\n| `/p`, `/p1`, `/p2` | Parallel/serial printers |\n| `/r0` | RAM"
+}

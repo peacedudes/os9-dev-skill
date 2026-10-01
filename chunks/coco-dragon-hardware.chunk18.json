@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 18,
+  "text": "neration on the CoCo's video\nhardware, not just a cosmetic display setting; `TUNEPORT` targets the\nprinter (`/p`) or terminal (`/t1`) port's baud-rate delay loop\nspecifically.\n\n## Disk (DMODE)\n\n`DMODE drv=n stp=n typ=n dns=n cyl=n sid=n vfy=n sct=n ilv=n sas=n` reconfigures a drive descriptor: step rate (00=35ms ... 03=6ms), drive type (20=5.25\" CoCo format), density (1=40 TPI, 3=96 TPI), cylinder count (23=35 track, 28=40 track, 50=80 track), write-verify on/off, sectors/track (12=18 decimal), interleave (normally 3, 2 on newer drives). Standard CoCo Level 1 floppy: double-density, single-sided, 35 tracks × 18 sectors × 256 bytes, 1 sector/cluster (≈157KB total).\n\nNamed drive descriptors follow a `Dx_NNs` convention: 35-track single-sided (`D0_35S`...`D3_35S`, the original CoCo drive spec"
+}

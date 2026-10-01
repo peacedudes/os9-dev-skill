@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 21,
+  "text": "levels up, which fails `E_PNNF`. So the runs are being *counted* rather than\nmerely accepted, a leading `./` and a trailing `/.` contribute zero without\ndisturbing the sum, and every run length in between composes.\n\n### No `getcwd`: name the current directory by climbing\n\n`getcwd` and `getwd` are in neither `clib.l` nor `unix.l`, `Absent` (this\nSDK's libraries). At the shell `pd` (and `pxd` for the execution directory on\n6809) prints it. From C, work it out from the directory files themselves.\n\n**An RBF directory is a file of 32-byte entries** (`Manual`, Technical Manual,\n\"Directory File Format\"). Bytes 0-27 hold the name, with the sign bit set on\nits last character. A first byte of 0 marks a deleted or unused entry. Byte 28\nis zero and bytes 29-31 are the LSN of the file's descriptor sect"
+}

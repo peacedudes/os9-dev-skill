@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 35,
+  "text": "is not an\nos9exec artifact; whether the manual overstates or shipping code always\ndiverged is unresolved.\n\n```basic\nPRINT [ print-list ]\nPRINT [ #path ] USING format-string, print-list   ! e.g. PRINT USING \"R8.2\", price\n```\n\n**The separator between the format string and the value list is a\ncomma, not a colon** - the colon form (`PRINT USING \"R8.2\": price`) is a\ncompile-time syntax error (`Error #000:029`). The comma form is confirmed both by\nthe manuals' own formal grammar (`Manual`) and `Live` (os9exec) end to end\n(see the directive-letter table and worked examples above - this is now\nfully resolved, not just the separator).\n\n`print-list` items are expressions or `TAB(expr)`. Plain `PRINT` behaves\nlike ordinary comma/semicolon-separated BASIC output; `PRINT USING` adds\na format string (fi"
+}

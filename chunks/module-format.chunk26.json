@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 26,
+  "text": "ified data module has a stale CRC - call\n`F$SetCRC` (C: `_setcrc()`) before saving it to disk (or `fixmod` the\nfile) or it won't reload. `dump` can inspect one directly.\n\n## Boot-time module discovery\n\nColdstart scans ROM (and the boot file) word-by-word for `$4AFC`; each hit\ngets a parity check, size read, and CRC check, and survivors enter the\nmodule directory - this is how ROMed modules (including user ones)\nauto-register at boot. Then the kernel links the **INIT module** (a\nconfiguration table: initial table sizes, system device names, kernel\ncustomization modules whose init functions are called at startup - new\nsystem calls can be added without rebuilding the kernel), initializes its\ntables, and forks the first program. The **Clock module** is the\nplatform-specific real-time-clock han"
+}

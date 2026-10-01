@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 15,
+  "text": "  the current execution directory, so moving `chx` off the directory holding\n  `cio` stops every `cio`-linked program with the identical\n  `**** Can't install trap handler **** cio ****` - `chx /dd/CMDS/GCC2`, to\n  reach a compiler driver by bare name, does exactly this. `load /dd/CMDS/cio`\n  first cures it. A module on another *device* instead fails with a generic\n  Path-Not-Found though the file exists. `Live` (os9exec). Check `chx` before\n  concluding the module is absent or the binary is built for the wrong CPU.\n\n## Microware `cpp` is pre-ANSI: four measured divergences\n\nEach of these is legal C that this preprocessor rejects or quietly mishandles,\nand each was measured `Live` (os9exec) with `cc -qm=16k` against the SDK. They\nsurface immediately on Unix code and nowhere on your develop"
+}

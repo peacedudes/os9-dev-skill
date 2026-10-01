@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 5,
+  "text": "again, each ran the new text, on a host directory and on an RBF image. If\n  a rebuild still seems to run old code, look for a **resident copy**\n  (`mdir`) before blaming the file: a module that crashed stays in memory\n  and shadows the rebuilt one (`basic09/basic09-per-target.md`).\n\n## Symbolic debugging (the OS-9 `debug` command)\n\n`Live` (os9exec). `cc -g file.c` emits `file.dbg`/`file.stb`; `debug /dd/prog`\nauto-loads them and shows symbol-resolved disassembly. At `dbg:`:\n\n- `b <name>` set breakpoint by symbol - **reliable**; `g` run to it.\n- `sc` (bare) lists code symbols; `sd`/`sm` data symbols / symbol modules.\n  **Never take an address from `sc`'s listing**: it double-applies\n  relocation (error grows with the symbol's offset), so addresses land\n  inside unrelated functions. Verify a"
+}

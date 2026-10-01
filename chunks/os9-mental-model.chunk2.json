@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-mental-model.md",
+  "chunk_index": 2,
+  "text": "ee together), parity. `F$Link` finds a resident module by name\nand increments the count (no disk I/O); `F$Load` reads from disk when\nabsent, then links. `F$UnLink` decrements; at zero the module is freed\nunless **sticky** (survives until an unlink drives the count to -1 or\nmemory pressure evicts it). Forking a program implicitly links it. Loading\na higher-revision module of the same name replaces the directory entry\nimmediately: running processes keep the old copy, new lookups get the new.\n\n### Module types\n\nThe header type byte distinguishes program, subroutine, data, trap library,\nsystem, file manager, device driver, device descriptor. The kernel checks\ntype before fork/link - forking a non-program returns an error. Every OS-9\ncapability is reachable both from the shell's utilities and d"
+}

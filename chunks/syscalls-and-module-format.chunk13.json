@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 13,
+  "text": "thm itself was not checked against a known-answer reference |\n| F$GPrDsc | $18 | A=PID, X=512-byte buffer | Copy of process descriptor. `Live` (NitrOS-9) |\n| F$GBlkMp | $19 | X=1024-byte buffer | Returns D=block size (commonly `$2000`=8K), Y=map size. `Live` (NitrOS-9), `Flag`: call succeeds but D/Y come back nowhere near the documented values |\n| F$GModDr | $1A | X=2048-byte buffer | Copy of module directory; returns Y=copy-end addr, U=system module-dir start addr. **Source-corrected**: NitrOS-9's `fgmoddr.asm` writes Y and U rather than reading them - the previously documented shape had them backwards as inputs. `Live` (NitrOS-9) |\n| F$CpyMem | $1B | D=DAT ptr, X=offset, Y=count, U=dest | Reads another process's memory via its DAT image (Level 2). `Source, Flag`: NitrOS-9's `fcpymem.asm`"
+}

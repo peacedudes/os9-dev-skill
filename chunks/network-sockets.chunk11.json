@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 11,
+  "text": "port}()`, `getnetby{name,addr}()`,\n`getprotoby{name,number}()`, plus a `get*ent()`/`set*ent()`/`end*ent()` family\nfor each (enumerate-all / reset-to-start / explicitly unlink). All of them\nquery the **compiled `inetdb` module**, never the text config files directly\n(see below) - and all implicitly link the calling process to `inetdb` on\nfirst use, so an explicit `link()` isn't required; only the `set*ent()` and\n`end*ent()` calls manage linkage explicitly.\n\n---\n\n## Configuration files and `inetdb`\n\nFour plain-text config files, all sharing one parsing convention (fields\nseparated by any run of whitespace/tabs, `#` starts a trailing comment):\n\n| File | Per-line fields |\n|---|---|\n| `hosts` | address, official hostname, aliases, comment |\n| `networks` | official network name, network number, "
+}

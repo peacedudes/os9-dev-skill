@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 30,
+  "text": "vectors 1-15 (`F$TLink` installs handlers here;\n  see Trap Handler Mechanics above).\n- Vectors 64-255: 192 ordinary vectored (non-auto) interrupts, registered\n  via `F$IRQ`; multiple devices may share one.\n\nHardware error exceptions are normally fatal to the offending process\nunless it installed a handler via `F$STrap` - the handler runs in user\nstate with registers already stacked, and must either fix up and continue\nor terminate. `F$STrap` takes a handler stack and a service table pairing\nexception vectors with handler routines; the installable set is the CPU\nerror/trap group (bus and address error, illegal instruction, zero-divide,\nCHK, TRAPV, privilege, plus the line-emulator and co-processor traps). It is\none of the least-travelled parts of the ABI - ordinary code tests an operand\nbef"
+}

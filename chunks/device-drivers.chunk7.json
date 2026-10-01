@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 7,
+  "text": "iptor is the non-executable module the kernel and file\nmanager consult when attaching a device; several of its fields are read\ndirectly by driver code or govern what the driver sees in static storage.\n\n| Field | Offset | Purpose |\n|---|---|---|\n| `M$Port` | `$30` | Hardware interface port address - pre-loaded into the driver's `V_PORT` static-storage slot before `INIT` runs (see Universal Rules above). |\n| `M$Mode` | `$37` | Access-mode bits: bit 0 read, bit 1 write, bit 2 execute, bit 6 single-user (non-sharable), bit 7 directory-file access. The kernel checks a caller's requested open mode against this before ever reaching the driver. |\n| `M$FMgr` | `$38` | Offset to the file manager's name string - what the descriptor selects for the filesystem-protocol layer. |\n| `M$PDev` | `$3A` | Off"
+}

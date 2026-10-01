@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 21,
+  "text": "egister image - the whole user register set |\n| `(a6)` | The program's global data pointer |\n\nTo resume, restore the registers from the image at `(a5)` and jump to the PC.\nTo continue past a faulting instruction rather than retry it, advance the\nsaved `R$PC` first.\n\nDo not confuse `(a0)` here with `F$STrap`'s own `(a0)` **input**, which is\nsomething else entirely: the stack the handler is to run on, zero meaning\nwhichever stack is current when the call is made.\n\n**Which vectors, exactly.** Two different facts are easy to conflate. The\n*error-exception group* is **vectors 2-8, 10-24, 48-63** - the manual's own\nsection heading (`Manual`, v2.4 TRM p. 2-31) - and membership of it is what makes\nan exception normally fatal. `F$STrap` then catches the members of that group\n**considered non-fatal*"
+}

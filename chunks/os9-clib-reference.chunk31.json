@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 31,
+  "text": "er than the file route:\n\n- **The copy that reads the value stops only on a carriage return** - no length\n  limit and no NUL check. An environment variable is NUL-terminated, so that\n  build runs away through memory until it dies. A program that aborts *after*\n  you supply a working `TERMCAP` string may be failing this way; give that one a\n  file instead, where the line's terminator stops the copy.\n- **The destination is a 128-byte buffer** while the line buffer is 256, so an\n  entry over about 127 bytes overruns it. Keep entries short on either route.\n\n## `termlib`: the pad character is `PC_`, and the error you get hides the real bug\n\n`Source` (SDK `DEFS/termcap.h`):\n\n```c\nextern char PC_, *BC, *UP, *tgetstr(), *tgoto();\nextern short ospeed;\n```\n\nTwo things follow, and the dangerous one is"
+}

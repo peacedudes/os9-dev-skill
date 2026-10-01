@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 6,
+  "text": "nder both modules;\n`EXP(1.)` prints `2.71828182845904` under `math` and `2.71828182845905` under\n`math881`.\n\nCode relying on accumulated rounding or near-equality behaves differently\nacross targets - use tolerance comparisons on REAL, never `=`.\n\n## 6809-only\n\n- **Graphics Interface Module** - `RUN GFX(...)` / `RUN GFX2(...)`, specific\n  to CoCo/Dragon video hardware and absent from the 68k line entirely.\n  Calling it on 68k fails silently (function not found): no error, just a\n  no-op or a crash depending on context. Guard or strip before porting.\n  Function-by-function reference: `6809/gfx-windowing.md`.\n- **`PACK` strips comments** - don't rely on them surviving into a\n  distributed compiled program. (Architecture-neutral in principle; only the\n  6809-era manual documents it.)\n\n## 68k-o"
+}

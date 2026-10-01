@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 54,
+  "text": "**`mdir`'s listing isn't exhaustive** - `Live` (NitrOS-9): immediately after a program\nsuccessfully `F$Load`ed a module (valid returned entry point, no error), and\nwhile that program was itself still running, `mdir` showed neither the loaded\nmodule nor the running program's own. A successful syscall result is stronger\nevidence of residency than `mdir`'s silence.\n\n**Breakpoint mechanism**: the 6809 `SWI` instruction, inserted and removed\ntransparently. Restrictions: RAM only (not ROM), must sit on an instruction's\nfirst opcode byte, max 12 simultaneous, and **user code cannot use plain\n`SWI`** (reserved for the debugger) - `SWI2` is what ordinary syscalls\nalready use and `SWI3` is available for user vectoring. A loop needs *two*\nbreakpoints to stop on every iteration.\n\n**Register display**:"
+}

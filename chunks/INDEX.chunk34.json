@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 34,
+  "text": " \"Can't install trap handler\" triage | all | basic09/pack-and-runb.md |\n\n## C\n\n| Question about... | Read |\n|---|---|\n| K&R vs ANSI constructs, prototypes, missing headers | c/kandr-vs-ansi.md |\n| `cc` invocation, CLIB/CDEF, compiler quirks, `cio` trap-handler triage of archived binaries, calling C from BASIC09 (6809 c-link) | c/os9-c-cheatsheet.md |\n| Standard library behavior (stdio/strings/malloc/os9fork) | c/os9-clib-reference.md |\n\n## 68k\n\n| Question about... | Read |\n|---|---|\n| F$/I$ syscall catalog, TRAP #0 convention, register contracts, F$Event/F$Alarm subfunctions, debugger-support calls (F$DFork/F$DExec) | 68k/syscall-reference.md |\n| Assembly: register conventions, program-entry register state, embedded asm, exception vectors, TRAP mnemonics, `r68`/`l68` gotchas, the OS-9 `deb"
+}

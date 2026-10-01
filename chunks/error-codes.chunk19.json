@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 19,
+  "text": "ice file structure |\n| 000:220 | E$HangUp | Telephone data carrier lost | Modem lost carrier |\n| 000:221 | E$MNF | Module not found | Not in the module directory, or its header was modified/corrupted |\n| 000:222 | E$NoClk | No clock | Request needs the system clock, but no clock is running - use `SETIME` |\n| 000:223 | E$DelSP | Suicide attempt | Process requested deallocation of the memory holding its own stack |\n| 000:224 | E$IPrcID | Illegal process number | Process ID is non-existent or not accessible to the caller |\n| 000:225 | E$Param | Bad parameter ‡ | Service request passed an illegal or impossible parameter |\n| 000:226 | E$NoChld | No children | `F$Wait` called with no child process to wait for |\n| 000:227 | E$ITrap | Illegal trap code | Trap code unavailable (in use) or invalid i"
+}

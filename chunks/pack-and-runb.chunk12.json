@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 12,
+  "text": "RunB can trap Ctrl-C/Ctrl-Q via\n`ON ERROR GOTO`, which interactive `basic` cannot.\n\n## Invoking a packed module - bare name only, three contexts\n\n1. **`RUN <name>` typed inside interactive `basic`:** workspace first,\n   then current *data* directory, then *execution* directory, then OS-9\n   module link/load (`Manual` order).\n2. **From the OS-9 shell** - `runb <name>`, or the bare name (the shell\n   auto-detects BASIC I-code and forks RunB with the name as argument).\n   It is the **shell** that does this, not the kernel: `Manual` on both\n   targets (*Using Professional OS-9* v2.4, \"Running Compiled Intermediate\n   Code Programs\" and the `shell` entry; the 6809 *OS-9 Operating System\n   User's Guide* §4.8). `F$Fork`/`F$Chain` require object code (68k TRM\n   `F$Fork`, p. 1-30), so a program f"
+}

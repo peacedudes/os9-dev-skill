@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 10,
+  "text": "ept routine\n  auto-masks signals (`P$SigLvl` set to 1). The non-recursive fast path\n  saves one full register image (72 bytes covering all MPU registers, 168\n  bytes if the FPU is active) in system state; a recursive intercept call\n  instead pushes its saved state onto the user stack.\n\n## Path Descriptor (one per open file/device)\n\nTracks the path number, access mode, current file manager and driver in\nuse, and file-manager/device-specific option fields. See\n`file-managers.md` in this skill for the detailed three-section layout\n(universal section / file-manager-specific section / 128-byte option\narea) and the `PD_COUNT` share-counter mechanics - this is the same\nstructure, described there from the file-manager author's side of the\nsame fence.\n\n## The Scheduler Algorithm\n\n**This section is "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 8,
+  "text": "ned remainder does not simply mean \"woken early\" - treat `F$Sleep` timing precision as unverified |\n| F$ID | $0C | - | Returns A=PID (1-255), Y=user ID (0-65535). `Live` (NitrOS-9) - A confirmed; Y not independently re-confirmed. **The 6809 user ID is one flat integer, NOT 68k's packed `group.user`** - see the cross-target warning below |\n| F$SPrior | $0D | A=PID, B=priority (0=lowest, 255=highest) | Same-user rule; superuser can set any. `Live` (NitrOS-9) |\n| F$SSWI | $0E | A=vector (1=SWI, 2=SWI2, 3=SWI3), X=routine | Per-process vector, not global. `Live` (NitrOS-9) for the install call; **whether the handler then runs on a bare `SWI` is unconfirmed** - a test using `F$Icpt`'s plain-`RTI` exit convention never saw its marker set, and `F$SSWI`'s raw hardware-vector mechanism may have a d"
+}

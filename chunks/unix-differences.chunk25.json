@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 25,
+  "text": " preempt everything below for as long as any of them stays active -\nnot merely \"get nearly all the CPU.\" Set priority: `setpr`/`F$SPrior`.\nFull mechanism: `os9-systems-dev` skill's `kernel-internals.md`.\n\n### The C compiler is K&R, not ANSI\n\nNo `const`/`volatile`, old-style function definitions only, `<strings.h>`\nnot `<string.h>`, no bit-fields, no `//`, no prototypes/call\ntype-checking. `int` is 32-bit on 68k (`Live` (os9exec); 16-bit claims\ndescribe the 6809 compiler). Full list: `c/kandr-vs-ansi.md`.\n\n### BASIC09: AND/OR/XOR are boolean; LAND/LOR/LXOR are bitwise\n\nBoth primary BASIC09 manuals (Rev G and Rev H) agree: `AND`/`OR`/`XOR`/`NOT`\noperate on BOOLEAN values (TRUE/FALSE), while `LAND`/`LOR`/`LXOR`/`LNOT` are\nbitwise/logical functions operating on integer values. Unlike C, where "
+}

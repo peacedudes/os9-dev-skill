@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 75,
+  "text": " range the dump reports.\n\nThen disassemble the file at that offset and you are looking at the\ninstruction that faulted. This also settles a question worth settling early -\n**whether the fault is inside the module at all.** An address that matches\nnothing in the image means execution left the program, which is a different\nclass of bug from one that has a line number.\n\n**A crash that comes and goes with how busy memory is suggests a one-byte\nstack overrun into a saved register's high byte.** 68k is big-endian, so the\nfirst byte past a stack buffer is the high byte of whatever the function\nsaved above it - typically the frame pointer. A string one character too long\nfor its buffer writes its NUL there. While the program sits below 16 MB that\nbyte is already `$00` and nothing happens; above 16"
+}

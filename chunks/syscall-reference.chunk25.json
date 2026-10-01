@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 25,
+  "text": "at high bit is easy to lose and expensive to lose. A C `alarm()` built on\n`secs<<8 | $80000000` is asking for 256ths - which is what the `unix.l` `alarm()`\nshipping with the freeware collection does, so `alarm(2)` passes `$80000200`.\nCode that drops bit 31 turns the same word into an enormous tick count, and\nthe alarm **silently never fires** rather than firing early or late; the call\nstill returns carry clear. `Live` (os9exec): `A$Set` and `A$Cycle` decode bit 31\nand round up to the tick, as the manual's NOTE requires (CONF68K t72-t76).\n\n**Two different faults make a ported program's alarm look dead, and fixing one\nleaves the other.** A lost bit 31 means the alarm never comes due at all. But a\nUnix-compatibility `signal()` may also deliver handlers only on a poll, so even a\ncorrectly arme"
+}

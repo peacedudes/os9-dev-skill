@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 31,
+  "text": " to black **unless**\n  `-s=<type>` is given, in which case a border color becomes mandatory.\n  `-s=<type>` picks the screen mode; `Live` (NitrOS-9), the CoCo3/OS-9 standard\n  type codes are: `1` = 40-column text (2K), `2`\n  = 80-column text (4K), `5` = 80-column 2-color graphics (16K), `6` =\n  40-column 4-color graphics (16K), `7` = 80-column 4-color graphics\n  (32K), `8` = 40-column 16-color graphics (32K) - all screens are 24-25\n  text lines or 192-200 graphics lines tall, and a graphics screen needs\n  the `StdFonts` file merged in before it can display text (else\n  characters show as a placeholder glyph). This resolves what the two\n  cross-check quick references had stated slightly differently. `-z`\n  reads window parameters from redirected stdin instead of the command\n  line (`Live` (N"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/6809-level2-mmu.md",
+  "chunk_index": 10,
+  "text": "a real-world implementation of this MMU\narchitecture; its boot-time Support ROM is a worked example of the\nmemory-diagnostic tooling a DAT-based system needs. It manages physical\naddress space in fixed 2K blocks (matching a 2K mapping-RAM granularity),\nnumbered sequentially:\n\n- **Address-decoding test**: writes a block's own number into it at every\n  extended address alias, checks nothing else got clobbered.\n- **Convergence test**: writes/verifies a pattern then its complement\n  across 256 passes per block, shifting the pattern each pass, to exercise\n  every bit combination at every address.\n- **Unattended overnight/weekend mode**: runs all diagnostics in sequence,\n  stops only on error.\n- **Blocks 0-3 can't be marked bad/excluded** - a physically defective\n  chip there prevents boot; the "
+}

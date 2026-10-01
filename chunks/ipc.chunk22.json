@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 22,
+  "text": "ease serializes them, with zero explicit locking calls. Design\n  a shared data file as read-modify-write on purpose and you get real\n  concurrency safety at no cost.\n- **A plain growing file can behave like a persistent pipe.** A write\n  landing at current EOF takes the **EOF lock** - a \"ghost lock\" placed\n  where no data exists yet, not a lock on the file's actual content, which\n  stays fully readable throughout. Its only job is to stop a reader from\n  mistaking \"caught up to the current end\" for \"the writer is done\": it\n  hits the ghost and waits right at the edge instead of reading past what's\n  really there. Unlike a real pipe the data also survives after both\n  processes exit - useful for a slow producer/consumer pair (e.g. a\n  spooler) that wants that.\n\nThe mode rule is two rules, an"
+}

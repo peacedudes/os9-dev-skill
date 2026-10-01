@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 4,
+  "text": "LF from `\\n`\nwhich on OS9 is the same as `\\r`.\"\n\n## Converting an ANSI tree with `ansi2knr`\n\n`ansi2knr` (Aladdin/Ghostscript, shipped inside the JPEG library sources) is the\nstandard de-ANSIfier and it builds under Microware `cc`, so it is the obvious\ntool to reach for. It earns its place, but four limits decide how much hand work\nis left, and a fifth can hang your build.\n\n**It rewrites definitions only - declarations reach `c68` untouched.** This is\nthe one that changes how you estimate a job. `Live` (os9exec), two game ports:\n46 and 90 function *definitions* converted automatically, while 33 and 66\n*prototypes* survived in the headers and all had to be done by hand. **So when\nsizing an ANSI tree for this compiler, count the declarations.**\n\n**But the definitions are only free in one brac"
+}

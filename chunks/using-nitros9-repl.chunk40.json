@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 40,
+  "text": "mbler strings (`nested\nMACRO definitions`, `ENDM without MACRO`) that plain `asm` does not. Seeing\n`asm:` from `rma` does not mean you ran the wrong tool.\n\n**The aliases are not all aliases.** `rma`, `rma_orig` and `rma.6809` are\nbyte-identical (module `rma`, 20,143 bytes, CRC `$F83DD9`). `rma.6309` is a\n*different* module - name `r63`, 23,591 bytes, CRC `$E86F73`. All of them plus\n`rlink` verify **Good**.\n\n`asm` remains a fine choice for ordinary single-file `MOD`/`EMOD` assembly, and\nis simpler. Modern NitrOS-9 builds with **lwasm** rather than the vintage\n`rma`/`rlink` pair, so cross-assembling on the host stays a valid route - a\nmatter of preference, since the guest toolchain works.\n\nRelated shell facts found alongside: `rma <file> #8k` gives an immediate\n`WHAT?` from the shell before "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 26,
+  "text": " handlers only on a poll, so even a\ncorrectly armed alarm runs nothing until the program calls `check_signal()` -\nthat one is a library property, not a kernel property, and is described in\n`c/os9-clib-reference.md`. Establish which you have before changing anything:\narm a deadline from **assembly**, or from Microware's own `intercept()`, and you\nhave removed the library from the question.\n\n**`F$Sleep` shares the high-bit convention but not the rounding rule.** Its page\nstates none, where `F$Alarm`'s NOTE requires rounding up. Do not rely on a\nsub-tick `F$Sleep` returning early: nothing in the manual promises it, and one\nimplementation rounds up (`Live` (os9exec): `$80000001`...`$80000007` slept 1,\n1, 2, 2, 2 and 3 ticks).\n\n**The same high-bit convention appears elsewhere**, so recognise it"
+}

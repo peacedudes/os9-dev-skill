@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 20,
+  "text": "ted standard paths share a descriptor outright. Whether\n    Microware's SCF propagates, and for which options, is not stated in the\n    passages held here. Either way, do not assume an option change is private to\n    your path.\n\n    That is also why a routine restoring options should **write back only the\n    fields it changed**, never a whole saved `struct _sgs` - see\n    `c/os9-clib-reference.md`. A whole-struct replay can undo another routine's\n    change, and if options do propagate, another process's.\n\n### I$ service requests\n\n| Call | Behavior |\n|---|---|\n| `I$Open` | Allocates buffers, initializes path descriptor vars, parses pathname; multi-file devices search their directory |\n| `I$Create` | Same as `I$Open`; on multi-file devices creates a new file, otherwise synonymous with `I$O"
+}

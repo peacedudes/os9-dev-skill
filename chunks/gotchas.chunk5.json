@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/gotchas.md",
+  "chunk_index": 5,
+  "text": "starts at 1** regardless. And the `DIM` bound is always the element\n  count - `BASE 0` shifts where indexing starts, it does not add a slot.\n- **A trailing comment after code is a compile error on both interpreters.**\n  `!` must be the first non-blank token on its line. A standalone whole-line\n  `!` comment is fine anywhere a statement could go, and `LIST` normalizes it\n  to `REM`. (`basic09c`, the independent native compiler, is the mirror\n  image: it accepts trailing comments and rejects standalone comment lines -\n  no comment style is clean across all three.)\n\n## Behavior that surprises\n\n- **A comment as the literal first line of a file breaks `LOAD` outright on\n  6809, but not on 68k** (`Live` (NitrOS-9, os9exec)). A source file starting with\n  `! ...` above `PROCEDURE` loads on 68k an"
+}

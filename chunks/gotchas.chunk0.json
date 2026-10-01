@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/gotchas.md",
+  "chunk_index": 0,
+  "text": "# BASIC09 Gotchas - all targets unless noted\n\nA digest of the traps, one to three lines each, with a pointer to the full\ntreatment. Nothing here is the only statement of a fact except where a bullet\ncarries its own detail.\n\n## Porting between targets\n\nFull per-target detail: `basic09-per-target.md`.\n\n- **INTEGER overflow wraps silently** at each target's width, no error, no\n  warning. The wrap *mechanism* is identical across targets, so porting code\n  that relies on the *width* breaks without any visible symptom - the #1\n  silent-bug source here.\n- **Hex constants change sign meaning across targets.** 6809 `$8000`-`$FFFF`\n  are negative (16-bit); the same literal on 68k is a large positive 32-bit\n  value. Never compare one across the boundary without an explicit cast.\n- **REAL precision di"
+}

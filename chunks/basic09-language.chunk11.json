@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 11,
+  "text": "roactively\nforce real division.** `Live` (os9exec): `r = i / 3` with `i: INTEGER`\n(both operands INTEGER) computes INTEGER division first (truncating,\ne.g. `100000/3` -> `33333`) and only *then* widens that already-truncated\nresult into the REAL destination `r` - the fraction is gone, `r` prints\nas `33333.` not `33333.333...`. A REAL-typed operand (e.g. `i / 3.0`, or\nany variable declared REAL) forces real division and preserves the\nfraction. This is a common trap for anyone assuming \"the destination\ntype decides the arithmetic\" the way it does in some other BASICs - here\nthe operand types decide, before the result ever reaches the\ndestination.\n\n```basic\nDIM name: TYPE\nDIM name(size): TYPE                    ! Arrays, 1-3 dimensions\nDIM name: STRING[max_len]\nDIM a, b, c: INTEGER; x, y: REA"
+}

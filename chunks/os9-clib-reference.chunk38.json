@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 38,
+  "text": "`.\n\n**`Live` (os9exec) - actual 68k `clib.l` symbol availability** (each\nlink-tested): `strcmp`/`strncmp`/`strlen`/`malloc`/`free`/`atoi`\nlink and work. **Memory functions are ANSI, not BSD:** `memcpy`/`memset` link;\n`bcopy`/`bzero` are **absent** (`Symbol unresolved`) - a contrast with the\nBSD-style *string-search* names (`index`/`rindex`, no `strchr`) just above.\nAlso **absent** (unresolved at link): `strchr`/`strrchr` (use `index`/`rindex`),\n`strtol` (use `atoi`), `strdup`, `strstr`. Reach for the name the library\nactually has, or the link fails outright rather than at runtime.\n\n## Character Classification (`<ctype.h>`)\n\nFast inline macros built over `_chcodes[]` table: `isalpha isupper islower\nisdigit isxdigit isspace ispunct isalnum isprint iscntrl isascii toupper\ntolower toascii`. Do"
+}

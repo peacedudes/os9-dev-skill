@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 31,
+  "text": "ts of the ABI - ordinary code tests an operand\nbefore dividing rather than catching the hardware trap - so its handler-entry\nconventions were thinly documented from the start. One 68k subtlety a resuming\nhandler must respect: **bus and address errors push a longer CPU exception\nframe** than the other vectors (they add fault-address and status-word fields -\nroughly 8 extra bytes on the 68010 and later), so the saved state a handler is\nhanded is not the same size for every exception. An interrupt service routine, by contrast, runs in **system\nstate with no current-process context** - it's servicing the CPU, not\n\"running as\" any particular process, which is why an ISR has such a\nrestrictive register-preservation contract (see `device-drivers.md`).\n\n## os9exec's scheduler and idle loop - for w"
+}

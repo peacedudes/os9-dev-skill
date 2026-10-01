@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 9,
+  "text": "itor that turns out wrong should suspect them first.\n\n- **Process descriptor table**: an array of process-descriptor addresses; a\n  process's ID is literally its index into this table (a zero entry means\n  that ID is unused/free). The table starts small and the kernel doubles\n  its size whenever it fills - so a PID's numeric value can vary run to\n  run and should never be hardcoded.\n- **Memory-area ceiling**: a process may dynamically hold at most 32\n  separate memory areas total, counting its initial static storage and\n  stack; the kernel tracks every one for automatic cleanup at exit.\n  Contiguous areas are merged where possible specifically to make the most\n  of this 32-entry ceiling.\n- **Signal-intercept state save**: entering an intercept routine\n  auto-masks signals (`P$SigLvl` set t"
+}

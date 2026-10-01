@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 68,
+  "text": "d has written to the terminal, as\n  the manual describes (`Manual`, *Using Professional OS-9*; `Live`\n  (os9exec, macOS and Windows 11)). One that has not - `sleep -s 20` - is moved to the background:\n  the shell prints `+3` and prompts, and the child runs on. One that has\n  written receives interrupt signal 3 and, with no intercept handler, dies\n  with `Error #000:003 (S_Intrpt) User interrupt`. So Ctrl-C does not stop a\n  silent computation, and does kill a chatty one.\n- **Ctrl-E** sends abort signal 2, which kills a child that has no\n  intercept handler, whatever it is doing - compute loop, blocked read, or\n  blocked write. `Live` (os9exec, macOS and Windows 11, on a loop with no\n  system calls). A program that installs a handler receives the signal\n  instead and decides for itself: Run"
+}

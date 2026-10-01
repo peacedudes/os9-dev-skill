@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 42,
+  "text": "`SS.Mouse` ($89 as a\nGetStat sub-function) - see `coco-dragon-hardware.md`.\n\n## Calls that can end the session that makes them\n\nThese are safe to *document* and hazardous to *call*, so they resist scripted\ntesting. The risk is the reason - a call whose risk you can design around is\nfair game, and two of them are shown below.\n\n| Call | Risk |\n|---|---|\n| `F$Boot` | Reboots. Ends the session outright |\n| `F$AProc`, `F$NProc` | Scheduler-internal - queue a process or switch to the next one; may never return to the caller |\n| `F$DelPrc` | Terminates a process by ID; trivially self-terminating |\n| `F$GCMDir` | Explicitly kernel-only in its own description |\n| `F$IOQu` | Untimed wait on an I/O queue - hangs with nothing to time it out |\n| `F$IRQ`, `F$IODel` | Manipulate real hardware interrupt v"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 28,
+  "text": "ent\" misses this case\nsilently (wrong behavior at runtime, no assemble/link-time warning).\n**Don't use `D5` to bound a raw read/write of the string** - a\nNUL-terminated scan is the safe check. `D5`'s exact meaning is unresolved\n(possibly the whole parameter+environment block size, not just the argument\ntext), and reading past the NUL using `D5` as\na byte count risks pulling in the environment-variable data that follows\nit in memory.\n\nRegister conventions for device-driver and file-manager dispatch-table entry\npoints (Init/Read/Write/GetStat/etc., as opposed to the IRQ convention above\nor the C-callable convention) are not attested anywhere in this rebuild's\nfour source clusters - that material lives in the sibling `os9-systems-dev`\nskill, which should be treated as the authority for it rat"
+}

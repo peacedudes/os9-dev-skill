@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 22,
+  "text": "odlink()` = F$Link, `modload()` = F$Load, `munlink()` = F$UnLink.\n\n- **Type check on fork/chain:** a resident name whose type/language doesn't\n  match the request returns `E_NEMOD` - no silent substitution; only if no\n  resident match is the name tried as a file path.\n- **Revision substitution:** loading a module whose name/type/language\n  match a resident one compares M$Revs - higher revision replaces the\n  directory entry immediately; running processes keep the old bytes.\n- **Module groups:** all modules loaded from one file share one contiguous\n  allocation and free only when the group's combined link count hits zero.\n- **Module files:** a file may hold any number of concatenated modules;\n  to RBF it's an ordinary file.\n- Link counts can be adjusted artificially (`link`/`unlink` utiliti"
+}

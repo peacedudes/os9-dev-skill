@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 17,
+  "text": "U or disk load, since it's still one 6809 sharing cycles across every session. `T1` is the CoCo's built-in (\"Bit Banger\") RS-232 port, generally considered unreliable; `T2` maps to the Deluxe RS-232 RomPak cartridge specifically; third-party serial cards need their own `T2`-compatible driver module installed via `OS9GEN`.\n\n**PIPE descriptor:** a virtual (memory-only) device used for inter-process data transfer between utility programs, with no disk I/O involved - the standard way command pipelines move data under OS-9's shell.\n\n## Monitor and serial tuning utilities\n\nCommand syntax/options for `montype`/`tuneport`: `6809/utility-usage.md` -\nnot repeated here. Hardware-specific context: `MONTYPE`'s r/c/m\nselection affects sync/color-burst generation on the CoCo's video\nhardware, not just a "
+}

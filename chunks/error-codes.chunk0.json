@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 0,
+  "text": "# OS-9 Error Codes Reference\n\n## Overview\n\nOS-9 error reporting follows a standard convention.\n\n### Error format: \"Error #NNN:MMM\"\n\nErrors are reported as **Error #NNN:MMM** where:\n- **NNN** is the class/module number (000 for kernel/core errors)\n- **MMM** is the specific error code within that class\n\nExample: `Error #000:216 (E_PNNF)` is class 000, code 216, symbolic name\n`E$PNNF` (Path Name Not Found).\n\n**The same error has two spellings, and only one of them is printed.** Source\nand `DEFS` files declare `E$PNNF`; the runtime prints `E_PNNF` - `Live`\n(os9exec), seen for `E_PNNF`, `E_CEF` and `E_DNE`. The tables below use the\n`E$` form throughout, so searching for a name exactly as the machine printed it\nwill miss every row: substitute `$` for `_` before looking it up.\n\n### Return convent"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 41,
+  "text": "s included whether referenced or not; no\nnon-mainline ROF may itself contain a mainline PSECT.\n\n| RLINK option | Effect |\n|---|---|\n| `-o=path` | Write the linked memory module here; without `-n`, the module is named after this path's final component |\n| `-n=name` | Explicit output module name |\n| `-l=path` | Library ROF (merged assembly ROFs) - each PSECT inside is pulled in only if it resolves a currently-unresolved reference; no mainline PSECTs allowed; libraries searched in command-line order |\n| `-e=n` / `-E=n` | Edition number for the output module (default 1) |\n| `-M=size` | Extra data-area memory, in pages (or `K` for kbytes); if omitted, RLINK sums the stack-size operand from every linked PSECT |\n| `-m` | Print a linkage map of each PSECT's assigned base address (a distinct option"
+}

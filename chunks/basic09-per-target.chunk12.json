@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 12,
+  "text": " `JSR` straight to its entry point**, returning\nvia a plain `RTS`. `KILL <name>` releases it afterward so its memory can be\nreclaimed.\n\n**Calling convention** (from the manual's stack-frame diagram):\n\n- `D0` = parameter count; `D1` = address of the first parameter.\n- On the stack above the return address: for each parameter *after* the\n  first, a 4-byte length followed by a 4-byte address, in call order, toward\n  higher addresses.\n- **Error signaling:** set the carry bit in the CCR and put the error code in\n  the low word of `D1`. On success, `RTS` with carry clear.\n- By-value vs. by-reference doesn't change the layout - either way the\n  routine receives an *address*. The difference is only what it points at:\n  the caller's own storage, or a temporary copy BASIC09 made. Writing through\n  a"
+}

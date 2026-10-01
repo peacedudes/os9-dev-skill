@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 21,
+  "text": "on `getchar()` does not block, does not report anything, and\n**spins** - consuming the CPU while appearing hung. The cure is `clearerr(stdin)`\nonce you have decided the signal was survivable; the diagnosis is that a hang\nwhich burns CPU is a latched error flag, not a blocked read. A genuinely blocked\nread is idle.\n\n**So do not tidy away a `clearerr()` you cannot account for.** Period code\nalready knew about this and guarded it: a 1980s game with an alarm timeout calls\n`clearerr(stdin)` on the path its interrupted read returns through, commented\nonly as being in case a user sends end-of-file. `Live` (os9exec): that program\ntakes its timeout, returns to its menu, and reads the next prompt normally - no\nspin. The guard is doing work that its comment does not claim, which is exactly\nwhat makes"
+}

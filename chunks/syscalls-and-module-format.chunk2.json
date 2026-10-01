@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 2,
+  "text": "rea,\n  `Y` = its top, `X` = the parameter area (which sits above `Y`, so `X` is\n  *not* a data-area boundary - see the next bullet for what it actually\n  points at), `D` = parameter area size, `PC` = module entry point, `CC`\n  flags F=0, I=0. The same `U`/`Y` convention is documented from the\n  assembler's side in `assembly-and-tools.md`'s data-area register section.\n- **Command-line parameter area at entry** (`Live` (NitrOS-9)): on a shell fork\n  (`progname ARGS`), entry `X` points directly at the argument text with **no\n  leading byte** - the raw command tail, multiple arguments space-separated\n  verbatim, terminated by a single **CR** (`$0D`). `D` = argument-text-length\n  + 1, the +1 being that CR; bare `progname` gives `D`=1, a lone CR. The\n  debugger's `E progname ARGS` is the outlier"
+}

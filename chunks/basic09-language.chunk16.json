@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 16,
+  "text": "OOP\n```\n\n**EXITIF always closes with ENDEXIT** - both the BASIC09 Reference Manual\n(Rev H) and the OS-9 BASIC User Manual (Rev G) show `EXITIF expr THEN\nstmts ENDEXIT` consistently. `Live` (os9exec): `EXITIF`/`ENDEXIT` inside a\n`LOOP`/`ENDLOOP` correctly exits the loop.\n\n**`WHILE` requires `DO`** - a bare `WHILE expr` (no `DO`) is a live syntax\nerror (`Error #000:031`); only the `DO` form compiles and runs (`Live` (os9exec)).\n\nAn INTEGER-typed FOR loop counter compiles to direct machine instructions\nand runs quickly; a REAL-typed counter invokes library routines at\nruntime, incurring significant overhead - roughly an order of magnitude\nslower, since REAL arithmetic on both architectures goes through library\ncalls rather than native instructions (INTEGER does not). Hot loops\nbenefit most fr"
+}

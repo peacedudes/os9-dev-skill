@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 28,
+  "text": " - treat this as a\n  spelling variant across editions, not two different error conditions.\n\n## Other error-handling behavior worth knowing\n\n- **`F$Exit` and parent status.** `F$Exit` terminates the calling process:\n  open paths close, data memory is released, and both the primary module and\n  any installed user trap handlers are unlinked. A parent blocked in\n  `F$Wait` receives the exit status (68k: `d1.w`; 6809: `B`, per\n  `6809/syscalls-and-module-format.md`'s `F$Exit`/`F$Wait` rows); by\n  convention this should be zero for success or an OS-9 error code\n  otherwise. If the parent has already died, the process descriptor is\n  freed immediately instead of waiting for a `F$Wait` that will never come.\n- **Pipe writes behave differently named vs. unnamed.** On an *unnamed*\n  pipe, if every wr"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 6,
+  "text": "hy `login` works at all - `ident` shows `login` owned by 0.0 while `shell`/`list`/`attr` are 1.0. **Case 1 is literally 0.0, both halves - NOT `is_super()` (group 0 alone).** The TRM draws that line deliberately: `is_super` is what an identity may *do*, F$SUser case 1 is who may *change* identity, so a group-0/user-nonzero account (0.153) is a super user that still cannot freely reassign its ID. `Live` (os9exec, enforced + tested) + `Manual` (v2.4 TRM p.1-62, checked against the manual's own wording) |\n| **F$Sleep** | Suspend process | d0.l=ticks (0=indefinite until signaled, 1=no-op/return immediately, positive=raw tick count, **high bit set = the low 31 bits are 256ths of a second** - the same convention as `F$Alarm`'s `d3`, `Manual`) | d0.l=remaining ticks if woken early | `Live` (os9ex"
+}

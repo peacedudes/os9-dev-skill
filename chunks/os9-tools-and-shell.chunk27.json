@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 27,
+  "text": "y; `-e` for details),\n`mfree` (free memory report), `dump` (works on modules too).\n\n**Processes:** `procs` (process list with owner ID, priority, state - shown\nas `group.user` on 68k, a flat user number on 6809),\n`kill`, `setpr`, `sleep`, `w`/`wait`, `ex`.\n\n**Disks and system:** `format` (three phases: surface scan, identification\nsector + allocation map, root directory), `free` (disk space), `dcheck`\n(filesystem consistency), `os9gen` (build a bootable disk), `backup`\n(disk-to-disk copy), `fsave`/`frestore` (incremental tape backup/restore),\n`tape`/`tapegen`, `diskcache`, `iniz`/`deiniz` (attach/detach a device -\nopening devices early at startup also avoids memory fragmentation), `devs`\n(attached-device list), `irqs` (IRQ-poll table), `events` (event-table\nlist), `date` (`-j` Julian), `se"
+}

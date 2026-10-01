@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-mental-model.md",
+  "chunk_index": 11,
+  "text": "l character devices - terminals, printers, serial ports: line editing, echo, flow control |\n| **SBF** | Sequential block devices - **tape drives**: block-oriented but non-random access |\n| **PIPEMAN** | Pipes: FIFO buffer coordination between processes |\n\nLine-oriented I/O (`I$ReadLn`/`I$WritLn`, CR-terminated records) is part of\nthe common path API, not a property of one file manager - it works on RBF\nfiles, SCF terminals, and pipes alike.\n\n## Conventions that bite\n\n- **Big-endian**: 68k stores multi-byte values MSB first; parsing OS-9\n  structures on a little-endian host requires byte swapping. (6809 also\n  stores multi-byte values MSB-first.)\n- **Text lines end in CR (0x0D), not LF** - family-wide. OS-9 C's `\\n`\n  compiles to CR (`\\e` gives a true LF). RBF stores exactly the bytes\n  wri"
+}

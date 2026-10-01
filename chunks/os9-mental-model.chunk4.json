@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-mental-model.md",
+  "chunk_index": 4,
+  "text": "liced) vs. application mode (time-sliced). On 68k this maps to\n  the CPU's own supervisor bit; a module's attribute byte declares which\n  state it runs in.\n- **Scheduler**: preemptive, priority + aging. Default timeslice 2 ticks\n  (~20 ms). Aging is a single system-wide counter consumed at each process\n  insertion, not a per-process wait-counter - a process queued earlier gets\n  a more favorable scheduling constant than one queued later at the same\n  priority, so low-priority work eventually runs. `D_MaxAge` is a priority\n  threshold above which aging is switched off and that tier fully preempts\n  everything below it while active. Full mechanism: `os9-systems-dev`\n  skill's `kernel-internals.md`.\n\n### Memory allocation facts that shape programs\n\n- **Colored memory**: allocation can request"
+}

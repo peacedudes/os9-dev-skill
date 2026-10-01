@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 59,
+  "text": "-Microware-Interactive-Assembler differences appendix - mostly\n`Manual`; the PSECT operands, the external-reference and trailing-colon export\nmechanisms, `-o=`, and `rlink`'s mainline/subordinate argument order are now\n`Live` (NitrOS-9) via a working two-file build).\n"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 7,
+  "text": " front rather than\nmany small ones, precisely because of this ceiling.\n\nFor code that wants to bypass `malloc()`'s bookkeeping entirely, `_srqmem()`/\n`_srtmem()` request and release memory straight from the kernel (`F$SRqMem`)\nwith less overhead. Two details worth knowing: passing `0xFFFFFFFF` as the\nsize to `_srqmem()` is a special case that returns the single largest\ncontiguous free block in the system (with the actual size delivered via the\nglobal `_srqslz`), and any pointer `_srqmem()` returns is guaranteed to fall\non an even byte boundary - don't lose track of the original pointer value if\nyou intend to hand it back via `_srtmem()` later. On failure, `_srqmem()`\nreturns `-1` with the reason in `errno`, the same convention as other C\nlibrary calls.\n\nThe `_lmalloc()`/`_lcalloc()`/`_lrea"
+}

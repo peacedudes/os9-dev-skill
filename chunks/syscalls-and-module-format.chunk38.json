@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 38,
+  "text": "tes `.` and `..` entries. `Source`: NitrOS-9's `rbf.asm` implements MakDir as a thin wrapper over Create (same B contract) that sets the directory bit afterward. `Live` (NitrOS-9) |\n| I$ChgDir | $86 | A=mode (1/2/3=data, 4=exec), X=pathlist | `Live` (NitrOS-9) - confirmed effective, not merely accepted: a subsequent bare-name `I$Create` resolved relative to the new directory |\n| I$Delete | $87 | X=pathlist | Requires write permission. `Live` (NitrOS-9) |\n| I$Seek | $88 | A=path, X=high 16 bits, U=low 16 bits of the 32-bit position | Random access (RBF) or cursor position (SCF). The register pair is **X:U** - the System Programmer's Manual (11.3.14) documents exactly this split, NitrOS-9's RBF `Seek` reads it the same way (`Source`), and `Live` (NitrOS-9) confirms it. **Trap when writing th"
+}

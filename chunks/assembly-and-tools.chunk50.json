@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 50,
+  "text": "ition* in that table, assigned by the location counter rather than\nwritten per name. **That file is RMA source and `asm` cannot `use` it at\nall** - see \"Why not `use` os9defs.a\" near the top of this file for what\nhappens and what to do instead.\n\n## Debugger\n\nEvery command below is `Live` (NitrOS-9) except `C`, which is `Manual` - it\nclears the RAM it tests, so it has deliberately never been run here.\n\n| Command | Effect |\n|---|---|\n| *(space)* `expr` | Calculator: evaluate and print in hex + decimal (` 5+3` -> `$0008 #00008`) |\n| `.` | Show Dot (working address) and its contents |\n| `. expr` | Set Dot, then show it |\n| `..` | Recall the *previous* Dot value |\n| `-` | Decrement Dot, show it |\n| *(bare return)* | Increment Dot, show it - steps through memory sequentially |\n| `= expr` | Write"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 6,
+  "text": "t reference\ncloses. Each is a composite structure in three regions.\n\nThe **first 42 bytes** ($00-$29) are a file-manager- and driver-agnostic\nheader the kernel manages. `Manual` (OS-9 Technical I/O Manual §1, universal\ntable), independently matching os9exec's `PD_` offsets:\n\n`PD_PD` $00 (path number), `PD_MOD` $02 (access mode), `PD_CNT` $03 (open\ncount - **the manual marks this obsolete**), `PD_DEV` $04 (device-table\npointer), `PD_CPR` $08 (requester PID), `PD_RGS` $0A (caller register stack),\n`PD_BUF` $0E (buffer), `PD_USER` $12 (owner group/user), `PD_PATHS` $16\n(open-path list), `PD_COUNT` $1A (open count - the current one), `PD_LProc`\n$1C (last active PID), `PD_ErrNo` $20 and `PD_SysGlob` $24 (C-language file\nmanager `errno` / system-global pointer), then `PD_FST` $2A and `PD_OPT` $80"
+}

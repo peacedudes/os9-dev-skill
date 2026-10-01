@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 19,
+  "text": "ng at the kernel level: **module groups exist because\nmerged modules in one file aren't necessarily page-aligned individually** -\nkeeping the group intact keeps the underlying contiguous memory block\nvalid for the memory manager, which is why the group only frees once\nevery member's combined link count is zero.\n\n- **Type/language matching is per-*field*, with 0 = wildcard - not a\n  whole-word compare** (`Live` (os9exec)). The requested type/language\n  is a word: high byte = type, low byte = language. The kernel matches the\n  two bytes **independently**, and a zero in either field means \"any\"\n  (`MT_ANY` / `ML_ANY`, both 0, as os9exec names them). So\n  `$0200` requests \"a *subroutine* module, *any* language\" and legitimately\n  matches a `$0202` subroutine / BASIC09-I-code module. This is ex"
+}

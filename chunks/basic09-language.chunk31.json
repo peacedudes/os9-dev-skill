@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 31,
+  "text": "der = 0\n  blank.price = 0\n  ! pre-allocate 50 empty slots\n  FOR n = 1 TO 50\n    PUT #sp, blank\n  NEXT n\n  ...\n  ! jump straight to record `slot`; one PUT writes the whole record\n  SEEK #sp, (slot - 1) * SIZE(blank)\n  PUT #sp, blank\nEND\n```\n\nPre-allocating every record (as above) before random-order updates avoids\nEOF errors from `SEEK`ing past the current end of a sparse file.\n\n(Mechanism per BASIC09 Reference Manual, Tandy ed., ch. 8 \"Disk Files\";\nthe example above is original, not the manual's own.)\n\n## PRINT USING\n\n**The format-string syntax uses directive LETTERS, not `#` placeholders.**\nA generic-BASIC-style `\"###.##\"` format string was **never real BASIC09\nsyntax** - it fails at run time (`Error #000:063`) and is a\nplausible-looking fabrication to guard against. The real syntax, conf"
+}

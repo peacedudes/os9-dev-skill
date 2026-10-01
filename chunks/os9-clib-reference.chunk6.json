@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 6,
+  "text": "stdlib.h>` fails `cpp` with `can't open /h0/DEFS/stdlib.h (err=216)` under the standard `cc` toolchain; the file exists on-disk only under the gcc2-specific `DEFS/os9lib`/`DEFS/GCC2` trees, and `cc` cannot use it: `cc`'s `-I` is not an include path (it selects the `cio` trap handler; `-I/...` gives `unknown flag : -/`), and `-V=/h0/DEFS/os9lib`, the real include-path switch, finds the header only for `c68` to reject its ANSI prototypes (`Live` (os9exec)). K&R doesn't require a prototype for `exit()`, so dropping the include and declaring nothing works fine |\n| `<ctype.h>` | Character classification (macros, K&R-era coverage) |\n| `<setjmp.h>` | `setjmp()`, `longjmp()` |\n| `<time.h>` | OS-9-specific system time (see \"File Dates and Time Zones\" below) |\n| `<errno.h>` | OS-9 error-code extensi"
+}

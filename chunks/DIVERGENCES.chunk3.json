@@ -1,0 +1,5 @@
+{
+  "source": "DIVERGENCES.md",
+  "chunk_index": 3,
+  "text": "manuals.\n- **`M$Attr` bits 0-4 are undocumented** in any surveyed manual; only bits 5\n  (supervisor state), 6 (sticky) and 7 (sharable) are described.\n- **Signal-queue depth on intercept entry is undocumented.** On entry to an\n  intercept routine `d0` holds the number of currently-queued signals,\n  including the one just delivered, so 1 means nothing else is waiting. The\n  source is Dibble's *OS-9 Insights* (third-party); the Technical Manual names\n  only `d1` and `a6`, and no manual we hold states it.\n- **`asm`'s source-line length limit is undocumented** - a real limit between\n  132 and 135 characters, whose only symptom is a misleading `bad instr` error\n  reported against the *following* line.\n"
+}

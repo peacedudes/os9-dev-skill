@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 25,
+  "text": " invoking a utility with options rather than guessing\nflags.\n\n**Files and directories:** `attr` (show/change permissions -\noutput-string decoding and the `-e` privilege gotcha, both `Live`:\n`common/utility-usage.md`'s `attr` entry), `build` (create\na small text file from console input, `?` prompt per line, EOF ends),\n`copy`, `del`, `deldir` (recursive directory delete), `dir` (`-e` for full\nlisting), `dsave` (emit a procedure file that copies a directory tree),\n`dump` (hex/ASCII file dump), `edt` (line editor), `list` (print text file),\n`makdir`, `merge` (concatenate files to stdout), `pd` (print working\ndirectory - 6809 spells it `pwd`, with `pxd` for the execution directory),\n`pr` (paginated printing), `rename`, `touch`, `tr` (character\ntranslate), `cmp` (binary compare: offset, hex valu"
+}

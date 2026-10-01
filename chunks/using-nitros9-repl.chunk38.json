@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 38,
+  "text": "u staring at a prompt with nothing to show:\n\n1. **`rma` writes no object file unless you pass `-o=`.** It runs, prints\n   nothing, exits cleanly, produces nothing. `-l` will even show a clean\n   listing with object bytes on every line and *still* write no ROF. This is\n   the big one.\n2. **Output goes to the execution directory (`chx`), not `chd`.** With `chx` on\n   `/dd/CMDS`, where an ordinary user cannot write, a run leaves nothing\n   anywhere and says nothing.\n3. **`/dd/CMDS/rma` has no public read** (`--e--ewr`, owner 0.0). An ordinary\n   user can execute it by bare name but cannot load it by pathlist -\n   `/dd/CMDS/rma <file>` prints **nothing at all**, though `copy` on the same\n   file admits `Error #214`. Copy the binaries somewhere you own, or be user 0.\n4. **A label is local unles"
+}

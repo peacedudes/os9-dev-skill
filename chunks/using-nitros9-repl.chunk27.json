@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 27,
+  "text": "dged channel, and restarting on that misreading loses the\n  workspace. Budget guest compute in minutes and poll for a sentinel the\n  program prints rather than sleeping a guessed interval.\n- **Two echo behaviours that look like character loss but aren't.** `Live` (NitrOS-9):\n  `LOAD <file>` at `B:` echoes the **procedure name it loaded**, not the\n  command line - `LOAD burn.b09` shows as `B:burn`. And the DriveWire server\n  shows repeating `OP_SERREAD` polls the whole time, *including while the\n  guest is busy computing* - polling is not evidence that a process is parked\n  at a prompt.\n- **After a long CPU-bound computation, or a burst of rapid sends, the next\n  command can land corrupted or be dropped.** `Live` (NitrOS-9) in two independent\n  sessions; deliberate attempts to reproduce it "
+}

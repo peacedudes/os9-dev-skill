@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 77,
+  "text": "e buffer and writes 13; it crashed 2 of 2 with memory\npushed high, and a copy one character shorter ran 3 of 3.\n\n**A dump hinting at a corrupted module is not evidence of one.** Check the file\nwith `ident`, which reports the module CRC and the header parity separately; a\nmodule that reports `Good CRC` and `Good parity` is intact, whatever a\npost-mortem probe of live memory made of it.\n\n## Symbolic debugging (the OS-9 `debug` command)\n\nSee `68k/os9-68k-assembly.md`, \"Symbolic debugging (the OS-9 `debug` command)\".\n\n---\nEverything above is `Live` (os9exec) unless tagged otherwise inline -\na few emulator-internal details are `Source` (read from os9exec's own C\nrather than observed), and any `Manual` claim says so.\n"
+}

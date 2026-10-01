@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 4,
+  "text": ". With `aaa` and `bbb` in\n  the workspace and `bbb` current, `PACK aaa >target` leaves `DIR` showing:\n\n  ```\n    aaa    92  66          -*aaa    96  66\n   *bbb    92  66    -->     bbb    92  66\n  ```\n\n  Three separate effects, all on `aaa` alone:\n  1. **A leading `-` marks it packed.** The manual documents `*` (current\n     procedure) but gives no legend for `-`; that it means \"packed\" is `Live` (os9exec),\n     confirmed by it attaching only to the packed procedure and by `LIST aaa`\n     afterwards printing **nothing at all** - the manual's \"CANNOT be edited or\n     debugged\", in practice.\n  2. **`*` moves to it** - packing makes that procedure current. That does\n     not change what a later `PACK*` enters at, which is decided by workspace\n     order (table above).\n  3. **It grows slightl"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 59,
+  "text": "n the `-d` trace (`Source`,\nos9exec). Usually harmless. `D_SPUMem` ($3D8) is the one worth recognising:\nevery Microware-C start-up reads it to detect a System Security Module, and 0\nis answered deliberately because that is what a machine without an SSM\nreports - see `kernel-internals.md` in `os9-systems-dev`.\n\n**`top` shows its header and no process rows.** `Live` (os9exec), with\n`@TERM=vt100`: it redraws the header until stopped and lists nothing. It asks\nfor PID 0, gets the documented `E$IPrcID` (224) refusal and ignores the\ncarry, so it reads a buffer nothing filled - `top`'s own bug, which what that\nbuffer happens to hold turns into an empty list or worse.\n\n**There are no device descriptor modules, by design** - os9exec does not\nprovide them. It mounts `/dd`, `/hN` and `/term` without "
+}

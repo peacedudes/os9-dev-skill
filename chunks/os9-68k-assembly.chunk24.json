@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 24,
+  "text": " 32 bits |\n| **A5** | Frame pointer - used to address local variables and parameters |\n| **A6** | Global-variable pointer - initialized to the base of the module's global/static data *plus* `0x8000`, enabling 16-bit signed offsets to reach a full 64K of globals |\n\nThe `+0x8000` bias is the key: it allows 16-bit signed offsets from A6 to address the entire 64K global region symmetrically around the bias point.\n\n## Program entry register state (what a forked program sees)\n\nWhen `F$Fork`/`F$Chain` transfers control to a module's execution entry\npoint (`M$Exec`), the kernel has already set up a specific register state -\ndistinct from both `F$Fork`'s *input* registers (what the parent passes, see\n`syscall-reference.md`) and the C-callable convention above. The load-bearing\nfacts a program can r"
+}

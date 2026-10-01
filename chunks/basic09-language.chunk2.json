@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 2,
+  "text": "heir forms with a\ntrailing `! text` for readability. **That form is not legal BASIC09** - a\ncomment must be the first non-blank token on its line (see Comments, and\n`gotchas.md`). Complete examples in this file obey the real rule; the\ntemplates are notation, not code to paste.\n\n## Getting Started\n\nBASIC09 operates through three interactive prompts, each a distinct mode:\n`B:` for System Mode (workspace management, file operations, launching\ncode), `E:` for Edit Mode (source entry/modification), and `D:` for Debug\nMode (breakpoint inspection, single-stepping). A fourth \"mode,\" Execution,\nis triggered by `RUN` at the `B:` prompt and runs your code before\nreturning to `B:`. From System Mode, `e <name>` enters Edit Mode and `run\n<name>` compiles then executes. Within System Mode, `$` runs an OS"
+}

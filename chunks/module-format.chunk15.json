@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 15,
+  "text": "  `basic09`'s own `BFX` reads `$21` (Sbrtn + object), and a freshly\n  `PACK`ed procedure reads `$22` (Sbrtn + BASIC09 I-code) with `At/Rv $81`\n  (reentrant, rev 1). `$04` would decode as type nibble 0 - not a valid\n  module type at all - with language 4, which\n  `6809/syscalls-and-module-format.md` marks reserved and unimplemented.\n  **Scope:** the encoding and the native-object value are `Live` (NitrOS-9); no 6809\n  C-compiled module was available to `ident`, so `$11` for that compiler's\n  own output is inference from a confirmed encoding rather than a direct\n  observation. It agrees with `c/os9-clib-reference.md`'s `os9fork()` entry\n  (`lang == 1`). These are compiler-specific values, not general constants.\n- `os9fork()`/`chain()` on 6809 want `lang == 1` (6809 machine code).\n  Numerical"
+}

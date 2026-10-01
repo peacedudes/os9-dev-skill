@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 25,
+  "text": ".\n- **If a terminal library reports an empty name**, try passing the variable as\n  `@TERM=`/`@TERMCAP=` and letting os9exec launch the program directly, with\n  no shell between, before suspecting your termcap. It needs no login session:\n\n```sh\nenv '@TERM=vt100' '@TERMCAP=/dd/SYS/termcap' os9exec /h0/CMDS/prog\n```\n\n  `TERMCAP` may hold a path or the entry itself; both work where this works.\n\n## Batch-testing binaries\n\nEach candidate can be its own boot program in a fresh instance - no shell\nneeded:\n\n```\ngtimeout 5 env OS9DISK=/abs/path/disk ./os9exec /dd/CMDS/<name> </dev/null 2>&1\n```\n\n**`gtimeout`, not `timeout`, on macOS** - the GNU coreutils build installs under\nthe `g` prefix there (`/opt/local/bin/gtimeout` from MacPorts, likewise\nHomebrew), and a bare `timeout` does not exist. On Lin"
+}

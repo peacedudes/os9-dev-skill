@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 6,
+  "text": "ocated\n\nexfilei\nPASS create-write-close\nPASS open of a missing file: Error #216 - Path Name Not Found\n```\n\n`dump exfile.txt` shows 18 bytes, `written by exfilei` plus the trailing\n`$0D`. **Error 216 is the same number the 68k and C examples report for the\nsame mistake** - OS-9 error codes are shared across architectures and\nlanguages, and the C library passes them through as `errno`.\n\n### The module the assembler produced\n\n```\ndump /dd/cmds/exfilei\n\n00000000 87CD 012E 000D 1181 0700 1400 C945 7846  .M..........IExF\n00000010 696C 65C9 308D 007C 8602 C603 103F 8325  ileI0..|..F..?.%\n```\n\n| Bytes | Field | Reads as |\n|---|---|---|\n| `87CD` @ `$00` | sync | the 6809 module signature - *not* the 68k `$4AFC` |\n| `012E` @ `$02` | module size | 302 bytes |\n| `000D` @ `$04` | name offset | `$0D`, w"
+}

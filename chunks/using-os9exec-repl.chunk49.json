@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 49,
+  "text": "vel climb really did climb four\n  levels: on a host directory a relative pathlist is joined to an absolute path\n  and resolved host-side (see the climbing section in\n  `common/unix-differences.md`). Naming the device type\n  matters here, because `OS9DISK`/`OS9Hx` can equally name an image. The one exception is NESTED device\n  roots - if one device's host root sits inside another's, `..` walks from the\n  inner device into the outer one (the clamp matches the first configured root\n  the path is a prefix of, which is the enclosing one). It still cannot leave\n  the set of configured devices. When testing confinement, make sure the\n  directory holding your device is not itself a device root, or you will\n  measure this instead.\n\n  **Permissions and ownership are only real on an RBF image.** A ho"
+}

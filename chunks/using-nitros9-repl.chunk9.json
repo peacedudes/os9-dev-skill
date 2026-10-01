@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 9,
+  "text": "1B) is SCF's default end-of-file character.** A program reading\n  the channel that receives one reads EOF, and the shell exits normally on it.\n  Under inetd that is cheap to recover from - reconnecting forks a new shell -\n  but it still destroys the session's state. Filter Escape out of anything\n  meant as literal content; a deliberate EOF is a raw Escape key.\n- **OS-9 wants CR line endings on input**, not CRLF/LF.\n- **Prompts have no trailing newline**, so any pipeline displaying channel\n  output must be unbuffered - line-buffering holds the prompt back and the\n  harness never sees it.\n- **inetd turns guest echo (PD.EKO) and auto-LF (PD.ALF) on**, so the guest\n  echoes input and ends lines CR LF. Suppress *local* echo, and collapse CR LF\n  to one newline - drop LF then map CR to NL, which"
+}

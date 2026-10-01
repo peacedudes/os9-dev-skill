@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/SOURCES.md",
+  "chunk_index": 9,
+  "text": "Farna Quick References as cross-checks for OCR ambiguity and Level 1/Level 2 differences; a handful of entries `Live` on NitrOS-9 |\n| 6809/reading-the-coco-screen.md | `Live` (NitrOS-9 EOU under XRoar, driven over DriveWire with host-side screen capture) except the windint opcode table, which is `Source` from NitrOS-9's own `windefs.as` |\n\nKnown-bad source note: the \"OS-9 Relocating Macro Assembler\" manual\ncirculating in 68k archives is actually a **6809** manual (it documents 6809\nregisters and addressing) - never use it for a 68k-specific claim. Its 6809\ncontent is drawn on in `6809/assembly-and-tools.md`.\n\nProvenance note on the Microware 6809 Level 1 source archive held alongside\nthis corpus: it is actual Microware source code, not a manual, and is held to\nthe same rule as the NitrOS-9"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 5,
+  "text": " | I/O format syntax error |\n| 28 | Missing path number | 64 | Illegal path number |\n| 29 | Missing comma | 65 | Wrong number of subscripts |\n| 30 | Missing dimension | 66 | Non-record-type operand |\n| 31 | Missing DO statement | 67 | Illegal argument |\n| 32 | Memory full (need more workspace memory) | 68 | Illegal control structure |\n| 33 | Missing GOTO | 69 | Unmatched control structure |\n| 34 | Missing left parenthesis | 70 | Illegal FOR variable |\n| 35 | Missing line reference | 71 | Illegal expression type |\n| 36 | Missing operand | 72 | Illegal declarative statement |\n| 37 | Missing right parenthesis | 73 | Array size overflow |\n| 38 | Missing THEN statement | 74 | Undefined line number |\n| 39 | Missing TO | 75 | Multiply-defined line number |\n| 40 | Missing variable reference | 76 |"
+}

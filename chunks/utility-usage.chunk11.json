@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 11,
+  "text": "d`/`-d=<date>` copy only newer\n  files, `-f`/`-r` force/overwrite via copy's flags, `-i` indent by\n  level, `-l` this level only, `-m` omit makdir lines, `-v` cmp-verify\n  (`-n` don't load copy/cmp), `-s` skip files on error, `-o`/`-o=<name>`\n  also os9gen a bootfile onto the destination, `-a` skip dot-files.\n- `edt [<opts>] <path>` - line-number editor (append at line, `c` change,\n  `d` delete, `l` list - interactive).\n- `list [<opts>] {<path>}` - print text file(s).\n- `makdir [<opts>] {<path>}` - `-x` create under the execution directory.\n- `merge [<opts>] {<path>}` - concatenate to stdout (redirect to\n  combine).\n- `pr [<opts>] {<path>}` - paginated/columnar printing: `-p=<n>` lines\n  per page, `-d` page depth, `-k=<n>` columns, `-m` one file per column,\n  `-c=<char>` column separator, "
+}

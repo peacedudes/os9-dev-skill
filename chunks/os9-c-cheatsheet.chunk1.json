@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 1,
+  "text": "ired. OS-9 requires `chx` - the execution directory - to include the\ncompiler's directory (so it can fork its sub-tools: preprocessor, assembler,\nlinker, etc.).\n\n## One Complete Example\n\n`[clean-room]` - a full compile-and-run session, not copied from any manual.\n\n```c\n/* hello.c */\n#include <stdio.h>\n\nmain()\n{\n    printf(\"Hello from OS-9\\n\");\n}\n```\n\nSource files need CR-only line endings. A file written with an OS-9 editor\nalready has them; one brought over from a Unix host has LF endings and must be\nconverted before it reaches OS-9 (`common/using-os9exec-repl.md` covers the\nhost-side tools). Then compile and run:\n```\ncc hello.c\nhello\n```\n`cc hello.c` produces an executable module named `hello` (no separate link\nstep for a single file). The compiler automatically links `LIB/cstart.r`\nfirs"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 72,
+  "text": "y without it, and with it stopped at the write:\n\n```\n# -W: pid=4 wrote 4 bytes at $00059E40, outside its own memory (pc=$00051D96)\nError #000:102 (E_BUSERR) bus error TRAP 2 occurred\n```\n\nReal OS-9 does this only with an SSM fitted, so this is the tool for \"my\nprogram corrupts something\" or \"another program fails after mine ran\" when\nthe hardware you target has none.\n\n**`-d 2`'s `<<<` return lines can name the wrong call.** The entry (`>>>`)\nand return (`<<<`) lines are printed from a single per-process current-call\nfield, read again at return time rather than saved at entry (`Source`,\nos9exec: `cp->func`, `debug_return`). Anything that dispatches a nested call\nin between overwrites it, so the outer call's return is attributed to the\ninner one. Trust `>>>` lines for what was called; pair a"
+}

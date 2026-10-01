@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 23,
+  "text": "entry - it doesn't; it's a different\n  primitive.\n- `LINE([path,][xcor1,ycor1,]xcor2,ycor2)` - from the draw pointer, or\n  from a given start to a given end; always leaves the draw pointer at the\n  endpoint (see \"Concepts\" above).\n- `ARC([path,][mx,my],xrad,yrad,xcor1,ycor1,xcor2,ycor2)` - draws an arc\n  centered at the draw pointer or at `mx,my`; `xrad`=`yrad` draws a\n  circular arc, otherwise elliptical. The two coordinate pairs define an\n  imaginary line **relative to the center as the origin** - the arc is\n  drawn starting at the point closest to the first pair and ending at the\n  point closest to the second; reversing the pair order flips which side\n  of that line the arc is drawn on.\n- `CIRCLE([path,][xcor,ycor,]radius)` - centers on the draw pointer if\n  coordinates are omitted. X r"
+}

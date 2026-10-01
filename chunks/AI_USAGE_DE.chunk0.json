@@ -1,0 +1,5 @@
+{
+  "source": "AI_USAGE_DE.md",
+  "chunk_index": 0,
+  "text": "# Anleitung: Wie KIs diese Wissensbasis nutzen können (Deutsch)\n\nEmpfohlene Vorgehensweise für KI-Integration:\n1. Dokumenten-Indexierung: Alle Markdown-Dateien in ein Vektorindex-System (z. B. FAISS, Milvus) einspeisen, mit Metadaten (Titel, Pfad, Sprache, Themen).\n2. Chunking: Texte in semantische Abschnitte (ca. 500 Wörter) teilen und mit Quelldatei/Merkmalen versehen.\n3. Retrieval-Pipeline: Bei einer Anfrage zuerst relevante Chunks abrufen, dann eine Zusammenfassung / Antwort mit Kontext generieren.\n4. Übersetzungs-Workflow: Für nicht-deutsche Originale automatische Übersetzung + menschliche Korrektur; Übersetzungen versionieren.\n5. Prompt-Design: Verwende System-Prompts, die die Zielumgebung (OS-9, 68k) und gewünschte Ausgabeform (Codebeispiele, Schritt-für-Schritt-Anleitung) spezifizi"
+}

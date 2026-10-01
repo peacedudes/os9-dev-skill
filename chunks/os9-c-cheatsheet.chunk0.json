@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 0,
+  "text": "# OS-9 C Compiler Cheatsheet (68k)\n\n**Every `Live` tag here is `Live` (os9exec).** No 6809 C compiler was\navailable to this project - the 1983-manual column below is `Manual`.\n\n## Setup\n\n**Before any of this works you need a running OS-9 system and Microware's\ncompiler.** Neither ships with this material: `cc`, `cpp`, `c68`, `o68`, `r68`\nand `l68` are proprietary Microware programs that come from a licensed SDK or\ndisk image. The commands below are typed at the OS-9 shell prompt. Without\nhardware, getting from an emulator plus such an image to that prompt is covered\nin `common/using-os9exec-repl.md`.\n\n\n```\nchx /h0/CMDS\nsetenv CLIB /h0/LIB\nsetenv CDEF /h0/DEFS\n```\n\n`CLIB` (must contain `cstart.r`, `clib.l`) and `CDEF` (header files) are\nrequired. OS-9 requires `chx` - the execution director"
+}

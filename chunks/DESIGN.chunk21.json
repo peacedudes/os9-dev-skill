@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 21,
+  "text": " fact\n  in a shape the extractor does not bind, so it is watched less densely than a\n  reader might assume: 182 bindings over 155 symbols, 12 of them stated in more\n  than one file. `0x` was left out deliberately - in this corpus it appears as\n  bit masks (`0x80 directory`), never as a symbol-to-offset binding, so\n  including it would add false positives rather than coverage.\n\n## Failability (project rule: make it fail once)\n\nEvery check went red before implementation (TDD). Each real false-positive\npattern from the first dogfood run is a permanent \"must-not-flag\" regression\ntest, and a reintroduced-I$Dup case is a \"must-flag\" test. Proven on real data:\ninjecting an I$Dup absence into a copy of the actual docs makes the checker flag\nit; the untouched corpus is silent.\n\nChecks 4-5 (added 20"
+}

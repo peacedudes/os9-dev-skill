@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 7,
+  "text": "ich is not an obvious\nway of saying \"wrong line endings\". Binary archives (`.lzh`, `.Z`, `.tar`)\ntransport unconverted; converting one corrupts it.\n\n### 3. A program is a *module*, not a flat executable\n\nHeader + body + CRC, position-independent, no fixed load address, no\nabsolute addresses inside.\n\n- One loaded copy is shared reentrantly across every process running it -\n  each process gets its own data area, not its own code copy.\n- `F$Link` finds an already-resident module by name (increments a link\n  count); `F$Load` from disk only happens if it isn't resident. A module\n  can outlive the process that loaded it (\"sticky\" attribute). Loading a\n  higher-revision module of the same name silently replaces the directory\n  entry without disturbing processes already running the old copy - only"
+}

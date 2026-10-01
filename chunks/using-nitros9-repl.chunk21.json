@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 21,
+  "text": " whole argument.\n\n## Session facts\n\n- **An unauthenticated session owns nothing.** Files it leaves are owned by the\n  boot identity (user 0), and a later session's write or delete fails `E$FNA`\n  (214) unless it is that same identity. Authenticate every connection via\n  inetd's `login`, or run `login USER1` as the first command. `Live` (NitrOS-9): with\n  login, `procs` shows User Number 1 and `dir -e` shows new files owned by 1.\n  Don't build tests around a fixture's assumed ownership across sessions.\n- **To become the super user, answer `User name?:` with an empty line.**\n  `Live` (NitrOS-9, EOU disk). The stock `SYS/password` first record has an\n  *empty* name field and uid 0 - `,,0,128,/DD/CMDS,.,SHELL` - so a bare Enter\n  at the prompt authenticates as user 0, the 6809 super user (a fl"
+}

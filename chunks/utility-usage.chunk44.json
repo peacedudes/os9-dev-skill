@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 44,
+  "text": "is may be a\n  vintage-Microware-only detail that cannot be settled on the systems\n  available here. See the `format` entry above.\n\n---\nSources: OS-9 Level 2 Operating System Manual (System Command\nDescriptions chapter) is primary; OS-9 Users Manual 1983 and Gimix OS-9\nUsers Manual 1983 (both Level 1) and the Farna OS-9 Quick References were\nused as independent cross-checks to resolve OCR ambiguity in the primary\nsource and to surface Level 1/Level 2 differences. All text here is\nparaphrased, not quoted. **Caveat on one cross-check source:** the file\ncatalogued in this corpus as the Farna \"1st edition\" CoCo quick reference\nis mislabeled - its own title page identifies it as documentation for\nProfessional OS-9/68000, not CoCo/6809, and its command entries describe the\n68k versions already co"
+}

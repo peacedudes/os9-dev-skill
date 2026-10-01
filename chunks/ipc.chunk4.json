@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 4,
+  "text": "Read` request. If the alarm arrives\nbefore the input is received, the `I$Read` request returns with an error.\"* So\nthe read **returns an error** rather than resuming, and the Guard pattern below\ndepends on exactly that.\n\n**How far this reaches, and it is wider than that one technique.** `Manual`\n(Microware's OS-9 Intermediate training text): signals **2-31** are *\"deadly to\nserial and pipe I/O system calls\"* - the same range its signal table labels\n\"Deadly I/O signals\". So it is not only a keyboard abort, and equally not every\nsignal: user-defined signals from 256 up are outside the range, and the rule is\nstated for **serial and pipe** I/O rather than for blocked calls in general.\n\n**The error a killed read returns is the signal number itself**, `Live`\n(os9exec): with signal 5 armed by `F$"
+}

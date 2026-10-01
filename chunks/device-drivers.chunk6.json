@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 6,
+  "text": " not called (the driver is already initialized).\n- **No match on port/manager/driver**: the new device is entirely unknown,\n  so proceed as with the first open above.\n\nWhen `I$Detach` is called to close a path, the kernel decrements that\ndevice's use count. Only when the count reaches zero does the kernel search\nfor other device-table entries using the same driver static storage. If none\nexist, `TERM` is called and the storage is freed. If other entries share it,\n`TERM` does not run - the driver stays active. This means **`TERM` only\nfires on the truly final close of a device**, not on every `I$Detach`. A\ndriver author must not assume `TERM` called for every close attempt.\n\n## Device Descriptor Fields a Driver Author Needs\n\nThe device descriptor is the non-executable module the kernel and "
+}

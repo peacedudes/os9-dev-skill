@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 62,
+  "text": " `ctype.h` (full ANSI) | Missing `isgraph()` and other ANSI additions; link errors, not compile errors |\n| `stat.h` (absent entirely) | **`Live` (os9exec):** there is no `stat.h` on the 68k `DEFS` - `#include <stat.h>` fails to open. File mode bits are in `<modes.h>` (owner/public only, no group class) |\n\n**Baseline:** K&R C - no enforced prototypes, no cross-file type checking.\n\n## References\n\n- Official Microware C Compiler manual (1983, 6809 edition) and \"The OS-9\n  Primer\" (cross-checked against each other; the Primer also covers the\n  later \"Ultra C\" compiler)\n- **\"The C Programming Language\"** (Kernighan & Ritchie; K&R C is the\n  baseline here)\n- OS-9 v2.4 Technical Reference Manual (module header language-code\n  values, syscall semantics underlying `os9fork()`/`sbrk()`)\n- The OS-9 G"
+}

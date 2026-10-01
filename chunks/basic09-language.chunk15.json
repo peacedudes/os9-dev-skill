@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 15,
+  "text": "PE) and are accessed by dot notation, including through\nnesting: `variable.field`, `variable.field1.field2`. Array fields\n(`Live` (os9exec)) use the same `(size)` syntax as a plain array\ndeclaration. The manual frames records as *more* efficient than an array\nof similar values, not less - field offsets resolve at compile time\ninstead of being computed at runtime.\n\n```basic\nTYPE typename = field1:TYPE; field2(size):TYPE; ...\nDIM var: typename\nDIM array(10): typename\nvar.field1 := value\n```\n\n## Control Structures\n\n```basic\nIF expr THEN\n  stmts\n[ ELSE\n  stmts ]\nENDIF\n\nFOR var = start TO end [ STEP incr ]\n  stmts\nNEXT [var]\n\nWHILE expr DO\n  stmts\nENDWHILE\n\nREPEAT\n  stmts\nUNTIL expr\n\nLOOP\n  stmts\n  [ EXITIF expr THEN stmts ENDEXIT ]\n  stmts\nENDLOOP\n```\n\n**EXITIF always closes with ENDEXIT** - b"
+}

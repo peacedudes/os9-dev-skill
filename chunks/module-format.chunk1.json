@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 1,
+  "text": "iberate\n  non-reentrant exception.\n- **C string literals** live in the shared read-only TEXT section - except\n  `char array[] = \"...\"` which gets per-process DATA storage and is safely\n  mutable.\n- The assembler `info` directive places strings in the module's\n  information area (version, copyright); C reaches it via `#asm`.\n\n## Universal header (68k) - 48 bytes, offsets 0x00-0x2F (`modhcom` in `module.h`)\n\n| Field | Offset | Size | Value/Purpose | Symbol |\n|-------|--------|------|---------------|--------|\n| Sync word | 0x00 | 2 | `$4AFC` - an illegal 68000 instruction, so coldstart can scan ROM for it word-by-word at near-zero cost, running parity/CRC checks only on hits | `M$ID` |\n| System revision | 0x02 | 2 | Header format revision | `M$SysRev` |\n| Module size | 0x04 | 4 | Total bytes,"
+}

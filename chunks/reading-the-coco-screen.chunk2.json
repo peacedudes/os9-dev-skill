@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/reading-the-coco-screen.md",
+  "chunk_index": 2,
+  "text": "e 8 with an 80x24 geometry fails with **error 189 \"Illegal\n  Coordinates\"** - type 8 is a 320×192 **40-column** screen, so 80 columns\n  does not fit. A geometry error, not the memory or screen-table exhaustion\n  it first looks like.\n- A shell started on such a window with `shell i=/w7&` **did not survive** -\n  it died on its own with the same error 189, leaving the window present but\n  with no process on it. Symptom: the screen shows what looks like a prompt\n  cursor but typing only clicks and never echoes, because nothing is reading\n  the keyboard.\n\n## Getting GFX2 output onto a screen you can see\n\n1. **`SELECT` after `DWSET` is mandatory**, even though nothing about `DWSET`\n   suggests it. Without it, a backgrounded procedure's drawing never becomes\n   visible on *any* screen - not \"hard"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 57,
+  "text": "ne the v2.4 manual itself marks \"currently not implemented\" (`Manual`). A\nprogram that tests the carry survives; one that does not may read 208 as its\nown failure.\n\n`F$STime` is accepted and does not touch the host clock. `Live` (os9exec).\n\n**No installed file manager or device driver ever runs.** os9exec serves\nevery path from its own host-side layer, dispatched by path prefix; its\n`I$Attach` never allocates driver static storage or calls `Init`, and `iniz`\nis not implemented. A correctly assembled, CRC-valid `FlMgr` or `Drivr`\ntherefore loads and is never invoked at any entry point. Module *format* can\nstill be built and checked here; entry-point conventions need OS-9 itself.\n`Source` (os9exec).\n\n**The kernel process has no real module.** It runs code built into the\nemulator and reports "
+}

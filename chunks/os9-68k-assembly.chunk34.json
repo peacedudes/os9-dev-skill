@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 34,
+  "text": " assembles: a module is one shared, re-entrant copy (possibly\n  in ROM) used by every process running it, and a write into it changes the\n  code for all of them and breaks its CRC. Per-process variables go in the\n  data area, below.\n- **Variables live in a `vsect`, addressed from A6 - and A6 is not the\n  start of your data.** At entry A6 is the data area's base **plus\n  `$8000`** (`common/module-format.md`), so a plain `(a6)` or a small\n  `N(a6)` points 32 KB *past* the start: with an ordinary 1-8 KB data area\n  that is beyond its end, in whatever memory comes next, and a write there\n  corrupts another module or process. OS-9 without an SSM does not stop it,\n  and the damage shows up somewhere else entirely - a Microware utility\n  misbehaving later, not your program failing. The correct fo"
+}

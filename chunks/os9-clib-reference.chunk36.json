@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 36,
+  "text": "it remains the general answer.\n\n## String Functions (`strings.h`, not `string.h`)\n\n| Function | Notes |\n|---|---|\n| `strcat`/`strncat`/`strcmp`/`strncmp`/`strcpy`/`strncpy`/`strlen` | `strncpy` pads the remainder with nulls if the source is shorter than n. |\n| `strhcpy` | Copies a sign-bit-**terminated** *source* (the OS-9 name/string convention: the final char has bit 7 set to mark the end) into a NUL-terminated C string - it copies through the terminator char with the high bit cleared, then NUL-terminates. **`Live` (os9exec) - dangerous gotcha, NOT in any manual:** `strhcpy` stops **only** at a high-bit byte, **not at NUL**. Handing it a plain NUL-terminated C string makes it read *past* the NUL into adjacent memory and **overflow the destination** - `strhcpy(buf,\"AB\")` copied `41 42 00 "
+}

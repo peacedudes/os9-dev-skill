@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 36,
+  "text": "e and no task\nregisters. `F$Boot`/`F$SUser`/`F$UnLoad` are plain bootstrap/user-ID/unlink\noperations with no DAT dependency.\n\n### I/O I$ calls\n\nRegister contracts match the System Programmer's Manual §11.3\nregister-for-register for `I$Open`, `I$Create`, `I$Delete`, `I$MakDir`,\n`I$ChgDir`, `I$Read`/`I$Write`, `I$ReadLn`, `I$Seek`, `I$GetStt`/`I$SetStt`.\n\n| Call | Code | Params | Notes |\n|---|---|---|---|\n| I$Attach | $80 | A=access mode, X=device name | Returns U=device table entry. `Live` (NitrOS-9) |\n| I$Detach | $81 | U=device table entry | Calls driver Term, deallocates if unused elsewhere. `Live` (NitrOS-9) - against a device still in use elsewhere it correctly adjusted a use count rather than tearing anything down |\n| I$Dup | $82 | A=path | Returns new path number (lowest available), "
+}

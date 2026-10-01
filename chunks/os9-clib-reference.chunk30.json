@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 30,
+  "text": "f this family\nthat had answered `'vt100': Unknown terminal type` against a stock termcap both\ngot past `tgetent` - one drew its screen correctly, the other proceeded into\nterminal setup and failed there for an unrelated reason. Same file, same\nprograms, only the first field changed.\n\n**The alternative is to put the entry in `TERMCAP` directly**, which needs no\ntermcap file at all and is the better answer when you do not own the file:\n\n```sh\nTERMCAP='vt100|dec vt100:bs:co#80:li#24:cl=\\E[H\\E[J:...'\n```\n\nThe value is used as the entry, so the two-character alias is not required on\nthis route - the first field is only read when scanning lines of a file.\n\nTwo hazards, both measured `Live` (os9exec) in one build, and both on the string\nroute rather than the file route:\n\n- **The copy that reads t"
+}

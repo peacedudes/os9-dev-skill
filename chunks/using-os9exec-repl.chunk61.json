@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 61,
+  "text": "m's stderr.** They\ncarry a `# ` prefix - `# No more memory:` from the allocator, for one - and go\nto that path rather than a channel of their own, so they interleave with\nguest output. `2>/nil` is what separates the two when capturing. `Live`\n(os9exec).\n\nThe `-d` syscall trace (below) lands on the same stderr, which matters whenever\nstderr belongs to something else - under a network login it goes down the\nconnection to the client. `idbg -o <path>` typed in the guest moves it to a\nfile instead, e.g. `idbg -o /h5/trc -d 2` with `OS9H5` naming a scratch\ndirectory; the file is appended to, and its lines end in CR. `Source`\n(os9exec: `Change_DbgPath`), `Live` (os9exec).\n\n## Where os9exec departs from the manuals\n\nKnown places where os9exec, as a stand-in, behaves differently from the\nMicroware "
+}

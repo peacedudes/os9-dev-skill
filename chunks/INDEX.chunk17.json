@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 17,
+  "text": "t increment | `68k/syscall-reference.md` |\n| `^syntax error` and nothing runs, from a batch invocation | a shell option written on the command line - `-nx` belongs on the procedure file's first line | `common/os9-tools-and-shell.md` |\n| Only the FIRST command of a batch takes effect, the rest silently ignored | commands fed on host **stdin** need LF endings; only a file passed as an *argument* wants CR-only | `common/using-os9exec-repl.md` |\n| A host file opens under the wrong case, or the wrong one of two similar names | host-directory lookup falls back to a case-insensitive, 28-char-cut, spaces-as-`_` scan and takes the FIRST match | `common/using-os9exec-repl.md` |\n| `linecount` or any line reader sees 0 lines in a file that plainly has several | a host directory translates nothing: LF "
+}

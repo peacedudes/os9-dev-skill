@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 4,
+  "text": "-z][A-Za-z0-9]+\\b`). Each\ndoc's platform comes from its path: `references/6809/...` -> 6809,\n`references/68k/...` -> 68k, everything else -> **neutral** (speaks to both). An\nabsence clause that names a platform in prose (\"6809 has no `F$STrap`\",\n\"os9exec...\") overrides the path for that claim.\n\n## Key subtlety: tags are evidence strength, not presence\n\nConfidence tags (`Hearsay < Manual < Source < Live`, plus `Absent`/`Flag`) say\nhow strong the evidence is, **not** whether the call exists. You can `Live`-\nobserve an *absence* (\"`Live` - FAILS, `E$UnkSvc`, unimplemented\"). So presence\nis read from specific wording:\n\n- **absent** if: an `Absent` tag on the subject; or the subject is `Live` **and**\n  the line says `unimplemented` / `E$UnkSvc` (a mere \"fails E$PNNF\" is an\n  error-path return o"
+}

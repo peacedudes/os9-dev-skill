@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 11,
+  "text": " What a packed module is\n\nA packed+saved procedure is an OS-9 **subroutine module**: type 2\n(Sbrtn), language 2 (BASIC I-code). **How `ident` renders that is\narchitecture-specific - don't carry one form to the other.** On 68k the\nheader has separate `M$Type`/`M$Lang` bytes and `ident` shows `Ty/La\n$0202`. On 6809 it is a single packed byte `(type << 4) | language`, so\nthe same module reads **`Ty/La $22`** (`Live` (NitrOS-9), with `At/Rv\n$81` - re-entrant, revision 1). See `common/module-format.md` for the\nencoding and what it settles about the 6809 C compiler's own value. It is not a\nprogram module; something must interpret it.\n\n**RunB** is that interpreter: a runtime-only BASIC09 (~half the size, no\nedit/debug). Per the manual, code under RunB can trap Ctrl-C/Ctrl-Q via\n`ON ERROR GOTO`, w"
+}

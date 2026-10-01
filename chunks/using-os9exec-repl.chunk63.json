@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 63,
+  "text": " system.\n- **GetStat SS_Size on a pipe answers `E$UnkSvc`.** The manual reads both\n  ways here (`68k/syscall-reference.md`); os9exec follows one reading, the\n  one under which `less` pages piped input to its end (os9exec's v4.1.0 release notes;\n  not measured here).\n- **The default pipe buffer is 4096 bytes**, where the manual gives 90\n  (`common/ipc.md`); 90 is os9exec's minimum. A C program writing 256-byte\n  chunks to a pipe with no reader had exactly 16 accepted before the write\n  failed. So a named-pipe writer with no reader blocks, and an unnamed-pipe\n  writer gets `E_WRITE`, only after about 4 KB - code that leans on the larger\n  buffer will stall or fail sooner on real equipment.\n- **Console paths do not enforce `E$BMode` (203).** stdin, stdout and stderr\n  share one descriptor, so"
+}

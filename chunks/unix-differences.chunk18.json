@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 18,
+  "text": "lso **cannot make a directory** - that is `I$MakDir`. And on pipes\nthe same rule holds by name: a named pipe that already exists returns `E$CEF`,\nwhile unnamed pipes cannot raise it.\n\n`open(path, S_IREAD)` on a directory fails - the directory bit must be set\nin the access mode (`S_IFDIR | S_IREAD`). `fopen()` offers no way to set\nthat bit at all, so it cannot open a directory under any mode. Unix code\nthat does `fopen(dir, \"r\")` to walk a directory simply doesn't work here.\n\n### Climbing: count the dots\n\n**Write `...`, not `../..`.** One period per level plus one - `.` stays put,\n`..` is the parent, `...` climbs two, `....` three. This is the form the manual\ndocuments (`Manual`, *Using Professional OS-9* v2.4, p. 4-9: \"add a period for\neach higher directory level\") and the form to use in a"
+}

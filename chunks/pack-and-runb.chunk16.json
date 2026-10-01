@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 16,
+  "text": "nt per type.\n\n## Ctrl-C and Ctrl-E under RunB\n\nUnder RunB, unlike interactive BASIC09, Ctrl-C and Ctrl-E \"can be trapped by\n`ON ERROR GOTO`\" (`Manual`, *OS-9 BASIC User Manual*, App. D). `Live`\n(os9exec), packed procedures run from the shell:\n\n- **With a trap armed**, either key jumps to the trap line at once, whether\n  RunB receives the signal directly or the waiting shell forwards it. `ERR`\n  there reads **0**; the manual gives no number, and real hardware has not\n  been checked.\n- **With no trap armed**, the key has no effect on a running loop: the\n  procedure runs to its end and exits normally. So a packed program you may\n  need to stop needs an `ON ERROR GOTO` that ends it, or `kill <pid>` from\n  another shell.\n\n## `**** Can't install trap handler ****` triage\n\nThis banner + `Error #0"
+}

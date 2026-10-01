@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 50,
+  "text": "T`, `KILL`, `LIST`,\n`LOAD`, `MEM`, `PACK`, `RENAME`, `RUN`, `SAVE`.\n\n`PACK` converts a procedure already in the workspace into a non-listable,\nnon-editable form in place, trading away editability/debuggability for\nIP-protected distribution - it does not speed up in-workspace execution.\n`RunB` is the runtime-only executable for running a `PACK`ed/`SAVE`d module\nstandalone outside interactive `basic`. Full mechanism, invocation rules,\nargument passing, the multi-procedure entry-point distinction\n(`PACK proc1,proc2` vs. `PACK*`), and\nknown gotchas are all in `pack-and-runb.md` -\nthat's the single authoritative reference, not repeated\nhere.\n\nA **Graphics Interface Module** exists on CoCo/Dragon (6809) systems for\nthis language, specific to those platforms' video hardware - see the\nper-architec"
+}

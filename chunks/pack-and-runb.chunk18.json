@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 18,
+  "text": "g, once per session.\n2. **`cio`/`csl` genuinely not resident** (check `mdir`): `load cio`. A\n   binary linked against the proprietary `cio` handler dies with this\n   banner on any disk lacking it - see `c/os9-c-cheatsheet.md` for\n   classifying and rebuilding cio-locked binaries.\n3. Under os9exec only, an intermittent failure with the module resident:\n   `common/using-os9exec-repl.md`.\n\nThe mechanism behind the first two: installing a trap handler resolves the\nhandler module via the same F$Link-then-F$Load(CHX) path as everything\nelse; when that fails, the requesting module prints its own \"can't\ninstall\" banner and aborts.\n\n---\nSources: BASIC09 Reference Manual (Rev H) and OS-9 BASIC User Manual\n(Rev G) for PACK/RunB semantics and the RUN search order; each `Live`\nclaim was observed by dir"
+}

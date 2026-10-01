@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 13,
+  "text": "gh many other insertions\nlook progressively more favorable relative to newer arrivals at the same\npriority. (The literal per-process increment does happen in one specific\ncase: if `D_ActAge` itself decrements below zero, it resets to\n`$7FFF0000` and every process currently in the active queue has its\nscheduling constant recalculated at that point - not on every ordinary\ninsertion.) A separate, purely informational \"age\" value - `P$Sched` minus\nthe current `D_ActAge` - is computed on demand by `F$GPrDsc` for tools like\n`procs`; it plays no role in scheduling itself and is clamped to `-1`\n(`$FFFF`) if the computed value looks unreasonable (over 10000).\n\nTwo system globals tune this behavior:\n\n- **`D_MaxAge`** (writable by superuser via `F$SetSys`, normally zero)\n  defines a **priority thresh"
+}

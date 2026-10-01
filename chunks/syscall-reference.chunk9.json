@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 9,
+  "text": " | Free at zero unless sticky (bit 6) - sticky needs count -1 or memory pressure (`Manual`). A module that was loaded *and* linked needs one call per link to fully free. `Live` (os9exec) |\n| **F$UnLoad** | Unlink by name | (a0)=module name | (a0)=updated | `d0.w`=type/language takes part in the lookup, as the manual's input list says: `Live` (os9exec), `d0=$DEAD` gives `E$MNF` and leaves the module loaded, while the module's own type/language or `0` unloads it |\n| **F$SetCRC** | Update module CRC | (a0)=module | - | Recomputes CRC + header parity after in-place modification (data modules); required before saving to disk. Rejects a non-header address with `E$BMID` (205) rather than trusting its input. `Live` (os9exec) |\n| **F$CRC** | Compute CRC | d0.l=count, d1.l=accumulator (init $FFFFFFF"
+}

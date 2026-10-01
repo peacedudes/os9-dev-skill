@@ -1,0 +1,5 @@
+{
+  "source": "README.md",
+  "chunk_index": 11,
+  "text": "ems skill: SKILL.md, SOURCES.md, references/\nAGENTS.md               entry point for any AI assistant\nCLAUDE.md               the same, imported for Claude Code\n.claude-plugin/         Claude Code plugin and marketplace manifests\nNOTICE                  attribution: Microware and every other source\nCONTRIBUTING.md         corrections, patches, and the checks every change passes\nSOURCE-AUTHORITY.md     what counts as Microware's word\nDIVERGENCES.md          where a manual contradicts itself or a Microware program\ntools/                  the checker, its tests, the pre-commit hook, release tools\n.github/workflows/      the same checks, run on every push and pull request\n```\n"
+}

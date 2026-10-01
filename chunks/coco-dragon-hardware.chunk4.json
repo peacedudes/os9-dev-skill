@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 4,
+  "text": "ue specific, substantially expanding on CoCo 1/2's fixed two-mode display.\n\n## Window Types (CoCo 3 / Multi-Vue)\n\n`WCREATE /wN -s=<type> xpos ypos xsize ysize forecolor backcolor` - type 0 (32×16 VDG, needs the `VDGINT` module), 1 (40×24 text, 16 colors, 2K), 2 (80×24 text, 16 colors, 4K), 5 (640×192 2-color graphics, 16K), 6 (320×192 4-color, 16K), 7 (640×192 4-color, 32K), 8 (320×192, 16-color - the widest palette of the standard graphics types, a GIME-enhanced mode). Memory figures and column counts are `Live` (NitrOS-9) in `utility-usage.md`'s `wcreate -s=<type>` entry; treat that as the authoritative copy. Window numbers 8-15 available under Multi-Vue. `WMODE` reports/changes an existing window's attributes without touching its `XMODE`/`TMODE` settings. Vertical resolution is fixed at"
+}

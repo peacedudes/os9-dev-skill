@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 22,
+  "text": "es 29-31 are the LSN of the file's descriptor sector, so reading\n28-31 as one long gives the same number. Every directory is created holding\n`.` and `..`, whose entries give its own and its parent's descriptor LSNs.\n\n1. Open `.` with `S_IREAD | S_IFDIR` for the data directory, or `S_IEXEC |\n   S_IREAD | S_IFDIR` for the execution directory. Execute mode alone cannot be\n   read (`I$Open` in `68k/syscall-reference.md`). Read its `.` entry to get\n   this directory's LSN.\n2. Open the parent (`..`, then `...`, `....`, in the same mode) and look for\n   the entry whose LSN matches the child's. Its name, with the sign bit\n   cleared, is the child's name.\n3. Stop at a directory whose `.` and `..` LSNs are equal: that is the root of\n   the device. `_gs_devn(path, buf)`, given the **path number** of "
+}

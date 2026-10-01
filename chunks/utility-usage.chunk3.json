@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 3,
+  "text": "s) against the current **execution**\n  directory instead of the data directory (attr, binex, cmp, copy, del,\n  dump, dir, fixmod, ident, makdir, merge, os9gen, rename, romsplit,\n  save, touch, and others).\n- **`-b=<num>k`** - memory/buffer allocation for the transfer (backup,\n  cmp, copy, dsave, edt, free, frestore, fsave, merge, os9gen; default is\n  typically 4K).\n\n## File and directory utilities\n\n- `attr [<opts>] {<path>} {<permissions>}` - permissions given as\n  `-r -w -e -pr -pw -pe -s -d` to set, `-n<abbrev>` (e.g. `-npw`) to\n  clear; unnamed bits unchanged; none given = display. **6809 inverts\n  this** (`Live` (NitrOS-9, os9exec), both sides): there a bare letter sets and a minus-prefix\n  clears, so `attr f -e` sets execute here and *clears* it on 6809 -\n  `6809/utility-usage.md`. `-"
+}

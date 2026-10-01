@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 13,
+  "text": "fsets documented in\n`file-managers.md`'s Identification Sector table (not restated here); the\n21-byte cutoff lands exactly at `DD_BT` (bootstrap fields), which a driver\ndoesn't need in its own static storage.\n\nDriver/file-manager-maintained extension fields follow at `$16`+ (`V_TRAK`\ncurrent track, `V_ScZero`/`V_ZeroRd` sector-0 cache, `V_SoftEr`/`V_HardEr`\nerror counters, etc.) - see the Technical I/O Manual for the complete table\nif hand-authoring one of these. (For the full disk-structure layout these\nfields are copied *from* - identification sector, allocation map, file\ndescriptor sector, directory format - see `file-managers.md`.)\n\n### Driver Static Storage (RBF)\n\n| Offset | Name | Maintained by | Purpose |\n|---|---|---|---|\n| $00 | `V_PORT` | kernel | Device hardware base address |\n|"
+}

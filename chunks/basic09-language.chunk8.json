@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 8,
+  "text": "structs used elsewhere in this\nprocedure are each independently `Live` (os9exec) too, but the procedure\nas a complete, unmodified whole hasn't been run start-to-finish.\n\n## Data Types\n\n| Type | Notes |\n|------|-------|\n| BYTE | 0-255, unsigned. Truncates silently on overflow. **The manual forbids passing it as a procedure parameter**, and nothing enforces that - see \"Procedures & Parameters\". |\n| INTEGER | Signed. Faster than REAL (see Control Structures below). Width/range/overflow behavior is architecture-specific - see the per-architecture file. |\n| REAL | Width/range/precision is architecture-specific - see the per-architecture file. |\n| STRING | Declared via `STRING[len]` (max length, default 32 if omitted). Fixed buffer, silently truncates past max. **Terminator is target-specific:**"
+}

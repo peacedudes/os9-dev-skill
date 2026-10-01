@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 15,
+  "text": "rity-only scheduling with aging effectively switched off system-wide.\n- **`D_MinPty`** (normally zero) sets a hard priority floor. A process\n  below it gets a scheduling constant of exactly zero instead of the\n  normal calculation, which places it at the tail of the queue; once the\n  head of the queue has a zero scheduling constant the kernel treats the\n  active queue as empty and halts, so such a process effectively never\n  runs. Raising it temporarily creates a frozen tier, useful for critical\n  real-time sections (often used by `F$SSpd` to implement process\n  suspension by making a process unreachable to the scheduler). **Setting\n  `D_MinPty` above every task's priority halts the system** - the kernel\n  becomes locked in an idle-wait state waiting for an interrupt that will\n  never free"
+}

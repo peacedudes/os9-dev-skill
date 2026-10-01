@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 36,
+  "text": "g, which calls need supervision before you automate them, 6809 module header bytes | 6809/syscalls-and-module-format.md |\n| Per-command syntax/options for the Level 2 utility set (attr...xmode, tmode/xmode parameter table, CoCo/Dragon-only commands called out separately), **making a bootable disk - `os9gen`/`cobbler`/`config` - plus `modpatch`**, Level1-vs-Level2 divergences found while cross-checking | 6809/utility-usage.md |\n| Assembler directives (asm/RMA), editor, debugger command set, RLINK | 6809/assembly-and-tools.md |\n| BASIC09 `RUN GFX(...)`/`RUN GFX2(...)` graphics/windowing subroutine calls: per-function syntax, window/device-window lifecycle (DWSET/DWEND/OWSET/SELECT), Get/Put buffers, palette/color, cursor/text control | 6809/gfx-windowing.md |\n| **Seeing** the CoCo screen (sc"
+}

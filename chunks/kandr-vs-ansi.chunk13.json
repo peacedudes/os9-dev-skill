@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 13,
+  "text": "ations do not help\n\n---\n\n**Sources:** Official Microware C Compiler manual (1983, 6809 edition),\n\"Differences From The K & R Specification\" section (bit fields, initializer\noperands, `=+`-style operators, `\\n` as CR); `strass()` is documented\nseparately in the same manual's C System Calls reference, not the\nDifferences chapter - usage `strass(s1, s2, count)`, described there as a\nbyte-by-byte copy for structures the compiler can't assign directly.\nCross-checked against \"The OS-9 Primer.\" Note: rows marked *(6809 manual)*\nare `Manual`, sourced from 6809-era material only, and may not apply\nunchanged to 68k; check `os9-c-cheatsheet.md` for 68k-specific\ndifferences.\n\n## `char` is SIGNED - `Live` (os9exec)\n\nMeasured by compiling on a Microware SDK and running: `char c = -1;` tests\nnegative, an"
+}

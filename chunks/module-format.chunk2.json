@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 2,
+  "text": "$SysRev` |\n| Module size | 0x04 | 4 | Total bytes, header through CRC | `M$Size` |\n| Owner | 0x08 | 4 | Creator group.user ID | `M$Owner` |\n| Name offset | 0x0C | 4 | Offset from module start to NUL-terminated name string | `M$Name` |\n| Access permissions | 0x10 | 2 | rwx for owner/group/public (low 12 bits, below) | `M$Accs` |\n| Module type | 0x12 | 1 | Table below | `M$Type` |\n| Language | 0x13 | 1 | Table below | `M$Lang` |\n| Attributes | 0x14 | 1 | bit 7 sharable, bit 6 sticky, bit 5 supervisor state | `M$Attr` |\n| Revision level | 0x15 | 1 | Drives directory substitution (below) | `M$Revs` |\n| Edition | 0x16 | 2 | Human-facing version counter (don't confuse with M$Revs) | `M$Edit` |\n| Usage offset | 0x18 | 4 | Offset to usage/comment string | `M$Usage` |\n| Symbol table offset | 0x1C |"
+}

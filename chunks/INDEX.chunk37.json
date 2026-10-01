@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 37,
+  "text": "fx-windowing.md |\n| **Seeing** the CoCo screen (screenshots via cocoscreen.sh), injecting keystrokes, CLEAR=backtick screen cycling, windint `$1B` escape-code table, creating graphics windows with wcreate, why XRoar's `-gdb` is a dead end | 6809/reading-the-coco-screen.md |\n| CoCo/Dragon hardware (VDG, graphics, mouse, ACIA, drives, monitors), the Boot List Order Bug, ToolShed host-side disk editing and its own traps | 6809/coco-dragon-hardware.md |\n| Level 1 vs Level 2, MMU/DAT internals, GMX III | sibling skill: os9-systems-dev `6809-level2-mmu.md` |\n\n## Confidence\n\nTag legend and what each tag licenses: `CONFIDENCE-TAGS.md`. Every claim\ncarries its own inline tag; this table is only the shape of the coverage, for\ndeciding how hard to lean on a file before opening it.\n\n| Area | Mostly |\n"
+}

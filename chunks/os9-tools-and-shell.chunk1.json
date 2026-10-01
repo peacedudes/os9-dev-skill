@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 1,
+  "text": "rward is\n  a separate instance.\n\n## Command line anatomy\n\n`keyword params modifiers` - separators may join multiple commands. The\nshell strips metacharacters (`;` `&` `!` `<` `>` `>>` `#` `*` `?`) from the\nargument text before the program sees it; quote them to pass literally.\n\n| Separator | Effect |\n|---|---|\n| `;` | Sequential - wait for each command before the next |\n| `&` | Concurrent - commands run simultaneously in the background |\n| `!` | Pipeline - connect stdout of the left command to stdin of the right. **Pipe is `!`, never `\\|`** - `\\|` is not a metacharacter at all and fails silently. Chains: `a ! b ! c` |\n\n| Modifier | Effect |\n|---|---|\n| `#n` or `#nK` | Raise the process's memory allocation (both forms are kilobytes on 68k); applies to that one command only. C programs use t"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 19,
+  "text": "with `@`.**\n`Source` (os9exec, `prepParams` in `os9exec_nt.c`): the routine that builds the\nguest's environment block walks the host `envp[]` and takes **only** entries\nbeginning with `@` - \"OS-9 environment variables must start with a '@'\".\n\n`Live` (os9exec), one probe printing `getenv(\"TERM\")`, run as the boot program:\n\n```sh\nenv '@TERM=vt100' '@TERMCAP=...' os9exec /h0/CMDS/prog   # prog sees TERM=[vt100]\nenv  'TERM=vt100'               os9exec /h0/CMDS/prog   # prog sees TERM=[]\n```\n\nSo the familiar `TERM=vt100 os9exec ...` does nothing for the program inside, and\nit fails **silently** - there is no warning that the variable was ignored. This\nis the first thing to check when a program behaves as though a variable you\n\"set\" is missing.\n\n**What a non-crossing variable looks like inside i"
+}

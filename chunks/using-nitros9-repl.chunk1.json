@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 1,
+  "text": "nel\nbridge is mandatory. The established one is **DriveWire over XRoar's built-in\nbecker port** (`-cart-becker -becker-port <port>`), which tunnels the DriveWire\nprotocol over TCP to a DW4 server, one of whose virtual serial channels carries\na shell.\n\nThe guest supplies the channel, so a stock DW4 server needs no patching:\n`inetd` reads `/DD/SYS/inetd.conf`, opens `/N` and sends `tcp listen <port>`;\non a connection the server announces `<id> <port> <address>`, inetd opens a\nsecond `/N`, sends `tcp join <id>`, dups it onto stdin/stdout/stderr and forks\nthe configured program. That vocabulary - `tcp connect|listen|join|kill` - is\nNitrOS-9's own `lib/net.as`. Conf line is `port[ options],program,params`;\nthe options (`telnet auth protect banner`) are server-side and may be ignored,\nwhich suit"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 10,
+  "text": " driver is the exception: it runs `cccp2`\nwithout `-traditional`, and a `gcc2` build of `\"abc\" \"def\"` prints `abcdef`.)\n\nWhen hunting for them, do not grep for lines beginning with a quote: that counts\nstring-array initialisers and comma-separated arguments, both legal K&R, and\nscored 116 hits on a tree that compiled fine. A genuine adjacent pair is **a line\nending in a closing quote with no comma, followed by a line opening with a\nquote.**\n\n**Line limits apply to the LOGICAL line, and continuations are spliced before\ncounting** - so `\\` buys you nothing, and neither does hiding the line in a\n`#if 0`. `Live` (os9exec): `cpp` gives way first, and **its limit is not a fixed\nnumber** - 511 characters is the best case measured in a file with nothing else\nin it, and content earlier in the file "
+}

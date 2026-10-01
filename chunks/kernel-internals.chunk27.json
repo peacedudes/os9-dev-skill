@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 27,
+  "text": "for best-fit. Fragmentation without an MMU stays rare\n  unless the system is severely memory-constrained or allocates very large blocks.\n- **Buddy-system allocator**: a second allocation scheme that splits/merges\n  power-of-2-sized blocks instead of maintaining fragment lists. Under MMU\n  protection, `D_MinBlk` must equal the MMU page size for buddy blocks to map\n  cleanly onto whole pages.\n- **Colored memory**: address space partitioned into distinct regions (e.g.\n  battery-backed non-volatile RAM, cache-friendly regions, DMA-accessible areas).\n  A data module or allocation request can be steered into a specific region via\n  color tags rather than using the default allocator placement.\n- **DMA and MMU address translation**: on MMU-equipped systems, DMA transfers\n  from a user buffer requi"
+}

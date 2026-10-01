@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 20,
+  "text": "ia: `-s` restore\n  all non-interactively (`-q` overwrite existing with it), `-a` force\n  permission to overwrite, `-c` validity check only, `-d=<dev>` source,\n  `-f=<path>` from file, `-i`/`-v` show backup identity (`-e` full\n  pathlists), `-p`/`-t=<dir>`/`-x=<n>`/`-j=<n>` as for fsave.\n- `tape {<opts>} [<dev>]` - positioning: `-r` rewind, `-b[=<n>]` skip\n  blocks, `-f[=<n>]` skip tapemarks, `-w[=<n>]` write tapemarks,\n  `-e=<n>` erase blocks, `-t` retension, `-o` off-line, `-s` report\n  block size.\n- `tapegen` - build a bootable tape (`-b=<bootfile>`, `-bz=<bootlist>`,\n  `-t=<target>`, `-v=<volume>`, `-i=<file>`, `-d=<dev>`, `-c` check\n  header, `-o` off-line after).\n- `diskcache [<opts>] [<dev>]` - `-e`/`-d` enable/disable, `-l` status,\n  `-t=<size>[k]` total cache limit.\n- `setime [<opt"
+}

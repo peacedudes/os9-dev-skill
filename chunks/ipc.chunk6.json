@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 6,
+  "text": "up to **10x** the cost of an unqueued one, so a hot path\nthat signals heavily pays that multiple on every queued signal.\nInsights also records an undocumented convenience: on entry to an intercept\nroutine, **d0 holds the number of currently-queued signals** (including the\none just delivered), so a value of 1 means nothing else is waiting. It does\nnot let a handler take the whole queue at once - each queued signal still\ngets its own entry, after the previous one's `F$RTE`; three queued signals\nenter the routine three times, seeing 3, 2, 1. What the count buys is knowing\nmore are coming, so costly work can wait for the entry that sees 1. `Live`\n(os9exec); see `F$Icpt` in `68k/syscall-reference.md`.\n\n**Masking:** the mask level (`P$SigLvl` in the process descriptor) suppresses intercept calls"
+}

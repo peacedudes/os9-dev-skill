@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 10,
+  "text": ") and no confirmed\nequivalent numbered error range in the sources surveyed here - its\narithmetic-error handling instead happens earlier, inside the BASIC09\nI-code interpreter's own runtime checks (e.g. `Error #045 -- Divide by\nZero`, an ordinary catchable BASIC09 error, not a CPU-trap dispatch - see\n`basic09/gotchas.md`'s divide-by-zero entry). A process can install its\nown 68k handler via `F$STrap`.\n\n| Code | Symbolic name | Meaning | Cause |\n|---|---|---|---|\n| 000:102 | E$BusErr | Bus error | CPU bus error exception |\n| 000:103 | E$AdrErr | Address error | CPU address error exception |\n| 000:104 | E$IllIns | Illegal instruction | CPU executed an illegal opcode |\n| 000:105 | E$ZerDiv | Zero divide | Integer zero-divide exception |\n| 000:106 | E$Chk | CHK exception | CHK or CHK2 instructi"
+}

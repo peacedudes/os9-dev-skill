@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 1,
+  "text": "ine them\n   as numeric constants in your own source.\n2. **`l68 -o=<name>` sets the module's real internal name**, overriding the\n   source's own `psect` name - so `mdir` shows the `-o=` name, not the one\n   you wrote.\n4. **The linker writes to the execution directory**, not your data directory.\n   No error, no output where you looked.\n5. **A PC-relative *destination* does not exist on the 68000** - `(d16,PC)`\n   is source-only. Writing to your own storage needs `lea` then a write\n   through the address register.\n\n6. **Branch mnemonics already default to the 16-bit form** - so `.w` buys\n   nothing. Bare `bcs`, `bra` and `bsr` all assemble as the opcode with a\n   zero low byte plus a 16-bit extension word, byte-identical to the same\n   mnemonic written `.w`, and a bare branch over a 210-byte"
+}

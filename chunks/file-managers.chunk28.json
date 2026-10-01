@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 28,
+  "text": "end holds no lock, and a\n  reader then sees every byte already written, including those appended at\n  EOF before it opened. The implementation traps worth knowing if you model\n  this: the creator's lock must survive the path walk's directory locks, and\n  a path joining a file others hold open must take the file's end from the\n  most advanced path, not from disk, because a growing file's end lives in\n  the writer's state until it is flushed.\n- **NitrOS-9** - stock 6809 RBF takes it for a write-only producer and a\n  write-only creator alike, and wakes waiters on every write. `Live`\n  (NitrOS-9). The mode gate the stock module *does* have is on the read\n  auto-lock, which is correct. Its real remaining RBF defect is a lost update after a\n  parked writer wakes - a matter of retrying the confli"
+}

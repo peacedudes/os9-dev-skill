@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 34,
+  "text": "d not\na missing math library.\n\n**The trace is the reason this is worth knowing**, because it does not look like\na formatting fault: the zero padding overwrites memory. One run left the PC in a\nrunaway zero-padding loop (`MOVE.B #$30,(A3)+`, `$30` being ASCII `'0'`) after\na write syscall; another died on a `MOVEA.L` through an address register\nholding `$30303030` - four `'0'` bytes where a pointer had been - with\n`F$SRqMem` as the last syscall. `Live` (os9exec). Either way a reader will start\nauditing their own buffers. **The fix is to format with `sprintf` and draw with `addstr`.**\n\n**Scope: `printw` alone. The rest of the family is fine.** Measured with curses\ngenuinely initialised (`LINES=24 COLS=80`), same float, same program:\n\n| call | result |\n|---|---|\n| `printw(\"%.2f\", 100.0)` | **b"
+}

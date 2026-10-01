@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 30,
+  "text": "ls *itself* with that number as the signal value; if uncaught, the\n  process exits with an error return to its parent. These live in the\n  compiler runtime's own numbering, not the kernel `E$` table above, and\n  aren't confirmed identical on a 68k compiler.\n\n---\n\n**Sources:** OS-9 v2.4 Technical Reference Manual, Error Codes section\n(000:001-000:255, page B-28 for the low range) and \"Write/WritLn\" (p. 4-13); OS-9/68000 Operating System\nTechnical Manual (July 1985, Revision S), Appendix C, \"Error Codes\" and\n§14-12 \"F$Exit\"; OS-9 C Compiler manual, \"Introduction to C System Calls\"\n(p. 3-1) and \"Run-Time Arithmetic Error Handling\" (p. 1-8); BASIC09 Reference\nManual (Rev H), Functions section (p. 8-5); BASIC09 Reference Manual, Appendix\nC \"Error Codes\" - cross-confirmed word-for-word identical"
+}

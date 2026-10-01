@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 45,
+  "text": "mmand entries describe the\n68k versions already covered in `common/utility-usage.md`. It is not an\nindependent 6809 source. Only the genuinely CoCo-specific 2nd edition,\nplus the 1982 Tandy CoCo quick reference, were treated as 6809\ncross-checks for that gap. A handful of items (`dcheck`'s options,\n`wcreate -s=<type>`, the `tmode`/`xmode` `baud=`/`psc=` parameters,\n`cobbler`'s existence, and NitrOS-9's own `format` syntax) are\nadditionally tagged `Live` (NitrOS-9), confirmed against a real NitrOS-9 session.\nNitrOS-9's utilities are a modern rewrite - flag any live divergence you\nfind as such, not as a manual error.\n"
+}

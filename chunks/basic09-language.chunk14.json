@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 14,
+  "text": " anywhere else in either primary manual, or in any\nof their worked examples, which cover both flat and nested records. `Live` (os9exec)\n(loaded via `LOAD`, so no editor is involved): every line of a `TYPE point` /\n`x: INTEGER` / `y: INTEGER` / `ENDTYPE` block is rejected individually\n(`Error #000:027` on each). The one-liner is the only form, and it supports\nboth nesting and array fields:\n\n```basic\nTYPE point = x:INTEGER; y:INTEGER\nDIM p: point\np.x = 10\np.y = 20\n```\n\n```basic\nTYPE inner = a:INTEGER; b:INTEGER\nTYPE outer = n:inner; arr(3):INTEGER\nDIM o: outer\no.n.a = 5\no.arr(1) = 100\n```\n\nNested-TYPE fields (`o.n.a`) and array fields (`o.arr(1)`) are both\n`Live` (os9exec). Fields may nest (a field's type can itself be a\npreviously-defined TYPE) and are accessed by dot notation, including th"
+}

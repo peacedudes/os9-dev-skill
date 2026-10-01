@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 25,
+  "text": "s own block number - don't overwrite it. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`) |\n| F$Ret64 | $31 | A=block number, X=base-page addr | | Deallocates a 64-byte block. Untested - depends on `F$All64` |\n| F$SSvc | $32 | Y=addr of a system-call init table | | Adds or replaces an entry in the kernel's dispatch table so a custom handler takes over a chosen function code. Y's table is a repeating sequence - function-code byte, then a 2-byte offset to the handler relative to the entry's own 3rd byte - terminated by a lone `$80`. A function code with its high bit set patches the *system*-mode dispatch table only; clear, it patches *both* system and user tables. `Source` (NitrOS-9 `fssvc.asm`) - the terminator byte and the table split appear in no manual checked |\n| F$IODel | $33 | X=I/O mod"
+}

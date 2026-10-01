@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 10,
+  "text": ", and **skips one trailing comma or any number of trailing spaces**. `E$BNam` is the only error and is the **documented end-of-pathlist signal** - \"if X was at the end of a pathlist, a bad name error will be returned\"; **on that error `Y` is still returned**, advanced past spaces/commas so the next pathlist in a command can be parsed. `Manual` (6809 System Programmer's Manual, §11.1.14 - notably fuller than the 68k TRM's entry); `Live` (NitrOS-9) for call success only, returned values unverified. **6809-only: do not carry the trailing skip or the error-path `Y` over to 68k** - the 68k line evolved from this design and its TRM specifies neither, so this row is not evidence about os9exec. See `68k/syscall-reference.md` |\n| F$CmpNam | $11 | B=length, X/Y=two strings | Carry clear if match; se"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 36,
+  "text": "exec)-verified 68k sub-tool chain used throughout the rest of this\nfile (`cpp`->`c68`/`c68020`->`o68`->`r68`/`r68020`->`l68`, driven by `cc`; see\n`Setup` above and `68k/os9-68k-assembly.md`). Kept here for reference since\n`c-link`/`c.link` naming shows up in mixed-architecture archives, but treat\nit as describing the 6809 toolchain's own internal component names, not an\nalternate name for any 68k tool.\n\n| Component | Purpose |\n|-----------|---------|\n| `cc` / `cc2` | Driver program; `cc` is two-pass, `cc2` is single-pass. Identical from the command line. |\n| `c.prep` / `c.preq` | Macro preprocessor |\n| `c.pass1` / `c.comp` | Initial compilation phase |\n| `c.pass2` | Second pass (`cc` only) |\n| `c.opt` | Assembly code optimizer |\n| `c.asm` | Relocating assembler (generates `.r` files) |\n| `"
+}

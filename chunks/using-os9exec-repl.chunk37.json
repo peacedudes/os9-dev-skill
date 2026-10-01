@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 37,
+  "text": "mcap) `sc` refuses to start at all with\n   `'xterm-256color': Unknown terminal type`, and `backgammon` draws its top\n   rule and nothing else - no cursor-addressed walls or pieces. `TERM=vt100`\n   and both render fully. Programs that carry their own compiled termcap, or\n   that simply assume a vt100, do not all accept a modern name. Set it before\n   blaming the program or the emulator. If a correct `vt100` still draws\n   `Unknown terminal type`, two further causes sit behind that one message, and\n   the quotes tell them apart: a **named** type means the entry was not matched,\n   so suspect the reader that skips any entry lacking a two-character first\n   field (`c/os9-clib-reference.md`); an **empty** `''` means the name never reached the library at\n   all - check the `@` prefix above, and "
+}

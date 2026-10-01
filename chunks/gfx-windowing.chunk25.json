@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 25,
+  "text": "nter, and\n  `ELLIPSE`'s separate x/y radii, are confirmed too.\n- `DRAW(path,option_string)` - draws a polyline from a mini-language of\n  direction codes and magnitudes in one string: `N`/`S`/`E`/`W`/`NE`/`NW`/\n  `SE`/`SW` each followed by a distance (e.g. `N40`); `A<val>` rotates the\n  drawing axis (`0`/`1`/`2`/`3` = 0°/90°/180°/270°); `U<xcor>,<ycor>` moves\n  by a relative vector without changing the draw pointer; `B<xcor>,<ycor>`\n  moves the same way but blanks (invisibly) - an offscreen `B` move hides\n  whatever's drawn next. Options are separated by spaces or commas; a\n  comma is specifically required between `B`/`U` and their coordinate\n  pair. **`Live` (NitrOS-9)** - `SETDPTR(50,50)` then\n  `DRAW(\"N40E60S40W60\")` rendered a clean closed rectangle outline,\n  confirming the direction c"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 14,
+  "text": "ack/red/green/yellow/blue/magenta/cyan/white\n  (registers 0-7) weren't cleanly recovered by either OCR pass.\n- **Typical window lifecycle from BASIC09:** `DIM` a path-number variable,\n  `OPEN` a path to the window device, `SELECT` the new window, read/write\n  through the path, then `CLOSE` (and `SELECT` back to the original window\n  if still needed - skippable if staying in the new window). A window\n  created this way via `OPEN` disappears automatically when its path\n  closes; for a window that should outlive the path, run `SHELL \"INIZ\n  /window\"` first to initialize the device independently before `OPEN`.\n\n### Window management\n\n- `DWSET(path,format,xcor,ycor,width,length,fg,bg,border)` - defines a\n  device window: `format` is the screen-type code (see above), `xcor`/\n  `ycor` are the upp"
+}

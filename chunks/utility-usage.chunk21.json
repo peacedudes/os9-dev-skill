@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 21,
+  "text": " `-t=<size>[k]` total cache limit.\n- `setime [<opts>] [y m d h m s [am/pm]]` - `-s` from battery clock,\n  `-d` don't echo the result.\n- `date [<opts>]` - `-j` Julian, `-m` 24-hour time.\n- `tsmon [<opts>] {/<dev>}` - watch terminals for logins; `-p` print an\n  online prompt, `-l=<prog>`/`-r=<prog>` alternate login/shell program,\n  `-d` statistics on ^\\. A monitor typically arms `I$SetStt` `SS_SSig`\n  (signal-on-data-ready) and then sleeps without reading the device at all -\n  which is why a newly brought-up terminal can sit dead to keypresses with no\n  error anywhere. Protocol and the four properties a driver must honour:\n  `os9-systems-dev` skill's `device-drivers.md`.\n- `kermit <flags> [<dev>] [<file>...]` - file transfer. Flags are one bundled\n  argument with no `-`, and two of them deci"
+}

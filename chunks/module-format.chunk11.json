@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 11,
+  "text": "#1024\n68000 Prog Mod, Object Code, Sharable\n```\n\n**A module's registered name is the one in its header, not its filename.**\nCopying this file to `exgood1` and loading it still put `exfio1` in `mdir` -\nworth knowing before hunting for a module under the name you saved it as.\n\n**But `argv[0]` is the FILENAME, not the module name** - `Live` (os9exec).\nThis matters because a family of Unix ports switches\nbehaviour on `argv[0]`: elvis ships one small wrapper binary copied under\nseveral names, and it reads the LAST LETTER of `argv[0]` (`w` -> `-R`\nread-only, `t` -> `-i` input mode, anything else -> plain vi). The same bytes\nunder a name ending `w` opened `[READONLY]`; under a name ending `s` they\nopened plain; under a name ending `t` they opened in insert mode - while the\nmodule name in the head"
+}

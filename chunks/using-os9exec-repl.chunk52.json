@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 52,
+  "text": "hout renaming it on the host.\n- **A name containing spaces opens by its `_` spelling** - unless a file really\n  spelt with `_` also exists, which then wins and shadows it.\n- **`makdir sub` beside an existing `Sub` fails `E_CEF`** on Linux, because the\n  lookup finds `Sub` first.\n\n**Line endings are not translated on a host directory.** `Live` (os9exec):\nnothing converts LF, and `I$ReadLn` ends only at CR, so a three-line LF file\nreads as a single line - `linecount` reports **0 lines** for it. Editing a file\nhost-side therefore leaves it unreadable to OS-9 line I/O unless you convert it\n(see \"Creating and editing files\" above); the device being a plain host directory does not\nbuy you host line endings.\n\n**`chx` with no argument prints nothing on a host directory**, where on an\nRBF image it "
+}

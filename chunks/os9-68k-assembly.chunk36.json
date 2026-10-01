@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 36,
+  "text": " large for a byte operand` - **and writes the module anyway**, so a build\n  that checks for an output file passes. Use `lea tab(a6),a1` then\n  `0(a1,d0.w)`.\n- **A trailing colon makes a label externally visible** - `Live` (os9exec),\n  confirmed via `l68 -s` and `debug`'s `sc` symbol\n  listing. Colon-suffixed labels (`start:`, `sumloop:`) are\n  debugger-/linker-visible symbols; colon-less labels are not - a build\n  with only colon-less labels showed just the three universal symbols\n  (`btext`/`bname`/`etext`) under `sc`, and adding colons made every\n  intended label appear.\n- The 68000 instruction set itself is out of scope here (sources assume\n  Motorola knowledge and document only OS-9 extensions).\n- Driver/file-manager entry-point register conventions live in the\n  sibling `os9-systems-d"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 35,
+  "text": ": if a call returns real\n  data in `X`, `Y` or `U`, and the program uses that same register as its\n  `,U`-relative data-area base pointer, it *will* be clobbered unless\n  bracketed - `PSHS U` immediately before the `SWI2`, `PULS U` immediately\n  after (`PULS` doesn't touch `CC`, so a carry/error result survives).\n- **Save a return value to memory immediately**, before any print or helper\n  call - shared helpers typically reuse `B` as a counter and `Y` as scratch,\n  silently destroying a return value left in them.\n- **A module's `CMDS`-visible name comes from `asm`'s `O=<name>` argument,\n  not the source's `NAM` directive.** The two are independent, and a name\n  colliding with a module already on disk from an earlier session - under a\n  different logged-in identity - can fail to overwrite w"
+}

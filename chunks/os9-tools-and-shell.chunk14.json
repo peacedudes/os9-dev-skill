@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 14,
+  "text": "her commands\nin the file became more directory names), and nothing else in it runs as a\ncommand. With `-nx` on the first line the shell instead echoes the line and\nprints `^syntax error`. Procedure files written on a Unix host must be\nconverted (`tr '\\n' '\\r'`, or `flip -m` where installed) before use.\n\n### Unattended procedure files: prompts and waits\n\n- **A utility that prompts devours the rest of the file.** `copy` onto an\n  existing destination reports `Error #000:218` and then asks `Overwrite\n  (yes/no/all/quit)?`. `Live` (os9exec): the following procedure lines are\n  read as answers to that prompt instead of being run - one character at a\n  time, re-prompting after each one that is not an answer - and when the file\n  runs out it gives up. Every line after the `copy` is gone without a"
+}

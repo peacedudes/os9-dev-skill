@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 12,
+  "text": "ea, so `load` the trap handler first if a program's F$Mem expansion keeps failing. `Live` (os9exec): information request, E$DelSP, and expansion when the arena above is free (CONF68K t51-t53). |\n| **F$SysID** | Get system identification | Pre-3.0 form: (a0)/(a1)/(a2)=80-byte buffers for the version, copyright and author-names strings, 0=not wanted | d0.l=licensee, d1.l=serial (both 1 by default), d2.l=MPU in use, d3.l=MPU the kernel was built for (Motorola part numbers), d4-d7=0 | **Not in the v2.4 manual**: \"implemented but not documented\" before v3.0 (OS-9 Insights ed. 3, App. A), the register form above being the OS-9 Guru's 11.5.16 (`Hearsay`-grade third party, but confirmed by period code: hc_utils `sysid.c` passes exactly these registers). v3.0 redefined it around a parameter block a"
+}

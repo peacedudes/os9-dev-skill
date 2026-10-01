@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 11,
+  "text": "ager or driver - it simply\nincrements the count, letting parent and child (or any set of processes)\nshare one open-file context without re-opening. Only when `I$Close` drives\nthe count to zero does the kernel deallocate and unlink the descriptor.\n\n**Kernel-side bookkeeping** - not the file manager's job, but what its\nOpen/Close calls are embedded inside: the kernel maintains a device table\n(one entry per attached device: file manager and driver names, the driver's\nstatic-storage pointer, a use count) and a path table (one entry per open\npath). A path's device-table entry and descriptor are resolved on `I$Attach`;\nsee `device-drivers.md` for the INIT/TERM lifecycle this drives.\n\n## RBF Disk Structure\n\nRBF implements a tree-structured filesystem. Every disk has the same layout:\nidentificatio"
+}

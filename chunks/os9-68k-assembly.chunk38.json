@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 38,
+  "text": " `l68` emits only 12 bytes after `$30` (`M$Exec`\n  then 8 zero bytes; `ident` reports `68000 Dev Drv`, `Exec off $3C`), with\n  no `M$Stack`/`M$IData`/`M$IRefs` - the `Prgrm` extension does not apply. **`Live` (os9exec), does NOT generalize to\n  `Devic` (device descriptor) modules**: the 6-operand form\n  unconditionally reserves the same 12 bytes of header padding before the\n  psect body, but a device descriptor's real extended header\n  (`M$Port`/`M$Vector`/`M$Mode`/`M$FMgr`/... - see the sibling\n  `os9-systems-dev` skill's `device-drivers.md`) is a completely\n  different shape at those same offsets, so this recipe silently\n  misaligns a hand-authored descriptor. A shorter 4-operand `psect` line\n  fails outright (`*** error - comma expected ***`); no working syntax\n  for authoring a `Devic`"
+}

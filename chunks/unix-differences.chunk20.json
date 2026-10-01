@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 20,
+  "text": " writing.\n`Hearsay` (the author, from a real system: \"yes real os-9 accepts `../../../..`\nno problem\"), so this is OS-9's behaviour and not a runtime indulgence.\n\n`Live` (os9exec): the rule holds for\n`../..`, `../...`, `.../..`, `../......./.././`, `A/..`, `A/B/...`,\n`A/B/C/../../..`, absolute pathlists with mixed runs, and `chd ../..`.\n\nOne measured case is worth quoting in full, because it carries its own control -\nnote that it mixes spellings to *exercise* composition, and is evidence rather\nthan a model to copy. From seven levels down, `list ./../.../...././SYS/f` opens a file **exactly six levels up** -\n`0+1+2+3+0` - and `chd` with the same pathlist followed\nby `pd` lands six up. The control: that climb does **not** reach a file seven\nlevels up, which fails `E_PNNF`. So the runs are b"
+}

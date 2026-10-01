@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 63,
+  "text": "tics underlying `os9fork()`/`sbrk()`)\n- The OS-9 Guru, section 3.2.12 (`cstart.r` / linker startup file)\n\n**Caution when consulting Microware C manuals directly:** the surviving\nmanuals cover both the 6809 and 68k compilers and sometimes blend them\nwithout marking which architecture a detail applies to (e.g. `int` size,\n\"direct page\" memory - the latter is always 6809). When in doubt on a\nfoundational claim, check it against a 68k-specific source, or measure it\non a 68k system, rather than trust a single passage.\n"
+}

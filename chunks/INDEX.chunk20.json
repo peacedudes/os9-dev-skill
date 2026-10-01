@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 20,
+  "text": " procedure lookup resolves against the *data* directory | `common/os9-tools-and-shell.md` |\n| `can't execute \"<a word you never typed>\"` | you named a data file, and the shell is running its contents as commands - the quoted word came from inside the file | `common/os9-tools-and-shell.md` |\n| A file you just created won't open, or a long name is refused | OS-9 allows 1 to 28 characters and a 29th is refused everywhere | `common/unix-differences.md` |\n| Compiler reads the whole source as one line | source has LF endings; OS-9 needs CR-only | `c/os9-c-cheatsheet.md`, `common/unix-differences.md`, `common/using-os9exec-repl.md` |\n| `cpp` still dies after every `.c` and `.h` was converted to CR, or dies on a `.dat`/data file you never thought of as source | it is `#include`d as C initialisers "
+}

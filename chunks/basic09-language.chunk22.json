@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 22,
+  "text": " at a called procedure by\nreference - the actual memory location is passed, not a copy. Any\nassignment to a parameter overwrites the caller's original value.\nConstants and expressions cannot be passed by reference; they always\narrive by value (read-only). To force by-value semantics for a variable,\nwrap it in a trivial expression: `x+0` for numerics or `s$+\"\"` for\nstrings. `Live` (os9exec), both directions: a plain `INTEGER` or\n`STRING` variable passed to `RUN` is mutated by the callee's assignment\nto its `PARAM` (caller sees the change); the same call with `x+0`/`s$+\"\"`\nleaves the caller's variable untouched.\n\n**Recursion works, including multiple simultaneous live activations of\nthe same procedure.** `Live` (os9exec) with two cases: a\nsingle-recursive factorial (`RUN fact(n-1, sub)`, unw"
+}

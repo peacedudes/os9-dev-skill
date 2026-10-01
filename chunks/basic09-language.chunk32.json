@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 32,
+  "text": "abrication to guard against. The real syntax, confirmed\nagainst the manual's grammar (`Manual`); `Live` (os9exec) end to end:\n\n| Directive | Meaning | Syntax |\n|---|---|---|\n| `Rw.f[j]` | REAL (also works for INTEGER/BYTE) | width `w`, `f` fraction digits, optional justify `<`/`>` |\n| `Ew.f[j]` | Exponential/scientific notation | same shape as `R` |\n| `Iw[j]` | INTEGER (also BYTE, in-range REAL) | width `w` |\n| `Hw[j]` | Hexadecimal dump of any type's internal bytes | width `w` |\n| `Sw[j]` | STRING, padded/truncated to width `w` | `<` left (default), `>` right |\n| `Bw[j]` | BOOLEAN - same shape as `S`, converts to a word | width `w` |\n\nJustify `j`: `<` left, `>` right, `^` center. **The `^` resolves an OCR\nambiguity**: the manual's own text rendered this symbol as a garbled\n\"°\" (degree sig"
+}

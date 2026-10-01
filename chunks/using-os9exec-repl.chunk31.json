@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 31,
+  "text": "t you need it.\n\n**`OS9DISK` CAN point at an RBF image** - `Live` (os9exec), measured\non macOS with `env -i` and from an unrelated\nworking directory. All three of these work against a 253 MB RBF\nimage:\n\n```\nenv -i OS9DISK=/abs/image.dd os9exec -r /dd/CMDS/cat /dd/SYS/motd   # absolute\nenv -i OS9DISK=/abs/image.dd os9exec -r cat SYS/motd                # bare name\nenv -i OS9DISK=/abs/image.dd os9exec -r /dd/CMDS/cat SYS/motd       # relative open\n```\n\nThe bare-name boot program proves the execution directory resolves inside the\nimage, and the relative open proves the data directory does. A whole test\nharness in the wild drives its RBF image this way.\n\n## Batch-driving a whole session: a procedure file, never a pipe\n\nFor unattended multi-command work (building an image, populating a disk),\npa"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 10,
+  "text": "t offsets 20..200 (1:1). With `SCALESW`\n  **off**, coordinates become **literal window pixels** and drawing **clips\n  at the window edge** - x=320/480/639 simply vanish on a 320-wide window.\n\n  **The practical trap is the \"0-639\" range** quoted throughout the entries\n  below: that is the coordinate range of a *640-wide* screen type (5 and 7).\n  On a 320-wide screen type (6 and 8) the meaningful range is 0-319. Nothing\n  rejects a larger value - `LINE` at x=639 on a 320-wide screen returned no\n  error (consistent with GFX2's general lack of bounds checking) - so\n  out-of-range coordinates fail silently rather than diagnosably.\n\n  Still untested: the origin half of the claim. Both test windows sat at\n  0,0, where window- and screen-relative origins coincide.\n- **Window/screen format codes** "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 46,
+  "text": "CRO ...\nENDM`, where the label on the `MACRO` line becomes a new pseudo-mnemonic\nusable after its definition. Body statements can reference previously-defined\nmacros (nesting up to 8 deep); defining a macro inside another's body is\nillegal. Redefining a real 6809 mnemonic with a same-named macro is legal and\nis the manual's own documented technique for building a cross-assembler for a\ndifferent instruction set; redefining an assembler directive the same way has\n\"unpredictable consequences\" per the manual. Macro text lives in a temporary\nwork file with a 1K buffer, so define short, frequently-used macros first to\nkeep them cached.\n\n**Macro arguments**: up to 9 positional, `\\1`-`\\9`, substituted only in the\noperand field (never label or mnemonic) of body statements, replaced by the\nliteral a"
+}

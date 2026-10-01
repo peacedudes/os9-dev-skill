@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 46,
+  "text": "because it is added to whatever the module already needs, not because 4096 is itself the right number for any particular program. **Arity is deliberately unprototyped, `Flag` - and the one fixed prototype is the outlier.** The six-parameter form above is what was exercised here. Three separate Microware-derived `stdlib.h` copies (the SDK's `os9lib` tree and two archived ones) decline to commit: they declare bare `os9fork(), os9forkc(),` - K&R empty parens, any arity - and carry the only full signature **commented out**, as `(char *, char *, int, int, short, short, short, ...)`: **variadic**, and differently typed from the GCC2 tree's fixed seven-parameter `(const char*, int, const char*, short, short, int, short)` (`os9forkc` there takes eight). All three copies are character-identical, so"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 25,
+  "text": "are gone afterwards | a login starts fresh and inherits nothing - set them in the account's `.login` | `common/os9-tools-and-shell.md` |\n| Ctrl-C or Ctrl-E does nothing to a running packed BASIC09 program | RunB turns the key into an error only when an `ON ERROR GOTO` trap is armed; with none, the loop runs on | `basic09/pack-and-runb.md` |\n| Separate writes run together / output garbled | `I$WritLn` writes **to the first CR** - a buffer without one runs past its end | `common/memory-and-io.md` |\n| A console line stops ending on Enter, or a read returns fewer bytes than asked | on SCF the terminator is **PD_EOR**, not literally CR - `tmode eor=` or a program's SS_Opt moved it. Set to zero, I$Read runs to its full count (the raw-input idiom); the manual warns I$ReadLn then ends only on EOF "
+}

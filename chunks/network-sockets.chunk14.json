@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 14,
+  "text": "s that don't want a full `routed`.\n- **`mbinstall`** carves out the `mbuf` pool from kernel memory (reducing\n  free RAM accordingly) and must run before any other Internet utility.\n- **Broadcast address** convention: the host portion of the interface's\n  address set to all-ones (by convention, `.255`).\n- **Ethernet hardware address storage** is board-specific and lives in\n  battery-backed RAM: VME/147 at `0xFFFE0778`, VME/167 at `0xFFFC1F2C` - both\n  formatted as 3 Motorola vendor-ID bytes (`08 00 3E`) followed by a 3-byte\n  board serial number (matching the label on the CPU board).\n\n### Ethernet driver diagnostics\n\n- **`lestat`** - stats for the AM7990 LANCE driver: interface state, address,\n  tx/rx counters, CRC/collision/overflow/framing error counts.\n- **`iestat`** - richer stats for t"
+}

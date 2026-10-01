@@ -1,0 +1,5 @@
+{
+  "source": "README.md",
+  "chunk_index": 2,
+  "text": "assistant\n\nA person can read these files, since they are plain Markdown, but every\nchoice in them was made for a model working on a task:\n\n- **Loaded on demand.** Each skill's `SKILL.md` carries a description that\n  tells the assistant when the skill applies, plus a short core model that it\n  reads every time. Everything else lives in `references/` and is opened only\n  when needed.\n- **Routed by symptom.** An assistant usually arrives with an error number or\n  a program that misbehaved, not a topic name. So each `references/INDEX.md`\n  maps symptoms to causes, as well as topics to files.\n- **Tagged for trust.** Every claim says what it rests on, so the assistant\n  can judge how far to lean on it and tell you how sure it is:\n\n  | Tag | Means |\n  |---|---|\n  | `Manual` | Stated in published "
+}

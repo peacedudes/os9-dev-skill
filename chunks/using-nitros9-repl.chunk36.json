@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 36,
+  "text": "nounce themselves (`F$Boot` reboots; `F$IRQ` installs a\nreal hardware vector). These three do not, and each costs a restart:\n\n- **`F$AProc` / `F$NProc`** - scheduler-internal. `F$NProc` does not *return*;\n  it dispatches the next process, so execution never comes back to your code.\n- **`F$IOQu`** - queues the caller on an I/O event with no timeout. Nothing\n  wakes it if the event never arrives, and the shell never reprompts.\n- **`F$SSvc`** - patches the *live* system-call dispatch table. A wrong entry\n  corrupts the running kernel rather than failing the call.\n\nRegister details for all of them: `6809/syscalls-and-module-format.md`. Test\nthese only where losing the session is acceptable, or from a forked child so\nthe blast radius is the child rather than your shell.\n\n## `rma` + `rlink` work"
+}

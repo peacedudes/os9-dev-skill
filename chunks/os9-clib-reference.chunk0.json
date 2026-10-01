@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 0,
+  "text": "# OS-9 C Standard Library Reference\n\nFor Microware C Compiler targeting 68000/6809 OS-9 systems.\n\n**Every `Live` tag here is `Live` (os9exec)** - OS-9/68k. No 6809 C\ncompiler was available to this project, so nothing on this page is\n6809-verified; treat the 6809 column of any comparison as `Manual`.\n\n## Overview\n\nThe Microware C library bridges OS-9 system calls and UNIX-style C I/O patterns.\nThe startup routine converts the OS-9 parameter string into `argc`/`argv`.\nAll standard I/O is path-based (paths 0=stdin, 1=stdout, 2=stderr) and\nuses OS-9 `I$Open`, `I$Read`, `I$Write` calls under the hood.\n\nMost wrapper functions follow UNIX naming for portability, but parameters\nand return values may differ from their raw OS-9 equivalents - verify against\nthe manual's cross-reference table between "
+}

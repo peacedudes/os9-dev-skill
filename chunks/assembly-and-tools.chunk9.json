@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 9,
+  "text": "ork - this one did, storing a path number through\n`U` - because the process gets a usable page anyway. Nothing warns you.\n(The `hello.a` sample on this disk uses `size equ *`, so its declared data\nsize is its module length by accident rather than by intent.)\n\n### Why not `use` os9defs.a\n\n`asm` cannot assemble `/dd/defs/os9defs.a`. The file is RMA source: it\nopens with `psect _os9defs,0,0,0,0,0`, uses `csect`, declares `true:`/\n`false:` with trailing-colon labels, and defines every call code as an\n`RMB 1` slot in a counted table. Feeding it to `asm` produces a cascade of\n`***** Error: bad instr` on those directives, then `undefined name` on every\n`OS9`/`I$`/`F$` symbol that never got defined, then `phasing` errors as the\ntwo passes disagree. **The disk's own `hello.a` fails this way too** ("
+}

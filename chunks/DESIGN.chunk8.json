@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 8,
+  "text": "oids. Resolution is **by basename**: `INDEX.md`\n   rows are written as bare names, tree-relative paths, or sibling-skill-\n   qualified paths (`os9-dev/references/CONFIDENCE-TAGS.md`), and basename\n   matching is the one rule that resolves all three without hand-parsing\n   \"sibling X skill\" prose to pick a path root. The known-basename set adds\n   each root's sibling `SKILL.md`/`SOURCES.md` explicitly (`INDEX.md`'s only\n   non-`references/` targets) rather than re-walking the whole skill tree.\n   Fails the run.\n5. **Orphaned `[[memory]]` link** - a wiki-style `[[name]]` cross-link (the\n   auto-memory system's own linking convention, `~/.claude/projects/*/memory/`)\n   with no memory file whose frontmatter `name:` matches. Opt-in via\n   `--memory-dir <dir>` since that path is project- and mac"
+}

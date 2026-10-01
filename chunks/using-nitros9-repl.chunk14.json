@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 14,
+  "text": "Backspace key is the one code a bridge legitimately translates.** It\n  sends DEL (`$7F`); SCF wants BS (`$08`). Verified by `tee`+`dump`: at the\n  default `bsp=08`, Ctrl-H erases and DEL lands in the line as a literal `7F`;\n  after `tmode bsp=7F` that inverts exactly. `bsp` is a single byte, so the\n  guest-side fix can only ever honour one of the two - translating DEL->BS in\n  the bridge is what keeps *both* the Backspace key and Ctrl-H erasing.\n- **Distinguish a bare Esc from an arrow key by timeout, not by blocking it.**\n  A modern terminal's arrow/function keys arrive as `ESC [ ...` / `ESC O ...`, so a\n  bridge that forwards Esc immediately spends it as an EOF and drops `[A` into\n  the line. Consume the whole sequence (translating it - see the CoCo table\n  below); emit Esc only after ~5"
+}

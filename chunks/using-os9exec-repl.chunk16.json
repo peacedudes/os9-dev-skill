@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 16,
+  "text": "ses: one raw `key Enter` to force a blank prompt line,\n  confirm, resend. The timed-out command was never sent, so nothing is lost.\n  The same byte costs you output at the *end* of a run: a program whose last\n  message ends in a bare CR has that line overwritten by the shell prompt that\n  follows, so a capture shows `Cannot open modem path (/t0) - bash#` or\n  `bash# EM port defined!` and reads as the program truncating itself.\n  Appending `; echo \"\"` to the command moves the prompt to a fresh line and the\n  message survives. `Live` (os9exec).\n\n  **If EVERY line behaves that way, suspect `PD_ALF` rather than the program.**\n  A single program ending its last message with a bare CR is the case above; a\n  terminal where nothing advances a line is a path option that some earlier\n  program clear"
+}

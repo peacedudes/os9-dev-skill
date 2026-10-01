@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 17,
+  "text": "t. Remote filenames are\n  glob-expanded only for `mget`/`mput`/`mdelete`/`mdir`/`mls` - using the\n  *remote* server's own expansion rules, not the client's.\n\n---\n\nSources: OS-9 Internet Software Reference Manual. `Manual` throughout -\nno call run from C. `Live` (os9exec): a C program calling `socket()` fails at\n*link* time (`Symbol 'socket' unresolved`, `l68: error`) with `cc`'s default\nlibraries, and still does with `LIB/net.l` or `LIB/unet.l` added. The SDK\ndisk does carry `LIB/socket.l` and three `netdb*.l` libraries, but they do\nnot begin with a ROF's `$DEADFACE` sync word (`socket.l` starts `2D00 D5BC`),\nand `l68` rejects them: `file '/dd/LIB/socket.l' is not a relocatable\nmodule`. Which linker reads that format is not established here. Error-handling conventions cross-referenced\nagai"
+}

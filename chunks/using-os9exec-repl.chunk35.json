@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 35,
+  "text": " before shipping an image:\n\n- **Copy into the image with `copy -n`.** The default duplicates the source\n  file's whole FD including its owner; a host-native directory has no real\n  OS-9 owner, so os9exec synthesises `0.0` and reproducing that is an owner\n  change a non-super caller may not make. The copy then prints `E$PERMIT`\n  *and still transfers the data*, which reads as harmless noise - the kind\n  of error that trains you to ignore a real one later. `-n` creates a fresh\n  FD and the error stops happening.\n- **A file created by a non-super account has no public read by default**\n  (`------wr`). On any machine where the operator is neither that owner nor\n  in group 0, the disk is unreadable. Set public bits explicitly.\n- **ToolShed's `copy -o=<id>` is not an ownership route**: it sets o"
+}

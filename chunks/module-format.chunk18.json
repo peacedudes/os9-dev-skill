@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 18,
+  "text": "|\n| Data init offset | 0x40 | 4 | -> data-initialization table | `M$IData` |\n| Pointer init offset | 0x44 | 4 | -> pointer-relocation tables | `M$IRefs` |\n\nAll 32-bit fields. **`Source`:** all six offsets, and the 0x48 total,\nmatch os9exec's program-module header definition. Entry point = load\naddress + M$Exec; the linker takes it from whichever psect was designated root.\n\n- **M$IData table:** entries of (4-byte data-area offset, 4-byte size,\n  literal bytes); the kernel copies them into the fresh data area at fork -\n  this is how C static initializers work. Linker vsect values land here.\n- **M$IRefs tables:** two sub-tables, each (MSW-of-offset word, count\n  word, count× LSW offsets, zero terminator). First table marks data slots\n  holding pointers into TEXT (fixed up with the module base"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 17,
+  "text": "er write \"the CoCo has\n  no arrow keys\": it has four, and OS-9 config utilities navigate with them\n  (`CTRL-CLEAR` toggles a \"keyboard mouse\" driven by the arrows plus F1/F2 as\n  fire buttons). The accurate narrower statement is that OS-9's *line editor*\n  has no cursor movement or arrow-driven history - Ctrl-A is the history.\n  `Live` (NitrOS-9): all of these survive a DriveWire `/N` channel\n  intact, F1/F2's high-bit `$B1`-`$B6` included, so the channel is 8-bit clean.\n  Only the codes SCF acts on *do* anything by themselves (left arrow erases,\n  shift-left kills the line); the rest arrive as data, which is what a guest\n  program expecting CoCo keys wants. They do **not** drive windows or the\n  keyboard mouse over `/N` - that is console-driver behaviour, and `/N` is not\n  the console.\n- "
+}

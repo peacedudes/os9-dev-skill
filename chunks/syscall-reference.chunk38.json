@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 38,
+  "text": "tion, and a `d0.w` path open\non `/dd/SYS/errmsg` prints that file's text. With `d0.w=0` os9exec prints a\nnamed message rather than a bare number: see \"Where os9exec departs from the\nmanuals\" in `common/using-os9exec-repl.md`.\n\n## Debugger support\n\n| Call | Purpose | Notes |\n|------|---------|-------|\n| **F$DFork** | Fork suspended debuggee | F$Fork inputs plus (a2)=register buffer -> child PID + initial register image. Child never runs until F$DExec; the image shows SR with the trace bit set. `Live` (os9exec) |\n| **F$DExec** | Drive debuggee | d0.w=PID, d1.l=instruction count (0=free run), d2.w=breakpoint count, (a0)=breakpoint list -> instructions executed, remaining count, exception offset/classification/access address/IR. Syscalls (including through trap handlers and F$Chain) run at ful"
+}

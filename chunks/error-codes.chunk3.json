@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 3,
+  "text": "` function, which\nreturns the most recent error code and **resets to zero as soon as it's\nread**. Codes above 80 are OS-9/system errors (the table below); codes\n10-80 are BASIC09-internal (1-9 are unused/reserved - not documented as\nmeaning anything).\n\n### BASIC09-internal errors (codes 10-80)\n\n| Code | Meaning | Code | Meaning |\n|---|---|---|---|\n| 10 | Unrecognized symbol | 46 | Operand type mismatch |\n| 11 | Excessive verbiage (too many keywords/symbols) | 47 | String stack overflow |\n| 12 | Illegal statement construction | 48 | Unimplemented routine |\n| 13 | I-code overflow (need more workspace memory) | 49 | Undefined variable |\n| 14 | Illegal channel reference (bad path number) | 50 | Floating overflow |\n| 15 | Illegal mode (Read/Write/Update/Dir only) | 51 | Line with compiler error"
+}

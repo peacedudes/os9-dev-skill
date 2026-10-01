@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 3,
+  "text": "d `/h0` needs only\n    `OS9DISK=<img> OS9H0=<img>` and mounts it silently. `Live` (os9exec). No\n    symlinking or copying required. (The console line `# /h0: using\n    OS9H0='<img>', ignoring '<startPath>/h0'` means something else: a\n    magic-name `h0` file also exists beside the start path, and the variable\n    won.)\n  - **But only ONE PROCESS may have an image open for writing.** One emulator\n    mounting the same image as two devices is fine - it is one kernel, with one\n    copy of the allocation bitmap. **Two emulator processes sharing one image are\n    two kernels, each caching its own bitmap**, and each will allocate over the\n    other's blocks. `Source, Flag`: this is the reasoning recorded in a\n    collection's own image-locking tool rather than a corruption anyone here has\n    re"
+}

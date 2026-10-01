@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 19,
+  "text": "GOTO` keyword at\nall - and has no `ENDIF`: `IF i<5 THEN 10` (`Live` (os9exec): compiles and\nruns correctly, jumps to line 10 when true, falls through otherwise).\n**Type 2** takes any statement(s) as its body, including `GOTO`/`GOSUB`,\nbut `ENDIF` is written as a mandatory part of the syntax (unlike the\nbracketed-optional `[ELSE ...]`), on its own line:\n```basic\nIF i<5 THEN\n  GOTO 10\nENDIF\n```\n(`Live` (os9exec)).\n\n**`IF i<5 THEN GOTO 10` - a single line, `GOTO` keyword present, no\n`ENDIF` - is neither form.** It's an invalid hybrid: Type 1 forbids the\n`GOTO` keyword, Type 2 requires `ENDIF`. `Live` (os9exec): it correctly fails to\ncompile (`Error #000:069`), including as the sole statement of an otherwise\nempty procedure - so it is not a compiler bug, not direction-dependent, and\nnot about "
+}

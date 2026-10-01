@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 29,
+  "text": " access), illegal instruction (`T_ILLINS`), zero divide\n  (`T_ZERDIV`). All dispatch through `F$STrap` and are fatal to the\n  offending process by default (unconditional termination) unless it\n  installed a handler; a process created via `F$DFork` instead keeps its\n  resources intact for post-mortem debugger examination rather than being\n  torn down.\n- Vector 9: trace exception (set by `F$DFork` to put a debug child under\n  single-step control; also what the OS-9 debugger uses generally).\n- Vectors 25-31: the seven auto-vectored interrupt levels (1-7), serviced\n  through `F$IRQ` identically to vectored interrupts; level 7 is\n  non-maskable.\n- Vector 32: the `TRAP #0` OS-9 system-call entry point (F$/I$ dispatch).\n- Vectors 33-47: user trap vectors 1-15 (`F$TLink` installs handlers here;\n  "
+}

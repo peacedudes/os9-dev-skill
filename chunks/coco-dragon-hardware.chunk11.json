@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 11,
+  "text": "`BWSDUMP` adds an inverse mode (`-i`, swaps black/white) and a reduced-size mode for the Tandy LPVII printer's smaller print area (`-7`, the only mode LPVII accepts). Between the two utilities, supported printers include the CGP-220 ink-jet and the LPVII/LPVIII/DMP series dot-matrix printers (via OS-9's bit-image graphics mode).\n\n## Hard Drive Systems\n\nA CoCo hard drive setup has four parts: power supply, drive(s), drive controller, and a Host Computer Adapter card (a.k.a. Hard Disk Interface Pak) - typically requiring a MultiPak Interface to attach, with rare exceptions. The controller presents as memory-mapped registers (address decoder into a CPU range like `$FF70-77`, a bidirectional data buffer, and Select/Read/Write/Register-Select control lines).\n\nThree incompatible controller/encod"
+}

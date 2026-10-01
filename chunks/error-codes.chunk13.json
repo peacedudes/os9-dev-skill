@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 13,
+  "text": " error | PMMU configuration error |\n| 000:157 | - | PMMU illegal operation | Illegal PMMU operation |\n| 000:158 | - | PMMU access level violation | PMMU access-level violation |\n\n### 000:164 - 000:176 - Miscellaneous errors (continued)\n\n| Code | Symbolic name | Meaning | Cause |\n|---|---|---|---|\n| 000:164 | E$Permit | No permission | Process/module must be owned by the superuser for this function |\n| 000:165 | E$Differ | Different arguments | `F$ChkNam` arguments do not match |\n| 000:166 | E$StkOvf | Stack overflow | `F$ChkNam` pattern string is too complex |\n| 000:167 | E$EvntID | Illegal event ID | Invalid or illegal event ID number |\n| 000:168 | E$EvNF | Event name not found | Link/delete failed - name not in the event table |\n| 000:169 | E$EvBusy | Event busy | Delete attempted on an "
+}

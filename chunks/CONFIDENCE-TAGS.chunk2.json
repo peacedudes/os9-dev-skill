@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/CONFIDENCE-TAGS.md",
+  "chunk_index": 2,
+  "text": "s not one claim. A `Live` tag\ntherefore carries the implementation in parentheses, outside the tag's own\nbackticks, and a claim confirmed on more than one lists each:\n`Live` (NitrOS-9, os9exec).\n\n## `Absent` names its scope for the same reason\n\nAn absence is exactly as implementation-specific as a presence, so an unscoped\n`Absent` is the same defect as a bare `Live`. \"There is no `ident`\" is a very\ndifferent claim from \"there is no `ident` **in this SDK**\" - the first tells a\nreader their own OS-9 lacks a utility that Microware ships and their machine may\nwell have. Write the second.\n\nThe failure mode to avoid is stating a local absence as a general one. A\nreader arrives with a real system, and a flat \"X does not exist\" that is only true\nof one disk image or one toolchain is both discourag"
+}

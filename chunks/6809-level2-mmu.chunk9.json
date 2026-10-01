@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/6809-level2-mmu.md",
+  "chunk_index": 9,
+  "text": "re since it's the address-map-specific passage. Optional secondary ROM at `$F0000-$FBFFF`.\n- I/O devices live in fully-decoded physical address space (20-21 bits, not logical), conventionally packed into as few physical blocks as possible near the top of the map (e.g. `$FE00-$FEFF`).\n- DMA can bypass the MMU entirely (physical addressing); OS-9 arbitrates multiple DMA-capable devices in software, so no hardware bus-arbitration logic is required.\n- Only the kernel (`OS9P1`/`OS9P2`) ever touches MMU hardware directly - file managers, drivers, and user code all go through ordinary syscalls, so a port to different MMU hardware only requires kernel-level changes.\n\n## Gimix GMX III: A Concrete Support-ROM Implementation\n\nGimix's CPU III board is a real-world implementation of this MMU\narchitectu"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 3,
+  "text": "hnical Manual* (1984) ch. 14 |\n| **F$Chain** | Replace current program | as F$Fork | doesn't return | Fork+Exit in one: reuses the caller's process descriptor and PID, preserves open paths. **A failed chain kills the caller** - the caller's image is torn down (unlink, free) *before* the new name is resolved, so a bad name lands on an already-gutted process with nothing left to return an error to. The caller simply exits with status `E$MNF` (221); the line you see is the *parent shell* reporting that status, and under a parent that is not a shell nothing prints at all (`Live` (os9exec)). This is the contract, not a fault; NitrOS-9 (`fchain.asm`) does the same. `Live` (os9exec); NitrOS-9 side is `Source` (`fchain.asm`), not run |\n| **F$Exit** | Terminate | d1.w=status | - | Closes paths. Aut"
+}

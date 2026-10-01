@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 27,
+  "text": " (**default on**)\n- `-f` - eject pages with a form-feed rather than blank lines (default off)\n- `-g` - include every byte of generated object code in the listing (off)\n- `-x` - hide macro-expanded lines from the listing (default on)\n- `-e` - suppress error-message printing (default on per the manual - a build\n  tool defaulting to hidden errors is surprising; confirm before relying on it)\n- `-s` - append the complete symbol table after the listing (default off)\n- `-d<n>` - lines per page (default 66)\n- `-w<n>` - max line width, truncating longer lines (default 80)\n\n**`asm` command-line options** (ch. 2.5, 2.8.8). Format: `asm filename\n[option(s)] [#memsize] [>listing]`. Options separated by spaces or commas, on\nby presence, off with a leading `-`; an in-source `OPT` overrides the command\nli"
+}

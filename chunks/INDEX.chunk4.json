@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/INDEX.md",
+  "chunk_index": 4,
+  "text": "are meant to agree, so cross-check\n`os9-dev`'s `memory-and-io.md` when changing a shared fact (offset, field\nname, matching rule) in either of those two files.\n\n**Confidence.** Tag legend: sibling skill's\n`os9-dev/references/CONFIDENCE-TAGS.md`. The split in this skill is\nstructural vs. behavioral - layouts are checkable against os9exec's C,\nbehavior largely isn't:\n\n| Area | Tier |\n|---|---|\n| Struct layouts - Process Descriptor, module / executable / device-descriptor headers, path descriptor (`PD_` header + 128-byte SCF options) | `Source`, several with compile-time offset assertions |\n| `file-managers.md` -> Record Locking | largely `Live` (os9exec) |\n| Behavior os9exec doesn't emulate - driver and file-manager dispatch, the scheduler algorithm, System Global memory, the Module Director"
+}

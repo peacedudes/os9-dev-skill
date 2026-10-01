@@ -1,0 +1,5 @@
+{
+  "source": "README.md",
+  "chunk_index": 4,
+  "text": "emulator is OS-9, so a `Live` result is evidence about the emulator.\n  Where an emulator and a Microware manual disagree, the assistant is told to\n  treat the manual as the specification. Nothing here has yet been checked on\n  real OS-9 hardware.\n\n## Installing\n\n| Assistant | How |\n|---|---|\n| **Claude Code** | The plugin commands above. Or link a checkout's two folders into `~/.claude/skills/` (shown below) |\n| **Other assistants that load skills** | Each skill directory is a standard skill folder: a `SKILL.md` with a `name` and `description` header, with `references/` beside it. Install both folders |\n| **Any agent that reads files** | Clone the repository and point the agent at [`AGENTS.md`](AGENTS.md) |\n| **A chat assistant that only takes attachments** | Attach `os9-dev/SKILL.md` and "
+}

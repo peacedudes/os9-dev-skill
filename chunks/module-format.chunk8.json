@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 8,
+  "text": " summed low 16\nbits instead); OS-9 Insights states the verification result as `0`, which\nis inconsistent with \"complement of XOR\" - `$FFFF` is treated as\nauthoritative here. This parity is unrelated to the module CRC.\n\n## Reading a real module - `Live` (os9exec)\n\nThe tables above are easier to trust once you have seen them in bytes. This\nis a small hand-written assembly program (the worked example in\n`68k/os9-68k-assembly.md`), linked with `l68 -o=exfio1`, then dumped and\ndecoded. Every number below came from the running system.\n\n```\ndump exfio1\n\n00000000  4afc 0001 0000 01c6 0000 0103 0000 0048 J|.....F.......H\n00000010  0555 0101 8001 0000 0000 0000 0000 0000 .U..............\n00000020  0000 0000 0000 0000 0000 0000 0000 31da ..............1Z\n00000030  0000 0050 0000 0000 0000 0000 0000 0"
+}

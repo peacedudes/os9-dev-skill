@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 4,
+  "text": "ite\n        bcs failed\n        lda path,u\n        swi2\n        fcb IClose\n        bcs failed\n        leax okmsg,pcr\n        ldy #okmsgln\n        lda #1\n        swi2\n        fcb IWrite\n* --- error path: open a file that is not there ---\n        leax missing,pcr\n        lda #READ\n        swi2\n        fcb IOpen\n        bcc unexpec\n        pshs b\n        leax experr,pcr\n        ldy #experrl\n        lda #1\n        swi2\n        fcb IWrite\n        puls b\n        swi2\n        fcb FPErr\n        clrb\n        swi2\n        fcb FExit\nunexpec leax unexmsg,pcr\n        ldy #unexln\n        lda #1\n        swi2\n        fcb IWrite\n        ldb #1\n        swi2\n        fcb FExit\nfailed  pshs b\n        leax failmsg,pcr\n        ldy #failln\n        lda #1\n        swi2\n        fcb IWrite\n        puls b\n        swi2\n"
+}

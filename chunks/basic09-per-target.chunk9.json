@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 9,
+  "text": " another BASIC program in place of the current\n  one. It does not return, unlike `RUN`.\n- **Command-line PARAM** - when a BASIC program runs directly from the OS-9\n  shell rather than via an internal `RUN`, arguments bind to `PARAM`\n  declarations with no call-site parentheses (`filter 11+4 \"this\"+\"that\"`).\n  The `PARAM` type signature decides whether an argument is read as string or\n  numeric, so anything ambiguous (numeric strings, paths) must be quoted to\n  force string interpretation. A missing parameter errors only if the code\n  actually uses it; extra parameters are ignored.\n  **The mechanism exists on 6809 too (`Live` (NitrOS-9)), but numeric `PARAM`s are\n  not converted there.** A `PACK`ed module invoked bare (`progname 42`) correctly\n  detects a *missing* argument (`Error #056 -- "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 21,
+  "text": "f as source | it is `#include`d as C initialisers - the CR rule applies by USE, not by extension | `common/unix-differences.md` |\n| Program builds and runs but misreads its own data file | LF endings in runtime data: the silent form of the CR rule, nothing reports it | `common/unix-differences.md` |\n| OS-9's `unshar` says `No shell commands in <file>` | the archive was transported without converting to OS-9 text | `common/unix-differences.md` |\n| Program dies immediately with a trap-handler banner | linked against Microware's `cio` trap handler, which this disk lacks | `c/os9-c-cheatsheet.md` |\n| Harness times out with the command visibly working | prompt gate doesn't recognise a sub-program's prompt - use raw keys | both REPL files |\n| Session hangs or dies on a syscall that looked ordina"
+}

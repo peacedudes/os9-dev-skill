@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 61,
+  "text": "the data area halts the program with `*** stack\noverflow ***` on stderr. **Data area:** initialized statics/globals, plus\nuninitialized ones (zeroed at startup) - addressable via the linker symbols\n`&edata`/`&end`. **Parameters:** sized via the `-m` linker flag. **Free\nmemory:** whatever's left after static/stack allocation feeds the\n`malloc()` pool (extendable via `sbrk()`).\n\n## Limitations\n\n| Feature | Status |\n|---------|-------|\n| `stdlib.h` (full) | No `rand()` (`Live` (os9exec): unresolved at link), and no `abs()`/`div()` (`Manual`). But `atoi()`/`atol()` **are** present and work - `Live` (os9exec): `atol(\"77\")`->77, `atoi` likewise |\n| `strings.h` | Use this, not `string.h` (different API: `index`/`rindex` not `strchr`/`strrchr`) |\n| `ctype.h` (full ANSI) | Missing `isgraph()` and o"
+}

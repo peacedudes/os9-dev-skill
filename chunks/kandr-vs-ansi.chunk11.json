@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 11,
+  "text": "thing else\nin it, and content earlier in the file lowers it, with the same length diagnosed\ncleanly in one file and killing `cpp` outright in another (`os9-c-cheatsheet.md`\nhas the measurements). `c68` stops at 1023. Joining string literals by hand\nroutinely lands a line between the two, so **keep joined lines well under 500**\nrather than aiming at a threshold.\n\nThe hidden case is `__FILE__` inside a macro's format string: it expands at every\ncall site, so the line that breaks is the *caller*, and the errors point there\nrather than at the header that caused it. Pass it as a `%s` argument instead of\nembedding it.\n\n## Porting checklist\n\n- [ ] K&R function definitions (params after name, types declared separately)\n- [ ] `+=`/`-=`/`*=`, not `=+`/`=-`/`=*`\n- [ ] Check every `\\n` - CR here, not "
+}

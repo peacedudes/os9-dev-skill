@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 1,
+  "text": ") permits it.\n\n## The most useful thing you can send\n\nYou do not need to open a pull request, or know anything about this repo's\nconventions, to help. **An issue saying \"this line is wrong, here is what I\nsaw\" is valuable on its own**, and is the highest-value contribution there is.\n\nA good correction report answers three things:\n\n1. **What this repo says** - the file and the line.\n2. **What you observed instead** - the actual output, error, or register state,\n   quoted rather than paraphrased. Exact text matters; a message's precise\n   wording is often the only way to tell two causes apart.\n3. **Where you observed it** - real hardware, which machine and OS-9 version;\n   or an emulator, which one and which build. This one decides everything about\n   how the correction can be recorded.\n\nTha"
+}

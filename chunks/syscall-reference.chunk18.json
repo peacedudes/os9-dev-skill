@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 18,
+  "text": "| same | Stop at first CR; apply device line editing (SCF: backspace/echo on input, LF append on output; 512-byte line buffer). The returned count includes the CR. On SCF the terminator is **PD_EOR**, which merely defaults to CR (`tmode eor=`; SCF devices only). The byte count TRUNCATES the line rather than ending the read: input past it is discarded, PD_OVF echoed per byte, until PD_EOR arrives - so the tail is lost, not returned by a second read. `Live` (os9exec) |\n| **I$Seek** | Position | d0.w=path, d1.l=position | - | Logical only; past-EOF legal; non-random devices no-op; doesn't touch record locks. `Live` (os9exec) |\n| **I$Delete** | Delete file | d0.b=mode, (a0)=pathname | (a0)=updated past the pathlist | Multi-file devices only. `Live` (os9exec) |\n| **I$MakDir** | Create directory"
+}

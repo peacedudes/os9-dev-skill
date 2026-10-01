@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 17,
+  "text": "ts additional segments, kept in close physical proximity to\nminimize head movement; small files typically fit one. On write past EOF, the\nfile manager first tries to expand the last segment in place before\nallocating a new one, in minimum-allocation-size increments. On close, unused\nsectors in the last segment are normally deallocated - **except** when the\nfile is closed in write/update mode while *not* at EOF, where truncation is\ndeliberately skipped to preserve reserved space for random-access and\ndatabase files; a `seek(0)` before close forces truncation in that case. The\nsegment list is also what lets random access translate a logical file offset\ninto a physical sector.\n\n### Directory File Format\n\nDirectories are files of 32-byte entries: a 28-byte name field (`DIR_NM`,\nbytes 0-27, sig"
+}

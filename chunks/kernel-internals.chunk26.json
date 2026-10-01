@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 26,
+  "text": "k OS-9's\n  free-list bookkeeping can track; every free region is linked via a\n  16-byte controlling structure at its start.\n- **Minimum *allocatable block* size** is larger and depends on whether\n  memory protection is in play: on an MMU-equipped system it typically\n  matches the MMU page size (e.g. 4K), since the kernel grabs whole\n  physical pages and subdivides them internally; without inter-task memory\n  protection it defaults to 256 bytes instead. Either way this is larger\n  than the 16-byte logical unit above - the kernel manages free fragments\n  *within* these larger blocks to avoid wasting a whole block/page on a\n  small request.\n- **First-fit strategy**: the allocator takes the first free block large enough\n  rather than searching for best-fit. Fragmentation without an MMU stays r"
+}

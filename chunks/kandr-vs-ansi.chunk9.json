@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 9,
+  "text": "t being confused means hanging. The cure is to\ndrop that one file from the conversion list.\n\n**Running it on an already-K&R tree is harmful, not merely useless.** `Live`\n(os9exec): it rewrites a definition it has already rewritten, and `c68` then\nreports `**** multiple definition ****` against parameter declarations that are\nplainly correct K&R. A distinctive symptom, easy to misread as a defect in the\nsource.\n\n## Two ANSI features the preprocessor will not give you\n\n**Adjacent string literals are not joined.** `\"abc\" \"def\"` is ANSI translation\nphase 6 and nothing in this toolchain performs it: `c68` reads two expressions and\nsays `; expected` plus `expression with little effect`. Join them in the source.\n`Live` (os9exec). (The SDK's `gcc2` driver is the exception: it runs `cccp2`\nwithout "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 9,
+  "text": "\nacross groups. Sending to PID 0 broadcasts to every process sharing the\nsender's user/group, excluding the sender itself; `kill 0` at the shell uses\nexactly this convention.\n\n**Nesting-counter overflow (theoretical):** mixing `longjmp()` with an\n`F$RTE` exit that skips `F$SigReset` can in principle overflow the signal\nintercept nesting counter - but only after roughly 4 billion unmatched\ncalls, so this is a real but remote edge case, not a practical concern.\n\nCtrl-C delivers signal 3 (interrupt) and Ctrl-E signal 2 (abort) - the\ninverse of Unix reflexes. Full control-key table and remapping:\n`os9-tools-and-shell.md`; Unix-habit traps: `unix-differences.md`.\n\n---\n\n## Alarms\n\nTwo distinct flavors, not two configurations of the same thing:\n\n| Flavor | Delivers | Constraints |\n|---|---|---|\n|"
+}

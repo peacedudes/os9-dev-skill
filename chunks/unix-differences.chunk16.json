@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 16,
+  "text": "de 0 requests no access at all**. POSIX spells read-only `0`.\nPorted code therefore asks for nothing while its author believes it asked for\nread, and **OS-9 grants exactly that**.\n\nIt does not fail in any way the code notices. `Live` (os9exec), a probe opening a\nsix-byte file and reading 64:\n\n```\nOPEN mode=0  fd=7  read=-1      <- a valid path number, and every read fails\nOPEN mode=1  fd=7  read=6       <- S_IREAD\n```\n\nSo the open **succeeds**, returns a usable-looking descriptor, and the file reads\nas empty forever. Found in agrep 2.01, which calls `open(name, 0)` in five\nplaces: files named on the command line were searched as empty, `agrep -c e file`\nanswered `0`, and nothing matched - while the *same* searches through stdin were\ncorrect, because stdin was never opened by that code. A p"
+}

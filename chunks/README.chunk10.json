@@ -1,0 +1,5 @@
+{
+  "source": "README.md",
+  "chunk_index": 10,
+  "text": "projects\n\n- **os9exec** (https://github.com/peacedudes/os9exec): an OS-9/68000\n  emulator for macOS, Linux and Windows. Its conformance suite, CONF68K, also\n  runs on real OS-9/68000 hardware. `CONTRIBUTING.md` explains how to help\n  with it.\n- **osk-freeware** (https://github.com/peacedudes/osk-freeware): over a\n  thousand programs written for OS-9/68000 by the people who ran it, rebuilt\n  and tested under os9exec. Porting them uncovered many of the traps recorded\n  here. Try it live in a browser at\n  https://peacedudes.github.io/osk-freeware/try/, or browse the catalogue at\n  https://peacedudes.github.io/osk-freeware/.\n\n## Layout\n\n```\nos9-dev/                application skill: SKILL.md, SOURCES.md, references/\nos9-systems-dev/        systems skill: SKILL.md, SOURCES.md, references/\nAGENT"
+}

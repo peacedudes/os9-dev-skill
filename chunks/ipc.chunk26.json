@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 26,
+  "text": "v2.4\nTechnical Reference Manual's IPC chapter for exact signal-code values and\nalarm semantics; `_os_ev_waitr`/`_os_ev_setr` and `FAM_NOCREATE` from\nMicroware Training & Education seminar manuals. The record-locking mode\nrules are cross-referenced across four: the 6809 *System Programmers Manual*\n§6.6.1/§6.6.3/§6.6.5, Tandy's *Technical Reference* and *Level Two\nDevelopment System*, and the 68k *v2.4 Technical Reference*.\n"
+}

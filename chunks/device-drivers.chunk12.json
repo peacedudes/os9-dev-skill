@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 12,
+  "text": ".\n- **`SS_DSize`** (autosize devices): return media size in logical sectors.\n- **`SS_Reset`**/**`SS_WTrk`** support the format utility (seek-to-track-0,\n  write a physical track) - `SS_WTrk` must check the format-protect bit in\n  `PD_Cntl` and return `E$Format` if set.\n- **`SS_SQD`** (park heads, hard disk only) - validate the target cylinder\n  is outside the media area before parking; don't mark the drive\n  \"initialized\" afterward, so the next real access re-inits correctly.\n\n### Drive Table (21 bytes, `DD_SIZ`, copied from sector 0 on init)\n\nThe first 21 bytes (`$00`-`$14`) are a driver-local copy of the leading\nfields of the disk's Identification Sector - `DD_TOT`, `DD_TKS`, `DD_MAP`,\n`DD_BIT`, `DD_DIR`, `DD_ATT`, `DD_FMT` at the same offsets documented in\n`file-managers.md`'s Identific"
+}

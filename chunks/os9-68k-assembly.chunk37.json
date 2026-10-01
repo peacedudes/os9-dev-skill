@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 37,
+  "text": "r conventions live in the\n  sibling `os9-systems-dev` skill, not here.\n\n## Cross-references\n\n- **The `psect` directive syntax gap above, resolved in practice -\n  but only for `mod_exec`-shaped module types.**\n  `basic09/basic09-per-target.md`'s \"Calling 68000 machine-language\n  procedures from BASIC09\" section has a complete, `Live` (os9exec)-tested\n  hand-written 68k assembly example (`psect addone,Type_Lang,Attr_Rev,\n  0,0,addone` - the 6-operand shape is `name,typelang,attrrev,edition,\n  stacksize,entry`) with real `r68`/`l68` invocations. `Live` (os9exec): this same\n  shape assembles and links unchanged for `Prgrm` and `Drivr`-type modules\n  too, not just the `Sbrtn` it was demonstrated with. The headers differ,\n  though: for a `Drivr`, `l68` emits only 12 bytes after `$30` (`M$Exec`\n "
+}

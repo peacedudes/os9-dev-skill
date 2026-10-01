@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 76,
+  "text": "yte is already `$00` and nothing happens; above 16 MB the damaged pointer\nsends `UNLK`/`RTS` into low memory, and the process dies with an illegal\ninstruction wherever execution stops - a `PC` that matches nothing in the\nmodule. The dump's tell is `SP`: it points into the process's static range but with\nbit 24 cleared, i.e. 16 MB below where it belongs. A 68000 or 68010 ignores the top address byte, so it never shows\nthere; a 68020 or later with more than 16 MB shows it, and so does os9exec,\nwhich emulates a 68020 with a large arena. To reproduce, push the program's\nmemory high: `sleep -s 12 #20000k &` at the shell holds 20 MB while you run\nit. `Live` (os9exec): the collection's `bash` 1.12 builds `BASH_VERSION` with\n`sprintf` into a 12-byte buffer and writes 13; it crashed 2 of 2 with mem"
+}

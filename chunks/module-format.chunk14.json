@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 14,
+  "text": " successful parity check as \"the header is intact.\"\n\n## 6809 header divergence (do not blend with 68k values)\n\nThe 6809 header is a different, shorter layout (9 bytes, sync `$87,$CD`,\n16-bit fields) - full byte layout in `6809/syscalls-and-module-format.md`.\nCompiler-specific values worth isolating:\n\n- **The 6809 type/language byte is `(type << 4) | language`, a single\n  byte** - so a 6809 C program reads `$11`, not `$04`. `Manual` (the *OS-9\n  System Programmer's Manual* §4.2.1: \"the module type is coded into the\n  four most significant bits of byte 6\", listing `$10` Prgrm, `$20` Sbrtn,\n  `$40` Data, language in the low nibble) and `Live` (NitrOS-9) via `ident` on real\n  modules - `dir` and `copy` (native 6809 object programs) read `$11`,\n  `basic09`'s own `BFX` reads `$21` (Sbrtn + objec"
+}

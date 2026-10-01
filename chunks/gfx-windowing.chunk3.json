@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 3,
+  "text": "ches from text to graphics screen;\n  must be called before any other GFX function. `format` `0` = 256×192,\n  2 colors; `1` = 128×192, 4 colors. Allocates a 6KB memory block; errors\n  if unavailable. Coordinate origin (0,0) is the **lower-left** corner, all\n  coordinates positive. A separate invisible \"draw pointer\" starts at 0,0;\n  some functions (`LINE`) move it as a side effect, tracked independently\n  of anything visible on screen. **The lower-left-origin claim stays\n  `Manual`**: on a Level-2/windowed NitrOS-9 build, `MODE` is accepted with\n  no error but never produces a screen reachable by CLEAR-cycling, across\n  three different ways of routing its output (`GFX`, unlike `GFX2`, takes no\n  `path` argument, so it always draws to the calling process's own default\n  output). That reads a"
+}

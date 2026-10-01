@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 23,
+  "text": "rated field offsets without hand-written `EQU`s |\n| `ENDSECT` | **RMA only.** Closes a `PSECT`, `VSECT`, or `CSECT` |\n| `FAIL text` | Aborts assembly with a message; typically wrapped in `IFxx ... ENDC` to enforce a build-time constraint. Everything after the keyword is the message, so no trailing comment |\n| `REPT n ... ENDR` | Assembles the block `n` times; can't nest, and `n` can't reference an `EXTERNAL` or forward-undefined symbol |\n| `PAG` (or `PAGE`) | Forces a listing page break. No label |\n| `SPC {n}` | Inserts `n` blank listing lines (default 1). No label |\n| `RZB n` | Reserves `n` zero-filled bytes (vs. `RMB`'s uninitialized reservation) |\n\n**Label/symbol syntax (RMA): 1-9 characters**, starting with a letter; legal\ncharacters are letters, digits, `$`, `.`, `_`, plus `@` per ch."
+}

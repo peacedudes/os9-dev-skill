@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 14,
+  "text": " **For ACIA (serial) devices:** parity (bits 0-2): 000=none, 001=odd, 011=even, 101=mark, 111=space - per the OS-9 Technical Reference (Tandy), whose encoding table's 3-bit codes only fit in bits 0-2; bit 4 toggles auto-answer modem mode; bits 3, 5-7 reserved. `Manual, Flag`: the Radio Shack CoCo Level I manual instead labels this \"bits 5-7 - Parity code\" with no accompanying encoding table to check bit-width against - not reconciled here; confirm against real hardware or a live session before depending on either bit position. **For TERM (VDG) devices:** bit 0 toggles true-lowercase, bit 1 selects 32 vs. 80-column screen output. **Baud code** (bits 0-3 of `baud=`): 0=110, 1=300, 2=600, 3=1200, 4=2400, 5=4800, 6=9600, and then two *distinct* codes rather than one - `7`=19200 (ACIAPAK driver"
+}

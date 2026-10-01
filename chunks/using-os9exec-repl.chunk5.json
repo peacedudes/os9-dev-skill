@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 5,
+  "text": "le permission attributes are enforced, and record locking\n  works, only on the RBF path - on a host directory locking is deliberately\n  absent, so a program that relies on it appears to work and silently\n  doesn't: an explicit `SS_Lock` on a host file fails `E$UnkSvc`, on a host\n  directory it reports success, and automatic record and EOF locking simply\n  does not happen. `Source` (os9exec). `mount -k=<size> h0`...`hz` makes a blank image to start from.\n  - **The trade is immediacy.** A host directory shows the guest whatever is on\n    the host *now*, so an edit is live on the next open. An image is a snapshot:\n    **a file you add to the source tree an image is built from does not exist\n    inside the emulator until the image is rebuilt.** The symptom is\n    `Error #000:216` / `E_PNNF` on"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 34,
+  "text": "between passes. The classic cause is a branch that could\nresolve short or long depending on a forward reference, but an\naddressing-mode mismatch on a forward-referenced label is just as common and\neasier to miss, because the error output points at labels far downstream of\nthe actual mistake. When phasing errors cascade across unrelated-looking\nlines, suspect an addressing-mode bug on an early label before assuming a\nbranch-range issue.\n\n## Writing 6809 assembly test programs - conventions\n\n- **Character literals**: `asm` accepts `LDA #'1'` but rejects `LDA #' '` and\n  `LDA #':'` with a syntax error. Hex (`#$20`, `#$3A`, `#$0D` for CR) is the\n  safe default for any non-alphanumeric character.\n- **Register-clobber discipline around syscalls**: if a call returns real\n  data in `X`, `Y` or `U`"
+}

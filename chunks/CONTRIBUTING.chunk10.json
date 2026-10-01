@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 10,
+  "text": "  only what it *is*.** A pattern can identify the right lines and still miss what\n  those lines are responsible for. Two real instances, both caught only by reading\n  the result back: a script that removed \"the staging line\" from a set of\n  documents was correct that each line staged a file, and wrong that staging was\n  all it did - one of them also set an environment variable the program needed.\n  And `git commit -- <path>` is genuinely a commit scoped to a path, while also\n  committing the *working tree* rather than the index, quietly including changes\n  that were deliberately left unstaged. In both cases the pattern matched exactly\n  what it was meant to. **Read back what a bulk edit produced before trusting the\n  pattern that produced it** - a diff line count is usually enough to see i"
+}

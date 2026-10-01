@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 4,
+  "text": "ling process's own default\n  output). That reads as a genuine Level-1-GFX/Level-2-environment\n  incompatibility, not as evidence for or against the origin claim.\n- `RUN GFX(\"ALPHA\")` - switches to the text screen; the graphics screen\n  stays intact in memory (can switch back).\n- `RUN GFX(\"QUIT\")` - switches to the text screen **and** deallocates the\n  graphics memory (unlike `ALPHA`, this is a one-way trip).\n- `RUN GFX(\"CLEAR\"[,color])` - clears to `color`, or to the current\n  background color if omitted; also resets the graphics cursor to 0,0.\n- `RUN GFX(\"COLOR\",color)` - changes the foreground color, and may switch\n  the current color set (BASIC09 divides GFX's palette into color sets; a\n  code outside the current set auto-initializes the new one). Does not\n  touch graphics format or cur"
+}

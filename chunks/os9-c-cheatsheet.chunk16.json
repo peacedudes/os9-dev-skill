@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 16,
+  "text": "mediately on Unix code and nowhere on your development host, so when a\nport fails in the preprocessor, check all four before suspecting the code.\n\n### `#include<file.h>` needs the space\n\n`Live` (os9exec), `cc -qm=16k` against the SDK. `#include<stdio.h>` is rejected\noutright:\n\n```\nnospace.c : line 1 **** incorrect include file syntax ****\n#include<stdio.h>\n         ^\n```\n\nThe caret sits on the `<`. The identical file with `#include <stdio.h>` compiles\nand runs. This `cpp` requires whitespace between `include` and the delimiter,\nwhere a C89-conforming preprocessor does not.\n\nIt costs nothing to comply and it is the **first** error you hit on code written\nthe other way, so it masks everything after it - fix all of them before reading\nany other diagnostic from the file.\n\n### `#undef` before r"
+}

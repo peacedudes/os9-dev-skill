@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 0,
+  "text": "# OS-9/68000 Assembly Language Reference\n\nScope: OS-9-specific 68k assembly facts (module mechanics, syscall\ndispatch, register ABI, exception vectors). No surveyed source provides a\ntrue 68k assembler manual - directive syntax has known gaps (listed at the\nend); don't assume 6809 RMA syntax carries over. (The \"Relocating Macro\nAssembler\" manual found in 68k archives is 6809-only - never a 68k\nsource.)\n\n## Before you assemble anything\n\nFive facts that decide whether your first build works. All are detailed\nbelow; they are collected here because each bites *before* you have output\nworth debugging.\n\n1. **`I$`/`F$` call names are not symbols** - nothing on the SDK disk defines\n   them. `dc.w I$Write` assembles clean and then fails at link. Define them\n   as numeric constants in your own sourc"
+}

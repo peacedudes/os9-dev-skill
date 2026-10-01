@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 11,
+  "text": "\"sb3 unbuffered printf %s\\n\", \"ok\")` emitted 22 bytes of `0x16`, two of `0x02` and one of `0x01` - each literal run and each conversion written as a byte equal to **its own length**, repeated that many times. Measured across nine programs to both routes, not to `setbuf` alone: `setvbuf(stdout, NULL, _IONBF, 0)` corrupts identically, while a real buffer, `_IOLBF`, the untouched default, and `fprintf(stderr, ...)` are all correct, and `putc` on the same stream after the same call writes the right bytes. `fprintf(stdout, ...)` after the same call is corrupted the same way as `printf` (`\"fp stdout %s\\n\"` gave ten `0x0A` bytes, then `02 02 01`). Pipes, redirection, output size and `fflush` are all innocent. Whether the fault lies in the C library or in the emulator it was measured on is unresol"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 7,
+  "text": "ran on** - `Live` (os9exec), `Live` (NitrOS-9),\n  `Live` (OS-9/68000). Never a bare `Live`. A `Live` claim is evidence about\n  that implementation, not about OS-9 in the abstract.\n- **Run it, or say you didn't.** An unrun example is `Manual` at best. Where\n  something could not be tested, say which claim went unchecked rather than\n  filling the gap from memory.\n- **Where sources disagree, add a `Flag` naming both readings** rather than\n  picking a winner. An honest unresolved flag is worth more than a confident\n  guess, and this project would rather carry twenty of them than one wrong\n  resolution.\n- **Don't overwrite an established measurement on one reading.** If something\n  looks like a contradiction, check it against the existing `Live` claims and\n  against a manual first - the two may"
+}

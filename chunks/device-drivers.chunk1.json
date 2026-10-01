@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 1,
+  "text": "d`, \"What os9exec\ndoes not implement\"), so they could not be exercised. The toolchain and\nmodule-format content here (byte layout, `psect` authoring) *can* be built and\nverified byte-correct there.\n\nA device driver is an OS-9 module (type `Drivr`, code `$0E`) owned by the\nsuper-user, with the system-state and re-entrant attribute bits set. Its\n`M$Exec` field points to a 7-entry jump table instead of a single entry\npoint; `M$Mem` gives its static storage size.\n\n## Entry Point Table\n\n```\ndc.w  INIT      (0)  Initialize device\ndc.w  READ      (1)  Read sector/character/block\ndc.w  WRITE     (2)  Write sector/character/block\ndc.w  GETSTAT   (3)  Get device status\ndc.w  SETSTAT   (4)  Set device status\ndc.w  TERM      (5)  Terminate/de-initialize device\ndc.w  TRAP      (6)  Error handler (curre"
+}

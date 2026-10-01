@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 20,
+  "text": " *could* surface as a presence\n  finding; the message flags this so a human reconciles it rather than the tool\n  asserting an error. There is currently no such case in the corpus.\n- Present claims are read from **table rows**, not prose. A `Live` mention in a\n  paragraph asserts nothing (safe under-reporting) - the authoritative presence\n  claims live in the reference tables. Explicit absence prose still counts.\n- This is token-level, not semantic: it cannot detect a register-layout\n  divergence (\"manual says d0.w, runtime uses d1.w\"). Those are tracked by the\n  `Flag` convention (check 3).\n- **Check 6 sees only the `SYMBOL $VALUE` form.** A table that leads with the\n  offset (`| $00-$01 | 2 | Sync |`) or writes it as `0x2E` states the same fact\n  in a shape the extractor does not bind, so"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 32,
+  "text": "when its `SS_Ticks` deadline comes due, from the\nscheduler and from its idle wait alike. `Source` (os9exec).\n\n### Testing it\n\n**A lost-update counter race cannot detect a missing lock.** On a runtime\nthat never pre-empts, a read-modify-write essentially never interleaves, so\nthe race never opens and the counter lands on the expected total against an\nimplementation with no locking whatsoever. What works instead:\n\n- **Force a conflict and check it is refused.** One process, two paths on one\n  file, both open for update: path A reads a record, path B reads the same\n  bytes. B must be refused with `E_DEADLK`. Deterministic, no timing, cannot\n  hang.\n- **Cross-process, for the blocking path.** A holder that reads a record and\n  sits on it across yield points, and a waiter that tries the same by"
+}

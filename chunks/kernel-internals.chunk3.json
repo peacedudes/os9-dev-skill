@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 3,
+  "text": "opment facilities, and a smaller/faster \"atomic\" kernel\naimed at embedded systems that trade away development conveniences for\nexecution speed - the internals below apply to both unless noted.\n\n## System Global Memory (~8KB, resident at RAM base)\n\nContains, roughly in order: the exception dump table (64 bytes, one entry\nper hardware exception, populated when one fires), the `D_*`-prefixed\nsystem global variables (`D_MinPty`, `D_MaxAge`, etc. - see below), the\nprocess descriptor table, the path descriptor table, the module directory,\nand the active/waiting/sleeping process queues. `F$SetSys` reads or writes\nindividual system globals by offset (superuser only for writes; the MSB of\n`d1.w` selects read-vs-write).\n\nA few offsets a process actually reads at run time: `D_SPUMem` ($3D8), the\nSyst"
+}

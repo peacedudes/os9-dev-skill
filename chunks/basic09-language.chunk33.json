@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 33,
+  "text": " rendered this symbol as a garbled\n\"°\" (degree sign), illegible as transcribed. Tested live to\nidentify it (`Live` (os9exec)): `'%'` is a runtime syntax error (`Error #000:063`); `'^'`\ncompiles and genuinely centers - confirmed by exact byte capture, not\neyeballing: `\"HI\"` in an 8-wide `S8^` field produces `\"   HI   \"` (3\nspaces each side). Control specs - `Tn` jumps to column `n`, `Xn` skips\n`n` columns, `'literal string'` inserts fixed text - are allowed between\nitem specs and don't consume an entry from the output list. Repeat groups:\n`N(spec,spec)`, nestable. **Path number placement**: `PRINT #path USING\nfmt, list` - the `#path` comes right after `PRINT`, before `USING`, not\nafter it (`PRINT USING #path, ...` is a syntax error, `Error #000:018`).\n\n`Live` (os9exec), field-width-exact (c"
+}

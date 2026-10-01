@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/6809-level2-mmu.md",
+  "chunk_index": 4,
+  "text": "selecting which section of the mapping RAM is \"live\" - switching a process in is just changing this register's value plus reloading the DAT image, not physically moving anything.\n- Minimum viable system: 5 virtual maps (system + 4 user tasks); 8 is the practical floor since hardware RAM sizes are powers of two.\n- Common mapping-RAM parts: Fairchild/Motorola 93L412 (open-collector out) / 93L422 (three-state out), 256×4 bits, ~25ns access, two ganged for a 256×8 arrangement. The Motorola **MC6829** is a single-chip alternative (replaces 10-30 discrete parts) but adds ~110ns of address delay, capping practical clock speed around 1.0-1.5MHz - discrete bipolar RAM was preferred for 2MHz systems despite the extra parts count.\n\n## Bootstrap and Addressing Subtleties\n\n- After reset, mapping RAM co"
+}

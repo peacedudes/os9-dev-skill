@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 25,
+  "text": "piler's runtime.\n\n- **`direct` storage class** - this C compiler adds `direct`, `extern\n  direct`, and `static direct` on top of K&R's storage classes, placing a\n  variable in the 6809's 256-byte direct page (addressable with fast 2-byte\n  instructions via the CPU's direct-page register). Can't be used for\n  function arguments; uninitialized `direct` variables default to zero like\n  other globals/statics. The manual itself warns this is unique to this\n  compiler and non-portable even across other 6809 toolchains.\n- **255-byte usable limit** - total `direct`-class storage is capped at 255\n  bytes (the linker itself consumes 1 of the page's 256 bytes). Exceeding\n  this is a linker error; the fix is moving some variables out of `direct`.\n- **1-byte minimum reservation** - even with zero `dire"
+}

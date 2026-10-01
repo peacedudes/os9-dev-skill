@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 4,
+  "text": "se four as \"unknown\", not \"free\".\n\n### User-mode F$ (process/memory management)\n\nRegister contracts below match the System Programmer's Manual §11.1\nregister-for-register for `F$Fork`, `F$Wait`, `F$ID`, `F$Link`, `F$Load`,\n`F$UnLink`, `F$Mem`, `F$CmpNam`, `F$CRC`, `F$Icpt`, `F$Sleep`, `F$PrsNam`.\n\n| Call | Code | Params | Notes |\n|---|---|---|---|\n| F$Link | $00 | A=type/lang, X=name | Returns A=type/lang, B=attr/rev, X=past name, Y=entry point, U=header addr. **Searches only the resident, in-memory module directory** - fails `E$MNF` (221) against a name that has a real file on disk but was never loaded; it does not fall back to a filesystem search the way `F$Load` does. A=0 is accepted as \"any type\". `Live` (NitrOS-9) |\n| F$Load | $01 | A=lang/type (0=any), X=pathlist | Same returns as Li"
+}

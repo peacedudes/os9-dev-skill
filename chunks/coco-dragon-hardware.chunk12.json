@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 12,
+  "text": "ntrol lines).\n\nThree incompatible controller/encoding families, not interchangeable: **MFM** (older, lower density), **RLL** (higher density on the same physical media, but needs an RLL-certified controller - an MFM controller on an RLL drive only reaches about two-thirds of its rated capacity, and an RLL controller on an MFM drive risks corruption), and **SCSI** (controller logic built into the drive itself rather than a separate card; designed for peripherals generally, not just disks). **IDE drives are not compatible with the CoCo at all.** Capacity follows directly from geometry: heads × sectors/track × cylinders × bytes/sector (e.g. 4 × 32 × 306 × 256 ≈ 10MB). The Radio Shack CoCo Hard Disk Interface specifically uses a WD1010 controller and supports 10/15/30MB drives; its drivers shi"
+}

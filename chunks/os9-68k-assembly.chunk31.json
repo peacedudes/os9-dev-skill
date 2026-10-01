@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 31,
+  "text": "n\nproducing this: an assembly-language program's `psect` declaration is\nwhat populates these fields (even though, per \"Known gaps\" below, the\nexact `psect` directive syntax isn't attested in this source set).\n\n**One root psect per linked program:** only one ROF in a link may supply\na non-zero type/language/attribute/revision/edition - the \"root psect\" -\nand it determines the whole output module's type/attributes/edition.\n`cstart.r` supplies this for a C program and must be linked first; for a\nhand-written assembly program, the programmer's own root psect plays that\nrole. `l68`'s \"no root psect found\" error is exactly what happens when no\nlinked object supplies one.\n\n## Directive syntax: what is settled, and what is still open\n\nNo surveyed source is a real 68k assembler manual, so **nothing"
+}

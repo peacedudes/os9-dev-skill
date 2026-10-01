@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 34,
+  "text": "000:018`).\n\n`Live` (os9exec), field-width-exact (captured via a file round-trip and\n`LEN()`, not by eyeballing terminal spacing): `PRINT #path USING \"R8.2\",\n12.349` produces an exactly-8-character field, correctly rounded to\n`12.35`. `PRINT #path USING \"I4\", 10`, `\"S8\", \"HELLO\"`, `\"H4\", 100`\n(-> `0064`, correct hex of 100) all compiled and ran with no error.\n\n**BOOLEAN prints mixed-case, contra the manual.** Both the Rev H (Microware)\nand Tandy 1983 BASIC09 manuals state BOOLEAN values print as `\"TRUE\"`/`\"FALSE\"`\n(uppercase). `Live` (os9exec): `PRINT #path USING \"B8\", TRUE` produces `\"True    \"` on\n68k os9exec *and* on real Microware BASIC09 6809 01.01.00 under NitrOS-9 -\nmixed case, correct 8-char field width, on both architectures. So it is not an\nos9exec artifact; whether the manual ove"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 5,
+  "text": "d inside `#if 0` (`c/os9-c-cheatsheet.md`). Both are the same\n   underlying limit reached from opposite directions; check line endings first\n   because it is cheaper, then the line.\n2. **Data read at run time - silent.** The program builds, starts, and reads\n   records that are not delimited the way it expects. A word list, a\n   dictionary, a grammar, a score file. Nothing reports anything.\n3. **Data `#include`d as source - the trap.** Files that are data by name and\n   extension but source by use: `monop` keeps its board, properties and cards\n   in `.dat` files that `monop.def` pulls in as C initialisers, so an LF\n   `.dat` kills the *build*, with `cpp` dying exactly as it would on a `.c`.\n   Convert \"the source\" and leave \"the data\" alone and you have broken the\n   build in a file you ar"
+}

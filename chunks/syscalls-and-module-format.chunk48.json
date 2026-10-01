@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 48,
+  "text": " the byte before the CRC, then complement before storing. A valid\nmodule's CRC re-verified - including its own CRC bytes - yields `$800FE3`.\n\nModule directory and linking semantics (name lookup, link-count sharing,\nhighest-revision-wins on name collision, ROM auto-scan for the sync pattern at\ncold start) are identical in concept to 68k - see\n`common/os9-mental-model.md`.\n\n## C Compiler\n\n`int` is **16-bit** on the 6809 compiler (32-bit on 68k). Direct-page\naddressing via the `DP` register is 6809-only - a reliable marker for telling\n6809-specific content from 68k.\n\n---\n\n**Sources:** OS-9 System Programmer's Manual (and its Rev F1/1983 errata),\nOS-9 Level Two Operating System Manual, OS-9 Technical Reference (Tandy/CoCo),\ntwo independent OS-9 Users Guides (1983), OS-9 Quick Reference (CoCo, "
+}

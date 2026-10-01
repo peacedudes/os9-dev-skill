@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 2,
+  "text": "e compiler automatically links `LIB/cstart.r`\nfirst - a startup routine built from `C/SOURCE/cstart.a` that initializes\nthe program and calls `main()`. This is the actual OS-9 entry point.\n\n## Pitfalls\n\nThese are the ones that actually cost time - read this before anything else\nin this file:\n\n- **`int` is 32-bit on 68k** (`Live` (os9exec), via `sizeof()` on a real 68k\n  toolchain), same as `long` and any pointer. Some documentation\n  describes a 16-bit `int` - that's the *6809* compiler's data model, not\n  68k's. The same applies to floating point: the 6809 compiler's `float`/\n  `double` are a proprietary sign-magnitude format, not IEEE 754 - don't\n  assume that carries over to 68k either. Don't trust a data-representation\n  claim without confirming which architecture's manual it came from"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 43,
+  "text": ", `F$IODel` | Manipulate real hardware interrupt vectors/device tables |\n| `F$SSvc` | Patches the live syscall dispatch table |\n| `I$SetStt` | Can disrupt the very channel the test is driven over |\n| `F$Chain` | Looked unsafe on failure - see below |\n\nThe last two are reachable if the call is fenced rather than avoided:\n\n- **`I$SetStt`** - `I$GetStt` first to save the setting, set, confirm,\n  restore, re-confirm. A wedged terminal then costs only a session restart.\n- **`F$Chain`** - confine the blast radius to a child. The parent forks a\n  child; the child prints a marker, chains to a module that fails, then prints\n  a second marker; the parent `F$Wait`s - the wait status is what the parent\n  actually sees. **Don't design for recovery: a failed chain cannot return.**\n  The caller's image i"
+}

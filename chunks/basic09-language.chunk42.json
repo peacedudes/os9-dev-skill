@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 42,
+  "text": "r$)` | Removes **trailing** spaces only - leading/embedded spaces are untouched, matching both manuals' description of the function. `Live` (os9exec): `TRIM$(\"  hi  \")` = `\"  hi\"` (2 leading spaces survive). |\n| `PEEK(address)` / `POKE address, value` | Direct memory access - not portable across targets, see `gotchas.md` |\n| `LAND(a,b)`/`LOR(a,b)`/`LXOR(a,b)`/`LNOT(a)` | **Function calls, not infix operators** - see above |\n\n## Error Handling\n\n```basic\nON ERROR GOTO line_number             ! Set trap\nON ERROR                               ! Disable trap\nERROR expr                             ! Generate error with code\n```\n\n`ON ERROR GOTO` needs an explicit, typed-in line number as its target -\nsame requirement as `GOTO`/`GOSUB` (see above). `Live` (os9exec): a\nsubscript-out-of-range error "
+}

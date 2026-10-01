@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 29,
+  "text": "ith a form-feed | off | |\n| `G` | Print every object-code line a directive generates, not just the first | off | attempted; no observable difference on multi-word `FDB`/`FCC` |\n| `L` | Generate the formatted listing at all; off means errors only | off | `Live` (NitrOS-9) |\n| `M` | Motorola-compatible mode | off | |\n| `N` | Narrow/non-columnized listing for narrow displays | off | `Live` (NitrOS-9) - drops the fixed-width address/bytes/label columns |\n| `O[=filename]` | Generate an object file - bare `O` names it after the source, a bare name places it under that name in the execution directory, a full pathlist controls device/directory/name | off | `Live` (NitrOS-9) |\n| `S` | Append an alphabetical symbol-table dump, one type-code letter per symbol: `D`=data (`RMB`), `E`=equate, `L`=progra"
+}

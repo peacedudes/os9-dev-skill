@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 25,
+  "text": "ly 1985, Revision S)** - were cross-checked card by\ncard. Almost everything agrees.\n\n**Whole-table check:** every code+symbol pair here was diffed against the\nv2.4 manual's error appendix - **87 shared codes, zero symbol mismatches**.\nThe one apparent conflict (000:200) resolves in Microware's favour and\nagainst that appendix: it prints `E$BPNum` for both 200 and 201, but 200 is\n`E$PthFul` in two other Microware manuals and in every call's own error list,\nso the appendix has a typo (corrected in the table above). This confirms the\nlist is Microware-sourced end to end - any word-level overlap with third-party quick\nreferences is just the shared standard codes, not a dependency on them.\n\nThree edition-level disagreements remain, and rather than silently pick a\nwinner, both readings are recor"
+}

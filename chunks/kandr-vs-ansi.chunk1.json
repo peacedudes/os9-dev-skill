@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 1,
+  "text": "nteed 68k fact, unless another row or\n`os9-c-cheatsheet.md` says otherwise. Unmarked rows reflect either\nbaseline K&R-era behavior or `Live` (os9exec)-verified facts on a real 68k\ntoolchain.\n\n| Modern C pattern | Status on this compiler | Fix |\n|---|---|---|\n| `int add(int a, int b) { ... }` (ANSI prototype) | Not supported - see K&R form below | Use K&R-style definitions (only form accepted) |\n| `x =+ 5;` (old compound-assignment form) | **Not** supported *(6809 manual)* - parses as `x = +5` | Use `x += 5;` |\n| `struct1 = struct2;` (direct struct assignment) | Not supported *(6809 manual)* | Use the library's `strass()` function - a byte-by-byte block copy provided as the documented workaround |\n| `<string.h>` | Doesn't exist | `<strings.h>` - different API (`index`/`rindex`, not `strchr`"
+}

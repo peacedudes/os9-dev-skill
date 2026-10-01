@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 12,
+  "text": "etworks` | official network name, network number, aliases, comment |\n| `protocols` | official protocol name, protocol number, aliases, comment |\n| `services` | official service name, `port/proto` (e.g. `ftp 21/tcp`), aliases, comment |\n\nThese text files are **not** read at runtime. `idbgen` compiles all four into\na single data module, `inetdb`, and every lookup function above queries that\nmodule instead - which is what lets a diskless/ROM-booted system have a full\nnetwork configuration with no filesystem at all. Any edit to the text files\nrequires re-running `idbgen` and reloading `inetdb` to take effect.\n\n---\n\n## Network installation and administration\n\n- **`ifgen`** generates a device descriptor from a template `if_devices`\n  file - the admin edits `if_devices` with the interface's Inter"
+}

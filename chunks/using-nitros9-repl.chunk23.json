@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 23,
+  "text": "hell.md`, \"Accounts and login\"). Nothing on 6809 reads one: not `login`, not\n  any shell on the disk. Per-user setup is the `SYS/password` fields instead -\n  `name,password,uid,priority,execdir,datadir,program`. `datadir` is the\n  login-time working directory, `execdir` is command search, and **`program`\n  is the per-user startup hook**: normally `SHELL`, but point it at a procedure\n  file and that runs on every login. `.` in either directory field means\n  inherit. `login` also prints `SYS/MOTD`.\n- **No `.login` means no `PATH`, so `chx` elsewhere strips you of every\n  utility.** `Live` (NitrOS-9). Fork lookups resolve against the execution\n  directory (`common/os9-mental-model.md`, \"Two current directories, not\n  one\"), and on 6809 nothing sets `PATH` for a logged-in account. So the\n  mom"
+}

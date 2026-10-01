@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 10,
+  "text": "okup even with `PATH`\n  correct and the files plainly present. `Source` (os9exec, traced).\n- **Verify which host directory a device maps to before creating host-side\n  test files**: run `dir` inside the emulator and `ls` on the host and\n  compare. A file dropped into the wrong host directory is simply invisible\n  inside the emulator and mimics a \"can't open file\" bug.\n- Booting a full system: `os9exec shell /h0/startup` - the startup file is\n  an argument to the `shell` boot program; booting the file directly fails\n  `E_FNA`. A startup file typically `load`s the toolchain and common\n  utilities, then runs `tsmon /term` for a login prompt. With `OS9STOP=1` in\n  the host environment, typing `stop` shuts the emulator down cleanly.\n- **Default to full speed.** os9exec paces terminal output to "
+}

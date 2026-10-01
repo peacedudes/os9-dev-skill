@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 44,
+  "text": "s differ by operand type and by target - neither\ngoes through the documented \"Divide by Zero\" path the way you'd expect:**\n\n- **INTEGER ÷ 0** - `Live` (NitrOS-9, os9exec). **6809** raises the documented\n  `Error #045 -- Divide by Zero`. **68k with `math881`** (the module a stock\n  startup loads) raises `Error #000:105 (E_ZERDIV) zero divide TRAP 5` - the\n  68000 hardware zero-divide exception (vector 5), dispatched through\n  `F$STrap`, not BASIC09's own documented error 45. **68k with the software\n  `math` module raises nothing**: `5/0` yields `2147483647`, execution\n  continues, and `ON ERROR GOTO` never fires.\n- **REAL ÷ 0** - `Live` (NitrOS-9, os9exec). **6809** raises `Error #045` here too.\n  **68k with the software `math` module** raises `Error #000:107 (E_TRAPV)`,\n  and `ON ERROR GOT"
+}

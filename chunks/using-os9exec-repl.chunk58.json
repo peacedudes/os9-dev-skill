@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 58,
+  "text": " It runs code built into the\nemulator and reports `P$PModul` = 0, so a monitor that follows that pointer\nto a module header (`devprc -a`, `top`, `sysmon`, `aprocs`) reads the zeroed\nlow page, finds no header, and fails cleanly. `Live` (os9exec).\n\nA hand-built trap module with no init data still needs an init table:\n`_midata`/`_midref` at 0 are not read as \"no table\" - os9exec parses a table\nat that offset unconditionally, so the module needs a real empty one there\n(dOff=0, cnt=0, then two 0-terminators) or the load fails `E$BMID`. `Source`\n(os9exec).\n\nUnmodelled **system globals** answer differently. A `F$GetSys`/`F$SetSys`\nread of an offset os9exec does not keep returns 0, silently; the note\n`# F$SetSys: unimplemented <hex>` appears only in the `-d` trace (`Source`,\nos9exec). Usually harm"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/gotchas.md",
+  "chunk_index": 4,
+  "text": "IF`. Type 2:\n  `IF cond THEN` / statements / `ENDIF` on its own line, where `ENDIF` is\n  mandatory. `IF cond THEN GOTO n` is neither form and correctly fails to\n  compile - not a compiler bug.\n- **`GOTO`/`GOSUB` targets are explicitly-typed line numbers**, not the hex\n  byte offsets `LIST` displays beside unnumbered structured code. Aiming a\n  `GOTO` at one of those reads as \"GOTO is broken\" and isn't.\n- **`LAND`/`LOR`/`LXOR`/`LNOT` are function calls, not infix operators.**\n  `6 LAND 3` is a syntax error; write `LAND(6,3)`. `AND`/`OR`/`XOR`/`NOT`\n  *are* infix, and are BOOLEAN-only.\n- **`BASE 0`/`BASE 1` needs the space** - `BASE0` is a syntax error, not an\n  alternate spelling. It affects array subscripts only: **string indexing\n  always starts at 1** regardless. And the `DIM` bound is a"
+}

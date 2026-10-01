@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 64,
+  "text": "tdin, stdout and stderr\n  share one descriptor, so writing to a console path opened read-only, or the\n  reverse, passes silently. Disk files enforce it both ways, so a working\n  console test says nothing about files.\n- **`F$STrap` installs only vectors 2-8.** The manual makes the FPCP\n  exceptions 48-54 catchable on a 68020/68030 (`68k/os9-68k-assembly.md`), and\n  os9exec emulates a 68020, but a handler registered for them is accepted and\n  never fires.\n- **`F$PrsNam` also accepts `{` and `}`** as element characters, beyond the\n  manual's `A-Z a-z 0-9 . _ $` - a deliberate convenience for MPW shell\n  variables. `Source, Flag`. It is more permissive, so it cannot produce a\n  spurious `E$BNam`.\n- **`F$PErr` with `d0.w=0` prints a named message**, `Error #nnn:nnn (E_NAME)\n  description`, wher"
+}

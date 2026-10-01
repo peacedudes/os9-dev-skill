@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 5,
+  "text": " new one). Does not\n  touch graphics format or cursor position.\n- `RUN GFX(\"POINT\",xcor,ycor[,color])` - plots a dot; uses the current\n  foreground color if `color` omitted.\n- `RUN GFX(\"LINE\"[,xcor1,ycor1],xcor2,ycor2[,color])` - draws from the\n  draw pointer if the start point is omitted, else from the given start to\n  the given end; always leaves the draw pointer at the endpoint.\n- `RUN GFX(\"CIRCLE\"[,xcor,ycor],radius[,color])` - centers on the draw\n  pointer if coordinates omitted. X range 0-255, Y range 0-191 - out of\n  range errors.\n- `RUN GFX(\"MOVE\",xcor,ycor)` - repositions the draw pointer only; no\n  visible effect.\n- `RUN GFX(\"JOYSTK\",stick,fire,xcor,ycor)` - `stick` `0`=right, `1`=left;\n  `fire` is an output variable (byte/integer/boolean; nonzero/`TRUE` =\n  pressed); `xcor`/`yco"
+}

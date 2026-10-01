@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 26,
+  "text": "; the manual warns I$ReadLn then ends only on EOF or error | `common/memory-and-io.md` |\n| BASIC09 `E`, bare `E` or `LOAD` fails `#248 - Media Full`, `0 free` workspace at any `#nk` | a stray second CR in the boot autotype reached the guest - restart it | `6809/using-nitros9-repl.md` |\n| TCP connects but no banner ever arrives | an earlier session closed without logging out; or channels exhausted after a few connect/detach cycles even with clean logouts | `6809/using-nitros9-repl.md` |\n| Nothing listening at all, guest looks dead | the DriveWire *server* crashed - check host crash reports before diagnosing the guest | `6809/using-nitros9-repl.md` |\n| Session died while listing a directory | channel-filling output kills it - narrow the listing or read the image host-side | `6809/using-nitro"
+}

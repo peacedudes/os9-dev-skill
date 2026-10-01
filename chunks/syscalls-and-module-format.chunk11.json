@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 11,
+  "text": "length, X/Y=two strings | Carry clear if match; second string sign-bit terminated. `Live` (NitrOS-9), `Flag`: two identical 4-byte strings with a *separate* trailing sign-bit byte returned carry SET. Plausibly the terminator must be the sign bit baked into the last real character (as `fcs` produces) rather than an extra byte - unconfirmed either way |\n| F$SchBit | $12 | D=start bit, X=map, Y=count, U=map end | Searches allocation bitmap for a free block. `Source` (NitrOS-9 `fallbit.asm`): returns D=where the found run starts, Y=how many free bits it spans - neither previously documented. `Live` (NitrOS-9), `Flag`: the call succeeds against a zeroed 64-bit local map but the D/Y values read back are not sane start/length numbers for that input |\n| F$AllBit | $13 | D=first bit, X=map, Y=count"
+}

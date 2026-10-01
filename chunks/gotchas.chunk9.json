@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/gotchas.md",
+  "chunk_index": 9,
+  "text": "es Microware's documented `Error #045 --\n  Divide by Zero` for both INTEGER and REAL. 68k raises the underlying 68000\n  CPU exception instead - `#000:105` (`E_ZERDIV`) for INTEGER, `#000:107`\n  (`E_TRAPV`) for REAL - but which of them fires depends on the math module\n  loaded, and with software `math` an INTEGER `5/0` quietly yields\n  `2147483647`. Guard divisors; never branch on the number. Details in\n  `basic09-language.md`.\n- **A literal `;` inside a string constant gains a spurious backslash.**\n  `PRINT \"text; more\"` stores and echoes as `text\\; more`, in both `LIST`'s\n  display and real runtime output - presumably the tokenizer disambiguating\n  from the statement separator. `Live` (NitrOS-9). Easy to miss until it\n  shows up in something meant to be exact text. 68k BASIC09 V2.1 does n"
+}

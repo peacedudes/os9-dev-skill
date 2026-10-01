@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 20,
+  "text": " static\nstorage, `(a3)` = device port address, `(a6)` = system global storage - a2\nand a3 are exactly the values supplied when the handler was installed via\n`F$IRQ`, not necessarily the same convention as ordinary entry points. The\nroutine reports whether it handled the interrupt via the carry flag (clear\n= serviced, set = not mine, kernel keeps polling the next handler in the\nchain) and may destroy only d0, d1, a0, a2, a3, a6.\n\n- **Level 7 (vector 31) is non-maskable** and can interrupt the kernel at\n  dangerous times, including mid-way through a critical kernel section.\n  Don't configure ordinary I/O devices at level 7 - it's meant for hardware\n  the system genuinely doesn't need to coordinate with (e.g. DRAM refresh),\n  and a level-7 handler used that way must never call an OS-9 system "
+}

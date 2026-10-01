@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 28,
+  "text": "nly for OS-9 system globals or hardware access; dangerous to system\n  stability if misused. (Not 6809-exclusive in principle, but only\n  documented for the BASIC09 environment this compiler targets.)\n\n---\n\nSources: The OS-9 Guru; OS-9 Insights; The OS-9 Primer; OS-9 v2.4 Technical\nReference Manual; Technical I/O Manual v2.4; OS-9 C Compiler manual; Using\nProfessional OS-9 v2.4; `malloc`/`_srqmem`/`_lmalloc` details from\nMicroware Training & Education seminar manuals.\n"
+}

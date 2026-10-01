@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 22,
+  "text": " the members of that group\n**considered non-fatal**, which p. 1-60 enumerates: bus error, address error,\nillegal instruction, zero divide, CHK, TRAPV, privilege violation, line 1010 and\nline 1111 (2-8, 10, 11), plus seven FPCP exceptions (48-54). So the wide range\nis not wrong and the narrow list is not a contradiction - one is the group, the\nother is the catchable part of it. The manual adds that not all catchable vectors\napply to every CPU: 48-54 are 68020/68030 only. (os9exec departs here: see\n\"Where os9exec departs from the manuals\" in `common/using-os9exec-repl.md`.)\n\nAn IRQ service routine invoked by kernel interrupt polling receives\n`(a2)` = driver static storage, `(a3)` = device port address, `(a6)` =\nsystem global storage (a2/a3 are whatever was supplied at `F$IRQ`\ninstallation ti"
+}

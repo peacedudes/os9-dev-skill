@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 33,
+  "text": " \"same\"\n  filled shape don't fully cancel.\n\n### Buffers, fonts, and the graphics cursor\n\n- **`Live` (NitrOS-9) - calling sequences accepted as documented** for\n  `DRAW(\"N40E60S40W60\")`, `BORDER(color)`, `CURXY(col,row)`,\n  `LOGIC(\"XOR\")`, `DEFBUFF(group,buffer,size)`,\n  `GET(group,buffer,x,y,xsize,ysize)` and `PUT(group,buffer,x,y)`. Note\n  `DEFBUFF` accepted an explicit `path` argument without complaint despite\n  being documented as taking none - read \"no path argument\" as \"does not\n  require one\". Visual behavior of these is not yet confirmed, only that\n  the calls are well-formed.\n- `DEFBUFF(group,buffer,size)` *(no `path` argument)* - allocates a\n  Get/Put buffer for `GET`/`PUT`. `group` 1-199 (0 and 200-255 are\n  reserved for OS-9 itself), `buffer` 1-255, `size` 1-8192 bytes. Each\n  d"
+}

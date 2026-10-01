@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 10,
+  "text": "none of them exist in `clib.l`/`unix.l`; `execl` is a CHAIN that never returns | `c/os9-clib-reference.md` |\n| A file opened through the execution directory (`S_IEXEC`) opens fine but every read fails - a module scan matches nothing | execute mode picks the directory and grants no read; open `S_IEXEC \\| S_IREAD` | `68k/syscall-reference.md`, `I$Open` |\n| `**** incorrect include file syntax ****` on a line that looks fine | `#include<file.h>` needs a space before the `<` | `c/os9-c-cheatsheet.md` |\n| Your macro is ignored and the library's is still in force, after one `**** redefined macro ****` warning | this `cpp` keeps the FIRST definition on redefinition - `#undef` before redefining any macro | `c/os9-c-cheatsheet.md` |\n| `'vt100': Unknown terminal type` from a termcap file that plainly"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 7,
+  "text": "gup/Carrier Lost (RS-232, not window-specific but in the same extended range).\n\n## Mouse/Joystick\n\n`I$GetStt` function `$89` (`SS.Mouse`) returns a 32-byte packet: validity flag, active-port flag (0=off, 1=right, 2=left), timeout counters, per-button state/click-count/hold-time (A and B buttons), button-down X/Y snapshot, window-pointer-location code, resolution flag (low: 10×3, high: 1×1 ratio of physical movement to counts), absolute X/Y (always reported in the range 0-639 × 0-191 regardless of the resolution setting), window-relative X/Y (divide by 8 for character-cell position), screen-relative X/Y. Entry: `A`=path, `B`=`$89`, `X`=buffer, `Y`=port select (0=auto, 1=right, 2=left).\n\nPlain joystick (non-window systems): X/Y each 0-63, fire button `$FF`=pressed / `$00`=released.\n\n## Sound"
+}

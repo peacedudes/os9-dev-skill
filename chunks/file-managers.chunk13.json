@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 13,
+  "text": "ends at `$5E` and `DD_SYNC` starts at `$60`. Whether that byte is a\nsecond reserved slot or a transcription gap is not settled here; treat it as\nreserved and write zero.\n\n| Field | Offset | Size | Contents |\n|---|---|---|---|\n| `DD_TOT` | $00 | 3 | Total sectors on media |\n| `DD_TKS` | $03 | 1 | Track size, in sectors |\n| `DD_MAP` | $04 | 2 | Allocation map size actually in use, in bytes |\n| `DD_BIT` | $06 | 2 | Sectors per cluster (always a power of 2) |\n| `DD_DIR` | $08 | 3 | LSN of the root directory's file descriptor |\n| `DD_OWN` | $0B | 2 | Owner ID of the disk itself (distinct from a file's `FD_OWN`) |\n| `DD_ATT` | $0D | 1 | Disk-level file attributes |\n| `DD_DSK` | $0E | 2 | Disk ID |\n| `DD_FMT` | $10 | 1 | Format flags: bit0 single/double side, bit1 FM/MFM density, bit2 double trac"
+}

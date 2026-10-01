@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 14,
+  "text": "s9exec))\n\n`l68`'s \"no root psect found\" is worth causing once, so it's recognizable.\nA `psect` whose type/language and attribute/revision operands are zero\nassembles perfectly cleanly:\n\n```\n psect noroot,0,0,0,0,0\n```\n\n```\nr68 noroot.a -O=noroot.r\nErrors: 00000\n\nl68 noroot.r -o=noroot1\nl68: error - no root psect found\n```\n\nThe object is structurally valid - it simply declares no entry point, so\nthere is nothing for the linker to make a program out of. An assembler that\nreports zero errors is not evidence that a module will link.\n\n## System call mechanism (TRAP #0)\n\nFull dispatch mechanism (`TRAP #0`/vector 32, the `OS9`/`tcall` macros,\nthe carry+`d1.w` error convention): `syscall-reference.md` - not\nrepeated here. Assembly/module-format-specific additions:\n\n- By Microware convention `TRAP "
+}

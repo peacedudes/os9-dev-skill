@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 47,
+  "text": "ght). All three copies are character-identical, so they are one original rather than three witnesses. Read that as the Microware side documenting a variadic call and declining to prototype it, with GCC2 having re-derived a fixed prototype for it - so a GCC2 arity is not corroboration. **Which arity the library actually implements is unmeasured**; pass arguments the way working period code does rather than trusting any header, and see the `system()` note below. |\n| `exit`/`_exit` | `exit()` flushes stdio buffers first; `_exit()` doesn't. |\n| `wait(int *status)` | Waits for a child to terminate. |\n| `setpr(pid, priority)` | Priority 0-255. |\n| `sleep(seconds)` | Actually delays in **ticks**, not true seconds - tick duration is clock/hardware-dependent (68k systems typically run 100Hz/~10ms t"
+}

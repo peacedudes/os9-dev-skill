@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 41,
+  "text": "itions (OS-9 has no separate group\nclass). A giveaway symptom: an `ls -l`-style listing whose file-type character\nis right but whose permission bits are all dashes means the *permission* decode\nis using Unix masks - independent of whatever else might be wrong with the type\ndecode.\n\n## File Dates and Time Zones\n\nOS-9 stores file modification dates as **local wall-clock time** - the FD\nsector's 5-byte `fd_date` field (year-1900, month, day, hour, minute; no\nseconds). A Unix `time_t`, by contrast, is UTC. Treating the stored fields\nas if they were UTC and printing them back through `localtime()` shifts\nevery timestamp by the local UTC offset - a flat, silent whole-timezone\nerror.\n\nThe obvious fix - `mktime()`, which interprets a `struct tm` as local time -\nis not available under gcc2: os9lib'"
+}

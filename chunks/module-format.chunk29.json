@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 29,
+  "text": "\ndeeper debugging when a module won't load.\n\n---\nSources: The OS-9 Guru; a 1985 independent OS-9/68000 technical manual;\nOS-9 v2.4 Technical Reference Manual; The OS-9 Primer; OS-9 Insights; OS-9\nC Compiler manual; Using Professional OS-9 v2.4; Technical I/O Manual\nv2.4; Disk File Organization manual. The `l68` error taxonomy and ROF\nheader layout are `Live` (os9exec) findings; M$Attr offset 0x14\nis `Live` (os9exec) against a real compiled 68k program.\n"
+}

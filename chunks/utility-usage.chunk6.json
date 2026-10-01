@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 6,
+  "text": "fers speed up large\n  copies - the manual's own examples lean on this), **`-n` don't duplicate\n  the FD from the source, create a fresh one instead**. The default\n  duplicates the source's whole file descriptor, including its owner, and\n  reproducing a different owner on the destination is an owner change a non-super\n  user is not entitled to make. `Live` (os9exec): the copy prints\n  `E$PERMIT` while still transferring the data, so it looks half-broken and\n  is easy to wave through as noise. `-n` skips FD replication and the error\n  disappears at its source. (Under os9exec this bites on copies out of a\n  host directory; see `using-os9exec-repl.md`.) `Manual` (*Using\n  Professional OS-9* v2.4).\n- `count [<opts>] {<path>}` - `-l` lines, `-w` words, `-c` characters,\n  `-b` per-character frequ"
+}

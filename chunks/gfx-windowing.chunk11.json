@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 11,
+  "text": "rigins coincide.\n- **Window/screen format codes** (used by `DWSET`'s `format` and\n  `GPLOAD`'s `format` parameters) are small integers. `Manual`, but\n  cross-referenced against a `Live` (NitrOS-9) table: this manual's own Table 9.6\n  (memory-requirement listing) matches `wcreate`'s `-s=<type>` table in\n  `utility-usage.md` (`Live` (NitrOS-9) there) exactly on byte counts and\n  resolution/color combinations:\n\n  | Code | Screen | Columns | Memory |\n  |---|---|---|---|\n  | `1` | 40-column text | 40 | 2K |\n  | `2` | 80-column text | 80 | 4K |\n  | `5` | 640×192, 2 colors | 80 | 16K |\n  | `6` | 320×192, 4 colors | 40 | 16K |\n  | `7` | 640×192, 4 colors | 80 | 32K |\n  | `8` | 320×192, 16 colors | 40 | 32K |\n\n  **Column counts confirmed** - `Live` (NitrOS-9), from what `wcreate`\n  accepts: `-s=6` "
+}

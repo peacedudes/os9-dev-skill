@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 8,
+  "text": "bing processes already running the old copy - only a\n  fresh lookup sees the new one.\n- No `mmap`, demand paging, or copy-on-write - a process's data area is\n  allocated up front at fork time.\n- Header carries type, language, access permissions, edition, and a\n  supervisor-state/reentrant/sticky attribute byte; the kernel rejects a\n  fork/link whose requested type doesn't match the module found. Offsets\n  are `Live` (os9exec) against a real compiled program: `module-format.md`.\n\n### 4. Pipe is `!`, not `|`\n\n`cmd1 ! cmd2`. `|` isn't a shell metacharacter at all - code or muscle\nmemory using it fails silently, not with an error. Chains: `a ! b ! c`.\nRedirection differs too: `>` is stdout, but `>>` redirects **stderr** - it\nis not append. **To append, use `>+`.** The Unix reflex that `>>` mea"
+}

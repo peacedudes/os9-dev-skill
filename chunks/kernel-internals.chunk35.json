@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 35,
+  "text": "OS-9\nInsights (editions 2-3) and the OS-9 v2.4 Technical Reference Manual. (The\nrejected per-process\n\"age by one on each arrival\" description conflicts with that walkthrough -\nthe real mechanism is a single decrementing system-wide counter plus\na per-process scheduling constant fixed at insertion time).\n"
+}

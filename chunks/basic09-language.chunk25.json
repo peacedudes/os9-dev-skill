@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 25,
+  "text": "ted output - see below\nGET #path, var_or_array                        ! Binary/random read\nPUT #path, var_or_array                        ! Binary/random write\nOPEN #var, \"pathlist\" [ :mode ]                ! Open existing file\nCREATE #var, \"pathlist\" [ :mode ]              ! Create new file\nCLOSE #path1, #path2, ...\nDELETE \"pathlist\"\nSEEK #path, byte_offset\n```\n\nAccess modes: READ, WRITE, UPDATE (read+write), EXEC, DIR.\n\n```basic\nDATA expr1, expr2, expr3, ...         ! Define data\nREAD var_list                          ! Read next DATA items\nRESTORE [ line_number ]               ! Rewind or jump to DATA\n```\n\nDATA wraps around when exhausted rather than erroring.\n\n`EOF(#path)` returns TRUE at end-of-file; `ERR` holds the most recent error\ncode and auto-resets to 0 once read; `POS` reports "
+}

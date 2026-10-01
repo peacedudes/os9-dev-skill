@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/reading-the-coco-screen.md",
+  "chunk_index": 1,
+  "text": "k** (macOS virtual keycode 50).\n\nOn a stock EOU disk the cycle has 4 screens; `procs` shows shells on Term\n(pid 2), W1 (5), W2 (6) and N1 (7) - N1 being the serial REPL, which has no\nscreen of its own.\n\n**A window with no live process on it never joins the CLEAR cycle.** Only\nscreens belonging to a running process are reachable this way. It still\n*displays*, though, and a lone block on it is not a cursor - don't read \"there\nis a cursor\" as \"there is a shell\".\n\n## Creating a graphics window\n\n`wcreate /w7 -s=5 0 0 40 24 0 1 1` succeeds - type 5 is a 640×192 2-color,\n80-column screen, so a 40-column window occupies its left half (screen-type\ntable: `gfx-windowing.md`).\n\n- `/w1` is already taken by EOU: error 184 \"Window already defined\".\n- Type 8 with an 80x24 geometry fails with **error 189 "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 28,
+  "text": "can reach or miss a program; see \"A working `getenv` is not\nevidence a library can see your variable\" in `common/using-os9exec-repl.md`.\n\n## A termcap reader that skips modern entries\n\nA family of ported programs carries its own termcap reader, and **it will not\nlook at a modern termcap entry** - so a correct `TERM` and a termcap file that\nplainly contains `vt100` are not enough, and setting `TERM=vt100` does not\nrescue it. `Live` (os9exec) throughout. Identify the family from the binary:\n\n```sh\nstrings -a <program> | grep -E '/dd/sys/termcap|%s/sys/termcap'\n```\n\nBoth strings together mean this reader. With `TERMCAP` unset it tries\n`/dd/sys/termcap` then `$HOME/sys/termcap`; set to a path it opens that; set to\nanything not starting with `/` it treats the value itself as the entry.\n\n**The c"
+}

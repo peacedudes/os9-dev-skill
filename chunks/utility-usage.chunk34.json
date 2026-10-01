@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 34,
+  "text": " there; Level 1 programs use the `GFX` module's single full-screen\n  low-resolution graphics instead. Level 2's multiple windows are a\n  memory-mapping trick (see `os9-systems-dev`'s `6809-level2-mmu.md` for\n  the DAT mechanism underneath) - several windows can share one physical\n  screen simultaneously, which is what `DWSET`'s special `format=$FF`\n  (\"current displayed screen\") value is for: a procedure file\n  deliberately placing more than one window on the same screen, as\n  opposed to the normal case of a program targeting its own window\n  (`format=$00`, \"process's current screen\").\n- **`montype`** (monitor-type selection: composite/RGB/monochrome) only\n  makes sense on Level 2/CoCo3 hardware capable of more than one video\n  mode - it isn't a Level 1 concept and doesn't appear in Level "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 37,
+  "text": " Relocating assembler (generates `.r` files) |\n| `c.link` | Linker (generates executable modules) |\n\n## Reference: File Suffixes\n\n| Suffix | Meaning |\n|--------|---------|\n| `.c` | C source file |\n| `.a` | Assembly language source |\n| `.r` | Relocatable module (intermediate) |\n| none | Executable binary (OS-9 memory module) |\n\nMultiple sources compile and link together: `cc prog1.c prog2.c prog3.c`\n\n## Reference: Compiler Flags\n\n**Letters are from the 1983 6809 manual; the punctuation observed on 68k is\n`=`.** The `Live` (os9exec) invocations elsewhere in this skill use\n`-f=<path>` and `-l=<path>` - lowercase, with an equals sign - so treat the\nbare `-F<name>`/`-M<n>` forms below as the manual's notation, not a\nverified 68k spelling. Confirm the exact form with `cc -?` (and `l68 -?`)\nbefor"
+}

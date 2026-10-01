@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/coco-dragon-hardware.md",
+  "chunk_index": 33,
+  "text": "time is also\naccepted here is unverified. The non-interactive argument form is more\nforgiving - it takes space, colon, semicolon or slash delimiters, freely\nmixed (`6809/utility-usage.md`).\n\n---\n\n**Sources:** Radio Shack/Tandy Color Computer OS-9 Level I manual (1983), OS-9 Operating System Users Guide (CoCo/Dragon 64), OS-9 Technical Reference (Tandy), OS-9 Quick Reference for the Tandy Color Computer (FARNA Systems, 1992). **The Sound section rests on no manual at all.** No primary-manual sound\ndocumentation was available, so it is drawn from retrocomputing web sources:\nCoCopedia's hardware/audio pages, 6809.org.uk's Dragon hardware reference,\nChris Lomont's \"Color Computer 1/2/3 Hardware Programming,\" cococommunity.net's\nGIME chip reference, and community references to the `SOUNDRV2` OS"
+}

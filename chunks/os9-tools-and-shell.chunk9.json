@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 9,
+  "text": " it (`chd`, `setenv`, ...) cannot\ndisturb the invoking shell. Use `profile` when you *want* the changes to\nstick. Relative procedure-file lookups resolve against the data directory.\n\n**So keeping one in the execution directory is the classic mistake**, `Live`\n(os9exec): a procedure file in `CMDS`, invoked by bare name, failed with\n`shell: can't execute \"PPX\" - Error #000:214 (E_FNA)`. Note that this quotes\nthe name you typed, while the data-file case below quotes a word from *inside*\nthe file and reports `E_PNNF` - both say \"can't execute\", and the error code\nplus whose word is quoted are the only things telling them apart.\n\n**A procedure file does not need the execute attribute.** `Live` (os9exec):\none with `----r-wr` - read and write, no execute bit at all -\nran correctly when invoked by"
+}

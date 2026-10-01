@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 32,
+  "text": "trap module with no init data, hand-built for os9exec, needs an empty\ninit table: see \"What os9exec does not implement\" in\n`common/using-os9exec-repl.md`.\n\n## Time\n\n**F$Time** (d0.w=mode: bit0 0=Gregorian/1=Julian, bit1 set=also return\nticks) -> d0.l=packed time, d1.l=packed date, d2.w=day of week (0=Sunday),\nd3.l=tick rate/current tick if requested. `Live` (os9exec). **68k returns everything\ndirectly in registers - there is no 6809-style 6-byte buffer pointer.** The\npacked field layout inside `d0.l`/`d1.l` is not decoded here; only the\nregister-slot convention is confirmed.\n\n**F$STime** (d0.l=time, d1.l=date - the input-side mirror of `F$Time`'s\noutput shape). `Live` (os9exec).\n\n**F$Julian** (d0.l=time as `00hhmmss`, d1.l=date packed as\n`(year:16)(month:8)(day:8)` - **not** decimal-digit "
+}

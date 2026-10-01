@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 12,
+  "text": "(NitrOS-9), from what `wcreate`\n  accepts: `-s=6` and `-s=8` take 40 columns but reject 80 with\n  `Error #189 Illegal Coordinates`, while `-s=7` takes 80. Type 5's screen\n  also measured **640 pixels wide** directly (a 40-column window covered\n  exactly its left half). Practical consequence: a `-s=8 0 0 80 24` request\n  asks for 80 columns on a 40-column screen - error 189 there is correct and\n  means bad geometry, not memory exhaustion.\n\n  GFX2's own use of the codes hasn't itself been\n  independently confirmed `Live` (NitrOS-9) - only `wcreate`'s has. Two additional special\n  values exist only for `DWSET`'s `format` (not `wcreate`'s `-s=<type>`,\n  which always creates a new window and has no \"current screen\" concept):\n  `$00` = the calling process's current screen (inherit its format rat"
+}

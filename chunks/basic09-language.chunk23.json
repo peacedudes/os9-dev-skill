@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 23,
+  "text": "gle-recursive factorial (`RUN fact(n-1, sub)`, unwind-as-you-go) and\na doubly-recursive Fibonacci (`RUN fib(n-1,a)` then `RUN fib(n-2,b)` in\nthe same frame - a meaningfully harder case since it needs multiple\nconcurrent activation records of the same procedure, not just a simple\nchain). `fact(5)=120`, `fib(10)=55`, both correct.\n\n**BYTE variables cannot be passed as parameters.** Pass a BYTE array\ninstead. **`Manual`-confirmed** - the *BASIC09 Reference Manual*\n(Rev H) parameter-passing section is explicit: parameters \"can be of any type\n(EXCEPT variables of type BYTE, but BYTE arrays are O.K.)\". Follow the manual.\n\n**Nothing enforces the rule, and the failure it guards against is silent.**\n`Live` (os9exec), 68k BASIC09 V2.1: `PARAM b: BYTE` is accepted at edit time\nand run time. A BYTE *v"
+}

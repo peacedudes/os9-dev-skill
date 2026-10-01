@@ -1,0 +1,5 @@
+{
+  "source": "tools/DESIGN.md",
+  "chunk_index": 18,
+  "text": "sting it:**\n\n- **It works per-commit, not corpus-wide.** A whole-tree sweep grouping every\n  claim by subject was tried and is useless: common identifiers (`dir`, `copy`,\n  `load`, `ident`) carry claims in seven to nine files each, so everything\n  couples to everything. Starting from what changed is what makes the subject set\n  small enough to be meaningful.\n- **It matches on blocks, not lines, and that was a bug first.** The corpus\n  hard-wraps prose, so a subject and its quantity routinely sit on different\n  physical lines - the real stale claim read \"Microware `cpp`\" / \"bus-errors at\n  513 characters\" across a break. The first implementation matched line by line,\n  passed its own unit tests, and **silently failed the historical case it was\n  built for**. Only running it against the tree"
+}

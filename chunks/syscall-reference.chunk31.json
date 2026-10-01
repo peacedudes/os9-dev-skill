@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 31,
+  "text": "m. `Live` (os9exec) |\n| **F$TLink** | Install trap handler | d0.w=trap 1-15, d1.l=memory override, (a0)=module name -> **(a0)=updated past module name**, (a1)=entry, (a2)=header. **Passing (a0)=0, or a name string whose first byte is 0, *unlinks* the handler on that vector** (manual, ch. 14). Links a TrapLib, allocates private static storage, runs its init. Max 15 per process (one per vector); a `tcall` before install can lazily self-install via the module's M$Excpt entry. `(a0)` must be a module *name*, resolved via the same exec-directory search as `F$Link`/`F$Load`, not a bare filename in the data directory. `Live` (os9exec) |\n| **F$Sema** | Kernel binary semaphore | OS-9 **v3.0+** only - absent on the v2.4 baseline documented here |\n\nA trap module with no init data, hand-built for os9e"
+}

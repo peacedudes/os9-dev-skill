@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 30,
+  "text": " its own data sector buffer, a reader never sees\n   size, segment list or sector contents change underneath it, and a lock is\n   pointless. Link paths on the same file into a ring and treat their buffers\n   as a shared cache.\n2. **The directory walk goes through the same read path.** Opening a file for\n   update walks directories via the ordinary read routine, so the path takes\n   a lock on *directory* bytes and carries those offsets onto the file it\n   ends up at - its own first read then collides with its own stale lock.\n   Drop locks whenever a path changes which file it refers to.\n3. **Judge a read conflict on bytes delivered, not bytes requested.** A\n   caller may offer a buffer far larger than the record. Since reading is not\n   destructive, the honest order is: read, check what was "
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/ipc.md",
+  "chunk_index": 1,
+  "text": "+` user-defined tier assumes a 16-bit\nsignal code (68k passes it in `d1.w`). **6809 signal codes are 8-bit**\n(carried in the `B` register - see\n`6809/syscalls-and-module-format.md`'s Signals section) and top out at\n255; there is no 6809 equivalent of the `256+` tier, and this table's\n`5-255` boundary doesn't carry over unchanged either - 6809 sources\ndisagreed on paper about where the reserved/user-definable split starts\nwithin 0-255 (4 vs. 128), but `Live` (NitrOS-9): a process installed an `F$Icpt`\nhandler, then `F$Send`'d itself code 50 (deep in the disputed range) and\ncode 200 (undisputed range); both delivered identically, the handler\nreceived the correct code in `B` both times, with no rejection or special\nhandling for either. **The kernel does not enforce a reserved/user\nboundary an"
+}

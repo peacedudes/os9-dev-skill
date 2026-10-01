@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 51,
+  "text": "e platforms' video hardware - see the\nper-architecture file.\n\n---\n\n**Sources:** BASIC09 Reference Manual (Rev H) and \"OS-9 BASIC User Manual\"\n(Revision G, 1991) - architecture-independent language mechanics, shared\nacross the 6809 and 68k editions, plus 5 authored BNF-grammar cards.\nNumeric widths, the 6809/68k delta, and remaining platform-specific facts:\n`basic09-per-target.md`. Trap digest: `gotchas.md`.\n"
+}

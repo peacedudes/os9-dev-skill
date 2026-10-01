@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 2,
+  "text": "\nimage or SDK. A host directory of your own files works identically for basic testing.\n\n## Launching and disks\n\n- `OS9DISK=<path>` (or a `dd` file/dir beside the binary) mounts as `/dd`;\n  `OS9H0`...`OS9Hz` (or `h0`...`hz` beside the binary) mount as `/h0`...`/hz`.\n  Each can be a host directory or an RBF disk image. **Configure devices by\n  these variables** rather than by the magic file names and host symlinks -\n  the variable says plainly which image is which.\n  - **The device letter is case-sensitive**: `/hz` is configured by `OS9Hz`,\n    and `OS9HZ` is silently ignored - no device, no complaint. `Live` (os9exec).\n  - **Two variables may name the same image, and that is supported.** A\n    collection that programs expect at both `/dd` and `/h0` needs only\n    `OS9DISK=<img> OS9H0=<img>`"
+}

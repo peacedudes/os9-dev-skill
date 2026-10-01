@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 12,
+  "text": " and the kernel **decrements it by one** at the\nstart of every `F$AProc` call - i.e., every time *any* process is inserted\ninto the active queue (a fresh fork, a signal delivery, a satisfied wait\ncondition, or the current process being re-queued when its time slice\nexpires). When a process is inserted, the kernel computes a **scheduling\nconstant** - ordinarily `priority + (the just-decremented) D_ActAge` - and\nstores it in the process descriptor's `P$Sched` field; the active queue\nstays sorted by this value, with the highest constant at the head. Once\nset, a process's own `P$Sched` is **not** recalculated while it waits -\nonly new insertions consume the next (lower) system-age value, which is\nwhat makes a process that has been waiting through many other insertions\nlook progressively more f"
+}

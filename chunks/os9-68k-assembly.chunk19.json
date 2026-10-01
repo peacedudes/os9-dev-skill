@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 19,
+  "text": "ebugger for a post-mortem look instead. The table above\nshows only a subset.\n\n### Reading SR in user state\n\n`MOVE SR,<ea>` is a **user** instruction on the MC68000/MC68008 and privileged\nonly from the MC68010 on (`Manual`, Motorola M68000 Family PRM: the entry\nheaded MC68000/MC68008 in the integer chapter, and the 68010+ entry in the\nsupervisor chapter). Old compilers read SR to get at the condition codes - the\nRTF Fortran run-time does - so on a 68010 or later that does not emulate the\ninstruction in its privilege-violation handler, as Motorola advised, such a\nprogram dies at an ordinary-looking instruction with\n`vector=$08 err=#000:108`.\n\nWhether Microware's 68010+ kernels emulate it is unrecorded; CONF68K t50 run\non real hardware would settle it. os9exec emulates a 68020 and lets user s"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 17,
+  "text": "ions (INTEGER does not). Hot loops\nbenefit most from INTEGER counters. A careless decimal point in an\nexpression (`value*2.` rather than `value*2`) silently forces the whole\nexpression to REAL, so watch for this in anything performance-sensitive.\n\nLegacy line-number `GOTO`/`GOSUB` (targets 1-32767) and `ON expr GOTO/GOSUB\nline1,line2,...` are both supported and `Live` (os9exec), working correctly -\n`GOTO`/`GOSUB` require **explicit line numbers typed in the source**\n(classic numbered-BASIC style, e.g. `10 PRINT x`, `20 GOTO 10`), targeting\none of those explicit numbers. GOSUB pushes a return frame distinct from a\nprocedure call frame, popped by `RETURN`. Confirmed live: a `GOTO` past two\nintervening lines correctly skipped them; a `GOSUB`/`RETURN` correctly\nreturned to the caller with a va"
+}

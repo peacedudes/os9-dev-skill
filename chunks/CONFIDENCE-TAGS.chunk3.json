@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/CONFIDENCE-TAGS.md",
+  "chunk_index": 3,
+  "text": " one disk image or one toolchain is both discouraging and, from where they are\nsitting, wrong. Where you can, say what *is* there instead of what is not: naming\nthe utility that does the job on the reader's system is more use than recording\nthat yours did not have it.\n\n| Qualifier | What it is |\n|---|---|\n| `OS-9 L1` / `OS-9 L2` | Microware OS-9/6809, Level One / Level Two |\n| `OS-9/68000` | Microware OS-9/68000 (add `+881` where the maths coprocessor matters) |\n| `OS-9000` | Microware OS-9000, itself multi-target - name the target too where it matters |\n| `NitrOS-9` | The open-source 6809/6309 reimplementation |\n| `os9exec` | The community 68000 emulator and OS-9/68000 kernel reimplementation |\n\nThe list is open - name any implementation precisely rather than forcing it\ninto an existing b"
+}

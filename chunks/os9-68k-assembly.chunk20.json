@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 20,
+  "text": "ettle it. os9exec emulates a 68020 and lets user state\nread SR, delivering S clear (`Live` (os9exec), CONF68K t50).\n\n`MOVE CCR,<ea>` is the 68010+ user-legal way to read the flags, and is not a\n68000 instruction at all.\n\n### What an `F$STrap` handler is handed\n\n`Manual` (v2.4 TRM p. 1-60), and `Live` (os9exec) - CONF68K t55-t56, which\npass on big- and little-endian hosts alike. Runtimes depend on this contract,\nso it is worth stating exactly:\n\n| Register | On entry to the handler |\n|---|---|\n| `d7.w` | The exception's vector offset - which error this is |\n| `(a0)` | The program counter at the exception. The manual notes this is the same value as `R$PC(a5)` |\n| `(a1)` | The stack pointer at the exception (`R$a7(a5)`) |\n| `(a5)` | The saved register image - the whole user register set |\n| `("
+}

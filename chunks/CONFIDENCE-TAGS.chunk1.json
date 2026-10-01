@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/CONFIDENCE-TAGS.md",
+  "chunk_index": 1,
+  "text": "for and confirmed **not to exist** - distinct from \"nobody's checked yet\". **Always names what it is absent from**, exactly as `Live` names where it ran: `Absent` (6809), `Absent` (the v2.4 manuals), `Absent` (this SDK). One line, a fact stamp. Add a clause only to state what happens instead (e.g. 6809 has no `events` utility because it uses `F$Send`/`F$Icpt`/`F$Sleep` signals rather than 68k's named-event objects) - never describe the syntax the absent thing *would* have had. |\n| `Flag` | Two or more sources disagree; unresolved. |\n\n`Absent` and `Flag` are status flags, not evidence tiers - they sit alongside\nthe others rather than replacing them.\n\n## `Live` names the implementation it was run on\n\n\"OS-9\" is not one system, so \"we ran it\" is not one claim. A `Live` tag\ntherefore carries th"
+}

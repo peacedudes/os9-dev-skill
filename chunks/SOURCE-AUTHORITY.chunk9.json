@@ -1,0 +1,5 @@
+{
+  "source": "SOURCE-AUTHORITY.md",
+  "chunk_index": 9,
+  "text": " are not third-party books; the rights holder is\n  Microware. Treated as authoritative here.\n- **Motorola's own M68000 Programmer's Reference Manual** is authoritative for\n  processor behaviour (instruction semantics, exception frames) and is used\n  that way. It says nothing about OS-9 and is never a source for OS-9 claims.\n- The two **Enhanced OS-9 (2000, v3.2)** manuals are genuinely Microware but\n  document a later major version. Mining them into v2.4 material risks\n  importing v3.2 semantics; kept out of scope, flagged rather than deleted.\n\n## Where the weight still sits\n\nThis corpus is what could be found, not Microware's documentation set. Read\nnothing here as complete coverage of OS-9: where a fact is absent or thin, the\nmanual carrying it may simply never have been in reach.\n\nThe t"
+}

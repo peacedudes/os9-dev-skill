@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 7,
+  "text": "ram\ncan hand a narrow capability to ordinary callers, covering setuid-style\nneeds without a separate mechanism. I/O-system modules (file managers,\ndrivers, descriptors) must be superuser-owned with the supervisor bit set;\na module file owned by superuser must stay superuser-owned or OS-9 refuses\nto load it.\n\n### Header parity\n\nXOR of all prior header words, one's-complemented - so folding *every*\nheader word including M$Parity yields `$FFFF` on an intact header. Checked\non every link; mismatch = `E_BMHP`. Protects the header only (the body may\nlegitimately change post-load, e.g. breakpoints). Cross-manual notes: some\nv2.4-era sources describe a refined scheme that also rotates the\naccumulator right by (word mod 16) per word (v2.2 reportedly summed low 16\nbits instead); OS-9 Insights states"
+}

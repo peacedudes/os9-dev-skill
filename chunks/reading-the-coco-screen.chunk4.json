@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/reading-the-coco-screen.md",
+  "chunk_index": 4,
+  "text": " on the same path fails silently into the\n   debugger, printing no markers at all. There is no `kill` on the EOU disk\n   (`kill <pid>` returns the shell's own `?`, which then sits on the input\n   line and corrupts the *next* scripted command), so a full restart is the\n   reliable cleanup.\n4. **Pick a foreground color that isn't also your background register.**\n   `DWSET(path,format,xcor,ycor,width,length,fg,bg,border)`'s `bg` assigns a\n   palette register as the window's background. Drawing afterward with `COLOR`\n   set to that same register is invisible - not an error, just nothing\n   rendered. A general trap, not specific to any one call, and consistent with\n   GFX2's total lack of argument validation.\n5. **Validate a new call's arity in the foreground first.** `PRINT` markers\n   between"
+}

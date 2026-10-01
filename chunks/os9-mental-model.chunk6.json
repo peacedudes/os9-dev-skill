@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-mental-model.md",
+  "chunk_index": 6,
+  "text": "d viable as an instant-on embedded/real-time\n  OS (Microware still maintains it - microware.com). OS-9 v2.4 is the\n  direct basis of CD-RTOS, the OS inside Philips CD-i players; this skill's\n  sources establish that equivalence but contain no CD-i-specific disc\n  format or driver API detail.\n\n## Two current directories, not one\n\n| | Command | Used for |\n|---|---|---|\n| **Data directory** | `chd` | Relative *data-file* paths; procedure-file lookup |\n| **Execution directory** | `chx` | Relative *module/command* names when running something |\n\nThe single underlying rule: **an execute-mode open resolves against `chx`;\nevery other open resolves against `chd`.** A command search checks the\nmodule directory (already resident?), then `chx`, then each `PATH` entry,\nthen the data directory (as a pro"
+}

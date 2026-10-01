@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 6,
+  "text": "un), never returning one; the first\n  98 succeed, the rest fail `E$NoRAM`, and the program writes nothing at all.\n  That \"size\" *is* the `FILE` pointer read as a byte count: it was proven to be\n  an address by moving the heap under it and watching the \"size\" follow, which\n  is also why its value differs from run to run.\n\n  **Do not try to fix it with a bigger buffer.** `-qixm=16k` behaves\n  identically. It is not a size problem.\n\n  Why the library and not the module is the variable: in the **matched** vintage\n  `putc`/`getc` compile to ordinary function calls (`$12`/`$09`) and the buffering\n  happens inside the module, consistently. In the **mismatched** vintage the\n  header *inlines* them and the slow path reaches `$41`/`$42`. Across 353\n  cio-linked programs on one collection, **no** pro"
+}

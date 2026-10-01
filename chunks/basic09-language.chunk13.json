@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 13,
+  "text": "ose are `arr(1)` and `arr(2)`; under `BASE 0` they are `arr(0)` and\n`arr(1)` - `arr(2)` is out of bounds under `BASE 0` (`Live` (os9exec):\n`Error #000:055`). Don't assume `BASE 0` gives you the same top index plus\none extra slot at 0; it doesn't.\n\nAssignment accepts `LET x := 1`, `x := 1`, or plain `x = 1` - all three\ncompile to identical I-code.\n\n### TYPE records\n\n**There is no multi-line `TYPE`/`ENDTYPE` block form - that construct never\nexisted in BASIC09.** It is a plausible-looking fabrication; don't emit it.\nThe BASIC09 Reference Manual's formal grammar (Rev H, p. 54-55) is\nunambiguous - `TYPE type_decl {; type_decl}`, one statement with\nsemicolon-separated fields and no closing keyword - and `ENDTYPE` appears\nnowhere in that grammar, anywhere else in either primary manual, or in any"
+}

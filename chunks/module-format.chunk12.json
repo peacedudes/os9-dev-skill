@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 12,
+  "text": "in insert mode - while the\nmodule name in the header stayed the same throughout. So:\n\n- renaming a module does **not** change how such a program behaves, and\n- renaming the FILE does, which is easy to do by accident when a name is\n  already taken and you reach for a suffix. `input.elvis` ends in `s`, so\n  that copy silently stopped being the input personality.\n\nTwo files sharing one module name is the other half of this: OS-9 answers by\nmodule name once a module is resident, whatever path you type, so the loser\nbecomes unreachable and nothing warns. Check both when a program under a new\nname misbehaves.\n\n### What each integrity check actually covers - `Live` (os9exec)\n\nFlipping a single bit in a copy of the module, then re-running `ident`,\nlocates the boundary between the two checks precis"
+}

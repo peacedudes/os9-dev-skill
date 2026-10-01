@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 9,
+  "text": "cates the target to 0 bytes**\n  before failing. **`Live` (NitrOS-9): real NitrOS-9 BASIC09\n  prints nothing at all** for `SAVE proc >rel`, `SAVE proc >/DD/abs/path`\n  and `PACK proc >rel` - a different binary on a different architecture, so\n  suggestive, not proof about the 68k line. `Absent`: whether the genuine\n  68k binary on real hardware prints it is untestable here. (`> pathlist`\n  with a space *after* the `>` is a separate thing - unrecognized syntax.)\n\n## `Error #000:043` means four different things\n\nBASIC09 code 43 is \"Unknown Procedure\", and it is raised for causes that have\nnothing to do with each other. Two of them mean *nothing is wrong*. Identify\nwhich before drawing a conclusion:\n\n| Where it appears | What it means | What to do |\n|---|---|---|\n| After `SAVE proc >path` or `P"
+}

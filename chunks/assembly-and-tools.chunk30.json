@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 30,
+  "text": "r symbol: `D`=data (`RMB`), `E`=equate, `L`=program label, `S`=set label, `U`=undefined | off | `Live` (NitrOS-9) |\n| `Wnum` | Max listing line width, truncating longer lines; the comment field is fixed at column 50, so a low value chops useful content | `W80` | `Live` (NitrOS-9) |\n\n**`I` corrupts the module - do not use it on a file passed as a command-line\nargument.** `Live` (NitrOS-9): every listing line gets an `ASM:` prefix, but the\nassembled module header comes out wrong (`87CD3103` instead of the correct\n`87CD001D`, CRC differing too) while assembly still reports `00000 error(s)`.\nSilent corruption reported as success. Neither `I` nor `U` is documented in\nany manual mined here; RMA's own comparison appendix (\"RMA has no interactive\nmode\") is the only hint that `I` may mean interacti"
+}

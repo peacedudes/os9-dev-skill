@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 58,
+  "text": "nly\n  declaration on the disk is in `DEFS/GCC2/stdio.h`, a different toolchain's\n  header - and no GCC2 library is present to satisfy it.\n- `Live` (os9exec): a program calling `popen()` compiles with\n  `**** warning - illegal pointer/integer combination ****` at the assignment -\n  the tell that the function is undeclared and assumed to return `int` - and\n  then fails at link:\n\n```\nSymbol 'popen' unresolved.\nSymbol 'pclose' unresolved.\n```\n\n**So do not plan a port around `popen()` here.** Use `os9fork`/`os9exec` with an\nexplicit argument vector, or a pipe set up by hand (`common/ipc.md`), and treat\nthe warning above as the early signal - it appears at compile time, before the\nlink error names the problem.\n\nThere is a third-party account, `Hearsay`, of a `popen()` failing at run time\nwith a "
+}

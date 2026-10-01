@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 10,
+  "text": "9 |\n|---|---|---|\n| **Ctrl-C** | kills foreground process | Sends interrupt signal 3 to the last process to use the terminal. If the foreground program has not written to the terminal yet, the shell moves it to the background (as if `&`) instead; if it has, it dies unless it intercepts the signal - `Manual`, `Live` (os9exec); see `using-os9exec-repl.md` |\n| **Ctrl-E** | - | The actual kill key - terminates the child outright, `Live` (os9exec) - sends abort signal 2, not the uninterceptable signal 0; see Tier 2's signal table |\n| **Ctrl-A** | move to start of line | Redisplays the previous input line without executing it, cursor at end - back up over it and retype to edit and resubmit; stands in for arrow-key/history recall (symbol `C$Rpet` - \"repeat\"; see `os9-tools-and-shell.md`) |\n| Flow"
+}

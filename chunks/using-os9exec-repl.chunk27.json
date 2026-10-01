@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 27,
+  "text": "e case where that distinction bites hardest, and the\nsounder test, see the `cio` link-mode pitfall in `c/os9-c-cheatsheet.md`.\n\n**Drive a program the way a person would, not the way that is easiest to\ncapture.** How you invoke it decides which defects can appear at all, and no\nsingle convenient route exposes them all - three measured classes, each\ninvisible under a different one:\n\n| defect | hidden by | exposed by |\n|---|---|---|\n| `putchar`/`putc` with a side-effecting argument (`c/os9-clib-reference.md`) | redirect to a **file** | a **pipe** or a terminal |\n| a scanner whose `freopen(..., yyin)` did nothing (`c/os9-c-cheatsheet.md`) | a **pipe** - it was going to read `stdin` anyway | a **named file** argument |\n| a raw `write()` whose line feeds the terminal never adds | a **file** - th"
+}

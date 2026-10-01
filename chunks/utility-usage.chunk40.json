@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 40,
+  "text": "lines, for `pause` |\n| `bsp=<h>` / `bse=<h>` | input / output backspace char (hex, default 08) |\n| `del=<h>` | delete-line char (hex, default 18) |\n| `bell=<h>` | alert/bell char (hex, default 07) |\n| `eor=<h>` | end-of-record / CR char (hex, default 0D) |\n| `eof=<h>` | end-of-file char (hex, default 1B / ESC) |\n| `reprint=<h>` | reprint-current-line char (hex) |\n| `dup=<h>` | duplicate-last-line char (hex, default 01) |\n| `psc=<h>` | pause char (hex, default 17 / Ctrl-W - `Live` (NitrOS-9); the primary manual's OCR rendered this as `pse=`, which is wrong) |\n| `abort=<h>` | terminate char (hex, normally Ctrl-C) |\n| `quit=<h>` | quit char (hex, normally Ctrl-E) |\n| `xon=<h>` / `xoff=<h>` | flow-control chars (hex, default 11 / 13) |\n| `tabs=<n>` / `tabc=<h>` | tab stop spacing (default 4) /"
+}

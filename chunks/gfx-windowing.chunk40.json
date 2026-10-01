@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 40,
+  "text": "oup 202\n  (`SYS/Stdptrs`); selecting which shape to use is done through a function\n  called `GOSET` in the one example that mentions it, but `GOSET` itself\n  has no documented entry anywhere in the corpus checked, and `Live` (NitrOS-9) it is\n  not a real function in this GFX2 build at all (see Unresolved) - whatever\n  selects a cursor shape in practice, it isn't `GOSET`.\n\n### Miscellaneous\n\n- `BELL` - rings the terminal bell/speaker. No parameters appear in any\n  example from either source; whether it accepts an optional `path` the\n  way most other GFX2 functions do is unclear - not stated either way.\n\n## Unresolved\n\n- **`GOSET`** (selecting a graphics-cursor shape for `PUTGC`) - `Live,\n  Absent`: `RUN GFX2(\"GOSET\",1)` gives `Error #048 -- Unimplemented\n  Routine`, and `gfx2.asm`'s ~60-ent"
+}

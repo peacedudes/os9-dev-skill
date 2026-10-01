@@ -1,0 +1,5 @@
+{
+  "source": "SOURCE-AUTHORITY.md",
+  "chunk_index": 0,
+  "text": "# Source authority: what counts as Microware's word\n\nThis file exists because the rest of this repo makes claims about OS-9, and a\nclaim is only as good as what backs it. It answers one question: **for any\nsource in the corpus, is it Microware speaking, or is it someone else's\nreading of Microware?**\n\n**The rule:** for divergence work (`DIVERGENCES.md`), only\nMicroware-published documentation counts as authoritative - including documentation published under licence by Tandy /\nRadio Shack, Dragon Data, and Motorola, which are Microware's own manuals\ncarrying a licensee's imprint. Third-party books are **not** authoritative,\nhowever good they are. The OS-9 Guru in particular is an excellent book and is\nstill not Microware's word.\n\n**Equally important, and the reason this project exists at al"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 15,
+  "text": "place) - that's the whole point of it. No implicit atomicity -\nsynchronize explicitly.\n\n### `mknod()` creates a directory, not a device node\n\nUnix's `mknod()` is a general-purpose special/device-file factory. OS-9's C\nlibrary `mknod()` only creates a directory - ordinary files come from\n`creat()`. The name survived; the behavior didn't. Code ported from Unix\nthat calls `mknod()` expecting a device node gets a directory instead, with\nno error to flag the mismatch.\n\n### Directories can't be opened like ordinary files\n\n### `open(path, 0)` opens a file you cannot read\n\n**The single most costly line to port unchanged.** OS-9's access mode is a *bit\nfield* - `D S E W R`, directory/single-user/exec/write/read (`Manual`, v2.4 TRM,\nI$Open) - so **mode 0 requests no access at all**. POSIX spells rea"
+}

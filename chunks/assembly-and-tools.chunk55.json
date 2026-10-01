@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 55,
+  "text": "to stop on every iteration.\n\n**Register display**: `SP CC A B DP X Y U PC`, one line of names, hex values\nbelow. `CC` bit 7 (E flag) must be set or `G` won't resume correctly - the\nentry-state `CC` genuinely has it set (`Live` (NitrOS-9)). `SP` points at the bottom of\nthe saved register block when a breakpoint fires.\n\n**Expression syntax**: hex is the default (`$` prefix optional), `#` for\ndecimal, `%` for binary, `'` for a one-character ASCII constant, `\"` for two.\nIndirect addressing: `<expr>` (byte) or `[expr]` (word). 6809 indexed\naddressing can be written in the calculator as `(:D+:Y)`, equivalent to\nassembly's `[D,Y]`.\n\n## Editor\n\n`Manual`. Line-and-buffer oriented, not screen-oriented (no cursor\naddressing - matching the \"no termcap\" reality in `unix-differences.md`). Two\nbuffers (p"
+}

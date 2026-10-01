@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/memory-and-io.md",
+  "chunk_index": 3,
+  "text": "ess translation, which OS-9 provides.\n\nWithout MMU, all user tasks share one address space with no isolation. Recommendation: keep memory in contiguous reserved blocks with expansion room.\n\n### Process memory at fork time\n\nEach process gets three regions, sized as `minimum data space + stack size + parameter string length`:\n\n| Region | Purpose | Notes |\n|---|---|---|\n| Static storage | Program's initialized/uninitialized variables | Sized from linker metadata; kernel initializes from constant tables |\n| Stack | Locals, return addresses, call frames | Grows downward; minimum declared in the module header |\n| Parameter string | Arguments from the parent | Copied to the top of allocated memory |\n\nPrograms can request additional static storage via `F$Fork`. All data access is register-indirect"
+}

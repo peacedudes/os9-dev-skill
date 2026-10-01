@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/kandr-vs-ansi.md",
+  "chunk_index": 7,
+  "text": "(va_alist) va_dcl` plus `va_start`/`va_arg`/`va_end` - and the converted\n  file must then be **excluded** from the pass, or the next run rewrites it again.\n- **It never looks inside a struct**, so ANSI function pointers declared as struct\n  members are invisible to it. Eleven `void (*init)(board_t *, ...)` members\n  produced 60 errors, none of them pointing at the real line.\n\n**A macro invocation at the left margin makes it hang - silently and forever.**\nA file of `ROOM(...)`/`OBJECT(...)` macro calls at the margin, with arguments\nspanning lines, has the same shape as a function header, and the tool tries to\nrewrite them. `Live` (os9exec): with an unbalanced `(` inside one of the string\nliterals it spun at full CPU and never exited, corrupting string literals on the\nway (commas inside them"
+}

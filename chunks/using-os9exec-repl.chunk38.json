@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 38,
+  "text": "brary at\n   all - check the `@` prefix above, and note that a `setenv`-created variable\n   is visible to `getenv` and invisible to curses\n   (`c/os9-clib-reference.md`). Basic loop: `i`,\n   type, ESC, `:wq`.\n3. **Host-side editing + conversion** - host-native directories only (a\n   file inside an RBF image has no host file to touch). `tr '\\n' '\\r' < in >\n   out` makes a Unix file CR-only, and is on every Unix host; `tr '\\r' '\\n'`\n   goes back. Best route for large sources; the file must end up CR-only or\n   the compiler reads it as one giant line. `Live` (os9exec). The third-party\n   `flip` does the same where installed (`flip -m` to CR, `-u` to LF, `-t`\n   reports the current state), and is safe to rerun on an already-CR file.\n\n**tmux eats a trailing semicolon**: `send-keys` treats a fina"
+}

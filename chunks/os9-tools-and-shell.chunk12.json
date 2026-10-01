@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 12,
+  "text": "ec), measured with\none-line C programs that do nothing but `exit(n)`:\n\n| `exit(n)` | What the shell prints |\n|---|---|\n| `0` | nothing |\n| `1` | **nothing - and a procedure file still stops there**, silently: `-x` treats 1 as a failure while the shell prints no message for it (measured with an assembly `F$Exit`) |\n| `2` | `Error #000:002 (S_Abort) User abort (Cmd-'.')` |\n| `255` | `Error #000:255 (E_FORMAT) Device is format protected` |\n\nThe text is whatever that *number* means in the error table, and has nothing to\ndo with what the program did - no disk was touched to produce that last line.\nGNU and BSD ports that print their usage and `exit(2)` therefore appear to abort\nevery time they are asked for help, and in a procedure file they end the run.\n\n**That fallback has no guard, so any rea"
+}

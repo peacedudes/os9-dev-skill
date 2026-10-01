@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 4,
+  "text": "SIX ones.** A missing file gives\n  **216** (`E$PNNF`), not `ENOENT`/2. Testing `errno == ENOENT` is the\n  reflex to unlearn; the numbers are the same ones a syscall returns in\n  `d1.w`, so `common/error-codes.md` is the table to read.\n- **A missing *file* and a missing *module* are different errors.**\n  `open()` on an absent file gives 216; `os9fork()` on an absent module\n  gives **221** (`E$MNF`), because module lookup is a different search\n  (the execution directory) from file lookup.\n- **`os9fork()` does not block.** It returns the child PID immediately;\n  the parent must `wait()` to collect the status. Here `wait()` returned\n  the same PID and the child's exit status of 0.\n- **Note the K&R shape**: `main()` with no return type and no prototypes.\n  See `c/kandr-vs-ansi.md` before reachi"
+}

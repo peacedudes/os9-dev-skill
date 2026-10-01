@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/pack-and-runb.md",
+  "chunk_index": 13,
+  "text": "ode (68k TRM\n   `F$Fork`, p. 1-30), so a program forking a packed module by name gets no\n   such help and must fork RunB itself.\n   Either way the module resolves via OS-9's standard order: **F$Link\n   (already resident?) then F$Load, which searches only CHX** - not\n   `PATH`. Bare-name invocation additionally needs RunB itself resolvable\n   the same way: preload it (`load runb` in a startup file - resident\n   modules are findable regardless of CHX) or have `runb` present in the\n   CHX directory.\n   **Only a bare name resolves - never a pathname.** `runb /path/to/mod`\n   and `/path/to/mod` both fail with `Error #000:043` regardless of\n   residency. Invoke by bare name from a CHX where it resolves.\n3. **`RUN <sibling>` inside a running packed module:** resolves via\n   **F$Link against the m"
+}

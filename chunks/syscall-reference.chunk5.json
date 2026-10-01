@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 5,
+  "text": "F$ID` returns a *flat* user ID with no group field at all, so a group/user split applied there is wrong - see the cross-target trap in `6809/syscalls-and-module-format.md`. `Live` (os9exec) |\n| **F$SUser** | Set process identity | d1.l=(group:16)(user:16), full 16-bit fields each | - | Same wire format as `F$ID`'s `d1.l` output, so save/restore round-trips. Permitted in exactly **three** cases, `E$Permit` otherwise: (1) caller is 0.0; (2) caller's primary module is *owned by* 0.0; (3) the new ID equals the caller's own primary module's owner. Owner = `M$Owner`, header offset $008, group word then user word - same packing as d1.l, so it compares directly. Case 3 is OS-9's setuid: a module owned by X lets whoever runs it become X. Case 2 is why `login` works at all - `ident` shows `login` ow"
+}

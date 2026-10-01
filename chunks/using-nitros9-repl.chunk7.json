@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 7,
+  "text": "sed\n  across runs and reboots - delete the directory to reset the disk), at full\n  speed. `NITROS9REPL_DISKDIR` boots a specific directory instead (test\n  harnesses do); `-ratelimit` in `NITROS9REPL_EXTRA_XROAR` restores real-time\n  pacing. Never point it at the golden master: XRoar edits the image in place.\n  A human session is then just `connect` (Ctrl-] detaches and logs out).\n  `connect` does not answer the `User name?:` prompt - a human types it.\n- **os9exec's `tools/coco` is the human front door.** Bare `coco` is idempotent: it\n  connects if a guest is up and boots one first if not, so it can be run any\n  time without checking state. Any arguments are forwarded to\n  `nitros9repl.sh`, so `coco send 'dir'`, `coco stop`, `coco server` all work.\n  It also retires the scripted `chan` sess"
+}

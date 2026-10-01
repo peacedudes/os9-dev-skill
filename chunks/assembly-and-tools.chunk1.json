@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 1,
+  "text": "yte `fcb` call code.\n3. **Use `-O=<name>`, not `O=<name>`** - the leading dash overwrites; without\n   it an existing output file fails the run. Case is not significant.\n4. **The object lands in the execution directory (`/dd/cmds`)**, not your data\n   directory. `dir` where you are makes every successful run look failed.\n5. **Never redirect `asm`'s standard output.** Errors go there, so a broken\n   assembly looks silent and successful.\n6. **Check the error count, not whether an output file appeared** - `asm`\n   writes an object even when the assembly failed, and it will `ident`\n   cleanly and then fail at run time on something unrelated.\n\nOne more bites *after* a clean build: **`*` is the program counter, `.` is\nthe data counter.** Using `*` for the `mod` directive's data-size operand\nassem"
+}

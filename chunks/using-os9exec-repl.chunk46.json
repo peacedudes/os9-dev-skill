@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 46,
+  "text": "rence.md`, \"A termcap reader that\nskips modern entries\".\n\n## Discovering what's installed\n\nAsk the running system (`os9-tools-and-shell.md`, \"Discovering what's\ninstalled\"); in addition, `imdir` (an os9exec built-in, not an OS-9 command)\ngives the emulator's own view of loaded modules - useful to confirm a trap\nhandler actually installed.\n\n## Accounts: don't stay superuser\n\nBooting straight into `shell` runs as group 0 (superuser - `procs` shows\n`Grp.Usr 0.0`). Fine for a smoke test; for real work use the login mechanism,\ndescribed in `os9-tools-and-shell.md`, \"Accounts and login\". Under os9exec:\n\n- Via a tsmon boot you land at `User name?:` - send just the account name\n  (`login` is already running).\n- **Never use `login` as os9exec's boot program** - it prints the banner\n  then exits the"
+}

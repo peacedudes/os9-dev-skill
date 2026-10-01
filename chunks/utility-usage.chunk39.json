@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/utility-usage.md",
+  "chunk_index": 39,
+  "text": "ted in this document turns out to be\nOS-9/68000 material, not an independent 6809 source - see `Sources:`\nfooter - so this is not doubly cross-checked).\n\n| Parameter | Meaning (default) |\n|---|---|\n| `upc`/`-upc` | force upper-case echo (lowercase auto-converts) / mixed case (default) |\n| `bsb`/`-bsb` | echo backspace as BS-space-BS (default) / echo a single backspace only |\n| `bsl`/`-bsl` | erase line by backspacing (video, default) / print a new line (hardcopy) |\n| `echo`/`-echo` | input echo (default on) |\n| `lf`/`-lf` | auto line feed after CR (default on) |\n| `pause`/`-pause` | screen pause when full, resume on space bar (default on) |\n| `null=<n>` | NUL padding count after CR (decimal, default 0) |\n| `pag=<n>` | screen page length in lines, for `pause` |\n| `bsp=<h>` / `bse=<h>` | inp"
+}

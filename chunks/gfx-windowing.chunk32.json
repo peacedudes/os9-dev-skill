@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/gfx-windowing.md",
+  "chunk_index": 32,
+  "text": "or toggle-effects (e.g.\n  drawing and re-drawing the same shape to erase it without touching what\n  else is on screen). **`Live` (NitrOS-9) - real, but the erase-by-redraw\n  idiom is unreliable for filled shapes.** Drawing `FCIRCLE(100,100,30)`,\n  then `LOGIC \"XOR\"` and the identical `FCIRCLE` call again, did **not**\n  cleanly erase back to background - it left a mottled residue with a\n  visible seam, clearly different from a solid `LOGIC \"OFF\"` control circle\n  drawn alongside it. The mottling is itself proof `XOR` is toggling real\n  pixels (a no-op would just look like a second identical solid circle);\n  the residue means `FCIRCLE`'s fill isn't pixel-identical between two\n  calls (likely dithered for this color), so two XORed draws of the \"same\"\n  filled shape don't fully cancel.\n\n### Bu"
+}

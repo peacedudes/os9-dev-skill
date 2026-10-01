@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 14,
+  "text": "\n psect addone,Type_Lang,Attr_Rev,0,0,addone\naddone move.l d1,a0\n addq.l #1,(a0)\n rts\n ends\n```\n\n(`Sbrtn`/`Objct`/`ReEnt` are hand-defined rather than pulled from\n`/h0/defs/oskdefs.d` via `use`; both give identical values, confirmed by\nreading that file directly.)\n\n```\nr68 -O=addone.r addone.a\nl68 -o=addonemod addone.r\n```\n\nThe result is a re-entrant machine-language subroutine module (a host's\n`file` command reports `OS9/68K module: re-entrant machine language\nsubroutine`). Called with `n=41`, `RUN addonemod(n)` then `PRINT n` prints\n**`42`** - proving the whole documented mechanism, not just absence of a\ncrash: `D1` genuinely holds the first parameter's address, the write through\nit genuinely propagates back to BASIC09's variable, and `RUN`/`JSR`/`RTS`\nround-trip.\n\n`Live` (os9exec) - a s"
+}

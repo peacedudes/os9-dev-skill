@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 3,
+  "text": "onfirming which architecture's manual it came from (see\n  the data-types reference table below).\n- **`\\n` is CR (0x0D), not LF** - matches OS-9's own line convention, but\n  will silently produce the wrong bytes if you're thinking in Unix terms.\n  **`Live` (os9exec)**: `putc('\\n', f)` to a file wrote the\n  single byte `0x0D` (the file read back `58 0D 59` for `X`,`\\n`,`Y`) - the\n  compiler maps the escape to CR at compile time; a raw `putc(0x0A, f)` stays\n  `0x0A`, so there is no I/O-layer translation, it is purely what `\\n` compiles\n  to.\n- **`<strings.h>`, not `<string.h>`** - different API (`index`/`rindex`,\n  not `strchr`/`strrchr`); see `os9-clib-reference.md`.\n- **Link installed programs `-qm` (trap-free), never `-qixm`.** This is the\n  costliest trap in the C toolchain, it does not a"
+}

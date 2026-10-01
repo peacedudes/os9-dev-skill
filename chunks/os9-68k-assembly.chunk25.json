@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 25,
+  "text": "tion above. The load-bearing\nfacts a program can rely on:\n\n| Register | At entry |\n|---|---|\n| **A6** | global/static data base, biased `+0x8000` (as above) |\n| **A7** | stack pointer (top of the process stack) |\n| **A5** | base of the parameter area (initial SP) |\n| **A1** | top of the process memory area (highest allocated address) |\n| **A3** | pointer to the program's own primary module header |\n| **D0** | the process's own ID |\n| **D1** | packed group.user (owner) ID |\n| **D2 / D3 / D5 / D6** | priority / # inherited paths / param-area size / total memory |\n\n**Undefined at entry - never read before you write them: `A0`, `A2`, `A4`,\n`D4`, `D7`.** A program that dereferences one is relying on luck: real\nhardware leaves whatever happened to be there. os9exec fills them with\nsentinel patte"
+}

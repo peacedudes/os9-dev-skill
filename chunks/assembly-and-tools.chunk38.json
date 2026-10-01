@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 38,
+  "text": "e.md`): same\npurpose, different toolchain, not interchangeable.\n\n**`PSECT` operands** (ch. 3.1.1): `PSECT name,typelang,attrrev,edition,\nstacksize,entry` - all six optional as a group (bare `PSECT` defaults `name`\nto `\"program\"`, the rest to 0). `name`: up to 20 printable non-space,\nnon-comma bytes, used only in RLINK's diagnostics; need not be unique.\n`typelang`: **must be 0 for a non-mainline PSECT**; non-zero marks this PSECT\nas the program's mainline segment. `attrrev`: module attribute/revision byte.\n`edition`: the manual describes this identically to `attrrev`, likely a\nduplication in the source. `stacksize`: estimated stack bytes; RLINK sums it\nacross every linked PSECT and adds the total to the data requirement.\n`entry`: entry-point offset (0 for non-mainline). Exactly one `PSECT` "
+}

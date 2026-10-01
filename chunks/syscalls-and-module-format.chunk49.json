@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 49,
+  "text": " Users Guides (1983), OS-9 Quick Reference (CoCo, 1992\nFARNA Systems).\n\nSource call codes from the System Programmer's Manual's Appendix C\n(Tables C.1/C.2) or the Rev F1 errata - **never** from that manual's inline\nprose cross-references, which contain wrong values. Its main scan also carries\nOCR damage that prints duplicate codes (`$18`, `$3B`, `$4B` each appear twice,\nand `$8E` misreads as `$BE`); in each case a second Microware source settles\nit - F$CpyMem `$1B`, F$FModul `$4E`, F$DelImg `$3B` (SPM Rev F1); I$SetStt\n`$8E`, F$VModul `$2E` (OS-9 Technical Reference, Tandy). The table agrees with\nMicroware throughout; only the one damaged scan disagrees with itself.\n"
+}

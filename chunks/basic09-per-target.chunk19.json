@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-per-target.md",
+  "chunk_index": 19,
+  "text": "\na `RUN` crashes and aborts the process, the module often stays linked with a\nnonzero use count. The *next* `RUN` of that name resolves via `F$Link`\n(reusing the resident copy) rather than `F$Load` (reading the rebuilt file),\nso a fix that is genuinely on disk and correctly relinked still crashes\nidentically. `unlink <modname>` doesn't reliably clear it - a dangling link\nfrom the aborted process can survive - but a reboot does. If\na crash looks unchanged after a fix you know is correct, check `Last\nsyscall:` in the crash dump before doubting the fix: `F$Link` means you're\nrunning stale bytes, `F$Load` means it's fresh.\n\n**Gotcha - the `math` trap handler links lazily and fails misleadingly.**\nBASIC09 links `math` (`TRAP #15`) the moment it first needs *any* numeric\nhandling, which includes"
+}

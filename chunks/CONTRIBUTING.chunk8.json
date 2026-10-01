@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 8,
+  "text": " claims and\n  against a manual first - the two may be describing different things. This is\n  the mistake the project's own authors have made most often, which is why it is\n  listed: a plausible correction that quietly replaced a verified fact has had to\n  be reverted here more than once.\n\n  The reason the tags and the git history earn their keep is that **a recorded\n  measurement is the control case for the next observation.** When what you see\n  disagrees with what the file says, one of you is wrong and the file is the one\n  with its evidence written down - so the first move is to find out whether you\n  are looking at the same thing, not to replace it. A sister project doing\n  captured-output work had two results that looked exactly like damage it had just\n  caused, and the only reason ne"
+}

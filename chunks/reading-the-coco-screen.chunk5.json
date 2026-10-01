@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/reading-the-coco-screen.md",
+  "chunk_index": 5,
+  "text": "the foreground first.** `PRINT` markers\n   between each `RUN GFX2(...)` call, run un-backgrounded, surface\n   parameter-count errors immediately instead of swallowing them into `/nil`.\n6. **Find the right screen by looking, not by color threshold.** Cycling until\n   a color appears above a pixel-count threshold works for large filled areas,\n   but thin line art often has too few matching pixels to clear a threshold\n   set safely above incidental occurrences elsewhere (`#A44713`, a 4-color\n   window's `COLOR 3`, also appears in Term's boot text at ~1076 px). Screens\n   repeat in a short cycle - typically 3-5 distinct ones - so a dozen presses\n   is enough to see every one twice.\n\n## windint escape codes - look them up, don't guess\n\nGraphics primitives are `$1B`-prefixed codes written to a w"
+}

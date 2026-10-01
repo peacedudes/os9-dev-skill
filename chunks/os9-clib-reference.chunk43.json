@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 43,
+  "text": "uest memory from OS; returns -1 if refused. |\n| `ibrk(int increase)` | Request memory from the program's initial pool (distinct from `sbrk`). |\n| `freemem(void)` | Pointer to the base of free memory. |\n\n**`Live` (os9exec)**: `calloc(16,1)` returned a block whose\n16 bytes were all zero (zero-init confirmed), and `sbrk(1000000000)` (a ~1 GB\nask) returned `-1` (refused, as documented). `malloc`/`free`/`calloc`/`sbrk`\nall link.\n\n**Memory layout** (high to low address): stack (grows downward) -> free\nmemory (`malloc`/`sbrk` pool) -> I/O buffers (256 bytes per open file) ->\nuninitialized data -> initialized data -> kernel/registers. The global\n`memend` marks the heap's upper bound. (Some 6809-era documentation adds a\n\"direct page\" region here for small, directly-addressed variables - that's\na 68"
+}

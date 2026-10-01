@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 33,
+  "text": "x, and fixing only it leaves two silent memory\ncorruptions in place.** If `PC` is unresolved in a port, treat it as a signal to\ncheck the declarations of `BC` and `UP` in the same file and make them `char *`,\nnot as a one-line rename.\n\n## `printw()` bus-errors on a floating-point conversion\n\n**Do not pass a float to `printw`.** `Live` (os9exec), reproduced independently\non two rigs with `curses.l`, `termlib.l` and `math.l` linked:\n\n```c\nprintw(\"F %.2f\", 100.0);        /* bus error, vector $02 */\nprintw(\"I %d\",   100);          /* fine -- same program, same libraries */\nsprintf(buf, \"F %.2f\", 100.0);  /* fine -- the C library formats it correctly */\naddstr(buf);\n```\n\nSo it is `printw`'s own conversion, not the C library's float formatting and not\na missing math library.\n\n**The trace is the "
+}

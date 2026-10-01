@@ -1,0 +1,5 @@
+{
+  "source": "SOURCE-AUTHORITY.md",
+  "chunk_index": 7,
+  "text": "## Not authoritative for divergence purposes\n\nGood sources, several of them excellent, but not Microware speaking. Useful as\ncorroboration or as a pointer to go find the real passage - never as the\nauthority a divergence is scored against.\n\n| Source | Who |\n|---|---|\n| `Galactic Industrial - The OS-9 Guru` (3 files) | Paul S. Dayan, Galactic Industrial, 1992 |\n| `Mastering_OS-9_on_the_Tandy_Color_Computer_1995.txt` | FARNA Systems 1995 |\n| `Mastering_OS-9_on_the_Tandy_Color_Computer_3.txt` | Paul K. Ward / F. G. Swygert |\n| `OS-9_Level_Two_and_the_Tandy_Color_Computer_3_Alexander.txt` | Alexander / Honaker 1992-94 |\n| `OS-9_Quick_Reference_1982.txt` | F. G. Swygert 1992 (misnamed - see above) |\n| `OS-9_Quick_Reference_1st_Farna_CoCo.txt` | FARNA 1994 (and 68k content, not 6809) |\n| `OS-9_Q"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 36,
+  "text": "erent logged-in identity - can fail to overwrite with a permission\n  error rather than cleanly replacing it.\n- **A fresh boot resets all in-memory kernel state**: module directory,\n  process table, DAT/task assignments. Nothing from an earlier session\n  persists - a module used successfully before is no longer resident, so\n  `F$Link` alone fails `E$MNF` on it; use `F$Load` (which falls back to a\n  filesystem search) or `F$Fork` first. Only disk-level changes survive.\n\n## Linkage Editor (RLINK) and Multi-File Builds\n\n`MOD`/`EMOD` cover a single self-contained source file. For a program built\nfrom several separately-assembled pieces, use `PSECT`/`VSECT`/`CSECT`: each\nassembles with its own location counter starting at zero (so every piece is\nindependently position-independent), and **RLINK**"
+}

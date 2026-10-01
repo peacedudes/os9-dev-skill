@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/SOURCES.md",
+  "chunk_index": 10,
+  "text": "nual, and is held to\nthe same rule as the NitrOS-9 kernel-source cross-check - cross-check only,\nnever a primary source, never extracted at length. It has not been opened for\nany purpose.\n\nTwo files in the 6809 text-resource set are named `Gimix_OS-9_*` but carry no\nGimix-specific content: `Gimix_OS-9_Programmers_Manual_Jan83.txt` is a\nbyte-identical duplicate of the System Programmer's Manual Rev F1 cited above,\nand `Gimix_OS-9_Users_Manual_1983.txt` is an independent OCR pass of the same\nRev G User's Manual. Misleading filenames only. Genuinely Gimix-specific\nmaterial - the O-FLEX operating system and the GMX III Support ROM manual - is\nhandled separately; the GMX III manual is cited in `os9-systems-dev/SOURCES.md`.\n\nWhere two manuals disagree, both readings are recorded in the file with"
+}

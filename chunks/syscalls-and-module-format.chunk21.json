@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/syscalls-and-module-format.md",
+  "chunk_index": 21,
+  "text": " `F$AllTsk` and `F$Move` were diffed against those\nlistings and match register-for-register.\n\nMany of these are **unimplemented on this NitrOS-9 build**, returning\n`E$UnkSvc` (208) - a consistent pattern, not per-call mystery, and a fact\nabout the build rather than about OS-9.\n\n| Call | Code | Params | Level 2? | Notes |\n|---|---|---|---|---|\n| F$SRqMem | $28 | D=byte count | | Allocates memory, rounded up to the next page; returns D=granted size, U=block addr; error E$MemFul. `Live` (NitrOS-9) - unimplemented (`E$UnkSvc`) |\n| F$SRtMem | $29 | U=block addr, D=byte count | | Deallocates a contiguous, page-aligned block; U must land on a page boundary or error E$BPAddr. Untested - `F$SRqMem` fails first |\n| F$IRQ | $2A | D=status-reg addr, X=0 (remove) or control-packet addr, Y=service routi"
+}

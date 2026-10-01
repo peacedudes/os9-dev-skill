@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/gotchas.md",
+  "chunk_index": 8,
+  "text": "n. A REAL\n  operand (`i / 3.0`) is what forces real division.\n- **A BOOLEAN operand in a numeric expression is a COMPILE-TIME error**\n  (`Error #000:067`), not a runtime one - the program never starts.\n- **`ON ERROR GOTO` does NOT auto-clear after firing**, despite claims\n  otherwise. It stays armed indefinitely until an explicit bare `ON ERROR`.\n- **`TRIM$` strips TRAILING spaces only** - `TRIM$(\"  hi  \")` is `\"  hi\"`.\n- **`FIX()` rounds to nearest, it does not truncate** - `FIX(-3.9)` is `-4`.\n- **`RND(n>0)` returns a fractional REAL in `[0,n)`**, not an integer the way\n  some other BASICs do. Use `FIX(RND(n))` for a random integer.\n- **Divide-by-zero reports a different code on each target, and on 68k it\n  may report nothing.** 6809 raises Microware's documented `Error #045 --\n  Divide "
+}

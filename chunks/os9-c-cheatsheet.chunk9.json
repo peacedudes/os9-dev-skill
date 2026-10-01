@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-c-cheatsheet.md",
+  "chunk_index": 9,
+  "text": " can't find\n  their inputs - errors here look like missing-file errors, not\n  environment errors.\n- **Register variables: 6809 vs. 68k behavior differs sharply.** On 6809,\n  one register variable per function is allowed; only `int`, `unsigned`, and\n  pointer types are valid. Invalid declarations (a second `register` variable,\n  or an unsupported type) aren't rejected - they're silently downgraded to\n  ordinary `auto` storage with no error. On 68k (Ultra C), the compiler\n  completely ignores programmer `register` declarations and determines\n  register placement itself - any `register` keyword is a no-op.\n- Language-syntax gotchas (K&R-only function definitions, no\n  `const`/`volatile`, etc.): `kandr-vs-ansi.md`.\n- **Linking against anything beyond the default `CLIB`** (e.g. termcap\n  functi"
+}

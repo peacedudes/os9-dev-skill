@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 16,
+  "text": "te waiting for an interrupt that will\n  never free it; only hardware reset recovers. Restore `D_MinPty`\n  immediately after your critical section finishes.\n\nProcesses with equal priority rotate time slices among themselves (round-robin at\nthat level). The real-time clock (typically 100Hz on 68k systems, but\nconfigurable) drives timeslicing; one time slice spans **two clock ticks (~20ms)**\nrather than one. A process that preempts a lower-priority one doesn't start\nits own fresh slice - it gets only whatever was left of the preempted\nprocess's slice, with the clock continuing from where it stood.\n\n**User state is preempted; system state is not.** User code is interrupted by\nthe clock when its slice expires - that is what makes the timeslicing above\nmean anything, and it is why a read-modify-"
+}

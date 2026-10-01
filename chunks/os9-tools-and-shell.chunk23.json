@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/os9-tools-and-shell.md",
+  "chunk_index": 23,
+  "text": "icks\n  across path open/close until reboot; not permanent (that takes editing\n  the descriptor file or a new boot). Serial hardware settings\n  (`baud`/`par`/`cs`/`stop`/`type`) need `deiniz` -> `xmode` -> `iniz`.\n  `tmode baud=<n>` is a partial exception - it does write the open path's\n  own baud byte without changing the hardware rate, and its argument is a\n  literal bits-per-second value rather than the descriptor's code; see\n  `common/utility-usage.md`'s `baud=` note.\n  Settable: control-key assignments, echo, backspace behavior, page\n  pause, EOF character, etc. - full parameter table in\n  `common/utility-usage.md`.\n- Page pause (`tmode pause` / `tmode nopause`): output halts after each full\n  screen until a key is pressed. Lines longer than the screen width wrap\n  without being counte"
+}

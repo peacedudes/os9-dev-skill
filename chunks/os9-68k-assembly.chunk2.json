@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 2,
+  "text": "ic written `.w`, and a bare branch over a 210-byte gap assembles\n   `Errors: 00000`. `.s` is the suffix that changes anything, emitting the\n   2-byte short form. (Measured on r68 V1.9; `Live` (os9exec).)\n7. **A diagnostic is printed BEFORE the source line it refers to**, with a\n   caret under the offending column and no address/bytes field on that line:\n\n   ```\n   00004 0002 4e71            nop\n   *** error - bad mnemonic ***\n   00005  bogusop d0,d1\n                  ^\n   ```\n\n   Read it the other way and you go hunting in the previous instruction.\n   `Live` (os9exec).\n\nTwo directive traps in the same class: `dc.b \"text\"` needs double quotes\n(single quotes fail for two or more characters), and `ds.b` is not valid in\ncode - reserve variables in a `vsect` instead, where it is (see \"Variables"
+}

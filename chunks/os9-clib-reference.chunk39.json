@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 39,
+  "text": "print iscntrl isascii toupper\ntolower toascii`. Domain guaranteed for ASCII only (-1 to 127).\n`_toupper`/`_tolower` (with underscore) are faster but restricted: pass\nonly lowercase to `_toupper` and uppercase to `_tolower`, or result is\nundefined.\n\n**Gotcha: no `isgraph()`** - this K&R-era header predates the ANSI additions.\nCalling `isgraph()` fails at *link* time (unresolved symbol), not compile\ntime. Implement as `isascii(c) && isprint(c) && c != ' '`.\n\n## File Permissions (`<modes.h>`)\n\n**The mode/permission bits live in `<modes.h>`, not `<stat.h>`** -\n`Live` (os9exec): `#include <stat.h>` fails `cpp` outright\n(`can't open /dd/DEFS/stat.h`, err 216 - there is no `stat.h` in the 68k\n`DEFS`), while `<modes.h>` is present and compiles. `<stat.h>` was a Unix-ism\nthat doesn't exist on this "
+}

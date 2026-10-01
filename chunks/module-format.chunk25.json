@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 25,
+  "text": "881.l` (68881/882 hardware FP) substitutes for `Math.l`\nunder the same registered name without recompiling clients. Internally\npromotes 32-bit floats to 64-bit doubles (no speed gain from `float`); no\ndenormals or negative zero. Compilers link and call it automatically;\nassembly reaches it via F$TLink + trap. Pre-`load`ing it speeds first\nuse; baking it into `OS9Boot` is generally not recommended.\n\n## Data modules\n\nNamed shared memory (`F$DatMod`; C: `_os_datmod()`/`_os_mkmodule()`):\ncreator sets size and\nattributes, data area arrives zeroed with a valid CRC; later processes\nlink by name. Allowed to be non-reentrant/mutable - that's the point. No\nkernel synchronization; pair with events/signals (`common/ipc.md`).\n**Gotcha:** an in-place-modified data module has a stale CRC - call\n`F$SetCRC"
+}

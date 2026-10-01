@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 14,
+  "text": "_PORT` | kernel | Device hardware base address |\n| $04 | `V_LPRC` | file manager | Last process ID |\n| $06 | `V_BUSY` | file manager | Process ID currently blocked on I/O |\n| $08 | `V_WAKE` | driver | Process ID to wake on completion |\n| $0A | `V_PATHS` | kernel | Open-paths list |\n| $2E | `V_NDRV` | driver | Number of drives |\n| $36 | `DRVBEG` | driver/FM | Where per-drive tables begin |\n\nLink order matters: `drvs_X.l` (X = drive count) must be linked before your\nown object files - it allocates the I/O globals and X drive tables in the\nlayout the driver expects.\n\n## SCF (Character Device) Driver Specifics\n\nSame entry points, different concerns - line discipline instead of block\ntransfer.\n\n**Known gap:** unlike RBF's complete Driver Static Storage offset table\nabove, SCF's fields below (`V"
+}

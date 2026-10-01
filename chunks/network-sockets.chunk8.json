@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/network-sockets.md",
+  "chunk_index": 8,
+  "text": "e. |\n| `recvfrom()` | Like `recv()` but works on an unconnected/datagram path and can report the sender's address. |\n| `send()` | Requires a connected path. Blocks if the send buffer is full (`EWOULDBLOCK` if non-blocking - wait on buffer space via `_ss_sevent()`). A message too large for one atomic transmission returns `EMSGSIZE` and sends nothing. |\n| `sendto()` | Like `send()` but takes an explicit destination and works on unconnected/datagram paths. |\n| `shutdown()` | Closes one direction of a full-duplex connection; the other keeps working. A path shut down for reading returns `ESHUTDOWN` from further `recv`/`recvfrom`. Full parameter detail unverified. |\n| `getsockname()` / `getpeername()` | Standard local/remote address retrieval; caller pre-sets the buffer-length field, gets the ac"
+}

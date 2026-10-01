@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/error-codes.md",
+  "chunk_index": 9,
+  "text": "rror | Math trap handler format error |\n| 000:066 | E$NotNum | Number not found | Math trap handler could not find the number |\n| 000:067 | E$IllArg | Illegal argument | Math trap handler received an illegal argument |\n\n### 000:102 - 000:158 - Processor exception errors (68k-specific)\n\n**This section is 68000-CPU-specific**, not a shared cross-architecture\ntable: the codes map 1:1 to 68k's own hardware exception vector table\n(`68k/os9-68k-assembly.md`'s Exception vector table - code = vector + 100),\nand several entries name 68000-family instructions/coprocessors with no\n6809 counterpart (`CHK`/`CHK2`, `TRAPV`/`TRAPcc`/`FTRAPcc`, FPCP, PMMU).\n6809 has no `F$STrap` call at all (absent from\n`6809/syscalls-and-module-format.md`'s syscall tables) and no confirmed\nequivalent numbered error range"
+}

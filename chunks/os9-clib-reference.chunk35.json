@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 35,
+  "text": "result |\n|---|---|\n| `printw(\"%.2f\", 100.0)` | **bus error** |\n| `wprintw(stdscr, \"%.2f\", 100.0)` | drew `100.00` |\n| `mvwprintw(stdscr, 2, 2, \"%.2f\", 100.0)` | drew `100.00` |\n| `mvprintw(2, 2, \"%.2f\", 100.0)` | survived |\n\n`stdscr` is what `printw` is shorthand for, so **the defect is in the wrapper,\nnot in the window and not in curses initialisation.**\n\nThat gives a lighter fix than `sprintf` for a program with many call sites:\n\n```c\n#define printw(f, a)   wprintw(stdscr, (f), (a))\n```\n\n**But note the arity.** `printw` is variadic; that macro takes exactly one\nargument after the format and will break any call with a different count. It\nsuits a program whose calls are uniform - and where they are not, `sprintf` into\na buffer and `addstr` it remains the general answer.\n\n## String Function"
+}

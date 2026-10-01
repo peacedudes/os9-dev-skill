@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 14,
+  "text": "does not act on it. `Live` (os9exec) |\n| **F$CpyMem** | Copy memory across a process boundary | d0.w=PID of external memory's owner, d1.l=count, (a0)=source, (a1)=destination | - | \"You can view any memory in the system with F$CpyMem\" (`Manual`) - it is the way to examine modules and system memory from user state. The DESTINATION is what is checked: a write only into the caller's own memory, else `E$BPAddr`. `Live` (os9exec) (os9exec departs - see \"Where os9exec departs from the manuals\" in `common/using-os9exec-repl.md`) |\n\n## I/O\n\n| Call | Purpose | Key inputs | Key outputs | Notes |\n|------|---------|-----------|------------|-------|\n| **I$Attach** | Attach device | d0.b=mode, (a0)=device name | (a2)=device-table entry | Exact port/manager/driver/descriptor match increments use count; s"
+}

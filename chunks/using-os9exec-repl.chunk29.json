@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 29,
+  "text": "hell or SDK is available:\n\n```\nos9exec mount -k=360k h7      # a real RBF image at <startPath>/h7\nos9exec makdir /h7/SCRATCH    # ...and directories inside it\nos9exec dir /h7               # SCRATCH\n```\n\nThis is the route for CI and for a fresh clone with no system disk. `mount -k`\nstreams the image (head plus a zero tail) rather than buffering it, so size is\nbounded by host disk, not by the 68k arena - 125 MB builds in well under a\nsecond. `mount -r`, a genuine RAM disk, IS bounded by the arena and says so.\n\n**The RAM-disk form wants the size on the option and the device as a path** -\n`mount -r=256k /r0`. `Live` (os9exec): `mount -r r0` answers `can't mount\ndevice \"\"` and `mount -r=256k r0` answers `can't mount device \"r0\"`; only the\nleading slash works. `mount -?` also lists `-n=<bytes>`"
+}

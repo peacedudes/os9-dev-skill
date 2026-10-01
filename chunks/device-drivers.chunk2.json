@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 2,
+  "text": "e device\ndc.w  TRAP      (6)  Error handler (currently unused - set to 0)\n```\n\n## Universal Rules\n\n- **Static storage is zeroed by the kernel before `INIT` runs**, except\n  `V_PORT` (the device's hardware base address, offset `$00`), which is\n  pre-loaded from the device descriptor's `M$Port` field. There is no\n  initialized-data table for a driver the way there is for an ordinary C\n  program.\n- **`TERM` is called even if `INIT` failed partway through** - validate\n  static storage state before using it in `TERM`; don't assume `INIT` ran\n  to completion.\n- `TERM` must: wait for pending I/O, disable interrupts, remove itself from\n  the IRQ polling table (`F$IRQ`), and return any *dynamically* allocated\n  buffers - the kernel releases the static storage itself, don't touch it.\n- **IRQ service"
+}

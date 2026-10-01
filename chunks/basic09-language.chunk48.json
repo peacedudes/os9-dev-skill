@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/basic09/basic09-language.md",
+  "chunk_index": 48,
+  "text": "thmetic errors, etc.) that a native machine-code\ncompiler typically wouldn't catch - a small performance cost in exchange\nfor not crashing on those classes of bug.\n\n## Statement separator\n\n**Several statements share a line with `\\`, not `:`.** `Live` (os9exec):\n`a=1 \\ b=2` compiles and runs, and `LIST` shows it as `a=1\\ b=2`. The\n`:` that most BASICs use is rejected at `LOAD` with `Error #000:011`, the\ncaret under the `:`. So code ported from another BASIC fails to load on its\nfirst multi-statement line.\n\n## Comments\n\n`!` starts a comment - **but only as the first non-blank token on the\nline.** Unlike most BASIC dialects (and unlike `basic09c`, the\nindependent native compiler - see `gotchas.md`), a real BASIC09\ninterpreter does not support a trailing comment after code on the same\nline; `P"
+}

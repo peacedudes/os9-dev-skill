@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 8,
+  "text": "---|---|\n| `fopen`/`freopen`/`fdopen(char *name, char *action, ...)` | Action letters: r/w/a/u/c/e/**d** (directory read - OS-9 specific). Append `x` (e.g. `\"wx\"`) locks to current directory and sets execute permission. `freopen` closes the original stream even on failure. |\n| `fclose`/`fflush(FILE *fp)` | `fflush(NULL)` flushes every open stream, not just one. |\n| `fread`/`fwrite(void *ptr, int size, int number, FILE *fp)` | Returns item count actually transferred; 0 on EOF/error. |\n| `fseek`/`rewind`/`ftell` | `fseek` place: 0=start, 1=current, 2=end. |\n| `getc`/`getchar`/`getw`/`gets`/`fgets` | `getc()` **auto-selects** `read()` (raw/binary) vs `readln()` (line-edited terminal) based on file type - override with `_SCF`/`_RBF` flags before the first read if you need to force one. `gets()"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/file-managers.md",
+  "chunk_index": 36,
+  "text": "le-manager entry points, GetStat/SetStat dispatch, path descriptor\nstructure); Disk File Organization manual (RBF disk structure, record\nlocking, raw I/O, file security) - cross-checked against The OS-9 Guru and\nthe v2.4 Technical Reference Manual for pipes. The File Descriptor Sector\ntable's `FD_LNK` row is confirmed against both the Disk File Organization\nmanual's own field table (Figure 7-2) and an independent 1985-era OS-9/68000\ntechnical manual. The mode rules for the EOF lock are cross-referenced across\nfour: the 6809 *System Programmers Manual* §6.6.1/§6.6.3/§6.6.5, Tandy's\n*Technical Reference* and *Level Two Development System*, and the 68k *v2.4\nTechnical Reference*. See `device-drivers.md` for the driver side of the same\nlayered model.\n"
+}

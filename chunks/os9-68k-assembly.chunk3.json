@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/os9-68k-assembly.md",
+  "chunk_index": 3,
+  "text": " in a `vsect` instead, where it is (see \"Variables\nlive in a `vsect`, addressed from A6\" below). A third, harder to\nplace: **a label named `a0`-`a7` or `d0`-`d7` collides with the register\nnames**, and the complaint lands on the instruction that *references* the\nlabel - `*** error - illegal addressing mode ***` - not on the label as a\nduplicate symbol, so it sends you to read the wrong line. `Live` (os9exec).\n\n## Toolchain (`Live` (os9exec), end-to-end)\n\n- **`cc`** drives `cpp` -> `c68` -> `o68` -> `r68` (assembler) -> **`l68`**\n  (linker), forking each by bare name via the execution directory (see\n  `common/os9-mental-model.md`).\n- **`l68`** error taxonomy - `Live` (os9exec): `file 'x.r' is not a\n  relocatable module` = the input does not start like a ROF (a zeroed sync\n  word, a large te"
+}

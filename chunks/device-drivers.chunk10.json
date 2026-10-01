@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/device-drivers.md",
+  "chunk_index": 10,
+  "text": "t file manager* (e.g. the same intelligent\n  controller used in both block and character mode). The driver code itself\n  doesn't need to know which file manager is calling it - only what its\n  own READ/WRITE/GETSTAT/SETSTAT entries mean for that mode.\n\n## RBF (Block Device) Driver Specifics\n\n**READ input:** `d0.l`=sector count, `d2.l`=starting LSN, `(a1)`=path\ndescriptor, `(a2)`=static storage, `(a4)`=process descriptor, `(a5)`=caller's\nregister stack, `(a6)`=system globals. **WRITE** is symmetric, transferring\nfrom `PD_BUF`, using the same input registers.\n\n**Known gap:** READ/WRITE are the only entry points with a documented\nregister convention anywhere in this skill. INIT, TERM, GETSTAT, and\nSETSTAT have no register inputs specified here or in `file-managers.md` -\na skeleton for those e"
+}

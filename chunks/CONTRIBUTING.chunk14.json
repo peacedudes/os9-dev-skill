@@ -1,0 +1,5 @@
+{
+  "source": "CONTRIBUTING.md",
+  "chunk_index": 14,
+  "text": "better, the license permits that outright\nonce it is in force, and credit under `NOTICE` is the only thing asked. Say so in\nyour README so readers can find the active copy.\n\n## Scope\n\nBoth collections cover the older end of the line: the v2.4-era OS-9/68000\nsystem and OS-9/6809 Level Two. Later versions, OS-9000 beyond passing\nmention, and OS-9 for other processors are out of scope - not because they\ndon't matter, but because nothing here was verified against them.\n"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/INDEX.md",
+  "chunk_index": 6,
+  "text": " pipe I/O, and the error returned is the signal number | `common/ipc.md` |\n| A program \"hangs\" while burning CPU on a `getchar()` loop | a signal killed the read and latched `ferror(stdin)`; every later read returns -1 at once until `clearerr` | `c/os9-clib-reference.md` |\n| A ported program times out correctly, yet its signal handler was never entered | the alarm interrupts the blocked read; the handler waits for `check_signal()` | `c/os9-clib-reference.md` |\n| A ported program's `alarm()`/`signal()` handler never runs | a Unix-compat `signal()` that only records the code - the handler waits for a `check_signal()` poll | `c/os9-clib-reference.md` |\n| One terminal setting is wrong while the others are right, after code that saves and restores options | a whole-struct `_gs_opt`/`_ss_opt` re"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/68k/syscall-reference.md",
+  "chunk_index": 24,
+  "text": "he moment of the call ever sees the pulsed value. `Live` (os9exec),\nall twelve.\n\n## Alarms\n\n**F$Alarm** (d0.l=alarm ID, d1.w=function, d2.l=signal, d3.l=interval,\nd4.l=date): subfunctions A$Delete=0, A$Set=1 (one-shot), A$Cycle=2\n(periodic), A$AtDate=3 / A$AtJul=4 (absolute Gregorian/Julian). `Live` (os9exec).\n\n**How `d3` is encoded, which decides whether your alarm fires at all**\n(`Manual`, v2.4 TRM, F$Alarm and both A$Set/A$Cycle): the interval is a count of\n**system clock ticks** - *unless* **bit 31 is set**, in which case the low 31\nbits are **256ths of a second**. All times round up to the nearest tick. The\nabsolute subfunctions read `d3` differently again: **A$AtDate** takes `00hhmmss`\nand **A$AtJul** takes seconds after midnight.\n\nThat high bit is easy to lose and expensive to lose."
+}

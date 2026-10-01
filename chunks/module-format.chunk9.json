@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/module-format.md",
+  "chunk_index": 9,
+  "text": ".1Z\n00000030  0000 0050 0000 0000 0000 0000 0000 0400 ...P............\n00000040  0000 01b2 0000 01ba 6578 6669 6f31 0000 ...2...:exfio1..\n00000050  41fa 00ac 7002 7203 7400 4e40 0083 6500 Az.,p.r.t.N@..e.\n```\n\nMapped onto the universal header table:\n\n| Bytes | Field | Reads as |\n|---|---|---|\n| `4afc` @ `$00` | `M$ID` | the sync word, as documented |\n| `0001` @ `$02` | `M$SysRev` | header format revision 1 |\n| `0000 01c6` @ `$04` | `M$Size` | 454 bytes, header through CRC |\n| `0000 0103` @ `$08` | `M$Owner` | group 0, user 259 |\n| `0000 0048` @ `$0C` | `M$Name` | name lives at `$48` - and `$48` does hold `exfio1` |\n| `0555` @ `$10` | `M$Accs` | read+exec for owner/group/public |\n| `01` `01` @ `$12` | `M$Type`/`M$Lang` | Program / 68000 object code |\n| `80` `01` @ `$14` | `M$Attr`/`M$Revs` "
+}

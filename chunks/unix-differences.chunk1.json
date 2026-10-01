@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/unix-differences.md",
+  "chunk_index": 1,
+  "text": " just slow, if you assume Unix)\n\n### 1. Two current directories, not one\n\nUnix has one cwd. OS-9 has two:\n\n| | Command | Governs |\n|---|---|---|\n| **Data directory** | `chd` | Relative *data* file paths; where the shell looks for a procedure file |\n| **Execution directory** | `chx` | Relative *command* names when running something |\n\n`chd` != `cd`. A program visible via `dir` (data dir) can be \"not found\"\nwhen run - running searches `chx`/`PATH`, not `chd`. Like Unix `cd`, `chd`\nwith no argument returns to `$HOME` (the `HOME` env var, **not** the\npassword-file login data dir); `chx` with no argument leaves the execution\ndirectory where it was, though on an RBF device it also prints\n`Error #000:214`\n(`Live` (os9exec) - see `os9-tools-and-shell.md` for the\ntest). Full resolution rule, `PATH`"
+}

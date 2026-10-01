@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/c/os9-clib-reference.md",
+  "chunk_index": 19,
+  "text": "and `ESC` keys. The keyboard routine took its copy\n*after* echo was already off, and on exit wrote that copy back *after* the echo\nroutine had turned echo on - leaving `kbich=3 kbach=5 eofch=27` correct and\n**`echo=0`**, with nothing having failed. Restoring only the fields each routine\nhad actually changed gave `echo=1` and the rest unchanged.\n\nNothing here is concurrent. It is an ordinary read-modify-write on shared state,\nwhere the \"shared state\" is a struct each routine believed it owned, and the\nstale write wins simply by happening last. **Read, change your fields, write -\ndo not snapshot and replay.**\n\nTwo reasons this is worse on OS-9 than the same mistake elsewhere: the failure is\n**silent and partial**, so what you get is one wrong setting among several right\nones rather than an o"
+}

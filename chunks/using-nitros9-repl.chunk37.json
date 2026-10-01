@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/using-nitros9-repl.md",
+  "chunk_index": 37,
+  "text": "d rather than your shell.\n\n## `rma` + `rlink` work - an apparent hang is one of four silent traps\n\n**`rma` does not hang** (`Live` (NitrOS-9)) - four silent traps account for\nevery apparent hang, and each is listed below. A full\nmulti-file build runs end to end, and the working sources are in the os9exec\nrepo at `test/6809-live-verification/rma-rlink-build/`:\n\n```\nrma main.a -o=main.r        (mainline PSECT, calls an undefined `helper`)\nrma sub.a  -o=sub.r         (non-mainline PSECT, defines `helper:`)\nrlink main.r sub.r -o=prog\nattr prog e pe pr\nprog                     ->  RMA-RLINK-OK\n```\n\nEvery symptom that looks like a hang is reproducible, and each is a silent\nfailure rather than a hang. Four independent traps, any of\nwhich leaves you staring at a prompt with nothing to show:\n\n1. **"
+}

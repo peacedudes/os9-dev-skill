@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/using-os9exec-repl.md",
+  "chunk_index": 40,
+  "text": "`.\n- `cc: cannot execute the pre-processor` usually means the sub-tools\n  aren't loaded/reachable - `load` them in the startup file rather than\n  patching `chx` around it.\n- **Hand-invoking `l68` directly writes its `-o=<name>` output to the\n  execution directory (`chx`), not the current data directory** - `Live` (os9exec),\n  same pattern as `cc`'s `-F=` flag. Symptom: the linker reports no error\n  and no output file appears in the data directory; check `chx` (typically\n  `/h0/CMDS`) before assuming the link failed.\n- A freshly compiled program in your data directory can fail to run by\n  bare name (`chd` doesn't affect command search). Run it by full path, or\n  put its directory on `PATH`.\n- Source must be CR-only before compiling.\n- **Two emulators compiling in one directory clobber each "
+}

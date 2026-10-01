@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 16,
+  "text": ", `echo step two\n  -z` echoes the *rest of the procedure file* as text and nothing after it\n  runs as a command.\n- `moded [<opts>] [<path>]` - edit a module's option table\n  (descriptors); `-d=<path>` field-description file, `-e=<path>` error\n  file, `-f=<path>` load modules from file. Follow with `fixmod -u`.\n- `binex [<opts>] [<path1> [<path2>]]` / `exbin` - module <-> S-record;\n  `-a=<hex>` load address, `-s=<n>` S-record type.\n- `romsplit {<opts>} {<path>}` - split for ROM burners; `-q` four-way\n  split.\n\n## Process and environment\n\n- `procs [<opts>]` - `-e` all users' processes, `-a` alternate columns,\n  `-b` both.\n- `kill {<procID>}`, `setpr <procID> <number>`, `sleep [-s] <num>`\n  (ticks; `-s` seconds), `w` (wait for one child), `ex <path> [<args>]`\n  (replace shell), `profile <path"
+}

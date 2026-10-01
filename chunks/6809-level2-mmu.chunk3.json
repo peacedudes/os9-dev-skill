@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/6809-level2-mmu.md",
+  "chunk_index": 3,
+  "text": "ptor holds a full software copy of the MMU's register state. On every context switch, the kernel copies the incoming process's DAT image into the actual MMU registers. MMU registers are write-only - the kernel reads from the process descriptor instead of the hardware.\n- **Translation pipeline**: the 6809's high-order logical address bits (typically 4 or 5 lines, e.g. A12-A15 or A11-A15) index into a fast lookup table (\"mapping RAM\"). The looked-up value supplies the high-order *physical* address bits (A16-A20+); the low-order logical bits pass straight through unchanged. Block size follows directly from how many high bits go through the MMU: 4 lines -> 4K blocks, 5 lines -> 2K blocks.\n- **Task Select Register**: a latch/PIA-driven register selecting which section of the mapping RAM is \"liv"
+}

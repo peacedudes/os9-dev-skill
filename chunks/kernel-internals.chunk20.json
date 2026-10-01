@@ -1,0 +1,5 @@
+{
+  "source": "os9-systems-dev/references/kernel-internals.md",
+  "chunk_index": 20,
+  "text": "02` subroutine / BASIC09-I-code module. This is exactly how `RunB` links a packed BASIC09\n  procedure without hard-coding its language sub-code - and the reason a\n  naïve `requested == actual` full-word comparison is wrong: it rejects the\n  match and the resident module looks \"not found.\" (The symptom of such a\n  comparison: a *loaded* packed module is invisible to `F$Link`, RunB falls\n  back to `F$Load`, and execution comes to depend on the current directory.\n  See os9-dev `basic09/pack-and-runb.md` for\n  the application-side view.)\n- **`F$Load`'s access mode is a *byte*, `d0.b`, and it chooses the\n  directory.** The v2.4 Technical Manual: the mode \"may be specified as\n  either Exec_ or Read_, causing the file to load from the current execution\n  or data directory, respectively\" (`Manual`"
+}

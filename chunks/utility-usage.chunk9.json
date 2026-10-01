@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/common/utility-usage.md",
+  "chunk_index": 9,
+  "text": "gnore write protection,\n  `-q` no confirmation prompts.\n- `dir [<opts>] {<path>}` - `-e` extended (owner, dates, size, perms),\n  `-a` include dot-files, `-d` mark directories with `/`, `-n`\n  directories themselves only, `-r` / `-r=<num>` recursive (to depth),\n  `-s` unsorted, `-u` unformatted (for piping), `-x` list the execution\n  directory.\n  - **`-e` output is fixed-width, and the filename starts at column 54.**\n    `Live` (os9exec) against the SDK's own `dir`, measured across **666 file\n    entries** in four directories: the sector address (2-5 hex digits) and the\n    byte size (2-7 digits) are **right-aligned in fixed fields**, so neither\n    widens the line, and the name began at column 54 in every one. (The count is\n    of entry lines; a listing's header and footer carry no name an"
+}

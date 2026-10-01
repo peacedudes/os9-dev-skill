@@ -1,0 +1,5 @@
+{
+  "source": "os9-dev/references/6809/assembly-and-tools.md",
+  "chunk_index": 32,
+  "text": "ong form.\n\n## Position-independent code\n\nUse `BRA`/`LBRA`/`BSR`/`LBSR`, never `JMP`/`JSR` with an absolute target; use\nPC-relative (PCR) indexed addressing for constant data rather than\nimmediate-loading an absolute label address.\n\n**Every label belongs to exactly one of two address spaces, and mixing them\nproduces confusing symptoms rather than a clear error** (`Live` (NitrOS-9)):\n\n1. Anything declared with `FCC`/`FCS`/`RMB`/`FDB` in the assembled module's\n   own code/data section is a real address *inside the module*, safe to reach\n   only via `,PCR`-relative addressing.\n2. Anything meant to live in the *process's per-process data area* (the\n   region `MOD`'s data-size field reserves) must be a plain numeric `EQU`\n   offset, never an `RMB`, and is reached only via `,U`-relative addressin"
+}

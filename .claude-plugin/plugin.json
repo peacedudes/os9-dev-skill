@@ -1,7 +1,7 @@
 {
   "name": "os9",
   "version": "1.0.0",
-  "description": "Reference skills for Microware OS-9 on the 6809 and 68000: application work (BASIC09, Microware C, assembly, the shell and utilities, modules, system calls, error codes) and systems work (device drivers, file managers, kernel internals). Every claim carries a confidence tag saying where it came from.",
+  "description": "Skills that teach an AI coding assistant Microware OS-9 on the 6809 and 68000: application work (BASIC09, Microware C, assembly, the shell and utilities, modules, system calls, error codes) and systems work (device drivers, file managers, kernel internals). Every claim carries a confidence tag saying where it came from.",
   "author": {
     "name": "Robert Doggett"
   },

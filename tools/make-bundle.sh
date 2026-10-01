@@ -7,9 +7,9 @@
 # an untracked scratch file cannot ride along. maintainer/ is gitignored and
 # therefore excluded by construction rather than by a rule that could rot.
 #
-# One edition serves every reader: README.md leads with the runtime-neutral
-# route (point any agent at AGENTS.md) and carries the Claude Code symlink step
-# as an explicitly optional extra. There is nothing to vary.
+# One edition serves every assistant: README.md's install table covers Claude
+# Code, other skill loaders, any agent pointed at AGENTS.md, and attachment-only
+# chat. There is nothing to vary.
 #
 # Usage: tools/make-bundle.sh [output.zip]
 

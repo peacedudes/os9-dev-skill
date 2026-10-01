@@ -1,7 +1,7 @@
 # Corrections and additions
 
-**Corrections are genuinely wanted.** This is a reference work about a system
-whose documentation is scattered, partly OCR'd, and occasionally
+**Corrections are genuinely wanted.** These skills teach AI assistants about
+a system whose documentation is scattered, partly OCR'd, and occasionally
 self-contradictory. Errors are expected, and a reader who hits one is better
 placed to catch it than the author was.
 

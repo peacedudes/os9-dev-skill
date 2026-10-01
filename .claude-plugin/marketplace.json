@@ -1,6 +1,6 @@
 {
   "name": "os9-dev-skill",
-  "description": "OS-9 development skills: a reference for Microware OS-9 on the 6809 and 68000.",
+  "description": "Agent skills that teach an AI coding assistant to program Microware OS-9 on the 6809 and 68000.",
   "owner": {
     "name": "Robert Doggett"
   },
@@ -8,7 +8,7 @@
     {
       "name": "os9",
       "source": "./",
-      "description": "Microware OS-9 development reference: os9-dev (applications) and os9-systems-dev (drivers, file managers, kernel)."
+      "description": "Microware OS-9 skills for AI coding assistants: os9-dev (applications) and os9-systems-dev (drivers, file managers, kernel)."
     }
   ]
 }

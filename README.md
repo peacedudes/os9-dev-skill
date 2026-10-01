@@ -104,15 +104,10 @@ so and point to Microware's manuals or the hardware maker's.
 
 ## What the assistant will need
 
-To do the work, not just to talk about it:
-
-- **An OS-9 system.** Real hardware if you have it. Without it, 68000 programs
-  run under [os9exec](https://github.com/peacedudes/os9exec), a community
-  emulator, and 6809 work runs on NitrOS-9 under the XRoar emulator. The
-  skills teach the assistant to drive both.
-- **Microware's own software**, legally held. The shell, the C compiler and
-  the utilities belong to Microware, and none of them is in this repository.
-  Nothing compiles C without Microware's `cc`.
+An OS-9 system to run its work on: real hardware if you have it. Without it,
+68000 programs run under [os9exec](https://github.com/peacedudes/os9exec), a
+community emulator, and 6809 work runs on NitrOS-9 under the XRoar emulator.
+The skills teach the assistant to drive both.
 
 ## About OS-9
 

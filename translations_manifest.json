@@ -1,0 +1,9 @@
+{
+  "repo": "peacedudes/os9-dev-skill",
+  "fork": "Q9-Forge/os9-dev-skill",
+  "branch": "setup-os9-dev-skill",
+  "tasks": [
+    {"file":"README.md","status":"open"},
+    {"path":"docs/","status":"open"}
+  ]
+}
